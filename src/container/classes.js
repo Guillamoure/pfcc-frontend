@@ -19,8 +19,8 @@ class Home extends React.Component {
   render() {
     console.log(this.state.classes[0])
     return (
-      <div>
-        Barbarian bro
+      <div className='background'>
+        Dees the Classes:
         {this.state.classes[0] ? this.renderClasses() : null}
       </div>
     )
