@@ -1,6 +1,7 @@
 import React from 'react'
 import NewClass from '../components/new_class'
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+import _ from 'lodash'
 
 class Home extends React.Component {
 
@@ -15,25 +16,24 @@ class Home extends React.Component {
   }
 
   renderClasses = () => {
-    return this.state.classes.map(klass => <div>{klass.name}</div>)
+    return this.state.classes.map(klass => <Link to={`/classes/${klass.name}`} >{klass.name}< br /></Link>)
   }
 
 
   renderNewClass = () => {
     console.log("clicked")
-
   }
 
   // <button onClick={this.renderNewClass}>Create New Class</button>
   render() {
-    console.log(this.state.classes[0])
     return (
       <div className='background'>
         Dees the Classes:
+        < br />
         {this.state.classes[0] ? this.renderClasses() : null}
         < br />
         < br />
-        <Link to='/classes/new' >Hit Me, Boi</Link>
+        <Link to='/classes-new' >Hit Me, Boi</Link>
       </div>
     )
   }

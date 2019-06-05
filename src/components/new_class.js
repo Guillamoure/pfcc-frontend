@@ -24,7 +24,6 @@ class NewClass extends React.Component {
   }
 
   renderChange = (e) => {
-
     this.setState({[e.target.name]: e.target.value})
   }
 
@@ -40,7 +39,7 @@ class NewClass extends React.Component {
           <br />
           <label>
             Desciption:
-            <input type="textfield" name="description" value={this.state.desciption} onChange={this.renderChange}/>
+            <textarea type="textfield" className="desc-box" rows="6" name="description" value={this.state.desciption} onChange={this.renderChange}/>
           </label>
           <br />
           <br />
