@@ -9,6 +9,7 @@ import Classes from './container/classes'
 
 import Login from './components/login'
 import SignUp from './components/signup'
+import NewClass from './components/new_class'
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route exact path="/classes" component={Classes} />
         <Route exact path="/login" component={Login} />
         <Route exact path="/signup" component={SignUp} />
+        <Route exact path="/classes/new" component={NewClass} />
       </React.Fragment>
     </Router>
   );
