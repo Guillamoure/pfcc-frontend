@@ -3,7 +3,7 @@
 }
 
 .background {
-  
+
   background-color: #CFB997;
 }
 
@@ -35,4 +35,12 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.desc-box {
+
+  resize: both;
+  overflow: auto;
+  vertical-align: top;
+  width: 35em;
 }
