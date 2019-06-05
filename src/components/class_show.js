@@ -33,7 +33,6 @@ class Class extends React.Component {
 
   renderBAB = () => {
     switch (this.state.klass.hit_die){
-
       case 6:
         return 0.5;
       case 8:
@@ -100,7 +99,7 @@ class Class extends React.Component {
           <br />
           <br />
           <label>
-            Desciption:
+            Description:
             <textarea type="textfield" rows="6" className="desc-box" name="description" value={this.state.feature.description} onChange={this.renderFeatureChange}/>
           </label>
           <br />
@@ -115,6 +114,35 @@ class Class extends React.Component {
       </div>
     )
   }
+  renderClassTableRow = () => {
+    let level = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+    return level.map(num => {
+      return (
+        <tr>
+          <td>{num}</td>
+          <td>+{_.floor(num * this.renderBAB())}</td>
+          <td>{"Nothing"}</td>
+        </tr>
+      )
+    })
+  }
+
+  renderClassTable = () => {
+    return (
+      <table >
+        <thead >
+          <tr >
+            <th >Level</th>
+            <th >BAB</th>
+            <th >Features</th>
+          </tr>
+        </thead>
+        <tbody >
+          {this.renderClassTableRow()}
+        </tbody>
+      </table>
+    )
+  }
 
 
   render() {
@@ -125,6 +153,7 @@ class Class extends React.Component {
         <p>{this.state.klass.description}</p>
         <p><strong>Hit Die</strong>: d{this.state.klass.hit_die}</p>
         <p><strong>Base Attack Bonus Progression</strong>: {this.renderBAB()}</p>
+        {this.renderClassTable()}
         {this.state.klass.klass_features && this.renderFeatures()}
         <button onClick={this.changeAddFeatureToggle}>{this.state.toggleCreateFeature ? "Hide new Feature Form" : "Add a new Class Feature"}</button>
         < br />
