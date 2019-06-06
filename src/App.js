@@ -6,11 +6,11 @@ import { BrowserRouter as Router, Route } from 'react-router-dom'
 
 import Home from './container/home'
 import Classes from './container/classes'
+import Class from './container/class_show'
 
 import Login from './components/login'
 import SignUp from './components/signup'
 import NewClass from './components/new_class'
-import Class from './components/class_show'
 
 
 class App extends React.Component {
