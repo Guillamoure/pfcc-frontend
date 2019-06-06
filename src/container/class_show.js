@@ -54,15 +54,25 @@ class Class extends React.Component {
     })
     .then(r => r.json())
     .then(data => {
-      this.renderClassFeature()
+      this.renderClassFeature(data)
     })
   }
 
   renderClassFeature = (newData) => {
-    const remappedFeatures = this.state.klass.klass_features.map(feature => {
-      return feature.id === newData.id ? newData : feature
-    })
-    
+    let remappedFeatures
+    if (Number.isInteger(newData)) {
+      remappedFeatures = this.state.klass.klass_features.filter(feature => {
+        return feature.id !== newData
+      })
+    } else if (!this.state.klass.klass_features.find(el => el.id === newData.klass_feature.id)){
+      remappedFeatures = this.state.klass.klass_features
+      remappedFeatures.push(newData.klass_feature)
+    } else if (typeof newData === 'object'){
+      remappedFeatures = this.state.klass.klass_features.map(feature => {
+        return feature.id === newData.id ? newData : feature
+      })
+    }
+
     return this.setState({
       klass: {
         ...this.state.klass,

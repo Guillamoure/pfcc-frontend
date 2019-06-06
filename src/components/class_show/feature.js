@@ -5,7 +5,8 @@ import FeatureForm from './feature_form'
 class Feature extends React.Component {
 
   state ={
-    toggleFeatureForm: false
+    toggleFeatureForm: false,
+    deleteFeatureButton: false
   }
 
   renderClick = (option) => {
@@ -32,7 +33,34 @@ class Feature extends React.Component {
   }
 
   renderForm = () => {
-    return <FeatureForm toggleFeatureForm={this.state.toggleFeatureForm} feature={this.props.feature} renderSubmit={this.renderSubmit}/>
+    return <FeatureForm toggleFeatureForm={this.state.toggleFeatureForm} feature={this.props.feature} renderSubmit={this.renderSubmit} deleteFeature={this.deleteFeature}/>
+  }
+
+  deleteFeature = () => {
+    this.setState({toggleFeatureForm: !this.state.toggleFeatureForm, deleteFeatureButton: !this.state.deleteFeatureButton })
+  }
+
+  deleteFeatureConfirm = (e, answer) => {
+    e.preventDefault();
+    if (answer === "yes") {
+
+      fetch(`http://localhost:3000/api/v1/klass_features/${this.props.feature.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          klass_feature_id: this.props.feature.id
+        })
+      })
+      .then(r => r.json())
+      .then(id => {
+        this.setState({toggleFeatureForm: false, deleteFeatureButton: false}, () => this.props.renderClassFeature(id))
+      })
+    } else if (answer === "no"){
+      this.setState({toggleFeatureForm: false, deleteFeatureButton: false})
+    }
   }
 
   render () {
@@ -40,12 +68,14 @@ class Feature extends React.Component {
       <span>
         <ul>
           <span><strong>{this.props.feature.name}</strong></span>
-          <button onClick={this.renderClick}>Edit</button>
+          {this.state.deleteFeatureButton ? <span><br/>Are you sure about that?<br/> <button onClick={(e) => this.deleteFeatureConfirm(e, "no")}>No</button><button onClick={(e) => this.deleteFeatureConfirm(e, "yes")}>Yes</button><br/><br/></span> : null}
+          {this.state.deleteFeatureButton? null : <button onClick={this.renderClick}>Edit</button>}
           <li>A {this.props.klass_name} learns this at <strong>level {this.props.feature.level_learned}</strong></li>
           <li>Description: {this.props.feature.description}</li>
           < br />
         </ul>
         {this.state.toggleFeatureForm ? this.renderForm() : null}
+        < br />
       </span>
     )
   }

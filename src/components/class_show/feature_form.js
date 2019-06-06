@@ -68,10 +68,13 @@ class NewFeature extends React.Component {
     )
   }
 
+
   render () {
     return (
       <div>
         {this.props.toggleFeatureForm ? this.renderAddFeature() : this.clearAddFeature()}
+        {this.props.feature ? <button onClick={this.props.deleteFeature}>Delete Feature</button> : null}
+        < br />
       </div>
     )
   }
