@@ -67,6 +67,15 @@ class Feature extends React.Component {
     }
   }
 
+  renderDescription = () => {
+    if (this.props.feature.description){
+
+      let desc = this.props.feature.description
+      desc = desc.split("\n\n")
+      return desc.map(para => <p>{para}</p>)
+    }
+  }
+
   render () {
     return (
       <span>
@@ -75,7 +84,7 @@ class Feature extends React.Component {
           {this.state.deleteFeatureButton ? <span><br/>Are you sure about that?<br/> <button onClick={(e) => this.deleteFeatureConfirm(e, "no")}>No</button><button onClick={(e) => this.deleteFeatureConfirm(e, "yes")}>Yes</button><br/><br/></span> : null}
           {this.state.deleteFeatureButton? null : <button onClick={this.renderClick}>Edit</button>}
           <li>A {this.props.klass_name} learns this at <strong>level {this.props.feature.level_learned}</strong></li>
-          <li>Description: {this.props.feature.description}</li>
+          <li>Description: {this.renderDescription()}</li>
           < br />
         </ul>
         {this.state.toggleFeatureForm ? this.renderForm() : null}

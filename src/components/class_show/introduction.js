@@ -3,11 +3,20 @@ import _ from 'lodash'
 
 class Introduction extends React.Component {
 
+  renderDescription = () => {
+    if (this.props.klass.description){
+
+      let desc = this.props.klass.description
+      desc = desc.split("\n\n")
+      return desc.map(para => <p>{para}</p>)
+    }
+  }
+
   render () {
     return (
       <div>
-        <h3>{this.props.klass.name}</h3>
-        <p>{this.props.klass.description}</p>
+        <h2>{this.props.klass.name}</h2>
+        {this.renderDescription()}
         <p><strong>Hit Die</strong>: d{this.props.klass.hit_die}</p>
         <p><strong>Skill Ranks per Level</strong>: {this.props.klass.skill_ranks} + Int modifier</p>
       </div>

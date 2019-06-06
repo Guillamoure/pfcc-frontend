@@ -18,6 +18,14 @@ class Table extends React.Component {
     }
   }
 
+  renderSave = (num, save) => {
+    if (save === 0.5){
+      return _.floor(num * save) + 2
+    } else if (save === 0.34){
+      return _.floor(num * save)
+    }
+  }
+
   renderLevelFeatures = (num) => {
     const levelFeatures = this.props.klass.klass_features.filter(feature => {
       return feature.level_learned === num
@@ -33,6 +41,9 @@ class Table extends React.Component {
         <tr>
           <td>{num}</td>
           <td>+{_.floor(num * this.renderBAB())}</td>
+          <td>+{this.renderSave(num, this.props.klass.fortitude)}</td>
+          <td>+{this.renderSave(num, this.props.klass.reflex)}</td>
+          <td>+{this.renderSave(num, this.props.klass.will)}</td>
           <td>{this.props.klass.klass_features &&this.renderLevelFeatures(num)}</td>
         </tr>
       )
@@ -46,6 +57,9 @@ class Table extends React.Component {
           <tr >
             <th >Level</th>
             <th >BAB</th>
+            <th >Fortitude Save</th>
+            <th >Reflex Save</th>
+            <th >Will Save</th>
             <th >Features</th>
           </tr>
         </thead>
