@@ -8,6 +8,9 @@ class NewClass extends React.Component {
     description: "",
     hit_die: 0,
     skill_ranks: "",
+    fortitude: "",
+    reflex: "",
+    will: "",
     deleteClassButton: false
   }
 
@@ -17,7 +20,10 @@ class NewClass extends React.Component {
         name: this.props.klass.name,
         description: this.props.klass.description,
         hit_die: this.props.klass.hit_die,
-        skill_ranks: this.props.klass.skill_ranks
+        skill_ranks: this.props.klass.skill_ranks,
+        fortitude: this.props.klass.fortitude,
+        reflex: this.props.klass.reflex,
+        will: this.props.klass.will
       })
     }
   }
@@ -36,7 +42,7 @@ class NewClass extends React.Component {
     .then(data => {
       if (!data.error){
         this.props.history.push(`/classes/${data.klass.name}`)
-        this.setState({name: "", description: "", hit_die: 0, skill_ranks: ""})
+        this.setState({name: "", description: "", hit_die: 0, skill_ranks: "", fortitude: "", reflex: "", will: ""})
       } else {
         console.log(data.error)
       }
@@ -87,6 +93,36 @@ class NewClass extends React.Component {
       <input type="number" name="skill_ranks" value={this.state.skill_ranks} onChange={this.renderChange}/>
       </label>
       <br />
+      <label>
+      Saving Throws:
+      <br />
+      <label>
+      Fortitude
+      <select name="fortitude" value={this.state.fortitude} onChange={this.renderChange}>
+      <option value= "" >Select One</option>
+      <option value= ".5" >Good</option>
+      <option value= ".34" >Poor</option>
+      </select>
+      </label>
+      <label>
+      Reflex
+      <select name="reflex" value={this.state.reflex} onChange={this.renderChange}>
+      <option value= "" >Select One</option>
+      <option value= ".5" >Good</option>
+      <option value= ".34" >Poor</option>
+      </select>
+      </label>
+      <label>
+      Will
+      <select name="will" value={this.state.will} onChange={this.renderChange}>
+      <option value= "" >Select One</option>
+      <option value= ".5" >Good</option>
+      <option value= ".34" >Poor</option>
+      </select>
+      </label>
+      </label>
+      < br />
+      < br />
       <input type="submit" name="submit" />
       </form>
   )
