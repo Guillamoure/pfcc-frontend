@@ -1,16 +1,20 @@
 import React from 'react'
 import _ from 'lodash'
+import { Link } from 'react-router-dom'
+
 
 import Introduction from '../components/class_show/introduction'
 import Table from '../components/class_show/table'
 import Features from '../components/class_show/feature_list'
 import FeatureForm from '../components/class_show/feature_form'
+import ClassForm from  '../components/class_form'
 
 class Class extends React.Component {
 
   state ={
     klass : {},
-    toggleFeatureForm: false
+    toggleFeatureForm: false,
+    toggleClassForm: false
   }
 
   renderURL = () => {
@@ -37,6 +41,9 @@ class Class extends React.Component {
   changeAddFeatureToggle = () => {
     this.setState({toggleFeatureForm: !this.state.toggleFeatureForm})
   }
+  toggleClassForm = () => {
+    this.setState({toggleClassForm: !this.state.toggleClassForm})
+  }
 
   renderSubmit = (e, feature) => {
     e.preventDefault()
@@ -54,7 +61,35 @@ class Class extends React.Component {
     })
     .then(r => r.json())
     .then(data => {
-      this.renderClassFeature(data)
+      if (!data.error){
+        this.renderClassFeature(data)
+      } else {
+        console.log(data.error)
+      }
+    })
+  }
+
+  renderClassEdit = (e, klass_updates) => {
+    e.preventDefault()
+
+    fetch(`http://localhost:3000/api/v1/klasses/${this.state.klass.id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        klass_id: this.state.klass.id,
+        updates: klass_updates
+      })
+    })
+    .then(r => r.json())
+    .then(data => {
+      if(!data.error){
+        this.setState({klass: data.klass, toggleClassForm: false})
+      } else {
+        console.log(data.error)
+      }
     })
   }
 
@@ -89,10 +124,12 @@ class Class extends React.Component {
 
 
   render() {
-    console.log(this.state)
+    console.log(this.props)
     return (
       <span>
         <Introduction klass={this.state.klass}/>
+        <button onClick={this.toggleClassForm}>{this.state.toggleClassForm ? "Hide Edit Class" : "Edit Class"}</button>
+        {this.state.toggleClassForm ? <ClassForm toggleClassForm={this.state.toggleClassForm} klass={this.state.klass} renderClassEdit={this.renderClassEdit} history={this.props.history} /> : null }
         <Table klass={this.state.klass}/>
         <Features klass={this.state.klass} renderClassFeature={this.renderClassFeature} />
 
