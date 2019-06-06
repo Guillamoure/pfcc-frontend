@@ -28,7 +28,11 @@ class Feature extends React.Component {
     })
     .then(r => r.json())
     .then(data => {
-      this.setState({toggleFeatureForm: false}, () => this.props.renderClassFeature(data.klass_feature))
+      if (!data.error){
+        this.setState({toggleFeatureForm: false}, () => this.props.renderClassFeature(data.klass_feature))
+      } else {
+        console.log(data.error)
+      }
     })
   }
 

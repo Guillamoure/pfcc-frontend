@@ -18,7 +18,13 @@ class Login extends React.Component {
       body: JSON.stringify(this.state)
     })
     .then(r => r.json())
-    .then(console.log)
+    .then(data => {
+      if(!data.error){
+        console.log("Welcome", data.user.username)
+      } else {
+        console.log(data.error)
+      }
+    })
   }
 
   renderChange = (e) => {

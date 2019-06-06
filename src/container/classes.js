@@ -1,5 +1,5 @@
 import React from 'react'
-import NewClass from '../components/new_class'
+import ClassForm from '../components/class_form'
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import _ from 'lodash'
 
@@ -12,7 +12,9 @@ class Home extends React.Component {
   componentDidMount() {
     fetch('http://localhost:3000/api/v1/klasses')
     .then(r => r.json())
-    .then(data => this.setState({classes: data}))
+    .then(data => {
+      this.setState({classes: data})
+    })
   }
 
   renderClasses = () => {
@@ -33,7 +35,7 @@ class Home extends React.Component {
         {this.state.classes[0] ? this.renderClasses() : null}
         < br />
         < br />
-        <Link to='/classes-new' >Hit Me, Boi</Link>
+        <Link to='/classes-form' >Hit Me, Boi</Link>
       </div>
     )
   }
