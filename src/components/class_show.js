@@ -27,7 +27,11 @@ class Class extends React.Component {
   }
 
   renderFeatures = () => {
-    return this.state.klass.klass_features.map(feature => <ul><h4>{feature.name}</h4><li>A {this.state.klass.name} learns this at <strong>level {feature.level_learned}</strong></li><li>Description: {feature.description}</li></ul>)
+    const sortedFeatures = this.state.klass.klass_features.sort((a, b) => {
+      return a.level_learned - b.level_learned
+    })
+    
+    return sortedFeatures.map(feature => <ul><h4>{feature.name}</h4><li>A {this.state.klass.name} learns this at <strong>level {feature.level_learned}</strong></li><li>Description: {feature.description}</li></ul>)
   }
 
 
@@ -152,7 +156,7 @@ class Class extends React.Component {
         <h3>{this.state.klass.name}</h3>
         <p>{this.state.klass.description}</p>
         <p><strong>Hit Die</strong>: d{this.state.klass.hit_die}</p>
-        <p><strong>Base Attack Bonus Progression</strong>: {this.renderBAB()}</p>
+        <p><strong>Skill Ranks per Level</strong>: {this.state.klass.skill_ranks} + Int modifier</p>
         {this.renderClassTable()}
         {this.state.klass.klass_features && this.renderFeatures()}
         <button onClick={this.changeAddFeatureToggle}>{this.state.toggleCreateFeature ? "Hide new Feature Form" : "Add a new Class Feature"}</button>
