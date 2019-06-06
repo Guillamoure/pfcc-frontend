@@ -10,7 +10,7 @@ class Features extends React.Component {
       return a.level_learned - b.level_learned
     })
     return sortedFeatures.map(feature => {
-      return <Feature key={feature.id} feature={feature} klass_name={this.props.klass.name} />
+      return <Feature key={feature.id} feature={feature} klass_name={this.props.klass.name} renderClassFeature={this.props.renderClassFeature}/>
     })
   }
 

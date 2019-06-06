@@ -10,7 +10,7 @@ class Class extends React.Component {
 
   state ={
     klass : {},
-    toggleCreateFeature: false
+    toggleFeatureForm: false
   }
 
   renderURL = () => {
@@ -35,11 +35,12 @@ class Class extends React.Component {
 
 
   changeAddFeatureToggle = () => {
-    this.setState({toggleCreateFeature: !this.state.toggleCreateFeature})
+    this.setState({toggleFeatureForm: !this.state.toggleFeatureForm})
   }
 
   renderSubmit = (e, feature) => {
     e.preventDefault()
+
     fetch('http://localhost:3000/api/v1/klass_features', {
       method: 'POST',
       headers: {
@@ -53,16 +54,21 @@ class Class extends React.Component {
     })
     .then(r => r.json())
     .then(data => {
-      this.setState({
-        klass: {
-          ...this.state.klass,
-          klass_features: [
-            ...this.state.klass.klass_features,
-            data.klass_feature
-          ]
-        },
-        toggleCreateFeature: false
-      })
+      this.renderClassFeature()
+    })
+  }
+
+  renderClassFeature = (newData) => {
+    const remappedFeatures = this.state.klass.klass_features.map(feature => {
+      return feature.id === newData.id ? newData : feature
+    })
+    
+    return this.setState({
+      klass: {
+        ...this.state.klass,
+        klass_features: remappedFeatures
+      },
+      toggleFeatureForm: false
     })
   }
 
@@ -78,13 +84,13 @@ class Class extends React.Component {
       <span>
         <Introduction klass={this.state.klass}/>
         <Table klass={this.state.klass}/>
-        <Features klass={this.state.klass}/>
+        <Features klass={this.state.klass} renderClassFeature={this.renderClassFeature} />
 
-        <button onClick={this.changeAddFeatureToggle}>{this.state.toggleCreateFeature ? "Hide new Feature Form" : "Add a new Class Feature"}</button>
+        <button onClick={this.changeAddFeatureToggle}>{this.state.toggleFeatureForm ? "Hide new Feature Form" : "Add a new Class Feature"}</button>
         < br />
         < br />
 
-        <FeatureForm toggleCreateFeature={this.state.toggleCreateFeature} klass={this.state.klass} renderSubmit={this.renderSubmit}/>
+        <FeatureForm toggleFeatureForm={this.state.toggleFeatureForm} renderSubmit={this.renderSubmit}/>
       </span>
     )
   }

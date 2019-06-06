@@ -1,12 +1,38 @@
 import React from 'react'
 import _ from 'lodash'
-// import EditFeature from './edit_feature'
+import FeatureForm from './feature_form'
 
 class Feature extends React.Component {
 
+  state ={
+    toggleFeatureForm: false
+  }
+
   renderClick = (option) => {
-    console.log(option)
-    console.log("the id for this feature is", this.props.feature.id)
+    this.setState({toggleFeatureForm: !this.state.toggleFeatureForm})
+  }
+
+  renderSubmit = (e, feature) => {
+    e.preventDefault();
+    fetch(`http://localhost:3000/api/v1/klass_features/${this.props.feature.id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        klass_feature_id: this.props.feature.id,
+        features: feature
+      })
+    })
+    .then(r => r.json())
+    .then(data => {
+      this.setState({toggleFeatureForm: false}, () => this.props.renderClassFeature(data.klass_feature))
+    })
+  }
+
+  renderForm = () => {
+    return <FeatureForm toggleFeatureForm={this.state.toggleFeatureForm} feature={this.props.feature} renderSubmit={this.renderSubmit}/>
   }
 
   render () {
@@ -14,12 +40,12 @@ class Feature extends React.Component {
       <span>
         <ul>
           <span><strong>{this.props.feature.name}</strong></span>
-          <button onClick={() => this.renderClick("edit")}>Edit</button>
-          <button onClick={() => this.renderClick("delete")}>Delete</button>
+          <button onClick={this.renderClick}>Edit</button>
           <li>A {this.props.klass_name} learns this at <strong>level {this.props.feature.level_learned}</strong></li>
           <li>Description: {this.props.feature.description}</li>
           < br />
         </ul>
+        {this.state.toggleFeatureForm ? this.renderForm() : null}
       </span>
     )
   }
