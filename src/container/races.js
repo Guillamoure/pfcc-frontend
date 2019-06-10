@@ -1,24 +1,24 @@
 import React from 'react'
-import ClassForm from '../components/class_form'
+import RaceForm from '../components/race_form'
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import _ from 'lodash'
 
-class Classes extends React.Component {
+class Races extends React.Component {
 
   state = {
-    classes: {}
+    races: {}
   }
 
   componentDidMount() {
-    fetch('http://localhost:3000/api/v1/klasses')
+    fetch('http://localhost:3000/api/v1/races')
     .then(r => r.json())
     .then(data => {
-      this.setState({classes: data})
+      this.setState({races: data})
     })
   }
 
-  renderClasses = () => {
-    return this.state.classes.map(klass => <Link to={`/classes/${klass.name}`} >{klass.name}< br /></Link>)
+  renderRaces = () => {
+    return this.state.races.map(race => <Link to={`/races/${race.name}`} >{race.name}< br /></Link>)
   }
 
 
@@ -31,16 +31,16 @@ class Classes extends React.Component {
     console.log(this.props)
     return (
       <div className='background'>
-        Dees the Classes:
+        Dees the Playable Races:
         < br />
-        {this.state.classes[0] ? this.renderClasses() : null}
+        {this.state.races[0] ? this.renderRaces() : null}
         < br />
         < br />
-        <Link to='/classes-form' >Hit Me, Boi</Link>
+        <Link to='/races-form' >Create a Fantasy Race!</Link>
       </div>
     )
   }
 
 }
 
-export default Classes
+export default Races

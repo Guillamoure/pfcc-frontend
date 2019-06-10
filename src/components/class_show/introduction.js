@@ -8,7 +8,7 @@ class Introduction extends React.Component {
 
       let desc = this.props.klass.description
       desc = desc.split("\n\n")
-      return desc.map(para => <p>{para}</p>)
+      return desc.map(para => <p key={_.random(1, 2000000)}>{para}</p>)
     }
   }
 

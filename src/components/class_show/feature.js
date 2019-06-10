@@ -1,6 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
 import FeatureForm from './feature_form'
+import { connect } from 'react-redux'
 
 class Feature extends React.Component {
 
@@ -72,7 +73,7 @@ class Feature extends React.Component {
 
       let desc = this.props.feature.description
       desc = desc.split("\n\n")
-      return desc.map(para => <p>{para}</p>)
+      return desc.map(para => <p key={_.random(1, 2000000)}>{para}</p>)
     }
   }
 
@@ -82,19 +83,24 @@ class Feature extends React.Component {
         <ul>
           <span><strong>{this.props.feature.name}</strong></span>
           {this.state.deleteFeatureButton ? <span><br/>Are you sure about that?<br/> <button onClick={(e) => this.deleteFeatureConfirm(e, "no")}>No</button><button onClick={(e) => this.deleteFeatureConfirm(e, "yes")}>Yes</button><br/><br/></span> : null}
-          {this.state.deleteFeatureButton? null : <button onClick={this.renderClick}>Edit</button>}
+          {!this.state.deleteFeatureButton && this.props.admin ? <button onClick={this.renderClick}>Edit</button> : null}
           <li>A {this.props.klass_name} learns this at <strong>level {this.props.feature.level_learned}</strong></li>
           <li>Description: {this.renderDescription()}</li>
-          < br />
         </ul>
         {this.state.toggleFeatureForm ? this.renderForm() : null}
         < br />
       </span>
     )
   }
-
-
-
 }
 
-export default Feature
+
+
+const mapStatetoProps = (state) => {
+  return {
+    currentUser: state.current,
+    admin: state.admin
+  }
+}
+
+export default connect(mapStatetoProps)(Feature)
