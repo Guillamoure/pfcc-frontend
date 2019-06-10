@@ -1,6 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
 import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
 
 
 import Introduction from '../components/class_show/introduction'
@@ -29,10 +30,6 @@ class Class extends React.Component {
     .then(r => r.json())
     .then(data => this.setState({klass: data}))
   }
-
-
-
-
 
 
 
@@ -95,13 +92,14 @@ class Class extends React.Component {
 
   renderClassFeature = (newData) => {
     let remappedFeatures
+
     if (Number.isInteger(newData)) {
       remappedFeatures = this.state.klass.klass_features.filter(feature => {
         return feature.id !== newData
       })
-    } else if (!this.state.klass.klass_features.find(el => el.id === newData.klass_feature.id)){
+    } else if (!this.state.klass.klass_features.find(el => el.id === newData.id)){
       remappedFeatures = this.state.klass.klass_features
-      remappedFeatures.push(newData.klass_feature)
+      remappedFeatures.push(newData)
     } else if (typeof newData === 'object'){
       remappedFeatures = this.state.klass.klass_features.map(feature => {
         return feature.id === newData.id ? newData : feature
@@ -118,22 +116,17 @@ class Class extends React.Component {
   }
 
 
-
-
-
-
-
   render() {
-    console.log(this.state.klass)
+    console.log(this.props)
     return (
       <span>
         <Introduction klass={this.state.klass}/>
-        <button onClick={this.toggleClassForm}>{this.state.toggleClassForm ? "Hide Edit Class" : "Edit Class"}</button>
+        {this.props.admin ? <button onClick={this.toggleClassForm}>{this.state.toggleClassForm ? "Hide Edit Class" : "Edit Class"}</button> : null}
         {this.state.toggleClassForm ? <ClassForm toggleClassForm={this.state.toggleClassForm} klass={this.state.klass} renderClassEdit={this.renderClassEdit} history={this.props.history} /> : null }
         <Table klass={this.state.klass}/>
         <Features klass={this.state.klass} renderClassFeature={this.renderClassFeature} />
 
-        <button onClick={this.changeAddFeatureToggle}>{this.state.toggleFeatureForm ? "Hide new Feature Form" : "Add a new Class Feature"}</button>
+        {this.props.admin ? <button onClick={this.changeAddFeatureToggle}>{this.state.toggleFeatureForm ? "Hide new Feature Form" : "Add a new Class Feature"}</button> : null}
         < br />
         < br />
 
@@ -141,8 +134,13 @@ class Class extends React.Component {
       </span>
     )
   }
-
-
 }
 
-export default Class
+const mapStatetoProps = (state) => {
+  return {
+    currentUser: state.current,
+    admin: state.admin
+  }
+}
+
+export default connect(mapStatetoProps)(Class)

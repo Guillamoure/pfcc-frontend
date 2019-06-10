@@ -1,4 +1,6 @@
 import React from 'react'
+import { connect } from 'react-redux'
+
 
 class SignUp extends React.Component {
 
@@ -19,7 +21,11 @@ class SignUp extends React.Component {
     })
     .then(r => r.json())
     .then(data => {
-      console.log(data)
+      debugger
+      this.props.dispatch({type: 'SIGNIN', user: data.user, admin: data.user.admin })
+      localStorage.setItem("token", data.token)
+      this.setState({username: "", password: ""})
+      this.props.history.push("/")
     })
   }
 
@@ -31,6 +37,7 @@ class SignUp extends React.Component {
   render() {
     return (
       <div>
+      Sign Up Form
         <form onSubmit={this.renderSubmit}>
           <label>
             Username:
@@ -48,4 +55,11 @@ class SignUp extends React.Component {
 
 }
 
-export default SignUp
+const mapStatetoProps = (state) => {
+  return {
+    currentUser: state.currentUser,
+    admin: state.admin
+  }
+}
+
+export default connect(mapStatetoProps)(SignUp)

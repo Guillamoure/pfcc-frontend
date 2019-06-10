@@ -38,7 +38,7 @@ class Table extends React.Component {
     let level = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
     return level.map(num => {
       return (
-        <tr>
+        <tr key={_.random(1, 2000000)}>
           <td>{num}</td>
           <td>+{_.floor(num * this.renderBAB())}</td>
           <td>+{this.renderSave(num, this.props.klass.fortitude)}</td>

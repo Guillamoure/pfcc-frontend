@@ -1,4 +1,5 @@
 import React from 'react'
+import { connect } from 'react-redux'
 
 class Login extends React.Component {
 
@@ -6,6 +7,21 @@ class Login extends React.Component {
     username: "",
     password: ""
   }
+
+  // renderSignedIn = () => {
+  //   if (this.props.currentUser){
+  //     render(){
+  //       <Redirect to='/classes'/>
+  //     }
+  //   }
+  // }
+
+  componentDidMount() {
+    const token = localStorage.getItem('token')
+    console.log('token is', token)
+    
+  }
+
 
   renderSubmit = (e) => {
     e.preventDefault()
@@ -21,6 +37,10 @@ class Login extends React.Component {
     .then(data => {
       if(!data.error){
         console.log("Welcome", data.user.username)
+        this.props.dispatch({type: 'SIGNIN', user: data.user, admin: data.user.admin })
+        localStorage.setItem("token", data.token)
+        this.setState({username: "", password: ""})
+        this.props.history.push("/")
       } else {
         console.log(data.error)
       }
@@ -33,8 +53,10 @@ class Login extends React.Component {
   }
 
   render() {
+    console.log(this.props)
     return (
       <div>
+      Login Form
         <form onSubmit={this.renderSubmit}>
           <label>
             Username:
@@ -46,10 +68,17 @@ class Login extends React.Component {
           </label>
           <input type="submit" name="submit" />
         </form>
+        {this.props.currentUser ? <span>Hi {this.props.currentUser.username}!</span> : null}
       </div>
     )
   }
-
 }
 
-export default Login
+const mapStatetoProps = (state) => {
+  return {
+    currentUser: state.currentUser,
+    admin: state.admin
+  }
+}
+
+export default connect(mapStatetoProps)(Login)
