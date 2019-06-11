@@ -8,19 +8,23 @@ class NavBar extends React.Component {
     currentUser : ""
   }
 
-  componentDidMount(){
+  componentDidUpdate(){
     const token = localStorage.getItem("token")
-    fetch("http://localhost:3000/api/v1/auth", {
-      headers: {
-        Authenticate: token
-      }
-    })
-    .then(r => r.json())
-    .then((data) => {
-      if (!data.error) {
-        this.setState({currentUser: data.current_user})
-      }
-    })
+    if (!this.state.currentUser && token){
+      fetch("http://localhost:3000/api/v1/auth", {
+        headers: {
+          Authenticate: token
+        }
+      })
+      .then(r => r.json())
+      .then((data) => {
+        if (!data.error) {
+          this.props.dispatch({type: 'SIGNIN', user: data.current_user, admin: data.current_user.admin })
+          this.setState({currentUser: data.current_user})
+          if(this.props.location.pathname === "/login" || this.props.location.pathname === "/signup"){this.props.history.push("/")}
+        }
+      })
+    }
   }
 
   renderLogOut = () => {
@@ -31,7 +35,7 @@ class NavBar extends React.Component {
   }
 
   render() {
-    console.log("The navbar state", this.state)
+    // console.log("The navbar state", this.state)
     console.log("The navbar props", this.props)
     // if (this.state.currentUser !== ""){
     //   this.setState({currentUser: this.props.currentUser})

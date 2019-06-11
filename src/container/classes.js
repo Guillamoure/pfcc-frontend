@@ -2,6 +2,7 @@ import React from 'react'
 import ClassForm from '../components/class_form'
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import _ from 'lodash'
+import { connect } from 'react-redux'
 
 class Classes extends React.Component {
 
@@ -43,4 +44,12 @@ class Classes extends React.Component {
 
 }
 
-export default Classes
+const mapStateToProps = (state) => {
+  return {
+    currentUser: state.currentUser,
+    admin: state.admin
+  }
+}
+
+
+export default connect(mapStateToProps)(Classes)

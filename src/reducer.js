@@ -4,12 +4,11 @@ const initialState = {
 }
 
 
-function reducer = (state = initialState, action){
+const reducer = (state = initialState, action) => {
   console.log('State Changer is called')
   console.log('current state is', state)
   console.log('the action is', action)
 
-  debugger
   switch(action.type){
     case "SIGNIN":
       return {...state, currentUser: action.user, admin: action.admin};
@@ -21,3 +20,5 @@ function reducer = (state = initialState, action){
 
 
 }
+
+export default reducer;

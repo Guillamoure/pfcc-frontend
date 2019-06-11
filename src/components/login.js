@@ -5,7 +5,8 @@ class Login extends React.Component {
 
   state = {
     username: "",
-    password: ""
+    password: "",
+    error: false
   }
 
   // renderSignedIn = () => {
@@ -16,11 +17,11 @@ class Login extends React.Component {
   //   }
   // }
 
-  componentDidMount() {
-    const token = localStorage.getItem('token')
-    console.log('token is', token)
-    
-  }
+  // componentDidMount() {
+  //   const token = localStorage.getItem('token')
+  //   console.log('token is', token)
+  //
+  // }
 
 
   renderSubmit = (e) => {
@@ -36,13 +37,13 @@ class Login extends React.Component {
     .then(r => r.json())
     .then(data => {
       if(!data.error){
-        console.log("Welcome", data.user.username)
         this.props.dispatch({type: 'SIGNIN', user: data.user, admin: data.user.admin })
         localStorage.setItem("token", data.token)
-        this.setState({username: "", password: ""})
+        this.setState({username: "", password: "", error: false})
         this.props.history.push("/")
       } else {
         console.log(data.error)
+        this.setState({username: "", password: "", error: true})
       }
     })
   }
@@ -53,7 +54,6 @@ class Login extends React.Component {
   }
 
   render() {
-    console.log(this.props)
     return (
       <div>
       Login Form
@@ -69,6 +69,7 @@ class Login extends React.Component {
           <input type="submit" name="submit" />
         </form>
         {this.props.currentUser ? <span>Hi {this.props.currentUser.username}!</span> : null}
+        {this.state.error ? <p><strong>Invalid login. Please try again.</strong></p> : null}
       </div>
     )
   }

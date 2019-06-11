@@ -6,7 +6,8 @@ class SignUp extends React.Component {
 
   state = {
     username: "",
-    password: ""
+    password: "",
+    error: false
   }
 
   renderSubmit = (e) => {
@@ -21,11 +22,16 @@ class SignUp extends React.Component {
     })
     .then(r => r.json())
     .then(data => {
-      debugger
+      if (!data.error){
+
       this.props.dispatch({type: 'SIGNIN', user: data.user, admin: data.user.admin })
       localStorage.setItem("token", data.token)
       this.setState({username: "", password: ""})
       this.props.history.push("/")
+      } else {
+        console.log(data.error)
+        this.setState({username: "", password: "", error: true})
+      }
     })
   }
 
@@ -49,6 +55,7 @@ class SignUp extends React.Component {
           </label>
           <input type="submit" name="submit" />
         </form>
+        {this.state.error ? <p><strong>Invalid login. Please try again.</strong></p> : null}
       </div>
     )
   }
