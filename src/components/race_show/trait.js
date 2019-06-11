@@ -16,21 +16,21 @@ class Trait extends React.Component {
 
   renderSubmit = (e, trait) => {
     e.preventDefault();
-    fetch(`http://localhost:3000/api/v1/race_traits/${this.props.trait.id}`, {
+    fetch(`http://localhost:3000/api/v1/racial_traits/${this.props.trait.id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       },
       body: JSON.stringify({
-        race_trait_id: this.props.trait.id,
+        racial_trait_id: this.props.trait.id,
         traits: trait
       })
     })
     .then(r => r.json())
     .then(data => {
       if (!data.error){
-        this.setState({toggleTraitForm: false}, () => this.props.renderClassTrait(data.race_trait))
+        this.setState({toggleTraitForm: false}, () => this.props.renderRacialTrait(data.racial_trait))
       } else {
         console.log(data.error)
       }
@@ -49,19 +49,19 @@ class Trait extends React.Component {
     e.preventDefault();
     if (answer === "yes") {
 
-      fetch(`http://localhost:3000/api/v1/race_traits/${this.props.trait.id}`, {
+      fetch(`http://localhost:3000/api/v1/racial_traits/${this.props.trait.id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
         body: JSON.stringify({
-          race_trait_id: this.props.trait.id
+          racial_trait_id: this.props.trait.id
         })
       })
       .then(r => r.json())
       .then(id => {
-        this.setState({toggleTraitForm: false, deleteTraitButton: false}, () => this.props.renderClassTrait(id))
+        this.setState({toggleTraitForm: false, deleteTraitButton: false}, () => this.props.renderRacialTrait(id))
       })
     } else if (answer === "no"){
       this.setState({toggleTraitForm: false, deleteTraitButton: false})
@@ -73,23 +73,18 @@ class Trait extends React.Component {
 
       let desc = this.props.trait.description
       desc = desc.split("\n\n")
-      return desc.map(para => <p key={_.random(1, 2000000)}>{para}</p>)
+      return desc.map(para => <span key={_.random(1, 2000000)}>{para}</span>)
     }
   }
 
   render () {
-    console.log("individual trait", this.props)
     return (
       <span className="trait">
-        <ul>
-          <span><strong>{this.props.trait.name}</strong></span>
-          {this.state.deleteTraitButton ? <span><br/>Are you sure about that?<br/> <button onClick={(e) => this.deleteTraitConfirm(e, "no")}>No</button><button onClick={(e) => this.deleteTraitConfirm(e, "yes")}>Yes</button><br/><br/></span> : null}
-          {!this.state.deleteTraitButton && this.props.admin ? <button onClick={this.renderClick}>Edit</button> : null}
-          <li>A {this.props.race_name} learns this at <strong>level {this.props.trait.level_learned}</strong></li>
-          <li>Description: {this.renderDescription()}</li>
-        </ul>
+        <span><strong>{this.props.trait.name}</strong>: {this.renderDescription()}</span>
+        {this.state.deleteTraitButton ? <span><br/>Are you sure about that?<br/> <button onClick={(e) => this.deleteTraitConfirm(e, "no")}>No</button><button onClick={(e) => this.deleteTraitConfirm(e, "yes")}>Yes</button><br/><br/></span> : null}
+        {!this.state.deleteTraitButton && this.props.admin ? <button onClick={this.renderClick}>Edit</button> : null}
         {this.state.toggleTraitForm ? this.renderForm() : null}
-        < br />
+        < br />< br />
       </span>
     )
   }

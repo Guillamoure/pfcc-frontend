@@ -2,6 +2,7 @@ import React from 'react'
 import RaceForm from '../components/race_form'
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import _ from 'lodash'
+import { connect } from 'react-redux'
 
 class Races extends React.Component {
 
@@ -36,11 +37,17 @@ class Races extends React.Component {
         {this.state.races[0] ? this.renderRaces() : null}
         < br />
         < br />
-        <Link to='/races-form' >Create a Fantasy Race!</Link>
+        {this.props.admin ? <Link to='/races-form' >Create a Fantasy Race!</Link> : null}
       </div>
     )
   }
-
 }
 
-export default Races
+const mapStateToProps = (state) => {
+  return {
+    currentUser: state.currentUser,
+    admin: state.admin
+  }
+}
+
+export default connect(mapStateToProps)(Races)

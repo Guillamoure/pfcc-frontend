@@ -1,5 +1,6 @@
 import React from 'react'
-import { Redirect } from 'react-router-dom'
+import { connect } from 'react-redux'
+
 
 class NewRace extends React.Component {
 
@@ -18,7 +19,8 @@ class NewRace extends React.Component {
         name: this.props.race.name,
         description: this.props.race.description,
         size: this.props.race.size,
-        speed: this.props.race.speed
+        speed: this.props.race.speed,
+        abilityScoreModifiers: this.props.race.race_ability_score_modifiers
       })
     }
   }
@@ -49,6 +51,7 @@ class NewRace extends React.Component {
   }
 
   renderFormSubmit = (e) => {
+
     if (this.props.renderRaceEdit){
         this.props.renderRaceEdit(e, this.state)
     } else {
@@ -167,7 +170,7 @@ class NewRace extends React.Component {
       })
       .then(r => r.json())
       .then(data => {
-        this.props.history.push('/classes')
+        this.props.history.push('/races')
         this.setState({deleteRaceButton: false})
     })
     } else if (answer === "no"){
@@ -176,7 +179,8 @@ class NewRace extends React.Component {
   }
 
   render() {
-    console.log(this.state.abilityScoreModifiers)
+    console.log("the state", this.state)
+    console.log("the props", this.props.race)
     return (
       <span>
         {(this.props.toggleRaceForm || this.props.location.pathname === "/races-form") ? this.renderForm() : null}
@@ -186,7 +190,13 @@ class NewRace extends React.Component {
       </span>
     )
   }
-
 }
 
-export default NewRace
+const mapStateToProps = (state) => {
+  return {
+    currentUser: state.currentUser,
+    admin: state.admin
+  }
+}
+
+export default connect(mapStateToProps)(NewRace)

@@ -8,8 +8,8 @@ class Traits extends React.Component {
   renderTraits = () => {
 
     return this.props.race.racial_traits.map(trait => {
-      
-      return <Trait key={trait.id} trait={trait}  race_name={this.props.race.name} renderRaceTrait={this.props.renderRaceTrait}/>
+
+      return <Trait key={trait.id} trait={trait}  race_name={this.props.race.name} renderRacialTrait={this.props.renderRacialTrait}/>
     })
   }
 
