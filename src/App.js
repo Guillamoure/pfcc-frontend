@@ -1,8 +1,8 @@
 import React from 'react';
 import './App.css';
-import logo from './logo.svg';
 
 import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { connect } from 'react-redux'
 
 import Home from './container/home'
 import Classes from './container/classes'
@@ -42,4 +42,11 @@ class App extends React.Component {
   }
 }
 
-export default App;
+const mapStatetoProps = (state) => {
+  return {
+    currentUser: state.currentUser,
+    admin: state.admin
+  }
+}
+
+export default connect(mapStatetoProps)(App);
