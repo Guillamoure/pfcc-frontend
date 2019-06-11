@@ -13,7 +13,6 @@ class Introduction extends React.Component {
   }
 
   renderAbilityScoreModifiers = () => {
-    console.log(this.props.race.race_ability_score_modifiers)
     if(this.props.race.race_ability_score_modifiers){
       let mods = this.props.race.race_ability_score_modifiers
       let modStrings = []
@@ -26,7 +25,6 @@ class Introduction extends React.Component {
   }
 
   render () {
-    console.log("race intro", this.props)
     return (
       <div>
         <h2>{this.props.race.name}</h2>

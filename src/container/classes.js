@@ -37,7 +37,7 @@ class Classes extends React.Component {
         {this.state.classes[0] ? this.renderClasses() : null}
         < br />
         < br />
-        <Link to='/classes-form' >Hit Me, Boi</Link>
+        {this.props.admin ? <Link to='/classes-form' >Create a new Class!</Link> : null}
       </div>
     )
   }

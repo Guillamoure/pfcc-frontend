@@ -58,8 +58,7 @@ class Race extends React.Component {
     .then(r => r.json())
     .then(data => {
       if (!data.error){
-        debugger
-        this.renderRaceTrait(data)
+        this.renderRacialTrait(data)
       } else {
         console.log(data.error)
       }
@@ -68,7 +67,6 @@ class Race extends React.Component {
 
   renderRaceEdit = (e, race_updates) => {
     e.preventDefault()
-
     fetch(`http://localhost:3000/api/v1/races/${this.state.race.id}`, {
       method: 'PATCH',
       headers: {
@@ -90,26 +88,26 @@ class Race extends React.Component {
     })
   }
 
-  renderRaceTrait = (newData) => {
+  renderRacialTrait = (newData) => {
     let remappedTraits
-    debugger
     if (Number.isInteger(newData)) {
-      remappedTraits = this.state.race.race_traits.filter(trait => {
+      remappedTraits = this.state.race.racial_traits.filter(trait => {
         return trait.id !== newData
       })
-    } else if (!this.state.race.race_traits.find(el => el.id === newData.id)){
-      remappedTraits = this.state.race.race_traits
-      remappedTraits.push(newData)
+    } else if (!this.state.race.racial_traits.find(el => el.id === newData.id)){
+      remappedTraits = this.state.race.racial_traits
+      remappedTraits.push(newData.racial_trait)
     } else if (typeof newData === 'object'){
-      remappedTraits = this.state.race.race_traits.map(trait => {
+      remappedTraits = this.state.race.racial_traits.map(trait => {
         return trait.id === newData.id ? newData : trait
       })
     }
-
+    // console.log("this is the remapped traits", remappedTraits)
+    // debugger
     return this.setState({
       race: {
         ...this.state.race,
-        race_traits: remappedTraits
+        racial_traits: remappedTraits
       },
       toggleTraitForm: false
     })
@@ -117,13 +115,14 @@ class Race extends React.Component {
 
 
   render() {
-    console.log("Race Show page", this.state)
+    console.log("This is the race state", this.state.race.race_ability_score_modifiers)
     return (
       <span>
         <Introduction race={this.state.race}/>
         {this.props.admin ? <button onClick={this.toggleRaceForm}>{this.state.toggleRaceForm ? "Hide Edit Race" : "Edit Race"}</button> : null}
+        < br />
         {this.state.toggleRaceForm ? <RaceForm toggleRaceForm={this.state.toggleRaceForm} race={this.state.race} renderRaceEdit={this.renderRaceEdit} history={this.props.history} /> : null }
-        <Traits race={this.state.race} renderRaceTrait={this.renderRaceTrait} />
+        <Traits race={this.state.race} renderRacialTrait={this.renderRacialTrait} />
 
         {this.props.admin ? <button onClick={this.changeAddTraitToggle}>{this.state.toggleTraitForm ? "Hide new Trait Form" : "Add a new Race Feature"}</button> : null}
         < br />
@@ -137,7 +136,7 @@ class Race extends React.Component {
 
 const mapStatetoProps = (state) => {
   return {
-    currentUser: state.current,
+    currentUser: state.currentUser,
     admin: state.admin
   }
 }
