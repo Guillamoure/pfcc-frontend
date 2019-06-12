@@ -10,6 +10,7 @@ import Races from './container/races'
 import Class from './container/class_show'
 import NavBar from './container/navbar'
 import Race from './container/race_show'
+import CharacterCreation from './container/character_creation'
 
 import Login from './components/login'
 import SignUp from './components/signup'
@@ -36,6 +37,7 @@ class App extends React.Component {
             <Route exact path="/races" component={Races} />
             <Route exact path="/races-form" component={RaceForm} />
             <Route exact path="/races/:slug" component={Race} />
+            <Route exact path="/creation" component={CharacterCreation} />
           </React.Fragment>
         </Router>
     );
