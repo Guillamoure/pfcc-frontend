@@ -17,7 +17,13 @@ class Home extends React.Component {
     return (
       <div className='background'>
         {this.renderSignUp()}
-        Yo-Bwoi
+        {`Welcome ${this.props.currentUser.username}`}
+        <br/>
+        <br/>
+        <button onClick={() => this.props.history.push("/creation")}>Create Character</button>
+        <br/>
+        <br/>
+        {/*<button>View Your Characters</button>*/}
       </div>
     )
   }
