@@ -11,7 +11,8 @@ class CharacterCreation extends React.Component{
 
   state = {
     activeField: "",
-    class: 0
+    class: 0,
+    race: 0
   }
 
   renderButtonClick = (field) => {
@@ -37,10 +38,13 @@ class CharacterCreation extends React.Component{
         {this.state.activeField === "abilityScores" ? <AbilityForm /> : null}
         <br /><br />
         <button onClick={() => this.renderButtonClick("race")}>{this.state.activeField === "race" ? "Hide Race Form": "Choose Your Fantasy Race"}</button>
+        {this.state.race && this.state.activeField !== "race" ? <span><strong>Race Picked!</strong></span> : null}
+
         <br/>
-        {this.state.activeField === "race" ? <Race /> : null}
+        {this.state.activeField === "race" ? <Race renderChange={this.renderChange} chosenRaceId={this.state.race}/> : null}
         <br /><br />
         <button onClick={() => this.renderButtonClick("class")}>{this.state.activeField === "class" ? "Hide Class Form": "Choose Your Class"}</button>
+        {this.state.class && this.state.activeField !== "class" ? <span><strong>Class Picked!</strong></span> : null}
         <br/>
         {this.state.activeField === "class" ? <Class renderChange={this.renderChange} chosenClassId={this.state.class}/> : null}
         <br /><br /></
