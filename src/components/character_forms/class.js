@@ -48,6 +48,10 @@ class Class extends React.Component{
     )
   }
 
+  // <label>
+  //   Level:
+  //
+  // </label>
 }
 
 const mapStateToProps = (state) => {
