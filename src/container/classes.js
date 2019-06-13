@@ -1,7 +1,6 @@
 import React from 'react'
-import ClassForm from '../components/class_form'
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
-import _ from 'lodash'
+import { Link } from 'react-router-dom'
+// import _ from 'lodash'
 import { connect } from 'react-redux'
 
 class Classes extends React.Component {
@@ -19,7 +18,7 @@ class Classes extends React.Component {
   }
 
   renderClasses = () => {
-    return this.state.classes.map(klass => <Link to={`/classes/${klass.name}`} >{klass.name}< br /></Link>)
+    return this.state.classes.map(klass => <Link to={`/classes/${klass.name}`} key={klass.id} >{klass.name}< br /></Link>)
   }
 
 
@@ -29,7 +28,6 @@ class Classes extends React.Component {
 
   // <button onClick={this.renderNewClass}>Create New Class</button>
   render() {
-    console.log(this.props)
     return (
       <div className='background'>
         Dees the Classes:

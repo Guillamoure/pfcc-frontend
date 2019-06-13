@@ -1,6 +1,6 @@
 import React from 'react'
-import _ from 'lodash'
-import { Link } from 'react-router-dom'
+// import _ from 'lodash'
+// import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 

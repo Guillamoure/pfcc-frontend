@@ -1,6 +1,6 @@
 import React from 'react'
-import _ from 'lodash'
-import { withRouter, Link } from 'react-router-dom'
+// import _ from 'lodash'
+import { withRouter} from 'react-router-dom'
 import { connect } from 'react-redux'
 
 class Details extends React.Component{

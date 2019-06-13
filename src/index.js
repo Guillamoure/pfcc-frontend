@@ -12,13 +12,6 @@ import reducer from './reducer'
 
 
 
-const initialState = {
-  currentUser: null,
-  admin: false
-}
-
-
-
 const store = createStore(reducer)
 
 ReactDOM.render(

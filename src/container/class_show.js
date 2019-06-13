@@ -1,6 +1,6 @@
 import React from 'react'
-import _ from 'lodash'
-import { Link } from 'react-router-dom'
+// import _ from 'lodash'
+// import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 
@@ -117,7 +117,6 @@ class Class extends React.Component {
 
 
   render() {
-    console.log(this.props)
     return (
       <span>
         <Introduction klass={this.state.klass}/>

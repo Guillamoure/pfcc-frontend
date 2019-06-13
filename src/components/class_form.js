@@ -1,5 +1,5 @@
 import React from 'react'
-import { Redirect } from 'react-router-dom'
+// import { Redirect } from 'react-router-dom'
 
 class NewClass extends React.Component {
 
@@ -21,9 +21,9 @@ class NewClass extends React.Component {
         description: this.props.klass.description,
         hit_die: this.props.klass.hit_die,
         skill_ranks: this.props.klass.skill_ranks,
-        fortitude: this.props.klass.fortitude,
-        reflex: this.props.klass.reflex,
-        will: this.props.klass.will
+        fortitude: this.props.klass.fortitude.toString(),
+        reflex: this.props.klass.reflex.toString(),
+        will: this.props.klass.will.toString()
       })
     }
   }
@@ -100,24 +100,24 @@ class NewClass extends React.Component {
       Fortitude
       <select name="fortitude" value={this.state.fortitude} onChange={this.renderChange}>
       <option value= "" >Select One</option>
-      <option value= ".5" >Good</option>
-      <option value= ".34" >Poor</option>
+      <option value= "0.5" >Good</option>
+      <option value= "0.34" >Poor</option>
       </select>
       </label>
       <label>
       Reflex
       <select name="reflex" value={this.state.reflex} onChange={this.renderChange}>
       <option value= "" >Select One</option>
-      <option value= ".5" >Good</option>
-      <option value= ".34" >Poor</option>
+      <option value= "0.5" >Good</option>
+      <option value= "0.34" >Poor</option>
       </select>
       </label>
       <label>
       Will
       <select name="will" value={this.state.will} onChange={this.renderChange}>
       <option value= "" >Select One</option>
-      <option value= ".5" >Good</option>
-      <option value= ".34" >Poor</option>
+      <option value= "0.5" >Good</option>
+      <option value= "0.34" >Poor</option>
       </select>
       </label>
       </label>
@@ -156,6 +156,7 @@ class NewClass extends React.Component {
   }
 
   render() {
+    console.log(this.state)
     return (
       <span>
         {(this.props.toggleClassForm || this.props.location.pathname === "/classes-form") ? this.renderForm() : null}

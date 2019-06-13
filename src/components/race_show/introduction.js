@@ -16,7 +16,7 @@ class Introduction extends React.Component {
     if(this.props.race.race_ability_score_modifiers){
       let mods = this.props.race.race_ability_score_modifiers
       let modStrings = []
-      mods.map(mod => {
+      mods.forEach(mod => {
         let bonus = mod.bonus < 0 ? mod.bonus : `+${mod.bonus}`
         modStrings.push(`${bonus} ${mod.ability_score}`)
       })

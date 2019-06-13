@@ -1,7 +1,6 @@
 import React from 'react'
-import RaceForm from '../components/race_form'
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
-import _ from 'lodash'
+import { Link } from 'react-router-dom'
+// import _ from 'lodash'
 import { connect } from 'react-redux'
 
 class Races extends React.Component {
@@ -19,7 +18,7 @@ class Races extends React.Component {
   }
 
   renderRaces = () => {
-    return this.state.races.map(race => <Link to={`/races/${race.name}`} >{race.name}< br /></Link>)
+    return this.state.races.map(race => <Link to={`/races/${race.name}`} key={race.id} >{race.name}< br /></Link>)
   }
 
 
@@ -29,7 +28,6 @@ class Races extends React.Component {
 
   // <button onClick={this.renderNewClass}>Create New Class</button>
   render() {
-    console.log(this.props)
     return (
       <div className='background'>
         Dees the Playable Races:
