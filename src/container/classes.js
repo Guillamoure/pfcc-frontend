@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 // import _ from 'lodash'
 import { connect } from 'react-redux'
 
@@ -18,7 +18,19 @@ class Classes extends React.Component {
   }
 
   renderClasses = () => {
-    return this.state.classes.map(klass => <Link to={`/classes/${klass.name}`} key={klass.id} >{klass.name}< br /></Link>)
+    const sortedClasses = this.state.classes.sort((a,b) => a.id - b.id)
+    return sortedClasses.map(klass => {return (
+      <div className='card' onClick={() => this.props.history.push(`/classes/${klass.name}`)} key={klass.id} >
+        <div className='fill'></div>
+        {console.log(klass.img_url)}
+        <span className='card-content'>
+        {klass.name}
+        </span>
+        <div className="fade"></div>
+        <img className='card-img' src={klass.img_url}>
+        </img>
+      </div>
+    )})
   }
 
 
@@ -29,13 +41,11 @@ class Classes extends React.Component {
   // <button onClick={this.renderNewClass}>Create New Class</button>
   render() {
     return (
-      <div className='background'>
-        Dees the Classes:
-        < br />
-        {this.state.classes[0] ? this.renderClasses() : null}
-        < br />
-        < br />
-        {this.props.admin ? <Link to='/classes-form' >Create a new Class!</Link> : null}
+      <div>
+        <div className='container'>
+          {this.state.classes[0] ? this.renderClasses() : null}
+          {this.props.admin ? <div className='card' onClick={() => this.props.history.push('/classes-form')}><span className='card-content'>Create a new Class!</span></div> : null}
+        </div>
       </div>
     )
   }
@@ -50,4 +60,4 @@ const mapStateToProps = (state) => {
 }
 
 
-export default connect(mapStateToProps)(Classes)
+export default withRouter(connect(mapStateToProps)(Classes))

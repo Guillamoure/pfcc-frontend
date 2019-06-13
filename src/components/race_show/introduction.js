@@ -27,10 +27,10 @@ class Introduction extends React.Component {
   render () {
     return (
       <div>
-        <h2>{this.props.race.name}</h2>
+        <h2>{this.props.race ? this.props.race.name : null}</h2>
         {this.renderDescription()}
-        <p><strong>Size</strong>: {this.props.race.size}</p>
-        <p><strong>Speed</strong>: {this.props.race.speed} ft</p>
+        <p><strong>Size</strong>: {this.props.race ? this.props.race.size : null}</p>
+        <p><strong>Speed</strong>: {this.props.race ? this.props.race.speed : null} ft</p>
         <p><strong>Ability Score Modifiers</strong>: {this.renderAbilityScoreModifiers()}</p>
       </div>
     )

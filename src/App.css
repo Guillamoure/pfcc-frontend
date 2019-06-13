@@ -1,46 +1,75 @@
-.App {
-  text-align: center;
-}
-
 .background {
-
   background-color: #CFB997;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 60s linear;
-  height: 40vmin;
-  pointer-events: none;
+.container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr)
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.card{
+    position: relative;
+    background-color: #FDFFFC;
+    width: 300px;
+    height: 300px;
+    /* padding: 10px 20px; */
+    margin: 10px;
+    overflow: hidden;
+    /* border: 1px solid #011627; */
+    border-radius: 10px;
+    box-shadow: 0 3px 5px 0 #777;
 }
 
-.App-link {
-  color: #61dafb;
+.card-content{
+    position: absolute;
+    justify-content: inherit;
+    /* padding: 50%; */
+    width: 100%;
+    height: 100%;
+    top: 50%;
+    font-family: 'Roboto Slab', serif;
+    font-size: 2em;
+    /* left: 0; */
+    text-align: center;
+    /* height: 51%; */
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    color: #fff;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.card:hover .card-content{
+  color: #000;
+  /* font-size: .5em; */
+  text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
 }
 
-.desc-box {
+.card:hover {
+  background-color: #000;
 
-  resize: both;
-  overflow: auto;
-  vertical-align: top;
-  width: 35em;
+}
+
+.fade:hover {
+  position: inherit;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+}
+/* .fill:hover{
+  position: inherit;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(255, 0, 0, 0.4);
+
+  z-index: 21322;
+} */
+.card-img{
+    /* position: inherit; */
+    width: 100%;
+    overflow: hidden;
+    object-fit: cover;
+}
+
+.card-img img{
+    height: 100%;
+    width: 100%;
+    margin-bottom: 1%;
 }

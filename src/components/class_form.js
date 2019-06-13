@@ -21,9 +21,9 @@ class NewClass extends React.Component {
         description: this.props.klass.description,
         hit_die: this.props.klass.hit_die,
         skill_ranks: this.props.klass.skill_ranks,
-        fortitude: this.props.klass.fortitude.toString(),
-        reflex: this.props.klass.reflex.toString(),
-        will: this.props.klass.will.toString()
+        fortitude: [this.props.klass.fortitude ? this.props.klass.fortitude.toString() : this.props.klass.fortitude],
+        reflex: [this.props.klass.reflex ? this.props.klass.reflex.toString() : this.props.klass.reflex],
+        will: [this.props.klass.will ? this.props.klass.will.toString() : this.props.klass.will]
       })
     }
   }
