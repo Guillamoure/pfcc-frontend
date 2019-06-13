@@ -21,10 +21,14 @@ class Classes extends React.Component {
     const sortedClasses = this.state.classes.sort((a,b) => a.id - b.id)
     return sortedClasses.map(klass => {return (
       <div className='card' onClick={() => this.props.history.push(`/classes/${klass.name}`)} key={klass.id} >
-        <span className='card-img'></span>
+        <div className='fill'></div>
+        {console.log(klass.img_url)}
         <span className='card-content'>
         {klass.name}
         </span>
+        <div className="fade"></div>
+        <img className='card-img' src={klass.img_url}>
+        </img>
       </div>
     )})
   }
@@ -38,11 +42,9 @@ class Classes extends React.Component {
   render() {
     return (
       <div>
-        Dees the Classes:
-        < br />
         <div className='container'>
           {this.state.classes[0] ? this.renderClasses() : null}
-          {this.props.admin ? <div onClick={() => this.props.history.push('/classes-form')}>Create a new Class!</div> : null}
+          {this.props.admin ? <div className='card' onClick={() => this.props.history.push('/classes-form')}><span className='card-content'>Create a new Class!</span></div> : null}
         </div>
       </div>
     )
