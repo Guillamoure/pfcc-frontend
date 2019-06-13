@@ -13,7 +13,7 @@ class Characters extends React.Component {
         {this.props.characters.map(character => {
           return (
             <span>
-              <p><Link to={`/characters/${character.id}`} >{character.name}</Link></p>
+              <p><Link to={`/characters/${character.id}`} key={character.id} >{character.name}</Link></p>
               <p>{character.race.name}</p>
               {character.klasses.map(klass => <p>{klass.name}</p>)}
             </span>
