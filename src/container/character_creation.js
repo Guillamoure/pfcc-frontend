@@ -1,5 +1,5 @@
 import React from 'react'
-import _ from 'lodash'
+// import _ from 'lodash'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 
@@ -12,7 +12,7 @@ class CharacterCreation extends React.Component{
 
   state = {
     activeField: "",
-    class: 0,
+    classes: [{classId: 0, level: 1}],
     race: 0,
     strength: 0,
     dexterity: 0,
@@ -43,9 +43,43 @@ class CharacterCreation extends React.Component{
   }
 
   renderSubmit = () => {
-    if (this.state.name && this.state.strength && this.state.dexterity && this.state.constitution && this.state.intelligence && this.state.wisdom && this.state.charisma && this.state.class && this.state.race) {
+    if (this.state.name && this.state.strength && this.state.dexterity && this.state.constitution && this.state.intelligence && this.state.wisdom && this.state.charisma && this.validClasses() && this.state.race) {
       return <button onClick={this.createCharacter}>Create Character!</button>
     }
+  }
+
+  renderDynamicChanges = (e) => {
+    if (["classId", "level"].includes(e.target.className)){
+      let classes = [...this.state.classes]
+      classes[e.target.dataset.id][e.target.className] = e.target.value
+      this.setState({ classes })
+    }
+  }
+
+  addClassField = (e, change) => {
+    e.preventDefault()
+    if (change === "plus") {
+
+      this.setState( { classes: [...this.state.classes, {classId: 0, level: 1} ] } )
+    } else if (change === "minus") {
+      let removedClasses = [...this.state.classes]
+      removedClasses.pop()
+      this.setState({classes: removedClasses})
+    }
+  }
+
+  validClasses = () => {
+    let valid = true
+    this.state.classes.forEach(klass => {
+      if (klass.level > 20 || klass.level < 1){
+        valid = false
+      }
+      if (klass.classId === 0){
+        valid = false
+      }
+    })
+
+    return valid
   }
 
   createCharacter = () => {
@@ -76,7 +110,7 @@ class CharacterCreation extends React.Component{
       },
       body: JSON.stringify({
         character_id: characterId,
-        klass_id: this.state.class
+        classes: this.state.classes
       })
     })
     .then(res => res.json())
@@ -106,9 +140,9 @@ class CharacterCreation extends React.Component{
         {this.state.activeField === "race" ? <Race renderChange={this.renderChange} chosenRaceId={this.state.race}/> : null}
         <br /><br />
         <button onClick={() => this.renderButtonClick("class")}>{this.state.activeField === "class" ? "Hide Class Form": "Choose Your Class"}</button>
-        {this.state.class && this.state.activeField !== "class" ? <span><strong>Class Picked!</strong></span> : null}
+        {this.validClasses() && this.state.activeField !== "class" ? <span><strong>Class Picked!</strong></span> : null}
         <br/>
-        {this.state.activeField === "class" ? <Class renderChange={this.renderChange} chosenClassId={this.state.class}/> : null}
+        {this.state.activeField === "class" ? <Class renderDynamicChanges={this.renderDynamicChanges} addClassField={this.addClassField} classes={this.state.classes}/> : null}
         <br /><br />
         {this.renderSubmit()}
       </span>

@@ -13,13 +13,16 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
-    fetch('http://localhost:3000/api/v1/characters', {
-      headers: {
-        User: this.props.currentUser.id
+    if (this.props.currentUser){
+
+        fetch('http://localhost:3000/api/v1/characters', {
+          headers: {
+            User: this.props.currentUser.id
+          }
+        })
+        .then(r => r.json())
+        .then(data => this.setState({characters: data}))
       }
-    })
-    .then(r => r.json())
-    .then(data => this.setState({characters: data}))
   }
 
   renderSignUp = () => {
@@ -29,7 +32,6 @@ class Home extends React.Component {
   }
 
   render() {
-    console.log(this.state.characters)
     return (
       <span className='background'>
         {this.renderSignUp()}
