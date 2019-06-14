@@ -17,25 +17,33 @@ class Races extends React.Component {
     })
   }
 
+  // renderRaces = () => {
+  //   return this.state.races.map(race => <Link to={`/races/${race.name}`} key={race.id} >{race.name}< br /></Link>)
+  // }
+
   renderRaces = () => {
-    return this.state.races.map(race => <Link to={`/races/${race.name}`} key={race.id} >{race.name}< br /></Link>)
+    const sortedRaces = this.state.races.sort((a,b) => a.id - b.id)
+    return sortedRaces.map(race => {return (
+      <div className='card' onClick={() => this.props.history.push(`/races/${race.name}`)} key={race.id} >
+        <div className='fill'></div>
+        {console.log(race.img_url)}
+        <span className='card-content'>
+        {race.name}
+        </span>
+        <div className="fade"></div>
+        <img className='card-img' src={race.img_url}>
+        </img>
+      </div>
+    )})
   }
 
-
-  renderNewClass = () => {
-    console.log("clicked")
-  }
 
   // <button onClick={this.renderNewClass}>Create New Class</button>
   render() {
     return (
-      <div className='background'>
-        Dees the Playable Races:
-        < br />
+      <div className='container-4'>
         {this.state.races[0] ? this.renderRaces() : null}
-        < br />
-        < br />
-        {this.props.admin ? <Link to='/races-form' >Create a Fantasy Race!</Link> : null}
+        {this.props.admin ? <div className='card' onClick={() => this.props.history.push('/races-form')}><span className='card-content'>Create a Fantasy Race!</span></div> : null}
       </div>
     )
   }

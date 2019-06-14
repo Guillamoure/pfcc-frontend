@@ -21,7 +21,9 @@ class CharacterCreation extends React.Component{
     wisdom: 0,
     charisma: 0,
     name: "",
-    description: ""
+    description: "",
+    anyBonus: "",
+    doesRacehaveAnyBonus: false
   }
 
   componentDidMount() {
@@ -43,7 +45,7 @@ class CharacterCreation extends React.Component{
   }
 
   renderSubmit = () => {
-    if (this.state.name && this.state.strength && this.state.dexterity && this.state.constitution && this.state.intelligence && this.state.wisdom && this.state.charisma && this.validClasses() && this.state.race) {
+    if (this.state.name && this.state.strength && this.state.dexterity && this.state.constitution && this.state.intelligence && this.state.wisdom && this.state.charisma && this.validClasses() && this.state.race && (this.state.doesRacehaveAnyBonus ? this.state.anyBonus : true)) {
       return <button onClick={this.createCharacter}>Create Character!</button>
     }
   }
@@ -121,6 +123,10 @@ class CharacterCreation extends React.Component{
     })
   }
 
+  renderdoesHaveAnyBonus = () => {
+    this.setState({doesRacehaveAnyBonus: true})
+  }
+
 
 
   render () {
@@ -134,10 +140,10 @@ class CharacterCreation extends React.Component{
         {this.state.activeField === "abilityScores" ? <AbilityForm  renderChange={this.renderChange} strength={this.state.strength}  dexterity={this.state.dexterity} constitution={this.state.constitution} intelligence={this.state.intelligence} wisdom={this.state.wisdom} charisma={this.state.charisma} /> : null}
         <br /><br />
         <button onClick={() => this.renderButtonClick("race")}>{this.state.activeField === "race" ? "Hide Race Form": "Choose Your Fantasy Race"}</button>
-        {this.state.race && this.state.activeField !== "race" ? <span><strong>Race Picked!</strong></span> : null}
+        {this.state.race && (this.state.activeField !== "race") && (this.state.doesRacehaveAnyBonus ? this.state.anyBonus : true) ? <span><strong>Race Picked!</strong></span> : null}
 
         <br/>
-        {this.state.activeField === "race" ? <Race renderChange={this.renderChange} chosenRaceId={this.state.race}/> : null}
+        {this.state.activeField === "race" ? <Race renderChange={this.renderChange} chosenRaceId={this.state.race} anyBonus={this.state.anyBonus} doesRacehaveAnyBonus={this.state.doesRacehaveAnyBonus} renderdoesHaveAnyBonus={this.renderdoesHaveAnyBonus}/> : null}
         <br /><br />
         <button onClick={() => this.renderButtonClick("class")}>{this.state.activeField === "class" ? "Hide Class Form": "Choose Your Class"}</button>
         {this.validClasses() && this.state.activeField !== "class" ? <span><strong>Class Picked!</strong></span> : null}
