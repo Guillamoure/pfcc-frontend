@@ -42,7 +42,7 @@ class Classes extends React.Component {
   render() {
     return (
       <div>
-        <div className='container'>
+        <div className='container-4'>
           {this.state.classes[0] ? this.renderClasses() : null}
           {this.props.admin ? <div className='card' onClick={() => this.props.history.push('/classes-form')}><span className='card-content'>Create a new Class!</span></div> : null}
         </div>
