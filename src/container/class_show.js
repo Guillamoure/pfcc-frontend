@@ -118,11 +118,12 @@ class Class extends React.Component {
 
   render() {
     return (
-      <span>
+      <span className='roboto show'>
         <Introduction klass={this.state.klass}/>
         {this.props.admin ? <button onClick={this.toggleClassForm}>{this.state.toggleClassForm ? "Hide Edit Class" : "Edit Class"}</button> : null}
         {this.state.toggleClassForm ? <ClassForm toggleClassForm={this.state.toggleClassForm} klass={this.state.klass} renderClassEdit={this.renderClassEdit} history={this.props.history} /> : null }
         <Table klass={this.state.klass}/>
+        <div className='header' style={{marginLeft: '2em'}}>Class Features</div>
         <Features klass={this.state.klass} renderClassFeature={this.renderClassFeature} />
 
         {this.props.admin ? <button onClick={this.changeAddFeatureToggle}>{this.state.toggleFeatureForm ? "Hide new Feature Form" : "Add a new Class Feature"}</button> : null}

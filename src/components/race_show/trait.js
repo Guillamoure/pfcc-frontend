@@ -80,11 +80,11 @@ class Trait extends React.Component {
   render () {
     return (
       <span className="trait">
-        <span><strong>{this.props.trait.name}</strong>: {this.renderDescription()}</span>
+        <div className='show'><strong>{this.props.trait.name}</strong>: {this.renderDescription()}</div>
         {this.state.deleteTraitButton ? <span><br/>Are you sure about that?<br/> <button onClick={(e) => this.deleteTraitConfirm(e, "no")}>No</button><button onClick={(e) => this.deleteTraitConfirm(e, "yes")}>Yes</button><br/><br/></span> : null}
         {!this.state.deleteTraitButton && this.props.admin ? <button onClick={this.renderClick}>Edit</button> : null}
         {this.state.toggleTraitForm ? this.renderForm() : null}
-        < br />< br />
+        < br />
       </span>
     )
   }

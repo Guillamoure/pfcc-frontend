@@ -16,10 +16,10 @@ function AbilityScore (props) {
 
 
   return (
-    <span className='centered' >
-    <div className='muted'><strong>{props.name}</strong></div>
-    <div className='enhanced'>{mod < 0 ? mod : `+${mod}`}</div>
-    <div className='dull'>{score}</div>
+    <span className='centered egg' >
+      <div className='enhanced'>{mod < 0 ? mod : `+${mod}`}</div>
+      <div className='muted'><strong>{props.name}</strong></div>
+      <div className='dull'>{score}</div>
     </span>
   )
 }
