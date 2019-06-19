@@ -43,7 +43,7 @@ class Features extends React.Component {
 
   render () {
     return (
-      <span>
+      <span className='show'>
         {this.props.klass.klass_features && this.renderFeatures()}
       </span>
     )

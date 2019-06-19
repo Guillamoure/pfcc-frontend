@@ -14,7 +14,7 @@ class Introduction extends React.Component {
 
   render () {
     return (
-      <div>
+      <div className='show'>
         <h2>{this.props.klass.name}</h2>
         {this.renderDescription()}
         <p><strong>Hit Die</strong>: d{this.props.klass.hit_die}</p>

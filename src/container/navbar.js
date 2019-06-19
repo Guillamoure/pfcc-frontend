@@ -1,6 +1,7 @@
 import React from 'react'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { Menu } from 'semantic-ui-react'
 
 class NavBar extends React.Component {
 
@@ -41,12 +42,12 @@ class NavBar extends React.Component {
     //   this.setState({currentUser: this.props.currentUser})
     // }
     return (
-      <div>
-        <button onClick={() => this.props.history.push('/classes')}>Classes</button>
-        <button onClick={() => this.props.history.push('/races')}>Races</button>
-        {this.state.currentUser ? <button onClick={() => this.props.history.push('/')}>{this.state.currentUser.username}</button>: <button onClick={() => this.props.history.push('/login')}>Login</button>}
-        {this.state.currentUser ? <button onClick={this.renderLogOut}>Log Out</button> : <button onClick={() => this.props.history.push('/signup')}>Sign Up</button>}
-      </div>
+      <Menu>
+        <Menu.Item onClick={() => this.props.history.push('/classes')}>Classes</Menu.Item>
+        <Menu.Item onClick={() => this.props.history.push('/races')}>Races</Menu.Item>
+        {this.state.currentUser ? <Menu.Item onClick={() => this.props.history.push('/')}>{this.state.currentUser.username}</Menu.Item>: <Menu.Item onClick={() => this.props.history.push('/login')}>Login</Menu.Item>}
+        {this.state.currentUser ? <Menu.Item onClick={this.renderLogOut}>Log Out</Menu.Item> : <Menu.Item onClick={() => this.props.history.push('/signup')}>Sign Up</Menu.Item>}
+      </Menu>
     )
   }
 }

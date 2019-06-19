@@ -44,7 +44,7 @@ class Table extends React.Component {
           <td>+{this.renderSave(num, this.props.klass.fortitude)}</td>
           <td>+{this.renderSave(num, this.props.klass.reflex)}</td>
           <td>+{this.renderSave(num, this.props.klass.will)}</td>
-          <td>{this.props.klass.klass_features &&this.renderLevelFeatures(num)}</td>
+          <td style={{textAlign: 'left'}}>{this.props.klass.klass_features &&this.renderLevelFeatures(num)}</td>
         </tr>
       )
     })
@@ -52,7 +52,7 @@ class Table extends React.Component {
 
   renderClassTable = () => {
     return (
-      <table >
+      <table className='show'>
         <thead >
           <tr >
             <th >Level</th>
@@ -72,7 +72,7 @@ class Table extends React.Component {
 
   render () {
     return (
-      <span>
+      <span className='show'>
         {this.renderClassTable()}
       </span>
     )

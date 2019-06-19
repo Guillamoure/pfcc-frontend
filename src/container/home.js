@@ -38,11 +38,13 @@ class Home extends React.Component {
         {`Welcome ${this.props.currentUser.username}`}
         <br/>
         <br/>
-        <button onClick={() => this.props.history.push("/creation")}>Create Character</button>
+        <button className='btn' onClick={() => this.props.history.push("/creation")} >Create Character</button>
         <br/>
         <br/>
-        <button onClick={() => this.setState({showCharacters: !this.state.showCharacters})}>{this.state.showCharacters ? "Hide your Characters": "View Your Characters"}</button>
-        {this.state.showCharacters ? <span><Characters characters={this.state.characters}/></span> : null}
+
+        <div className='container-4' style={{margin: '0 2em'}} >
+          <Characters characters={this.state.characters}/>
+        </div>
       </span>
     )
   }

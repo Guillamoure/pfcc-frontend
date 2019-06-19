@@ -117,11 +117,12 @@ class Race extends React.Component {
   render() {
     console.log("This is the race state", this.state.race.race_ability_score_modifiers)
     return (
-      <span>
+      <span className='roboto show'>
         <Introduction race={this.state.race}/>
         {this.props.admin ? <button onClick={this.toggleRaceForm}>{this.state.toggleRaceForm ? "Hide Edit Race" : "Edit Race"}</button> : null}
         < br />
         {this.state.toggleRaceForm ? <RaceForm toggleRaceForm={this.state.toggleRaceForm} race={this.state.race} renderRaceEdit={this.renderRaceEdit} history={this.props.history} /> : null }
+        <div className='header' style={{marginLeft: '2em'}}>Racial Traits</div>
         <Traits race={this.state.race} renderRacialTrait={this.renderRacialTrait} />
 
         {this.props.admin ? <button onClick={this.changeAddTraitToggle}>{this.state.toggleTraitForm ? "Hide new Trait Form" : "Add a new Race Feature"}</button> : null}

@@ -26,7 +26,7 @@ class Introduction extends React.Component {
 
   render () {
     return (
-      <div>
+      <div className='show'>
         <h2>{this.props.race ? this.props.race.name : null}</h2>
         {this.renderDescription()}
         <p><strong>Size</strong>: {this.props.race ? this.props.race.size : null}</p>
