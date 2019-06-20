@@ -10,6 +10,7 @@ class NewRace extends React.Component {
     size: "Medium",
     speed: "",
     abilityScoreModifiers: [{ability_score: "", bonus: 0}],
+    img_url: "",
     deleteRaceButton: false
   }
 
@@ -20,7 +21,8 @@ class NewRace extends React.Component {
         description: this.props.race.description,
         size: this.props.race.size,
         speed: this.props.race.speed,
-        abilityScoreModifiers: this.props.race.race_ability_score_modifiers
+        abilityScoreModifiers: this.props.race.race_ability_score_modifiers,
+        img_url: this.props.race.img_url
       })
     }
   }
@@ -39,7 +41,7 @@ class NewRace extends React.Component {
     .then(data => {
       if (!data.error){
         this.props.history.push(`/races/${data.race.name}`)
-        this.setState({name: "", description: "", size: 0, speed: "Medium",   abilityScoreModifiers: [{ability_score: "", bonus: 0}]})
+        this.setState({name: "", description: "", size: 0, speed: "Medium", abilityScoreModifiers: [{ability_score: "", bonus: 0}], img_url: ""})
       } else {
         console.log(data.error)
       }
@@ -96,6 +98,11 @@ class NewRace extends React.Component {
         <button onClick={(e) => this.addAbilityScoreModifierField(e, "plus")}>+</button>
         {this.state.abilityScoreModifiers.length > 1 ? <button onClick={(e) => this.addAbilityScoreModifierField(e, "minus")}>-</button> : null}
         < br />< br />
+        <label>
+          Image Link:
+          <input type="text" name="img_url" value={this.state.img_url} onChange={this.renderChange}/>
+        </label>
+        <br /><br />
         <input type="submit" name="submit" />
       </form>
     )

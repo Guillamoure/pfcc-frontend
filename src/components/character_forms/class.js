@@ -33,8 +33,7 @@ class Class extends React.Component{
       let classId = `class-${idx}`, level = `level-${idx}`
       return (
         <div key={idx}>
-        Class Options:
-          <label htmlFor={classId}>{`Class #${idx + 1}`}</label>
+          <label htmlFor={classId}>{`Class #${idx + 1}`} </label>
             <select
               name={classId}
               data-id={idx}
@@ -46,7 +45,7 @@ class Class extends React.Component{
               <option value= "" >Choose One</option>
               {this.state.classes[0] ? this.renderClasses() : null}
             </select>
-          <label htmlFor={level}>Level</label>
+          <label htmlFor={level}> Level </label>
           <input
             type="number"
             name={level}
@@ -85,6 +84,7 @@ class Class extends React.Component{
   render () {
     return (
       <div className='third-col centered'>
+      <span>Class Options </span>
       {this.mapClassDynamicFields()}
       <button onClick={(e) => this.props.addClassField(e, "plus")}>+</button>
       {this.props.classes.length > 1 ? <button onClick={(e) => this.props.addClassField(e, "minus")}>-</button> : null}

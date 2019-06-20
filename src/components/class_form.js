@@ -11,6 +11,7 @@ class NewClass extends React.Component {
     fortitude: "",
     reflex: "",
     will: "",
+    img_url: "",
     deleteClassButton: false
   }
 
@@ -23,7 +24,8 @@ class NewClass extends React.Component {
         skill_ranks: this.props.klass.skill_ranks,
         fortitude: [this.props.klass.fortitude ? this.props.klass.fortitude.toString() : this.props.klass.fortitude],
         reflex: [this.props.klass.reflex ? this.props.klass.reflex.toString() : this.props.klass.reflex],
-        will: [this.props.klass.will ? this.props.klass.will.toString() : this.props.klass.will]
+        will: [this.props.klass.will ? this.props.klass.will.toString() : this.props.klass.will],
+        img_url: this.props.klass.img_url
       })
     }
   }
@@ -42,7 +44,7 @@ class NewClass extends React.Component {
     .then(data => {
       if (!data.error){
         this.props.history.push(`/classes/${data.klass.name}`)
-        this.setState({name: "", description: "", hit_die: 0, skill_ranks: "", fortitude: "", reflex: "", will: ""})
+        this.setState({name: "", description: "", hit_die: 0, skill_ranks: "", fortitude: "", reflex: "", will: "", img_url: ""})
       } else {
         console.log(data.error)
       }
@@ -123,6 +125,12 @@ class NewClass extends React.Component {
       </label>
       < br />
       < br />
+      <label>
+      Image Link:
+      <input type="text" name="img_url" value={this.state.img_url} onChange={this.renderChange}/>
+      </label>
+      <br />
+      <br />
       <input type="submit" name="submit" />
       </form>
   )

@@ -7,6 +7,8 @@ import AbilityScores from '../components/character_show/ability_scores'
 import CharacterName from '../components/character_show/character_name'
 import Saves from '../components/character_show/saves'
 import HP from '../components/character_show/hp'
+import ArmorClass from '../components/character_show/ac'
+import AttackBonus from '../components/character_show/attack_bonus'
 import Details from '../components/character_show/details'
 import FeaturesTraits from './features_traits'
 
@@ -56,6 +58,8 @@ class Character extends React.Component {
         {this.state.character.race && <Details character={this.state.character}/>}
         {this.state.character.race && <Saves character={this.state.character}/>}
         {this.state.character.race && <HP character={this.state.character}/>}
+        {this.state.character.race && <AttackBonus character={this.state.character}/>}
+        {this.state.character.race && <ArmorClass character={this.state.character}/>}
 
 
       </span>
