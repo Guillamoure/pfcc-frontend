@@ -84,14 +84,13 @@ class Class extends React.Component{
 
   render () {
     return (
-      <span>
-      <p>Bild a Bear's Class</p>
+      <div className='third-col centered'>
       {this.mapClassDynamicFields()}
       <button onClick={(e) => this.props.addClassField(e, "plus")}>+</button>
       {this.props.classes.length > 1 ? <button onClick={(e) => this.props.addClassField(e, "minus")}>-</button> : null}
       {this.checkForValidLevels()}
       {this.state.classes[0] && this.props.chosenClassId ? this.renderChosenClass() : null}
-      </span>
+      </div>
     )
   }
 }

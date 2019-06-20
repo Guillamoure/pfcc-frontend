@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import AbilityScores from '../components/character_show/ability_scores'
 import CharacterName from '../components/character_show/character_name'
 import Saves from '../components/character_show/saves'
+import HP from '../components/character_show/hp'
 import Details from '../components/character_show/details'
 import FeaturesTraits from './features_traits'
 
@@ -54,6 +55,8 @@ class Character extends React.Component {
         {this.state.character.race && <FeaturesTraits character={this.state.character}/>}
         {this.state.character.race && <Details character={this.state.character}/>}
         {this.state.character.race && <Saves character={this.state.character}/>}
+        {this.state.character.race && <HP character={this.state.character}/>}
+
 
       </span>
     )

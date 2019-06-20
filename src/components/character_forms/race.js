@@ -11,13 +11,19 @@ class Race extends React.Component{
   }
 
 
-  componentDidMount = () => {
+  componentDidMount() {
     fetch('http://localhost:3000/api/v1/races')
     .then(r => r.json())
     .then(data => {
       this.setState({races: data})
     })
   }
+
+  // componentWillUpdate() {
+  //   if (mod.ability_score !== 'Any' && this.state.raceAnyModifier) {
+  //     this.setState({raceAnyModifier: false})
+  //   }
+  // }
 
   renderAnyChoiceField = () => {
     if (!this.props.doesRacehaveAnyBonus){
@@ -70,8 +76,7 @@ class Race extends React.Component{
 
   render () {
     return (
-      <span>
-      <p>Bild a Bear's Race</p>
+      <div className='second-col centered'>
       <label>
         Race Options:
         <select name="race" value={this.props.chosenRaceId} onChange={(e) => this.props.renderChange(e)}>
@@ -82,7 +87,7 @@ class Race extends React.Component{
       {this.state.races[0] && this.props.chosenRaceId ? this.renderChosenRace() : null}
       {this.state.races[0] && this.props.chosenRaceId ? this.renderRacialAbilityModifiers() : null}
       {this.state.raceAnyModifier ? this.renderAnyChoiceField() : null}
-      </span>
+      </div>
     )
   }
 
