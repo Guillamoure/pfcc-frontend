@@ -35,13 +35,8 @@ class Home extends React.Component {
     return (
       <span className='background'>
         {this.renderSignUp()}
-        {`Welcome ${this.props.currentUser.username}`}
-        <br/>
-        <br/>
         <button className='btn' onClick={() => this.props.history.push("/creation")} >Create Character</button>
-        <br/>
-        <br/>
-
+        <br/><br/>
         <div className='container-4' style={{margin: '0 2em'}} >
           <Characters characters={this.state.characters}/>
         </div>
