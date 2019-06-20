@@ -144,13 +144,7 @@ class CharacterCreation extends React.Component{
   render () {
     return (
       <div>
-        {(this.state.strength && this.state.constitution && this.state.dexterity && this.state.intelligence && this.state.wisdom && this.state.charisma) ? <span className='complete'>Ability Scores</span> : <span className='incomplete'>Ability Scores</span>}
-        {(this.state.name) ? <span className='complete'>Character Name</span> : <span className='incomplete' >Character Name</span>}
-        {(this.validClasses()) ? <span className='complete' >Character Class(es)</span> : <span className='incomplete' >Character Class(es)</span>}
-        {(this.state.race) ? <span className='complete' >Character Race</span> : <span className='incomplete' >Character Race</span>}
-        <span className='confirmation'>
-          {this.renderSubmit()}
-        </span>
+
         <span id='creation-form'>
           <Details renderChange={this.renderChange} name={this.state.name} description={this.state.description} alignment={this.state.alignment} background={this.state.background} age={this.state.age} gender={this.state.gender} hair={this.state.hair} eyes={this.state.eyes} height={this.state.height} weight={this.state.weight} homeland={this.state.homeland} deity={this.state.deity}/>
           <div className='container-3'>
@@ -162,6 +156,15 @@ class CharacterCreation extends React.Component{
           {/*<button onClick={() => this.renderButtonClick("race")}>{this.state.activeField === "race" ? "Hide Race Form": "Choose Your Fantasy Race"}</button>*/}
           {/*<button onClick={() => this.renderButtonClick("class")}>{this.state.activeField === "class" ? "Hide Class Form": "Choose Your Class"}</button>*/}
         </span>
+        <div className='centered'>
+          {(this.state.strength && this.state.constitution && this.state.dexterity && this.state.intelligence && this.state.wisdom && this.state.charisma) ? <span className='complete'>Ability Scores</span> : <span className='incomplete'>Ability Scores</span>}
+          {(this.state.name) ? <span className='complete'>Character Name</span> : <span className='incomplete' >Character Name</span>}
+          {(this.validClasses()) ? <span className='complete' >Character Class(es)</span> : <span className='incomplete' >Character Class(es)</span>}
+          {(this.state.race) ? <span className='complete' >Character Race</span> : <span className='incomplete' >Character Race</span>}
+        </div>
+        <div className='confirmation centered'>
+          {this.renderSubmit()}
+        </div>
       </div>
     )
   }

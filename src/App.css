@@ -2,7 +2,7 @@
   height: 100%;
   background-repeat: no-repeat;
   background-attachment: fixed;
-  background-image: linear-gradient(#CFB997 50%, #fff);
+  background-image: linear-gradient(#CFB997 60%, #fff);
 }
 
 .container-4 {
@@ -75,7 +75,7 @@
   background-color: rgba(235, 235, 235, 0.95);
   border: solid;
   border-color: #000;
-  border-radius: 1.5em;
+  border-radius: 1em;
   overflow: auto;
   max-height: 23.75em;
   position: relative;
@@ -111,6 +111,32 @@
 #saves {
   grid-column-start: 1;
   grid-column-end: 3;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  margin: .5em;
+  padding: .2em;
+  background-color: rgba(235, 235, 235, 0.95);
+  border: solid;
+  border-color: #000;
+  border-radius: 1em;
+}
+
+#attack-bonus {
+  grid-column-start: 4;
+  grid-column-end: 5;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  margin: .5em;
+  padding: .2em;
+  background-color: rgba(235, 235, 235, 0.95);
+  border: solid;
+  border-color: #000;
+  border-radius: 1em;
+}
+
+#ac {
+  grid-column-start: 3;
+  grid-column-end: 4;
   grid-row-start: 2;
   grid-row-end: 3;
   margin: .5em;
@@ -335,15 +361,16 @@
   border-radius: .8em;
   width: 90%;
   align-items: center;
-  color: #fff;
-  text-shadow: -1px -1px 0 #CFB997, 1px -1px 0 #CFB997, -1px 1px 0 #CFB997, 1px 1px 0 #CFB997;
+  color: #CFB997;
+  /* text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff; */
   border: transparent;
 }
 
 .create-btn {
+  font-family: 'Righteous', cursive;
   background: #fff;
-  font-size: 1.1em;
-  font-weight: 700;
+  font-size: 1.6em;
+  font-weight: 600;
   display: inline-block;
   /* margin: 0 5%; */
   /* padding: .78571429em 1.5em .78571429em; */
@@ -353,7 +380,8 @@
   align-items: center;
   color: green;
   /* text-shadow: -1px -1px 0 #CFB997, 1px -1px 0 #CFB997, -1px 1px 0 #CFB997, 1px 1px 0 #CFB997; */
-  border: transparent;
+  border: solid #000;
+  margin-top: .6em;
 }
 
 
@@ -398,21 +426,29 @@
   font-size: 5em;
 }
 
+.subtitle {
+  text-align: center;
+  font-size: 2em;
+}
+
 .incomplete {
-  color: red;
-  border: solid #000;
+  font-family: 'Righteous', cursive;
+  font-size: 1.5em;
+  color: #CFB997;
+  border: solid #fff;
   border-radius: 2em;
   margin: 0 .5em;
   padding: 0 .3em;
-  background-color: #111;
+  background-color: #eee;
 }
 
 .complete {
+  font-family: 'Righteous', cursive;
+  font-size: 1.5em;
   color: green;
   border: solid #fff;
   border-radius: 2em;
   margin: 0 .5em;
   padding: 0 .3em;
   background-color: #eee;
-
 }

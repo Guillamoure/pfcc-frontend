@@ -45,6 +45,7 @@ class SignUp extends React.Component {
     return (
       <div>
         <h1 className='project-name front-and-center'>CharacterFinder</h1>
+        <h4 className='project-name subtitle'>Pathfinder TTRPG Database & Character Creator</h4>
         <Form onSubmit={this.renderSubmit} style={{margin: '0 20%'}}>
           <Form.Field>
             <label>Username</label>

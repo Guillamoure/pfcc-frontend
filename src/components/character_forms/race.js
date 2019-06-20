@@ -53,7 +53,7 @@ class Race extends React.Component{
 
   renderChosenRace = () => {
     let chosen = this.state.races.find(el => el.id === _.toNumber(this.props.chosenRaceId))
-    return <Link to={`/races/${chosen.name}`} >{chosen.name}< br /></Link>
+    return <Link to={`/races/${chosen.name}`} > Info< br /></Link>
   }
 
   renderRacialAbilityModifiers = () => {
@@ -77,13 +77,11 @@ class Race extends React.Component{
   render () {
     return (
       <div className='second-col centered'>
-      <label>
-        Race Options:
+      <label>Race Options </label>
         <select name="race" value={this.props.chosenRaceId} onChange={(e) => this.props.renderChange(e)}>
           <option value= "" >Select One</option>
           {this.state.races[0] ? this.renderRaces() : null}
         </select>
-      </label>
       {this.state.races[0] && this.props.chosenRaceId ? this.renderChosenRace() : null}
       {this.state.races[0] && this.props.chosenRaceId ? this.renderRacialAbilityModifiers() : null}
       {this.state.raceAnyModifier ? this.renderAnyChoiceField() : null}
