@@ -20,7 +20,7 @@ class Saves extends React.Component {
         score += mod.bonus
       }
     })
-    if (this.props.character.anyBonus === _.capitalize(scoreName)){
+    if (this.props.character.any_bonus === _.capitalize(scoreName)){
       score +=2
     }
     return score

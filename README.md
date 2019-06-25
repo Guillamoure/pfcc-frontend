@@ -1,4 +1,36 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# CharacterFinder - Pathfinder TTRPG Database & Character Creator
+
+## Installation
+
+This is React/frontend half of the code. For the Rails/backend of the code, go to https://github.com/Guillamoure/pfcc-backend. Clone or Download this file and copy into a new file on your terminal using
+
+### `git clone`
+
+
+Open up the file, and run
+
+### `npm install`
+
+followed by
+
+### `npm start`
+
+NOTE: the Rails server runs through localhost:3000, so make sure this React file does not run on that server. Either run the Rails server first, and let the React server go to the alternate port of 3001, or before starting this server, run
+
+### `export PORT=3001`
+
+before starting the server up.
+
+
+## Description
+
+This program is to help users who play the Pathfinder Role Playing Game create their characters, and have a resource where all of their character's information, abilities, features, and statistics are all in one location, on one page. This application allows a user to preview different character options, and create a character through this application.
+
+A user, if they have administrative access, will be able to add character options and details to the backend using forms present within the application.
+
+
+
+
 
 ## Available Scripts
 
@@ -39,30 +71,4 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 
 ## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/ge
