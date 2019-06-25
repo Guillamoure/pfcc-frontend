@@ -1,6 +1,6 @@
 import React from 'react'
 import _ from 'lodash'
-import { withRouter } from 'react-router-dom'
+import { withRouter, Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import AbilityScores from '../components/character_show/ability_scores'
@@ -61,12 +61,12 @@ class Character extends React.Component {
         {this.state.character.race && <AttackBonus character={this.state.character}/>}
         {this.state.character.race && <ArmorClass character={this.state.character}/>}
 
-
       </span>
     )
   }
-
 }
+
+// {this.props.currentUser.id === this.state.character.user_id ? <button className='char-edit' >Edit your Character</button> : null}
 
 const mapStatetoProps = (state) => {
   return {
