@@ -1,5 +1,8 @@
 import React from 'react'
-
+import { withRouter } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 
 
 class Details extends React.Component {
@@ -15,7 +18,8 @@ class Details extends React.Component {
     console.log(this.props.character)
     return(
       <div id="details">
-        <div className='header'>Background</div>
+        <span className='header'>Background</span>
+        {this.props.character.user_id === this.props.currentUser.id && <span className='edit' onClick={() => this.props.editModal('background')}><FontAwesomeIcon icon={faPencilAlt} /></span>}
           <div className='nested'>
             <div><strong>Background:</strong> {this.props.character.background}</div>
             <div><strong>Age:</strong> {this.props.character.age}</div>
@@ -38,4 +42,11 @@ class Details extends React.Component {
   }
 }
 
-export default Details
+const mapStatetoProps = (state) => {
+  return {
+    currentUser: state.currentUser,
+    admin: state.admin
+  }
+}
+
+export default withRouter(connect(mapStatetoProps)(Details))
