@@ -11,12 +11,15 @@ import ArmorClass from '../components/character_show/ac'
 import AttackBonus from '../components/character_show/attack_bonus'
 import Details from '../components/character_show/details'
 import FeaturesTraits from './features_traits'
+import BackgroundForm from '../modals/background_form'
+
 
 
 class Character extends React.Component {
 
   state = {
-    character: {}
+    character: {},
+    modal: false
   }
 
   componentDidMount() {
@@ -47,19 +50,46 @@ class Character extends React.Component {
   //   this.setState({classFeatures: _.flatten(klass_features)})
   // }
 
+  renderEdit = (info, details) => {
+    fetch(`http://localhost:3000/api/v1/${details}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(info)
+    })
+    .then(res => res.json())
+    .then(data => {
+      console.log(data)
+      this.setState({character: data.character, modal: false})
+    })
+  }
+
+  editModal = (section) => {
+    this.setState({modal: section})
+  }
+
+  clickOut = (e) => {
+    if(e.target.classList[0] === "page-dimmer"){
+      this.setState({modal: false})
+    }
+  }
+
 
   render() {
-    console.log(this.state.classFeatures)
     return (
       <span className="container-8 character">
         {this.state.character.race && <AbilityScores character={this.state.character}/>}
         {this.state.character.race && <CharacterName character={this.state.character}/>}
         {this.state.character.race && <FeaturesTraits character={this.state.character}/>}
-        {this.state.character.race && <Details character={this.state.character}/>}
+        {this.state.character.race && <Details character={this.state.character} editModal={this.editModal}/>}
         {this.state.character.race && <Saves character={this.state.character}/>}
         {this.state.character.race && <HP character={this.state.character}/>}
         {this.state.character.race && <AttackBonus character={this.state.character}/>}
         {this.state.character.race && <ArmorClass character={this.state.character}/>}
+
+        {this.state.modal === 'background' && <BackgroundForm character={this.state.character} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
 
       </span>
     )

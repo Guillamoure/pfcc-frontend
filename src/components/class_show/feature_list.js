@@ -34,7 +34,9 @@ class Features extends React.Component {
     //   }
     // })
 
-    // multiLevelAbilities={multiLevelAbilities[feature.name]}
+    // return uniqueFeatures.map(feature => {
+    //   return <Feature key={feature.id} feature={feature}  klass_name={this.props.klass.name} renderClassFeature={this.props.renderClassFeature} multiLevelAbilities={multiLevelAbilities[feature.name]}/>
+    // })
 
     return sortedFeatures.map(feature => {
       return <Feature key={feature.id} feature={feature}  klass_name={this.props.klass.name} renderClassFeature={this.props.renderClassFeature}/>
