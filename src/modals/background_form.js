@@ -37,9 +37,12 @@ class BackgroundForm extends React.Component{
       <Portal>
         <div className="page-dimmer" onClick={this.props.clickOut}>
           <div className="edit-form" name="background">
-            Background
+            <span className="enhanced" >Background</span>
+            <br /><br />
             <label>Age</label>
+            <br />
             <input type="number" name="age" value={this.state.age} onChange={this.renderChange}/>
+            <br />
             <label>Background</label>
             <br />
             <textarea style={{width: '15em'}} type="textfield" className="desc-box" rows="6" name="background" value={this.state.background} onChange={this.renderChange}/>

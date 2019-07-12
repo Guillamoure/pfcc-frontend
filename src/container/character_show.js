@@ -11,7 +11,9 @@ import ArmorClass from '../components/character_show/ac'
 import AttackBonus from '../components/character_show/attack_bonus'
 import Details from '../components/character_show/details'
 import FeaturesTraits from './features_traits'
+
 import BackgroundForm from '../modals/background_form'
+import CharacterForm from '../modals/character_form'
 
 
 
@@ -81,7 +83,7 @@ class Character extends React.Component {
     return (
       <span className="container-8 character">
         {this.state.character.race && <AbilityScores character={this.state.character}/>}
-        {this.state.character.race && <CharacterName character={this.state.character}/>}
+        {this.state.character.race && <CharacterName character={this.state.character} editModal={this.editModal}/>}
         {this.state.character.race && <FeaturesTraits character={this.state.character}/>}
         {this.state.character.race && <Details character={this.state.character} editModal={this.editModal}/>}
         {this.state.character.race && <Saves character={this.state.character}/>}
@@ -90,6 +92,7 @@ class Character extends React.Component {
         {this.state.character.race && <ArmorClass character={this.state.character}/>}
 
         {this.state.modal === 'background' && <BackgroundForm character={this.state.character} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
+        {this.state.modal === 'character' && <CharacterForm character={this.state.character} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
 
       </span>
     )
