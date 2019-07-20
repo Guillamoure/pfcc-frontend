@@ -14,6 +14,7 @@ import FeaturesTraits from './features_traits'
 
 import BackgroundForm from '../modals/background_form'
 import CharacterForm from '../modals/character_form'
+import AbilityForm from '../modals/ability_form'
 
 
 
@@ -30,6 +31,7 @@ class Character extends React.Component {
     .then(data => {
       // IF YOU WANT THE PAGE TO BE PRIVATE
       // if (this.props.currentUser.id === data.character.user.id){
+        this.props.dispatch({type: 'CHARACTER', character: data.character })
         this.setState({character: data.character})
       // } else {
       //   this.props.history.push('/')
@@ -80,9 +82,10 @@ class Character extends React.Component {
 
 
   render() {
+    console.log("redux character adding", this.props.character)
     return (
       <span className="container-8 character">
-        {this.state.character.race && <AbilityScores character={this.state.character}/>}
+        {this.state.character.race && <AbilityScores character={this.state.character} editModal={this.editModal}/>}
         {this.state.character.race && <CharacterName character={this.state.character} editModal={this.editModal}/>}
         {this.state.character.race && <FeaturesTraits character={this.state.character}/>}
         {this.state.character.race && <Details character={this.state.character} editModal={this.editModal}/>}
@@ -93,6 +96,7 @@ class Character extends React.Component {
 
         {this.state.modal === 'background' && <BackgroundForm character={this.state.character} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
         {this.state.modal === 'character' && <CharacterForm character={this.state.character} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
+        {this.state.modal === 'ability' && <AbilityForm character={this.state.character} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
 
       </span>
     )
@@ -104,7 +108,8 @@ class Character extends React.Component {
 const mapStatetoProps = (state) => {
   return {
     currentUser: state.currentUser,
-    admin: state.admin
+    admin: state.admin,
+    character: state.character
   }
 }
 
