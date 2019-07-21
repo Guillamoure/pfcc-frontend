@@ -41,7 +41,7 @@ class NewRace extends React.Component {
     .then(data => {
       if (!data.error){
         this.props.history.push(`/races/${data.race.name}`)
-        this.setState({name: "", description: "", size: 0, speed: "Medium", abilityScoreModifiers: [{ability_score: "", bonus: 0}], img_url: ""})
+        this.setState({name: "", description: "", size: "Medium", speed: 0, abilityScoreModifiers: [{ability_score: "", bonus: 0}], img_url: ""})
       } else {
         console.log(data.error)
       }
