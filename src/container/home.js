@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import Characters from '../components/characters'
+import Settings from './settings'
 
 
 class Home extends React.Component {
@@ -38,6 +39,7 @@ class Home extends React.Component {
         <button className='btn' onClick={() => this.props.history.push("/creation")} >Create Character</button>
         <br/><br/>
         <div className='container-4' style={{margin: '0 2em'}} >
+          <Settings />
           <Characters characters={this.state.characters}/>
         </div>
       </span>
