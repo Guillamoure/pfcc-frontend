@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
+import { faPencilAlt, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 
 
 class Skillset extends React.Component {
@@ -133,6 +133,30 @@ class Skillset extends React.Component {
     this.setState({addSkillset: true, chosenSkills: skillIdArray, name: skillset.name, editSkillset: true})
   }
 
+  renderDelete = () => {
+    fetch(`http://localhost:3000/api/v1/skillsets/${this.state.activeSkillset}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        id: this.state.activeSkillset      })
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (!data.error){
+        console.log(data)
+        let updatedObj = this.state.skillsets.filter(ss => {
+          return ss.id !== data
+        })
+        this.setState({name: "", chosenSkills: [], addSkillset: false, editSkillset: false, skillsets: updatedObj}, this.fetchSkillsets())
+      } else {
+        console.log(data.error)
+      }
+    })
+  }
+
   skillsetForm = () => {
     return (
       <span>
@@ -146,6 +170,7 @@ class Skillset extends React.Component {
         </span>
         <span>
           <button onClick={() => this.setState({addSkillset: false, chosenSkills: [], editSkillset: false})}>X</button>
+          {(this.state.editSkillset && this.props.admin) && <span        onClick={this.renderDelete}><FontAwesomeIcon icon={faTrashAlt} /></span>}
         </span>
       </span>
     )
