@@ -10,6 +10,7 @@ import HP from '../components/character_show/hp'
 import ArmorClass from '../components/character_show/ac'
 import AttackBonus from '../components/character_show/attack_bonus'
 import Details from '../components/character_show/details'
+import Skills from '../components/character_show/skills'
 import FeaturesTraits from './features_traits'
 
 import BackgroundForm from '../modals/background_form'
@@ -32,12 +33,19 @@ class Character extends React.Component {
       // IF YOU WANT THE PAGE TO BE PRIVATE
       // if (this.props.currentUser.id === data.character.user.id){
         this.props.dispatch({type: 'CHARACTER', character: data.character })
+        this.renderAbilityScoreCalc("Strength")
+        this.renderAbilityScoreCalc("Dexterity")
+        this.renderAbilityScoreCalc("Constitution")
+        this.renderAbilityScoreCalc("Intelligence")
+        this.renderAbilityScoreCalc("Wisdom")
+        this.renderAbilityScoreCalc("Charisma")
         this.setState({character: data.character})
       // } else {
       //   this.props.history.push('/')
       // }
-  })
+    })
   }
+
   //
   // getCharacterClassFeatures = (klasses) => {
   //   let klass_features = []
@@ -54,6 +62,31 @@ class Character extends React.Component {
   //   this.setState({classFeatures: _.flatten(klass_features)})
   // }
 
+  renderAbilityScoreCalc = (ability) => {
+    const downcaseAbility = _.lowerCase(ability)
+    let score = this.props.character[downcaseAbility]
+    debugger
+    this.props.character.race.race_ability_score_modifiers.forEach(mod => {
+      if (ability === mod.ability_score){
+        score += mod.bonus
+      }
+    })
+    if (this.props.character.anyBonus === ability){
+      score +=2
+    }
+    this.props.dispatch({type: 'ABILITY SCORE', ability: downcaseAbility, score: score })
+  }
+
+  renderReduxAbilityScores = () => {
+    // this.props.dispatch({type: 'CHARACTER', character: this.state.character })
+    this.renderAbilityScoreCalc("Strength")
+    this.renderAbilityScoreCalc("Dexterity")
+    this.renderAbilityScoreCalc("Constitution")
+    this.renderAbilityScoreCalc("Intelligence")
+    this.renderAbilityScoreCalc("Wisdom")
+    this.renderAbilityScoreCalc("Charisma")
+  }
+
   renderEdit = (info, details) => {
     fetch(`http://localhost:3000/api/v1/${details}`, {
       method: 'PATCH',
@@ -66,7 +99,8 @@ class Character extends React.Component {
     .then(res => res.json())
     .then(data => {
       console.log(data)
-      this.setState({character: data.character, modal: false})
+      this.props.dispatch({type: 'CHARACTER', character: data.character })
+      this.setState({character: data.character, modal: false}, this.renderReduxAbilityScores())
     })
   }
 
@@ -82,7 +116,7 @@ class Character extends React.Component {
 
 
   render() {
-    console.log("redux character adding", this.props.character)
+    console.log("redux character adding", this.props.character_info)
     return (
       <span className="container-8 character">
         {this.state.character.race && <AbilityScores character={this.state.character} editModal={this.editModal}/>}
@@ -93,6 +127,7 @@ class Character extends React.Component {
         {this.state.character.race && <HP character={this.state.character}/>}
         {this.state.character.race && <AttackBonus character={this.state.character}/>}
         {this.state.character.race && <ArmorClass character={this.state.character}/>}
+        {this.state.character.race && <Skills character={this.state.character}/>}
 
         {this.state.modal === 'background' && <BackgroundForm character={this.state.character} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
         {this.state.modal === 'character' && <CharacterForm character={this.state.character} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
@@ -109,7 +144,8 @@ const mapStatetoProps = (state) => {
   return {
     currentUser: state.currentUser,
     admin: state.admin,
-    character: state.character
+    character: state.character,
+    character_info: state.character_info
   }
 }
 

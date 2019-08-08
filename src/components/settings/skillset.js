@@ -170,7 +170,7 @@ class Skillset extends React.Component {
         </span>
         <span>
           <button onClick={() => this.setState({addSkillset: false, chosenSkills: [], editSkillset: false})}>X</button>
-          {(this.state.editSkillset && this.props.admin) && <span        onClick={this.renderDelete}><FontAwesomeIcon icon={faTrashAlt} /></span>}
+          {(this.state.editSkillset && this.props.admin) && <span onClick={this.renderDelete}><FontAwesomeIcon icon={faTrashAlt} /></span>}
         </span>
       </span>
     )
@@ -207,7 +207,6 @@ class Skillset extends React.Component {
         <label>
           Active Skillset:
           <select name="activeSkillset" value={this.state.activeSkillset} onChange={this.renderActiveSkillsetChange}>
-            <option value= "0" >Select Skillset</option>
             {this.state.skillsets.map(ss => <option value={ss.id}>{ss.name}</option>)}
           </select>
         </label>

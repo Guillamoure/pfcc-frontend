@@ -33,12 +33,12 @@ class AbilityScores extends React.Component {
   render () {
     return (
       <div className={this.renderEditAbilityToggle()}>
-        <Ability ability={this.props.character.strength} name={'Strength'} racialModifiers={this.props.character.race.race_ability_score_modifiers} anyBonus={this.props.character.any_bonus}/>
-        <Ability ability={this.props.character.dexterity} name={'Dexterity'} racialModifiers={this.props.character.race.race_ability_score_modifiers} anyBonus={this.props.character.any_bonus}/>
-        <Ability ability={this.props.character.constitution} name={'Constitution'} racialModifiers={this.props.character.race.race_ability_score_modifiers} anyBonus={this.props.character.any_bonus}/>
-        <Ability ability={this.props.character.intelligence} name={'Intelligence'} racialModifiers={this.props.character.race.race_ability_score_modifiers} anyBonus={this.props.character.any_bonus}/>
-        <Ability ability={this.props.character.wisdom} name={'Wisdom'} racialModifiers={this.props.character.race.race_ability_score_modifiers} anyBonus={this.props.character.any_bonus}/>
-        <Ability ability={this.props.character.charisma} name={'Charisma'} racialModifiers={this.props.character.race.race_ability_score_modifiers} anyBonus={this.props.character.any_bonus}/>
+        <Ability name={'Strength'} ability_score={this.props.character_info.ability_scores.strength}/>
+        <Ability name={'Dexterity'} ability_score={this.props.character_info.ability_scores.dexterity}/>
+        <Ability name={'Constitution'} ability_score={this.props.character_info.ability_scores.constitution}/>
+        <Ability name={'Intelligence'} ability_score={this.props.character_info.ability_scores.intelligence}/>
+        <Ability name={'Wisdom'} ability_score={this.props.character_info.ability_scores.wisdom}/>
+        <Ability name={'Charisma'} ability_score={this.props.character_info.ability_scores.charisma}/>
         {this.props.character.user_id === this.props.currentUser.id && <span className='edit' onClick={() => this.props.editModal('ability')}><FontAwesomeIcon icon={faPencilAlt} /></span>}
 
       </div>
@@ -49,7 +49,8 @@ class AbilityScores extends React.Component {
 const mapStateToProps = (state) => {
   return {
     currentUser: state.currentUser,
-    admin: state.admin
+    admin: state.admin,
+    character_info: state.character_info
   }
 }
 

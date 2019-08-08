@@ -6,15 +6,23 @@ import { connect } from 'react-redux'
 class Class extends React.Component{
 
   state = {
-    classes: {}
+    classes: {},
+    activeSkillset: 0,
+    skillsets: {}
   }
 
   componentDidMount = () => {
     fetch('http://localhost:3000/api/v1/klasses')
     .then(r => r.json())
     .then(data => {
-      this.setState({classes: data})
+      this.setState({classes: data}, this.fetchSkillsets())
     })
+  }
+
+  fetchSkillsets = () => {
+    fetch("http://localhost:3000/api/v1/skillsets")
+    .then(r => r.json())
+    .then(data => this.setState({skillsets: data}))
   }
 
   renderClasses = () => {
@@ -72,6 +80,19 @@ class Class extends React.Component{
     }
   }
 
+  renderActiveSkillset = () => {
+    return (
+      <div>
+        <label>
+          Active Skillset:
+          <select name="activeSkillset" value={this.props.activeSkillset} onChange={this.props.renderChange}>
+            {this.state.skillsets.map(ss => <option value={ss.id}>{ss.name}</option>)}
+          </select>
+        </label>
+      </div>
+    )
+  }
+
   // <label>
   //   Class Options:
   //   <select name="class" value={this.props.chosenClassId} onChange={(e) => this.props.renderChange(e)}>
@@ -84,6 +105,8 @@ class Class extends React.Component{
   render () {
     return (
       <div className='third-col centered'>
+      <span>Skillset</span>
+      {!!this.state.skillsets.keys && this.renderActiveSkillset()}
       <span>Class Options </span>
       {this.mapClassDynamicFields()}
       <button onClick={(e) => this.props.addClassField(e, "plus")}>+</button>

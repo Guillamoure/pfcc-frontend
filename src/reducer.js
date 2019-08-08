@@ -1,7 +1,10 @@
 const initialState = {
   currentUser: "",
   admin: false,
-  character: {}
+  character: {},
+  character_info: {
+    ability_scores: []
+  }
 }
 
 
@@ -12,7 +15,9 @@ const reducer = (state = initialState, action) => {
     case "SIGNOUT":
       return {...state, currentUser: "", admin: false};
     case "CHARACTER":
-      return {...state, character: action.character}
+      return {...state, character: action.character};
+    case "ABILITY SCORE":
+      return {...state, character_info: {...state.character_info, ability_scores: {...state.character_info.ability_scores, [action.ability]: action.score}}}
     default:
       return state
   }
