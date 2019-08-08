@@ -1,5 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
+import { withRouter } from 'react-router-dom'
+import { connect } from 'react-redux'
 
 
 
@@ -63,4 +65,13 @@ class Saves extends React.Component {
   }
 }
 
-export default Saves
+const mapStateToProps = (state) => {
+  return {
+    currentUser: state.currentUser,
+    admin: state.admin,
+    character_info: state.character_info
+  }
+}
+
+
+export default withRouter(connect(mapStateToProps)(Saves))

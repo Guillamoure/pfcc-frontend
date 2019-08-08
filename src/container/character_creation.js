@@ -32,12 +32,15 @@ class CharacterCreation extends React.Component{
     weight: "",
     alignment: "",
     anyBonus: "",
-    doesRacehaveAnyBonus: false
+    doesRacehaveAnyBonus: false,
+    activeSkillset: 0
   }
 
   componentDidMount() {
     if (!this.props.currentUser){
       this.props.history.push("/signup")
+    } else {
+      this.setState({activeSkillset: this.props.currentUser.skillset_id})
     }
   }
 
@@ -150,7 +153,7 @@ class CharacterCreation extends React.Component{
           <div className='container-3'>
             <AbilityForm  renderChange={this.renderChange} strength={this.state.strength}  dexterity={this.state.dexterity} constitution={this.state.constitution} intelligence={this.state.intelligence} wisdom={this.state.wisdom} charisma={this.state.charisma} />
             <Race renderChange={this.renderChange} chosenRaceId={this.state.race} anyBonus={this.state.anyBonus} doesRacehaveAnyBonus={this.state.doesRacehaveAnyBonus} renderdoesHaveAnyBonus={this.renderdoesHaveAnyBonus}/>
-            <Class renderDynamicChanges={this.renderDynamicChanges} addClassField={this.addClassField} classes={this.state.classes}/>
+            <Class renderChange={this.renderChange} renderDynamicChanges={this.renderDynamicChanges} addClassField={this.addClassField} classes={this.state.classes} activeSkillset={this.state.activeSkillset}/>
           </div>
           {/*<button onClick={() => this.renderButtonClick("abilityScores")}>{this.state.activeField === "abilityScores" ? "Hide Ability Score Form": "Create Your Ability Scores"}</button>*/}
           {/*<button onClick={() => this.renderButtonClick("race")}>{this.state.activeField === "race" ? "Hide Race Form": "Choose Your Fantasy Race"}</button>*/}
