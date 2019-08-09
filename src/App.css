@@ -72,9 +72,9 @@
 
 .features-traits {
   grid-column-start: 1;
-  grid-column-end: 5;
-  grid-row-start: 3;
-  grid-row-end: 8;
+  grid-column-end: 4;
+  grid-row-start: 4;
+  grid-row-end: 9;
   margin: .5em;
   padding: .2em;
   background-color: rgba(235, 235, 235, 0.95);
@@ -89,8 +89,8 @@
 .hp {
   grid-column-start: 8;
   grid-column-end: 9;
-  grid-row-start: 1;
-  grid-row-end: 2;
+  grid-row-start: 2;
+  grid-row-end: 3;
   margin-top: 2em;
   margin: .5em;
   padding: .2em;
@@ -116,8 +116,8 @@
 #saves {
   grid-column-start: 1;
   grid-column-end: 3;
-  grid-row-start: 2;
-  grid-row-end: 3;
+  grid-row-start: 3;
+  grid-row-end: 4;
   margin: .5em;
   padding: .2em;
   background-color: rgba(235, 235, 235, 0.95);
@@ -127,10 +127,10 @@
 }
 
 #attack-bonus {
-  grid-column-start: 4;
-  grid-column-end: 5;
-  grid-row-start: 2;
-  grid-row-end: 3;
+  grid-column-start: 3;
+  grid-column-end: 4;
+  grid-row-start: 3;
+  grid-row-end: 4;
   margin: .5em;
   padding: .2em;
   background-color: rgba(235, 235, 235, 0.95);
@@ -140,8 +140,8 @@
 }
 
 #ac {
-  grid-column-start: 3;
-  grid-column-end: 4;
+  grid-column-start: 7;
+  grid-column-end: 8;
   grid-row-start: 2;
   grid-row-end: 3;
   margin: .5em;
@@ -155,8 +155,8 @@
 #details {
   grid-column-start: 8;
   grid-column-end: 9;
-  grid-row-start: 2;
-  grid-row-end: 8;
+  grid-row-start: 3;
+  grid-row-end: 9;
   margin: .5em;
   padding: .6em;
   background-color: rgba(235, 235, 235, 0.95);
@@ -169,10 +169,10 @@
 }
 
 #skills {
-  grid-column-start: 5;
+  grid-column-start: 4;
   grid-column-end: 8;
-  grid-row-start: 2;
-  grid-row-end: 9;
+  grid-row-start: 3;
+  grid-row-end: 10;
   margin: .5em;
   padding: .6em;
   background-color: rgba(235, 235, 235, 0.95);
@@ -215,21 +215,21 @@
 }
 
 #character {
-  grid-column-start: 5;
-  grid-column-end: 8;
+  grid-column-start: 1;
+  grid-column-end: 9;
   grid-row-start: 1;
   grid-row-end: 2;
   margin: .5em;
-  background-color: rgba(235, 235, 235, 0.95);
-  text-align: center;
-  border: solid;
-  border-color: #000;
-  border-radius: 2.2em;
+  /* background-color: rgba(235, 235, 235, 0.95); */
+  /* text-align: center; */
+  /* border: solid; */
+  /* border-color: #000; */
+  /* border-radius: 2.2em; */
   padding: .15em;
 }
 
 #title {
-  font-size: 2em;
+  font-size: 2.5em;
   font-weight: 700;
 }
 
@@ -478,6 +478,11 @@
 
 .edit {
   position: sticky;
+  left: 87%;
+}
+
+.notif {
+  position: sticky;
   left: 100%;
 }
 
@@ -494,6 +499,75 @@
   text-align: center;
   font-size: 16px;
   z-index: 1001;
+}
+
+/* .badge1[data-badge-1]:after {
+   content:attr(data-badge-1);
+   position:absolute;
+   bottom: 28px;
+   right:-10px;
+   font-size:.7em;
+   background:green;
+   color:white;
+   width:18px;height:18px;
+   text-align:center;
+   line-height:18px;
+   border-radius:50%;
+   box-shadow:0 0 1px #333;
+}
+
+.badge2[data-badge-2] {
+   content:attr(data-badge-2);
+   position:absolute;
+   bottom: 28px;
+   right: 20px;
+   font-size:.7em;
+   background: blue;
+   color:white;
+   width:18px;height:18px;
+   text-align:center;
+   line-height:18px;
+   border-radius:50%;
+   box-shadow:0 0 1px #333;
+}
+
+.badge3[data-badge-3]:after {
+   content:attr(data-badge-3);
+   position:absolute;
+   bottom: 28px;
+   right: -0px;
+   font-size:.7em;
+   background: red;
+   color:white;
+   width:18px;height:18px;
+   text-align:center;
+   line-height:18px;
+   border-radius:50%;
+   box-shadow:0 0 1px #333;
+} */
+
+.badge {
+  background: #77cc51;
+  border-color: #59ad33;
+  background-image: -webkit-linear-gradient(top, #a5dd8c, #77cc51);
+  background-image: -moz-linear-gradient(top, #a5dd8c, #77cc51);
+  background-image: -o-linear-gradient(top, #a5dd8c, #77cc51);
+  background-image: linear-gradient(to bottom, #a5dd8c, #77cc51);
+  display: block;
+  position: absolute;
+  top: -50px;
+  right: -3px;
+  line-height: 16px;
+  height: 16px;
+  padding: 0 5px;
+  font-family: Arial, sans-serif;
+  color: white;
+  text-shadow: 0 1px rgba(0, 0, 0, 0.25);
+  border: 1px solid;
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 1px rgba(255, 255, 255, 0.3), 0 1px 1px rgba(0, 0, 0, 0.08);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.3), 0 1px 1px rgba(0, 0, 0, 0.08);
+  z-index: 900;
 }
 
 .page-dimmer {
