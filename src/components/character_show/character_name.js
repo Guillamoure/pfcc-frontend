@@ -3,6 +3,8 @@ import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
+import { faDiceD20 } from '@fortawesome/free-solid-svg-icons'
+import { faDungeon } from '@fortawesome/free-solid-svg-icons'
 
 class CharacterName extends React.Component {
 
@@ -18,7 +20,8 @@ class CharacterName extends React.Component {
     return(
       <div id='character'>
         <div className='first-row' style={{padding: '.25em'}} id='title'>{this.props.character.name}</div>
-        <span className='second-row'>{this.props.character.race.name} {this.renderClasses()}</span>
+        <span className='second-row' style={{padding: '.5em'}}>{this.props.character.race.name} {this.renderClasses()}</span>
+        <span className="notif" data-badge-1="3" data-badge-2="12" data-badge-3="1"><FontAwesomeIcon icon={faDiceD20} size='3x'onClick={() => this.props.editModal('notifications')} /></span>
         {this.props.character.user_id === this.props.currentUser.id && <span className='edit' onClick={() => this.props.editModal('character')}><FontAwesomeIcon icon={faPencilAlt} /></span>}
       </div>
     )

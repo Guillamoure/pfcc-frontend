@@ -164,7 +164,6 @@ class NewClass extends React.Component {
   }
 
   render() {
-    console.log(this.state)
     return (
       <span>
         {(this.props.toggleClassForm || this.props.location.pathname === "/classes-form") ? this.renderForm() : null}

@@ -9,13 +9,15 @@ import Table from '../components/class_show/table'
 import Features from '../components/class_show/feature_list'
 import FeatureForm from '../components/class_show/feature_form'
 import ClassForm from  '../components/class_form'
+import ClassSkillsForm from '../components/class_skills_form'
 
 class Class extends React.Component {
 
   state ={
     klass : {},
     toggleFeatureForm: false,
-    toggleClassForm: false
+    toggleClassForm: false,
+    toggleClassSkillsForm: false
   }
 
   renderURL = () => {
@@ -28,7 +30,7 @@ class Class extends React.Component {
     const klass = this.renderURL()
     fetch(`http://localhost:3000/api/v1/klasses/${klass}`)
     .then(r => r.json())
-    .then(data => this.setState({klass: data}))
+    .then(data => this.setState({klass: data.klass}))
   }
 
 
@@ -40,6 +42,10 @@ class Class extends React.Component {
   }
   toggleClassForm = () => {
     this.setState({toggleClassForm: !this.state.toggleClassForm})
+  }
+
+  toggleClassSkillsForm = () => {
+    this.setState({toggleClassSkillsForm: !this.state.toggleClassSkillsForm})
   }
 
   renderSubmit = (e, feature) => {
@@ -90,6 +96,30 @@ class Class extends React.Component {
     })
   }
 
+  renderClassSkillsFetch = (e, skills_data, method)=> {
+    e.preventDefault()
+    fetch(`http://localhost:3000/api/v1/class_skillset_skills`, {
+      method: method,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        klass_id: this.state.klass.id,
+        skills: skills_data,
+        skillset_id: this.props.currentUser.skillset_id
+      })
+    })
+    .then(r => r.json())
+    .then(data => {
+      if(!data.error){
+        this.setState({klass: data.klass, toggleClassSkillsForm: false})
+      } else {
+        console.log(data.error)
+      }
+    })
+  }
+
   renderClassFeature = (newData) => {
     let remappedFeatures
     if (Number.isInteger(newData)) {
@@ -115,11 +145,16 @@ class Class extends React.Component {
 
 
   render() {
+    console.log("Class info", this.state.klass)
     return (
       <span className='roboto show'>
-        <Introduction klass={this.state.klass}/>
+        {this.state.klass.name && <Introduction klass={this.state.klass}/>}
         {this.props.admin ? <button onClick={this.toggleClassForm}>{this.state.toggleClassForm ? "Hide Edit Class" : "Edit Class"}</button> : null}
         {this.state.toggleClassForm ? <ClassForm toggleClassForm={this.state.toggleClassForm} klass={this.state.klass} renderClassEdit={this.renderClassEdit} history={this.props.history} /> : null }
+
+        {this.props.admin ? <button onClick={this.toggleClassSkillsForm}>{this.state.toggleClassSkillsForm ? "Hide Skills Form" : "Skills Form"}</button> : null}
+        {this.state.toggleClassSkillsForm && <ClassSkillsForm toggleClassSkillsForm={this.state.toggleClassSkillsForm} klass={this.state.klass} renderClassSkills={this.renderClassSkillsFetch} />}
+
         <Table klass={this.state.klass}/>
         <div className='header' style={{marginLeft: '2em'}}>Class Features</div>
         <Features klass={this.state.klass} renderClassFeature={this.renderClassFeature} />
@@ -136,7 +171,7 @@ class Class extends React.Component {
 
 const mapStatetoProps = (state) => {
   return {
-    currentUser: state.current,
+    currentUser: state.currentUser,
     admin: state.admin
   }
 }
