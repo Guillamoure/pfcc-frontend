@@ -104,7 +104,7 @@ class Class extends React.Component{
 
   render () {
     return (
-      <div className='third-col centered'>
+      <div>
       <span>Skillset</span>
       {!!this.state.skillsets.keys && this.renderActiveSkillset()}
       <span>Class Options </span>

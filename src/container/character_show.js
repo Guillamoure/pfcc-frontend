@@ -66,7 +66,6 @@ class Character extends React.Component {
   renderAbilityScoreCalc = (ability) => {
     const downcaseAbility = _.lowerCase(ability)
     let score = this.props.character[downcaseAbility]
-    debugger
     this.props.character.race.race_ability_score_modifiers.forEach(mod => {
       if (ability === mod.ability_score){
         score += mod.bonus
