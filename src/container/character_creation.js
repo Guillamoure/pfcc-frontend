@@ -7,6 +7,9 @@ import AbilityForm from '../components/character_forms/ability_scores'
 import Race from '../components/character_forms/race'
 import Class from '../components/character_forms/class'
 import Details from '../components/character_forms/details'
+import Skills from '../components/character_forms/skills'
+
+import CreationTabs from './creation_tabs'
 
 class CharacterCreation extends React.Component{
 
@@ -33,7 +36,12 @@ class CharacterCreation extends React.Component{
     alignment: "",
     anyBonus: "",
     doesRacehaveAnyBonus: false,
-    activeSkillset: 0
+    activeSkillset: 0,
+    activeTab: "Details"
+  }
+
+  renderTabClick = (choice) => {
+    this.setState({activeTab: choice})
   }
 
   componentDidMount() {
@@ -149,12 +157,13 @@ class CharacterCreation extends React.Component{
       <div>
 
         <span id='creation-form'>
-          <Details renderChange={this.renderChange} name={this.state.name} description={this.state.description} alignment={this.state.alignment} background={this.state.background} age={this.state.age} gender={this.state.gender} hair={this.state.hair} eyes={this.state.eyes} height={this.state.height} weight={this.state.weight} homeland={this.state.homeland} deity={this.state.deity}/>
-          <div className='container-3'>
-            <AbilityForm  renderChange={this.renderChange} strength={this.state.strength}  dexterity={this.state.dexterity} constitution={this.state.constitution} intelligence={this.state.intelligence} wisdom={this.state.wisdom} charisma={this.state.charisma} />
-            <Race renderChange={this.renderChange} chosenRaceId={this.state.race} anyBonus={this.state.anyBonus} doesRacehaveAnyBonus={this.state.doesRacehaveAnyBonus} renderdoesHaveAnyBonus={this.renderdoesHaveAnyBonus}/>
-            <Class renderChange={this.renderChange} renderDynamicChanges={this.renderDynamicChanges} addClassField={this.addClassField} classes={this.state.classes} activeSkillset={this.state.activeSkillset}/>
-          </div>
+          <CreationTabs renderTabClick={this.renderTabClick} activeTab={this.state.activeTab}/>
+
+          {this.state.activeTab === "Details" && <Details renderChange={this.renderChange} name={this.state.name} description={this.state.description} alignment={this.state.alignment} background={this.state.background} age={this.state.age} gender={this.state.gender} hair={this.state.hair} eyes={this.state.eyes} height={this.state.height} weight={this.state.weight} homeland={this.state.homeland} deity={this.state.deity}/>}
+          {this.state.activeTab === "Ability Scores" && <AbilityForm  renderChange={this.renderChange} strength={this.state.strength}  dexterity={this.state.dexterity} constitution={this.state.constitution} intelligence={this.state.intelligence} wisdom={this.state.wisdom} charisma={this.state.charisma} />}
+          {this.state.activeTab === "Race" && <Race renderChange={this.renderChange} chosenRaceId={this.state.race} anyBonus={this.state.anyBonus} doesRacehaveAnyBonus={this.state.doesRacehaveAnyBonus} renderdoesHaveAnyBonus={this.renderdoesHaveAnyBonus}/>}
+          {this.state.activeTab === "Class" && <Class renderChange={this.renderChange} renderDynamicChanges={this.renderDynamicChanges} addClassField={this.addClassField} classes={this.state.classes} activeSkillset={this.state.activeSkillset}/>}
+          {this.state.activeTab === "Skills" && <Skills />}
           {/*<button onClick={() => this.renderButtonClick("abilityScores")}>{this.state.activeField === "abilityScores" ? "Hide Ability Score Form": "Create Your Ability Scores"}</button>*/}
           {/*<button onClick={() => this.renderButtonClick("race")}>{this.state.activeField === "race" ? "Hide Race Form": "Choose Your Fantasy Race"}</button>*/}
           {/*<button onClick={() => this.renderButtonClick("class")}>{this.state.activeField === "class" ? "Hide Class Form": "Choose Your Class"}</button>*/}

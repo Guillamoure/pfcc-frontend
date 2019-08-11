@@ -76,7 +76,7 @@ class Race extends React.Component{
 
   render () {
     return (
-      <div className='second-col centered'>
+      <div>
       <label>Race Options </label>
         <select name="race" value={this.props.chosenRaceId} onChange={(e) => this.props.renderChange(e)}>
           <option value= "" >Select One</option>

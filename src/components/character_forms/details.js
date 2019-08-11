@@ -11,8 +11,8 @@ class Details extends React.Component{
 
   render () {
     return (
-      <div className='first-row centered container-3'>
-        <span className='first-col'>
+      <div >
+        <span>
           <label>Character Name</label>
           <br />
           <input style={{width: '10em'}} type="text" name="name" value={this.props.name} onChange={this.props.renderChange}/>
@@ -32,7 +32,7 @@ class Details extends React.Component{
             <option value= "Chaotic Evil" >Chaotic Evil</option>
           </select>
           <br /><br />
-          <div className='container-2'>
+          <div>
             <label>Age</label>
             <input type="number" name="age" value={this.props.age} onChange={this.props.renderChange}/>
             <label>Gender</label>
@@ -40,11 +40,11 @@ class Details extends React.Component{
           </div>
         </span>
         <br />
-        <span className='second-col first-row'>
+        <span>
           <label>Description</label>
           <br />
           <textarea style={{width: '15em'}} type="textfield" className="desc-box" rows="6" name="description" value={this.props.description} onChange={this.props.renderChange}/>
-          <div className='container-2'>
+          <div>
             <label>Hair</label>
             <input type="text" name="hair" value={this.props.hair} onChange={this.props.renderChange}/>
             <label>Eye Color</label>
@@ -55,7 +55,7 @@ class Details extends React.Component{
             <input type="text" name="weight" value={this.props.weight} onChange={this.props.renderChange}/>
           </div>
         </span>
-        <span className='third-col first-row'>
+        <span>
           <label>Background</label>
           <br />
           <textarea style={{width: '15em'}} type="textfield" className="desc-box" rows="6" name="background" value={this.props.background} onChange={this.props.renderChange}/>

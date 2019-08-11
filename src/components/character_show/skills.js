@@ -25,12 +25,24 @@ class Skills extends React.Component {
     return mod < 0 ? mod : `+${mod}`
   }
 
+  renderClassSkill = (skill) => {
+    let isThisAClassSkill = false
+    this.props.character.klasses.forEach(klass => {
+      klass.class_skillset_skills.forEach(csss => {
+        if (csss.skill_id === skill.id && csss.skillset_id === this.props.character.skillset.id) {
+          isThisAClassSkill = true
+        }
+      })
+    })
+    return isThisAClassSkill
+  }
+
   renderSkillTableRow = () => {
     const sortedSkills = this.state.skillset.skills.sort((a,b) => a.name > b.name ? 1 : -1)
     return sortedSkills.map(skill => {
       return (
         <tr key={_.random(1, 2000000)}>
-          <td></td>
+          <td>{this.renderClassSkill(skill) ? "X" : null}</td>
           <td><strong>{skill.ability_score.slice(0, 3)}</strong></td>
           <td>{skill.name}</td>
           <td>{this.renderSkillBonus(skill)}</td>
