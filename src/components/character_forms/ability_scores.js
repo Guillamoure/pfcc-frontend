@@ -43,9 +43,10 @@ class AbilityForm extends React.Component{
   render () {
     return (
       <div className='first-col centered'>
-        {this.state.numbers[0] ? <p>{this.state.numbers.join(", ")}</p>: <p> You can roll your own numbers, or you can generate some sample scores with the button below! </p>}
+        {this.state.numbers.length === 6 ? <p>{this.state.numbers.join(", ")}</p>: <p> You can roll your own numbers, or you can generate some sample scores with the button below! </p>}
 
         <button onClick={this.generateRandomAbilityScores}>Generate 6 numbers!</button>
+        {this.state.numbers.length === 6 && <button onClick={() => this.props.mapAbilityScores(this.state.numbers)}>Map directly to Abilities!</button>}
         <br /><br />
         <div className='container-2' style={{marginLeft: '20%'}}>
           <label>Strength</label>

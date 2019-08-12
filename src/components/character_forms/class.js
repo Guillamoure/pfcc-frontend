@@ -15,14 +15,8 @@ class Class extends React.Component{
     fetch('http://localhost:3000/api/v1/klasses')
     .then(r => r.json())
     .then(data => {
-      this.setState({classes: data}, this.fetchSkillsets())
+      this.setState({classes: data})
     })
-  }
-
-  fetchSkillsets = () => {
-    fetch("http://localhost:3000/api/v1/skillsets")
-    .then(r => r.json())
-    .then(data => this.setState({skillsets: data}))
   }
 
   renderClasses = () => {
@@ -80,18 +74,6 @@ class Class extends React.Component{
     }
   }
 
-  renderActiveSkillset = () => {
-    return (
-      <div>
-        <label>
-          Active Skillset:
-          <select name="activeSkillset" value={this.props.activeSkillset} onChange={this.props.renderChange}>
-            {this.state.skillsets.map(ss => <option value={ss.id}>{ss.name}</option>)}
-          </select>
-        </label>
-      </div>
-    )
-  }
 
   // <label>
   //   Class Options:
@@ -105,8 +87,7 @@ class Class extends React.Component{
   render () {
     return (
       <div>
-      <span>Skillset</span>
-      {!!this.state.skillsets.keys && this.renderActiveSkillset()}
+
       <span>Class Options </span>
       {this.mapClassDynamicFields()}
       <button onClick={(e) => this.props.addClassField(e, "plus")}>+</button>
