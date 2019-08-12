@@ -1,5 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
+import { connect } from 'react-redux'
+
 
 class AttackBonus extends React.Component {
 
@@ -38,13 +40,13 @@ class AttackBonus extends React.Component {
       klass_ids[klass.klass_id] = klass.level
     })
     this.props.character.klasses.forEach(klass => {
-      ab += Math.floor(this.renderBAB(klass.hit_die) * klass_ids[klass.id])
+      ab += Math.floor(this.renderBAB(klass.hit_die) * this.props.character_info.classes[klass.id])
     })
     if (this.props.character.race.size === 'Small'){
       ab += 1
     }
     ab += this.renderAbilityScoreModifiers(ability)
-    return ab
+    return ab < 0 ? ab : `+${ab}`
   }
 
   render () {
@@ -53,8 +55,8 @@ class AttackBonus extends React.Component {
         <span className='centered'>
           <div className='dull'><strong>Attack Bonus</strong></div>
           <div className='container-2'>
-            <span className='enhanced'>+{this.renderAB('strength')}</span>
-            <span className='enhanced'>+{this.renderAB('dexterity')}</span>
+            <span className='enhanced'>{this.renderAB('strength')}</span>
+            <span className='enhanced'>{this.renderAB('dexterity')}</span>
             <span>Melee</span>
             <span>Ranged</span>
           </div>
@@ -64,4 +66,13 @@ class AttackBonus extends React.Component {
   }
 }
 
-export default AttackBonus
+const mapStateToProps = (state) => {
+  return {
+    currentUser: state.currentUser,
+    admin: state.admin,
+    character_info: state.character_info
+  }
+}
+
+
+export default connect(mapStateToProps)(AttackBonus)

@@ -6,11 +6,19 @@ import { connect } from 'react-redux'
 class Characters extends React.Component {
 
   renderClasses = (character) => {
-    let klasses = character.klasses.map(klass => {
-      let char_klass = character.character_klasses.find(char_k => klass.id === char_k.klass_id)
-      return `${klass.name} ${char_klass.level}`
+    let klasses = {}
+    character.klasses.forEach(klass => {
+      if (klasses[klass.name]) {
+        klasses[klass.name]++
+      } else {
+        klasses[klass.name] = 1
+      }
     })
-    return klasses.join(", ")
+    let classesLevels = []
+    Object.entries(klasses).forEach(klass => {
+      classesLevels.push(`${klass[0]} ${klass[1]}`)
+    })
+    return classesLevels.join(", ")
   }
 
   renderCharacters = () => {
@@ -42,7 +50,7 @@ class Characters extends React.Component {
     console.log(this.props)
     return (
       <React.Fragment>
-        {this.renderCharacters()}
+        {this.props.currentUser && this.renderCharacters()}
       </React.Fragment>
     )
   }

@@ -11,7 +11,6 @@ class Skills extends React.Component {
     fetch("http://localhost:3000/api/v1/skillsets")
     .then(r => r.json())
     .then(data => {
-      debugger
       this.setState({skillsets: data})
     })
   }
@@ -57,10 +56,20 @@ class Skills extends React.Component {
 
   render() {
     return(
-      <div>
+      <div >
         <span>Skillset</span>
         {this.state.skillsets && this.renderActiveSkillset()}
-        {this.state.skillsets && this.renderSkillTableRow()}
+        <table>
+          <thead >
+            <tr >
+              <th >Ability</th>
+              <th >Skill</th>
+            </tr>
+          </thead>
+          <tbody >
+            {this.state.skillsets && this.renderSkillTableRow()}
+          </tbody>
+        </table>
       </div>
     )
   }

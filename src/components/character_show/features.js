@@ -29,6 +29,8 @@ class Features extends React.Component {
             {this.state.activeFeature === feature.id && <div style={{color: '#000'}}>{feature.description}</div>}
           </li>
         )
+      } else {
+        return null
       }
 
     })

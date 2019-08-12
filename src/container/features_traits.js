@@ -14,7 +14,6 @@ class FeaturesTraits extends React.Component {
   }
 
   render(){
-    console.log(this.props.character)
     return(
       <div className="features-traits">
         <Tabs renderTabClick={this.renderTabClick} activeTab={this.state.activeTab}/>

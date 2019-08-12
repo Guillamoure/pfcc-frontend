@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-class SkillRanks from React.Component {
+class SkillRanks extends React.Component {
 
   state = {
     skillset: false,
@@ -16,7 +16,7 @@ class SkillRanks from React.Component {
       const skillsAndRanks = {}
       data.skillset.skills.forEach(skill => {
         let ranks = 0
-        this.props.character.character_skillset_skill.forEach(charRanksSkill => {
+        this.props.character.character_skillset_skills.forEach(charRanksSkill => {
           if (charRanksSkill.skill_id === skill.id){
             ranks = charRanksSkill.ranks
           }
@@ -35,7 +35,7 @@ class SkillRanks from React.Component {
 
   renderCSSChangeColor = (id) => {
     if (this.state.currentRanks[id] > this.state.previousRanks[id]){
-      return"green"
+      return "green"
     } else {
       return "black"
     }
@@ -56,7 +56,9 @@ class SkillRanks from React.Component {
 
   render() {
     return (
-      {this.renderSkillSelection()}
+      <div>
+        {this.state.skillset && this.renderSkillSelection()}
+      </div>
     )
   }
 }
@@ -65,6 +67,7 @@ const mapStatetoProps = (state) => {
   return {
     currentUser: state.currentUser,
     admin: state.admin,
+    character: state.character,
     character_info: state.character_info
   }
 }
