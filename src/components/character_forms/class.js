@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 class Class extends React.Component{
 
   state = {
-    classes: {},
+    classes: false,
     activeSkillset: 0,
     skillsets: {}
   }
@@ -38,25 +38,13 @@ class Class extends React.Component{
           <label htmlFor={classId}>{`Class #${idx + 1}`} </label>
             <select
               name={classId}
-              data-id={idx}
-              id={classId}
-              value={this.props.classes[idx].classId}
-              className="classId"
-              onChange={this.props.renderDynamicChanges}
+              value={this.props.classes[idx]}
+              onChange={(e) => this.props.renderDynamicChanges(e, idx)}
             >
               <option value= "" >Choose One</option>
-              {this.state.classes[0] ? this.renderClasses() : null}
+              {this.state.classes && this.renderClasses()}
             </select>
-          <label htmlFor={level}> Level </label>
-          <input
-            type="number"
-            name={level}
-            data-id={idx}
-            id={level}
-            value = {this.props.classes[idx].level}
-            className="level"
-            onChange={this.props.renderDynamicChanges}
-          />
+            {`Level ${idx + 1}`}
         </div>
       )
     })
@@ -89,9 +77,9 @@ class Class extends React.Component{
       <div>
 
       <span>Class Options </span>
+      <button onClick={(e) => this.props.addClassField(e, "plus", this.props.classes.length-1)}>{`Level ${this.props.classes.length + 1}`}</button>
+      {this.props.classes.length > 1 ? <button onClick={(e) => this.props.addClassField(e, "minus")}>Delevel</button> : null}
       {this.mapClassDynamicFields()}
-      <button onClick={(e) => this.props.addClassField(e, "plus")}>+</button>
-      {this.props.classes.length > 1 ? <button onClick={(e) => this.props.addClassField(e, "minus")}>-</button> : null}
       {this.checkForValidLevels()}
       {this.state.classes[0] && this.props.chosenClassId ? this.renderChosenClass() : null}
       </div>

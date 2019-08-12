@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 
@@ -26,7 +25,7 @@ class Skills extends React.Component {
         {skill.name}
         </span>
         <div className="fade"></div>
-        <img className='card-img' src={skill.img_url}>
+        <img className='card-img' src={skill.img_url} alt={skill.name}>
         </img>
       </div>
     )})

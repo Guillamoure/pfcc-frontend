@@ -35,7 +35,7 @@ class Saves extends React.Component {
       klass_ids[klass.klass_id] = klass.level
     })
     this.props.character.klasses.forEach(klass => {
-      totalSavingThrow += this.renderSave(klass_ids[klass.id], klass[save])
+      totalSavingThrow += this.renderSave(this.props.character_info.classes[klass.id], klass[save])
     })
     const mod = Math.floor((this.renderClassAbilityScoreModifiers(score) - 10) / 2)
     totalSavingThrow += mod

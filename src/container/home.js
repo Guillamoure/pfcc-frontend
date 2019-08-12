@@ -22,7 +22,9 @@ class Home extends React.Component {
           }
         })
         .then(r => r.json())
-        .then(data => this.setState({characters: data}))
+        .then(data => {
+          this.setState({characters: data})
+      })
       }
   }
 

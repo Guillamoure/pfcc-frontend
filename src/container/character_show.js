@@ -34,12 +34,8 @@ class Character extends React.Component {
       // IF YOU WANT THE PAGE TO BE PRIVATE
       // if (this.props.currentUser.id === data.character.user.id){
         this.props.dispatch({type: 'CHARACTER', character: data.character })
-        this.renderAbilityScoreCalc("Strength")
-        this.renderAbilityScoreCalc("Dexterity")
-        this.renderAbilityScoreCalc("Constitution")
-        this.renderAbilityScoreCalc("Intelligence")
-        this.renderAbilityScoreCalc("Wisdom")
-        this.renderAbilityScoreCalc("Charisma")
+        this.dispatchAbilityScores()
+        this.dispatchClassLevels()
         this.setState({character: data.character})
       // } else {
       //   this.props.history.push('/')
@@ -71,13 +67,25 @@ class Character extends React.Component {
         score += mod.bonus
       }
     })
-    if (this.props.character.anyBonus === ability){
+    if (this.props.character.any_bonus === ability){
       score +=2
     }
     this.props.dispatch({type: 'ABILITY SCORE', ability: downcaseAbility, score: score })
   }
 
-  renderReduxAbilityScores = () => {
+  dispatchClassLevels = () => {
+    let charKlassesLevels = {}
+    this.props.character.character_klasses.forEach(charKlass => {
+      if (charKlassesLevels[charKlass.klass_id]) {
+        charKlassesLevels[charKlass.klass_id]++
+      } else {
+        charKlassesLevels[charKlass.klass_id] = 1
+      }
+    })
+    this.props.dispatch({type: 'CLASSES', classes: charKlassesLevels})
+  }
+
+  dispatchAbilityScores = () => {
     // this.props.dispatch({type: 'CHARACTER', character: this.state.character })
     this.renderAbilityScoreCalc("Strength")
     this.renderAbilityScoreCalc("Dexterity")
@@ -100,7 +108,7 @@ class Character extends React.Component {
     .then(data => {
       console.log(data)
       this.props.dispatch({type: 'CHARACTER', character: data.character })
-      this.setState({character: data.character, modal: false}, this.renderReduxAbilityScores())
+      this.setState({character: data.character, modal: false}, this.dispatchAbilityScores(), this.dispatchClassLevels())
     })
   }
 
@@ -116,7 +124,7 @@ class Character extends React.Component {
 
 
   render() {
-    console.log("redux character adding", this.props.character_info)
+    console.log("redux character adding", this.props)
     return (
       <span className="container-8 character">
         {this.state.character.race && <AbilityScores character={this.state.character} editModal={this.editModal}/>}

@@ -15,7 +15,7 @@ class CharacterCreation extends React.Component{
 
   state = {
     activeField: "",
-    classes: [{classId: 0, level: 1}],
+    classes: [0],
     race: 0,
     strength: 0,
     dexterity: 0,
@@ -70,19 +70,17 @@ class CharacterCreation extends React.Component{
     }
   }
 
-  renderDynamicChanges = (e) => {
-    if (["classId", "level"].includes(e.target.className)){
-      let classes = [...this.state.classes]
-      classes[e.target.dataset.id][e.target.className] = e.target.value
-      this.setState({ classes })
-    }
+  renderDynamicChanges = (e, index) => {
+    let classes = [...this.state.classes]
+
+    classes[index] = e.target.value
+    this.setState({ classes })
   }
 
-  addClassField = (e, change) => {
+  addClassField = (e, change, index) => {
     e.preventDefault()
     if (change === "plus") {
-
-      this.setState( { classes: [...this.state.classes, {classId: 0, level: 1} ] } )
+      this.setState( { classes: [...this.state.classes, this.state.classes[index]] } )
     } else if (change === "minus") {
       let removedClasses = [...this.state.classes]
       removedClasses.pop()
