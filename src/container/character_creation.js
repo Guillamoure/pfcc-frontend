@@ -146,6 +146,17 @@ class CharacterCreation extends React.Component{
     this.setState({doesRacehaveAnyBonus: true})
   }
 
+  mapAbilityScores = (array) => {
+    this.setState({
+      strength: array[0],
+      dexterity: array[1],
+      constitution: array[2],
+      intelligence: array[3],
+      wisdom: array[4],
+      charisma: array[5]
+    })
+  }
+
 
   // {this.state.strength && this.state.dexterity && this.state.constitution && this.state.intelligence && this.state.wisdom && this.state.charisma && this.state.activeField !== "abilityScores" ? <div><strong>Ability Scores Picked!</strong></div> : null}
   // {this.state.race && (this.state.activeField !== "race") && (this.state.doesRacehaveAnyBonus ? this.state.anyBonus : true) ? <div><strong>Race Picked!</strong></div> : null}
@@ -160,10 +171,10 @@ class CharacterCreation extends React.Component{
           <CreationTabs renderTabClick={this.renderTabClick} activeTab={this.state.activeTab}/>
 
           {this.state.activeTab === "Details" && <Details renderChange={this.renderChange} name={this.state.name} description={this.state.description} alignment={this.state.alignment} background={this.state.background} age={this.state.age} gender={this.state.gender} hair={this.state.hair} eyes={this.state.eyes} height={this.state.height} weight={this.state.weight} homeland={this.state.homeland} deity={this.state.deity}/>}
-          {this.state.activeTab === "Ability Scores" && <AbilityForm  renderChange={this.renderChange} strength={this.state.strength}  dexterity={this.state.dexterity} constitution={this.state.constitution} intelligence={this.state.intelligence} wisdom={this.state.wisdom} charisma={this.state.charisma} />}
+          {this.state.activeTab === "Ability Scores" && <AbilityForm renderChange={this.renderChange} strength={this.state.strength}  dexterity={this.state.dexterity} constitution={this.state.constitution} intelligence={this.state.intelligence} wisdom={this.state.wisdom} charisma={this.state.charisma} mapAbilityScores={this.mapAbilityScores}/>}
           {this.state.activeTab === "Race" && <Race renderChange={this.renderChange} chosenRaceId={this.state.race} anyBonus={this.state.anyBonus} doesRacehaveAnyBonus={this.state.doesRacehaveAnyBonus} renderdoesHaveAnyBonus={this.renderdoesHaveAnyBonus}/>}
-          {this.state.activeTab === "Class" && <Class renderChange={this.renderChange} renderDynamicChanges={this.renderDynamicChanges} addClassField={this.addClassField} classes={this.state.classes} activeSkillset={this.state.activeSkillset}/>}
-          {this.state.activeTab === "Skills" && <Skills />}
+          {this.state.activeTab === "Class" && <Class renderChange={this.renderChange} renderDynamicChanges={this.renderDynamicChanges} addClassField={this.addClassField} classes={this.state.classes} />}
+          {this.state.activeTab === "Skills" && <Skills activeSkillset={this.state.activeSkillset} renderChange={this.renderChange} classes={this.state.classes}/>}
           {/*<button onClick={() => this.renderButtonClick("abilityScores")}>{this.state.activeField === "abilityScores" ? "Hide Ability Score Form": "Create Your Ability Scores"}</button>*/}
           {/*<button onClick={() => this.renderButtonClick("race")}>{this.state.activeField === "race" ? "Hide Race Form": "Choose Your Fantasy Race"}</button>*/}
           {/*<button onClick={() => this.renderButtonClick("class")}>{this.state.activeField === "class" ? "Hide Class Form": "Choose Your Class"}</button>*/}
