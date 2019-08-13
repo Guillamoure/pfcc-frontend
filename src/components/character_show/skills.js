@@ -21,7 +21,11 @@ class Skills extends React.Component {
 
   renderSkillBonus = (skill) => {
     const score = this.props.character_info.ability_scores[_.lowerCase(skill.ability_score)]
-    const mod = Math.floor((score - 10) / 2)
+    let mod = Math.floor((score - 10) / 2)
+    let skillRanks = this.props.character.character_skillset_skills.find(chsss => chsss.skill_id === skill.id)
+    if (skillRanks !== undefined){
+      mod += skillRanks.ranks
+    }
     return mod < 0 ? mod : `+${mod}`
   }
 
@@ -85,6 +89,7 @@ const mapStatetoProps = (state) => {
   return {
     currentUser: state.currentUser,
     admin: state.admin,
+    character: state.character,
     character_info: state.character_info
   }
 }
