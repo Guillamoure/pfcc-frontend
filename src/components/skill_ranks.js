@@ -6,7 +6,8 @@ class SkillRanks extends React.Component {
   state = {
     skillset: false,
     previousRanks: {},
-    currentRanks: {}
+    currentRanks: {},
+    availableRanks: 0
   }
 
   componentDidMount() {
@@ -23,15 +24,30 @@ class SkillRanks extends React.Component {
         })
         skillsAndRanks[skill.id] = ranks
       })
-      this.setState({skillset: data.skillset, previousRanks: skillsAndRanks, currentRanks:skillsAndRanks})
+      this.setState({skillset: data.skillset, previousRanks: skillsAndRanks, currentRanks:skillsAndRanks}, this.renderAvailableRanks())
     })
   }
 
-  renderClassLevel = () => {
-    return this.props.character.character_klasses.reduce((agg, klass) => {
-      return agg + klass.level
-    }, 0)
+  renderSubmit = () => {
+    fetch('http://localhost:3000/api/v1/character_skillset_skills', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        character_id: this.props.character.id,
+        skillset_id: this.props.character.skillset.id,
+        ranks: this.state.currentRanks
+      })
+    })
+    .then(r => r.json())
+    .then(data => {
+      this.props.dispatch({type: 'CHARACTER', character: data.character })
+      this.props.exitModal()
+    })
   }
+
 
   renderCSSChangeColor = (id) => {
     if (this.state.currentRanks[id] > this.state.previousRanks[id]){
@@ -41,14 +57,28 @@ class SkillRanks extends React.Component {
     }
   }
 
+  renderAvailableRanks = () => {
+    let availableRanks = this.props.character.klasses.reduce(((agg, klass) => {
+      return agg + klass.skill_ranks
+    }), 0)
+    availableRanks += (Math.floor((this.props.character_info.ability_scores.intelligence - 10) / 2) * this.props.character.character_klasses.length)
+    if (this.state.previousRanks.length > 1){
+      const currentRanks = Object.entries(this.state.previousRanks).reduce(((agg, skill) => {
+        return agg + skill[1]
+      }), 0)
+      availableRanks -= currentRanks
+    }
+    this.setState({availableRanks: availableRanks})
+  }
+
 
   renderSkillSelection = () => {
     return this.state.skillset.skills.map(skill => {
       return (
         <div>
             <span>{skill.name}: <span className={this.renderCSSChangeColor(skill.id)}>{this.state.currentRanks[skill.id]}</span></span>
-          {(!this.state.currentRanks[skill.id] === this.renderClassLevel()) ? <button onClick={this.setState({currentRanks: {...this.state.currentRanks, [skill.id]: this.state.currentRanks[skill.id]+1 }})}>+</button> : null}
-          {(!this.state.currentRanks[skill.id] === this.state.previousRanks[skill.id]) ? <button onClick={this.setState({currentRanks: {...this.state.currentRanks, [skill.id]: this.state.currentRanks[skill.id]-1 }})}>-</button> : null}
+          {!(this.state.currentRanks[skill.id] === this.props.character.character_klasses.length) && (this.state.availableRanks !== 0)? <button onClick={() => this.setState({currentRanks: {...this.state.currentRanks, [skill.id]: this.state.currentRanks[skill.id]+1 }, availableRanks: this.state.availableRanks - 1})}>+</button> : null}
+          {!(this.state.currentRanks[skill.id] === this.state.previousRanks[skill.id]) ? <button onClick={() => this.setState({currentRanks: {...this.state.currentRanks, [skill.id]: this.state.currentRanks[skill.id]-1 }, availableRanks: this.state.availableRanks + 1})}>-</button> : null}
         </div>
       )
     })
@@ -57,7 +87,9 @@ class SkillRanks extends React.Component {
   render() {
     return (
       <div>
+        <div>Available Ranks: {this.state.availableRanks}</div>
         {this.state.skillset && this.renderSkillSelection()}
+        <button onClick={this.renderSubmit}>Submit!</button>
       </div>
     )
   }

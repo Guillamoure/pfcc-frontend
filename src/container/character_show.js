@@ -121,6 +121,9 @@ class Character extends React.Component {
       this.setState({modal: false})
     }
   }
+  exitModal = () => {
+    this.setState({modal: false})
+  }
 
 
   render() {
@@ -140,7 +143,7 @@ class Character extends React.Component {
         {this.state.modal === 'background' && <BackgroundForm character={this.state.character} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
         {this.state.modal === 'character' && <CharacterForm character={this.state.character} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
         {this.state.modal === 'ability' && <AbilityForm character={this.state.character} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
-        {this.state.modal === 'notifications' && <Notifications editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
+        {this.state.modal === 'notifications' && <Notifications exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
 
       </span>
     )

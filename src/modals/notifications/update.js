@@ -36,7 +36,7 @@ class Update extends React.Component {
       return <div onClick={() => this.setState({activeProblem: "Ranks"})}><FontAwesomeIcon icon={faExclamationTriangle} color='#ffd800' />You have some Skill Ranks to spend</div>
     }
     if (this.needsRanks() && this.state.activeProblem === "Ranks"){
-      return <SkillRanks />
+      return <SkillRanks exitModal={this.props.exitModal}/>
     }
   }
 
