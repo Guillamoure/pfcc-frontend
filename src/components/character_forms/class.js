@@ -77,9 +77,10 @@ class Class extends React.Component{
       <div>
 
       <span>Class Options </span>
+      <br/>
       <button onClick={(e) => this.props.addClassField(e, "plus", this.props.classes.length-1)}>{`Level ${this.props.classes.length + 1}`}</button>
-      {this.props.classes.length > 1 ? <button onClick={(e) => this.props.addClassField(e, "minus")}>Delevel</button> : null}
       {this.mapClassDynamicFields()}
+      {this.props.classes.length > 1 ? <button onClick={(e) => this.props.addClassField(e, "minus")}>Delevel</button> : null}
       {this.checkForValidLevels()}
       {this.state.classes[0] && this.props.chosenClassId ? this.renderChosenClass() : null}
       </div>

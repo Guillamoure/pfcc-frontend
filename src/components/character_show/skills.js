@@ -22,11 +22,17 @@ class Skills extends React.Component {
   renderSkillBonus = (skill) => {
     const score = this.props.character_info.ability_scores[_.lowerCase(skill.ability_score)]
     let mod = Math.floor((score - 10) / 2)
-    let skillRanks = this.props.character.character_skillset_skills.find(chsss => chsss.skill_id === skill.id)
-    if (skillRanks !== undefined){
-      mod += skillRanks.ranks
+    let skillRanks = this.renderNumOfRanks(skill)
+      mod += skillRanks
+    if (this.renderClassSkill(skill) && skillRanks > 0){
+      mod += 3
     }
     return mod < 0 ? mod : `+${mod}`
+  }
+
+  renderNumOfRanks = (skill) => {
+    let skillRanks = this.props.character.character_skillset_skills.find(chsss => chsss.skill_id === skill.id)
+    return skillRanks !== undefined ? skillRanks.ranks : 0
   }
 
   renderClassSkill = (skill) => {
@@ -50,6 +56,7 @@ class Skills extends React.Component {
           <td><strong>{skill.ability_score.slice(0, 3)}</strong></td>
           <td>{skill.name}</td>
           <td>{this.renderSkillBonus(skill)}</td>
+          <td>{this.renderNumOfRanks(skill)}</td>
         </tr>
       )}
     )
@@ -64,6 +71,7 @@ class Skills extends React.Component {
             <th >Ability</th>
             <th >Skill</th>
             <th >Bonus</th>
+            <th >Ranks</th>
           </tr>
         </thead>
         <tbody >

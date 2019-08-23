@@ -7,16 +7,15 @@ class CharacterForm extends React.Component{
   state = {
     name: "",
     race: 0,
-    classes: [{classId: 0, level: 1}],
+    classes: [0],
     anyBonus: "",
     doesRacehaveAnyBonus: false,
-    allClasses: {},
+    allClasses: false,
     allRaces: {},
     id: ""
   }
 
   componentDidMount() {
-    console.log("edit background", this.props.character)
     this.setState({
       name: this.props.character.name,
       race: this.props.character.race.id,
@@ -47,18 +46,17 @@ class CharacterForm extends React.Component{
   }
 
   renderDefaultClasses = () => {
-    const klasses = this.props.character.character_klasses.map(klass => {
-      return {classId: klass.klass_id, level: klass.level}
+    const sortedClasses = this.props.character.character_klasses.sort((a,b) => a.level - b.level)
+    const klasses = sortedClasses.map(klass => {
+      return klass.klass_id
     })
     return klasses
   }
 
-  renderDynamicChanges = (e) => {
-    if (["classId", "level"].includes(e.target.className)){
-      let classes = [...this.state.classes]
-      classes[e.target.dataset.id][e.target.className] = e.target.value
-      this.setState({ classes })
-    }
+  renderDynamicChanges = (e, index) => {
+    let classes = [...this.state.classes]
+    classes[index] = e.target.value
+    this.setState({ classes })
   }
 
   renderClasses = () => {
@@ -111,11 +109,11 @@ class CharacterForm extends React.Component{
     )
   }
 
-  addClassField = (e, change) => {
+  addClassField = (e, change, index) => {
     e.preventDefault()
     if (change === "plus") {
 
-      this.setState( { classes: [...this.state.classes, {classId: 0, level: 1} ] } )
+      this.setState( { classes: [...this.state.classes, this.state.classes[index]] } )
     } else if (change === "minus") {
       let removedClasses = [...this.state.classes]
       removedClasses.pop()
@@ -135,38 +133,27 @@ class CharacterForm extends React.Component{
     }
   }
 
+    mapClassDynamicFields = () => {
+      return this.state.classes.map((val, idx)=> {
+        let classId = `class-${idx}`, level = `level-${idx}`
+        return (
+          <div key={idx}>
+            <label htmlFor={classId}>{`Class #${idx + 1}`} </label>
+              <select
+                name={classId}
+                value={this.state.classes[idx]}
+                onChange={(e) => this.renderDynamicChanges(e, idx)}
+              >
+                <option value= "" >Choose One</option>
+                {this.state.allClasses && this.renderClasses()}
+              </select>
+              {`Level ${idx + 1}`}
+          </div>
+        )
+      })
+    }
 
-  mapClassDynamicFields = () => {
-    return this.state.classes.map((val, idx)=> {
-      let classId = `class-${idx}`, level = `level-${idx}`
-      return (
-        <div key={idx}>
-          <label htmlFor={classId}>{`Class #${idx + 1}`} </label>
-            <select
-              name={classId}
-              data-id={idx}
-              id={classId}
-              value={this.state.classes[idx].classId}
-              className="classId"
-              onChange={this.renderDynamicChanges}
-            >
-              <option value= "" >Choose One</option>
-              {this.state.allClasses[0] ? this.renderClasses() : null}
-            </select>
-          <label htmlFor={level}> Level </label>
-          <input
-            type="number"
-            name={level}
-            data-id={idx}
-            id={level}
-            value = {this.state.classes[idx].level}
-            className="level"
-            onChange={this.renderDynamicChanges}
-          />
-        </div>
-      )
-    })
-  }
+
 
   render() {
     return (
@@ -192,8 +179,8 @@ class CharacterForm extends React.Component{
             <br />
             <label>Classes</label>
             <br />
-            {this.mapClassDynamicFields()}
-            <button onClick={(e) => this.addClassField(e, "plus")}>+</button>
+            {this.state.allClasses && this.mapClassDynamicFields()}
+            <button onClick={(e) => this.addClassField(e, "plus", this.state.classes.length-1)}>+</button>
             {this.state.classes.length > 1 ? <button onClick={(e) => this.addClassField(e, "minus")}>-</button> : null}
             {this.checkForValidLevels()}
             <br /><br />
