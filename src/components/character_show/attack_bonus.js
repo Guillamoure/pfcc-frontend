@@ -51,7 +51,7 @@ class AttackBonus extends React.Component {
 
   render () {
     return(
-      <div id='attack-bonus' >
+      <div id='attack-bonus' className='shadow'>
         <span className='centered'>
           <div className='dull'><strong>Attack Bonus</strong></div>
           <div className='container-2'>

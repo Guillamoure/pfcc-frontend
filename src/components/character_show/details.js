@@ -17,7 +17,7 @@ class Details extends React.Component {
   render(){
     console.log(this.props.character)
     return(
-      <div id="details">
+      <div id="details" className='shadow'>
         <span className='header'>Background</span>
         {this.props.character.user_id === this.props.currentUser.id && <span className='edit' onClick={() => this.props.editModal('background')}><FontAwesomeIcon icon={faPencilAlt} /></span>}
           <div className='nested'>
