@@ -18,13 +18,19 @@ import CharacterForm from '../modals/character_form'
 import AbilityForm from '../modals/ability_form'
 import Notifications from '../modals/notifications'
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCaretRight } from '@fortawesome/free-solid-svg-icons'
+import { faCaretLeft } from '@fortawesome/free-solid-svg-icons'
+
+
 
 
 class Character extends React.Component {
 
   state = {
     character: {},
-    modal: false
+    modal: false,
+    display: "Adventure"
   }
 
   componentDidMount() {
@@ -126,25 +132,57 @@ class Character extends React.Component {
     this.setState({modal: false})
   }
 
+  rightArrow = () => {
+    switch(this.state.display){
+      case "Adventure":
+        return "Character";
+      case "Combat":
+        return "Adventure";
+      case "Character":
+        return "Combat";
+      default:
+        return "Character"
+    }
+  }
+
+  leftArrow = () => {
+    switch(this.state.display){
+      case "Adventure":
+        return "Combat";
+      case "Combat":
+        return "Character";
+      case "Character":
+        return "Adventure";
+      default:
+        return "Combat"
+    }
+  }
+
 
   render() {
     console.log("redux character adding", this.props)
     return (
       <span className="container-8 character">
-        {this.state.character.race && <AbilityScores character={this.state.character} editModal={this.editModal}/>}
         {this.state.character.race && <CharacterName character={this.state.character} editModal={this.editModal}/>}
-        {this.state.character.race && <FeaturesTraits character={this.state.character}/>}
-        {this.state.character.race && <Details character={this.state.character} editModal={this.editModal}/>}
-        {this.state.character.race && <Saves character={this.state.character}/>}
-        {this.state.character.race && <HP character={this.state.character}/>}
-        {this.state.character.race && <AttackBonus character={this.state.character}/>}
-        {this.state.character.race && <ArmorClass character={this.state.character}/>}
-        {this.state.character.race && <Skills character={this.state.character}/>}
+        {this.state.character.race && this.state.display === "Adventure" && <AbilityScores character={this.state.character} editModal={this.editModal}/>}
+        {this.state.character.race && this.state.display === "Adventure" && <FeaturesTraits character={this.state.character}/>}
+        {this.state.character.race && this.state.display === "Adventure" && <Details character={this.state.character} editModal={this.editModal}/>}
+        {this.state.character.race && this.state.display === "Adventure" && <Saves character={this.state.character}/>}
+        {this.state.character.race && this.state.display === "Adventure" && <HP character={this.state.character}/>}
+        {this.state.character.race && this.state.display === "Adventure" && <AttackBonus character={this.state.character}/>}
+        {this.state.character.race && this.state.display === "Adventure" && <ArmorClass character={this.state.character}/>}
+        {this.state.character.race && this.state.display === "Adventure" && <Skills character={this.state.character}/>}
+
+        {this.state.character.race && this.state.display === "Combat" && <HP character={this.state.character}/>}
+
 
         {this.state.modal === 'background' && <BackgroundForm character={this.state.character} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
         {this.state.modal === 'character' && <CharacterForm character={this.state.character} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
         {this.state.modal === 'ability' && <AbilityForm character={this.state.character} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
         {this.state.modal === 'notifications' && <Notifications exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
+
+        <div id='right' onClick={() => this.setState({display: this.rightArrow()})}><FontAwesomeIcon icon={faCaretRight} size='9x'/><div>{this.rightArrow()}</div></div>
+        <div id='left' onClick={() => this.setState({display: this.leftArrow()})}><FontAwesomeIcon icon={faCaretLeft} size='9x'/><div>{this.leftArrow()}</div></div>
 
       </span>
     )

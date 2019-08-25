@@ -84,6 +84,7 @@
   overflow: auto;
   max-height: 23.75em;
   position: relative;
+  box-shadow: 4px 4px 2px #000;
 }
 
 .hp {
@@ -98,6 +99,7 @@
   border: solid;
   border-color: #000;
   border-radius: 1.5em;
+  box-shadow: 4px 4px 2px #000;
 }
 
 .show {
@@ -124,6 +126,8 @@
   border: solid;
   border-color: #000;
   border-radius: 1em;
+  box-shadow: 4px 4px 2px #000;
+
 }
 
 #attack-bonus {
@@ -137,6 +141,7 @@
   border: solid;
   border-color: #000;
   border-radius: 1em;
+  box-shadow: 4px 4px 2px #000;
 }
 
 #ac {
@@ -150,6 +155,7 @@
   border: solid;
   border-color: #000;
   border-radius: 1em;
+  box-shadow: 4px 4px 2px #000;
 }
 
 #details {
@@ -166,6 +172,7 @@
   overflow: auto;
   max-height: 100%;
   position: relative;
+  box-shadow: 4px 4px 2px #000;
 }
 
 #skills {
@@ -182,6 +189,7 @@
   overflow: auto;
   max-height: 100%;
   position: relative;
+  box-shadow: 4px 4px 2px #000;
 }
 
 
@@ -212,6 +220,8 @@
   border-color: #190B28;
   border-radius: 2.2em;
   margin: .15em;
+  box-shadow: 4px 4px 2px #000;
+
 }
 
 #character {
@@ -226,6 +236,7 @@
   /* border-color: #000; */
   /* border-radius: 2.2em; */
   padding: .15em;
+
 }
 
 #title {
@@ -586,4 +597,16 @@
 
 .green {
   color: green;
+}
+
+#right {
+  position: absolute;
+  right: 2em;
+  top: 40%;
+}
+
+#left {
+  position: absolute;
+  left: 2em;
+  top: 40%;
 }
