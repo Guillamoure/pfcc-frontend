@@ -1,5 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
+import { withRouter } from 'react-router-dom'
+import { connect } from 'react-redux'
 
 class HP extends React.Component {
 
@@ -17,37 +19,30 @@ class HP extends React.Component {
   }
 
   conMod = () => {
-    let con = this.props.character.constitution
-    this.props.character.race.race_ability_score_modifiers.forEach(mod => {
-      if ('Constitution' === mod.ability_score){
-        con += mod.bonus
-      }
-    })
-    if (this.props.character.anyBonus === 'Constitution'){
-      con +=2
-    }
-    return Math.floor((con - 10) / 2)
+    return Math.floor((this.props.character_info.ability_scores.constitution - 10) / 2)
   }
 
-  firstClass = () => {
-    let firstClassHD = this.props.character.klasses[0].hit_die
-    return firstClassHD + this.conMod()
-  }
+  // firstClass = () => {
+  //   let firstClassHD = this.props.character.klasses[0].hit_die
+  //   return firstClassHD + this.conMod()
+  // }
 
   renderCharacterHP = () => {
     let totalHP = 0
     let klass_ids = {}
     this.props.character.character_klasses.forEach(klass => {
-      klass_ids[klass.klass_id] = klass.level
+      if (klass.hp !== null) {
+        totalHP += klass.hp
+      }
+      totalHP += this.conMod()
     })
-    totalHP += this.firstClass()
-    let firstID = this.props.character.klasses[0].id
-    klass_ids[firstID] = klass_ids[firstID] - 1
-    this.props.character.klasses.forEach(klass => {
-      let hpPerLvl = (klass.hit_die/ 2) + 0.5
-      totalHP += (hpPerLvl * klass_ids[klass.id])
-      totalHP += (this.conMod() * klass_ids[klass.id])
-    })
+    // totalHP += this.firstClass()
+    // let firstID = this.props.character.klasses[0].id
+    // klass_ids[firstID] = klass_ids[firstID] - 1
+    // this.props.character.klasses.forEach(klass => {
+    //   let hpPerLvl = (klass.hit_die/ 2) + 0.5
+    //   totalHP += (hpPerLvl * klass_ids[klass.id])
+    // })
     return (
       <span className='centered'>
         <div className='dull'><strong>Hit Points</strong></div>
@@ -89,4 +84,13 @@ class HP extends React.Component {
   }
 }
 
-export default HP
+const mapStateToProps = (state) => {
+  return {
+    currentUser: state.currentUser,
+    admin: state.admin,
+    character: state.character,
+    character_info: state.character_info
+  }
+}
+
+export default withRouter(connect(mapStateToProps)(HP))
