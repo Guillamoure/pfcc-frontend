@@ -17,6 +17,7 @@ import BackgroundForm from '../modals/background_form'
 import CharacterForm from '../modals/character_form'
 import AbilityForm from '../modals/ability_form'
 import Notifications from '../modals/notifications'
+import HPChanges from '../modals/hp_changes'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCaretRight } from '@fortawesome/free-solid-svg-icons'
@@ -168,7 +169,7 @@ class Character extends React.Component {
         {this.state.character.race && this.state.display === "Adventure" && <FeaturesTraits character={this.state.character}/>}
         {this.state.character.race && this.state.display === "Adventure" && <Details character={this.state.character} editModal={this.editModal}/>}
         {this.state.character.race && this.state.display === "Adventure" && <Saves character={this.state.character}/>}
-        {this.state.character.race && this.state.display === "Adventure" && <HP character={this.state.character}/>}
+        {this.state.character.race && this.state.display === "Adventure" && <HP character={this.state.character} editModal={this.editModal}/>}
         {this.state.character.race && this.state.display === "Adventure" && <AttackBonus character={this.state.character}/>}
         {this.state.character.race && this.state.display === "Adventure" && <ArmorClass character={this.state.character}/>}
         {this.state.character.race && this.state.display === "Adventure" && <Skills character={this.state.character}/>}
@@ -180,6 +181,7 @@ class Character extends React.Component {
         {this.state.modal === 'character' && <CharacterForm character={this.state.character} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
         {this.state.modal === 'ability' && <AbilityForm character={this.state.character} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
         {this.state.modal === 'notifications' && <Notifications exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
+        {this.state.modal === 'hitPoints' && <HPChanges exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
 
         <div id='right' onClick={() => this.setState({display: this.rightArrow()})}><FontAwesomeIcon icon={faCaretRight} size='9x'/><div>{this.rightArrow()}</div></div>
         <div id='left' onClick={() => this.setState({display: this.leftArrow()})}><FontAwesomeIcon icon={faCaretLeft} size='9x'/><div>{this.leftArrow()}</div></div>

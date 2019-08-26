@@ -1,0 +1,48 @@
+.narrow {
+  max-width: 3em;
+}
+
+.taller {
+  min-height: 3em;
+}
+
+.middle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.red {
+  color: red;
+}
+
+.red:hover {
+  background-color: red;
+  color: white;
+}
+
+.blue {
+  color: blue;
+}
+
+.blue:hover {
+  background-color: blue;
+  color: white;
+}
+
+.green {
+  color: green;
+}
+
+.green:hover {
+  background-color: green;
+  color: white;
+}
+
+.hp-btn {
+  background-color: transparent;
+  border-radius: 6px;
+  min-width: 2em;
+  max-height: 1.2em;
+  text-align: center;
+}
