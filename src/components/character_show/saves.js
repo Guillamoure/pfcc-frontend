@@ -46,7 +46,7 @@ class Saves extends React.Component {
   render(){
     console.log(this.props.character)
     return(
-      <div id='saves' className='container-3'>
+      <div id='saves' className='container-3 shadow'>
         <div id='saving-throw-title'>Saving Throws</div>
         <span className='centered' >
           <div className='enhanced'>{this.renderCharacterSave('fortitude', 'constitution')}</div>

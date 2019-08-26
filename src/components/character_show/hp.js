@@ -6,7 +6,8 @@ import { connect } from 'react-redux'
 class HP extends React.Component {
 
   state = {
-    activeFeature: 0
+    activeFeature: 0,
+    adjustHP: null
   }
 
   changeActiveFeature = (e) => {
@@ -43,10 +44,22 @@ class HP extends React.Component {
     //   let hpPerLvl = (klass.hit_die/ 2) + 0.5
     //   totalHP += (hpPerLvl * klass_ids[klass.id])
     // })
+
+    // <span style={{display: "inline-block"}}> <input className="narrow taller" type="number" name="adjustHP" value={this.props.adjustHP} onChange={this.props.renderChange}/>
+    // </span>
+    // <span style={{display: "inline-block", marginLeft: '.5em', marginRight: '.5em'}}>
+    //   <div><button className="green hp-btn">-</button></div>
+    //   <div><button className="red hp-btn">+</button></div>
+    //   <div><button className="blue hp-btn">t</button></div>
+    // </span>
     return (
       <span className='centered'>
         <div className='dull'><strong>Hit Points</strong></div>
-        <div className='enhanced'>{Math.floor(totalHP)}</div>
+        <div className='middle'>
+          <span className='enhanced'>{totalHP - this.props.character.lethal_damage}</span>
+          <span className='enhanced'>/{totalHP}</span>
+          <span><button className='spacing' style={{boxShadow: "1px 1px 2px #000", borderRadius: ".5em"}} onClick={() => this.props.editModal("hitPoints")}>Adjust</button></span>
+        </div>
       </span>
     )
     // this.props.character.klasses.map(klass => {
@@ -77,7 +90,7 @@ class HP extends React.Component {
 
   render () {
     return(
-      <div className='hp'>
+      <div className='hp shadow'>
       {this.renderCharacterHP()}
       </div>
     )

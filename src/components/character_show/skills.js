@@ -84,7 +84,7 @@ class Skills extends React.Component {
 
   render(){
     return(
-      <div id='skills'>
+      <div id='skills' className='shadow'>
         <div name="skill list">
           {!!this.state.skillset ? this.renderSkillsTable() : null}
         </div>

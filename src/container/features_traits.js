@@ -15,7 +15,7 @@ class FeaturesTraits extends React.Component {
 
   render(){
     return(
-      <div className="features-traits">
+      <div className="features-traits shadow">
         <Tabs renderTabClick={this.renderTabClick} activeTab={this.state.activeTab}/>
         <div style={{height: '100%'}}>
           {this.state.activeTab === "Features" && <Features character={this.props.character} />}

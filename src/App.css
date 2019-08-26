@@ -36,10 +36,6 @@
   grid-template-columns: 3fr 3fr 3fr 3fr 3fr 3fr .1fr;
 }
 
-.character {
-  margin: 10px 8em;
-}
-
 .muted {
   font-size: 11px;
   color: #777;
@@ -64,41 +60,7 @@
   text-align: center;
 }
 
-.ability {
-  grid-column-start: 1;
-  grid-column-end: 5;
-  margin: .5em;
-}
 
-.features-traits {
-  grid-column-start: 1;
-  grid-column-end: 4;
-  grid-row-start: 4;
-  grid-row-end: 9;
-  margin: .5em;
-  padding: .2em;
-  background-color: rgba(235, 235, 235, 0.95);
-  border: solid;
-  border-color: #000;
-  border-radius: 1em;
-  overflow: auto;
-  max-height: 23.75em;
-  position: relative;
-}
-
-.hp {
-  grid-column-start: 8;
-  grid-column-end: 9;
-  grid-row-start: 2;
-  grid-row-end: 3;
-  margin-top: 2em;
-  margin: .5em;
-  padding: .2em;
-  background-color: rgba(235, 235, 235, 0.95);
-  border: solid;
-  border-color: #000;
-  border-radius: 1.5em;
-}
 
 .show {
   padding: 0 2em;
@@ -112,78 +74,6 @@
   text-align: center;
   padding: 0 .3em;
 }
-
-#saves {
-  grid-column-start: 1;
-  grid-column-end: 3;
-  grid-row-start: 3;
-  grid-row-end: 4;
-  margin: .5em;
-  padding: .2em;
-  background-color: rgba(235, 235, 235, 0.95);
-  border: solid;
-  border-color: #000;
-  border-radius: 1em;
-}
-
-#attack-bonus {
-  grid-column-start: 3;
-  grid-column-end: 4;
-  grid-row-start: 3;
-  grid-row-end: 4;
-  margin: .5em;
-  padding: .2em;
-  background-color: rgba(235, 235, 235, 0.95);
-  border: solid;
-  border-color: #000;
-  border-radius: 1em;
-}
-
-#ac {
-  grid-column-start: 7;
-  grid-column-end: 8;
-  grid-row-start: 2;
-  grid-row-end: 3;
-  margin: .5em;
-  padding: .2em;
-  background-color: rgba(235, 235, 235, 0.95);
-  border: solid;
-  border-color: #000;
-  border-radius: 1em;
-}
-
-#details {
-  grid-column-start: 8;
-  grid-column-end: 9;
-  grid-row-start: 3;
-  grid-row-end: 9;
-  margin: .5em;
-  padding: .6em;
-  background-color: rgba(235, 235, 235, 0.95);
-  border: solid;
-  border-color: #000;
-  border-radius: 1em;
-  overflow: auto;
-  max-height: 100%;
-  position: relative;
-}
-
-#skills {
-  grid-column-start: 4;
-  grid-column-end: 8;
-  grid-row-start: 3;
-  grid-row-end: 10;
-  margin: .5em;
-  padding: .6em;
-  background-color: rgba(235, 235, 235, 0.95);
-  border: solid;
-  border-color: #000;
-  border-radius: 1em;
-  overflow: auto;
-  max-height: 100%;
-  position: relative;
-}
-
 
 
 .tab-list {
@@ -206,13 +96,6 @@
 
 }
 
-.egg {
-  background-color: rgba(235, 235, 235, 0.95);
-  border: solid;
-  border-color: #190B28;
-  border-radius: 2.2em;
-  margin: .15em;
-}
 
 #character {
   grid-column-start: 1;
@@ -226,6 +109,7 @@
   /* border-color: #000; */
   /* border-radius: 2.2em; */
   padding: .15em;
+
 }
 
 #title {
@@ -574,10 +458,11 @@
   position: absolute;
   left: 0;
   top: 0;
+  /* bottom: 0; */
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.85);
-  z-index: 1000;
+  /* z-index: 1000; */
 }
 
 .black {
@@ -586,4 +471,20 @@
 
 .green {
   color: green;
+}
+
+#right {
+  position: absolute;
+  right: 2em;
+  top: 40%;
+}
+
+#left {
+  position: absolute;
+  left: 2em;
+  top: 40%;
+}
+
+.spacing {
+  margin: .5em;
 }
