@@ -8,7 +8,8 @@ class HPChanges extends React.Component {
   state = {
     amount: 0,
     adjustment: "heal",
-    lethality: 'lethal'
+    lethality: 'lethal',
+    id: this.props.character.id
   }
 
   renderAmount = () => {
@@ -85,7 +86,6 @@ class HPChanges extends React.Component {
     }
 
   render() {
-    console.log(this.state.amount)
     return (
       <Portal>
       <div className="page-dimmer" onClick={this.props.clickOut}>
@@ -95,7 +95,7 @@ class HPChanges extends React.Component {
             {this.renderAdjustment()}
           </div>
           {this.state.adjustment === 'harm' && this.renderLethality()}
-          {(this.state.amount !== 0 && this.state.amount !== "") && <button>{this.renderString()}</button>}
+          {(this.state.amount !== 0 && this.state.amount !== "") && <button onClick={() => this.props.renderEdit(this.state, 'hp_changes')}>{this.renderString()}</button>}
         </div>
       </div>
       </Portal>
