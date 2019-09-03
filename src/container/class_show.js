@@ -10,6 +10,7 @@ import Features from '../components/class_show/feature_list'
 import FeatureForm from '../components/class_show/feature_form'
 import ClassForm from  '../components/class_form'
 import ClassSkillsForm from '../components/class_skills_form'
+import SpellsForm from '../components/spells_form'
 
 class Class extends React.Component {
 
@@ -17,7 +18,8 @@ class Class extends React.Component {
     klass : {},
     toggleFeatureForm: false,
     toggleClassForm: false,
-    toggleClassSkillsForm: false
+    toggleClassSkillsForm: false,
+    toggleSpellsForm: false
   }
 
   renderURL = () => {
@@ -46,6 +48,9 @@ class Class extends React.Component {
 
   toggleClassSkillsForm = () => {
     this.setState({toggleClassSkillsForm: !this.state.toggleClassSkillsForm})
+  }
+  toggleSpellsForm = () => {
+    this.setState({toggleSpellsForm: !this.state.toggleSpellsForm})
   }
 
   renderSubmit = (e, feature) => {
@@ -153,7 +158,10 @@ class Class extends React.Component {
         {this.state.toggleClassForm ? <ClassForm toggleClassForm={this.state.toggleClassForm} klass={this.state.klass} renderClassEdit={this.renderClassEdit} history={this.props.history} /> : null }
 
         {this.props.admin ? <button onClick={this.toggleClassSkillsForm}>{this.state.toggleClassSkillsForm ? "Hide Skills Form" : "Skills Form"}</button> : null}
+        {this.props.admin ? <button onClick={this.toggleSpellsForm}>{this.state.toggleSpellsForm ? "Hide Spells Form" : "Spells Form"}</button> : null}
         {this.state.toggleClassSkillsForm && <ClassSkillsForm toggleClassSkillsForm={this.state.toggleClassSkillsForm} klass={this.state.klass} renderClassSkills={this.renderClassSkillsFetch} />}
+
+        {this.state.toggleSpellsForm && <SpellsForm toggleSpellsForm={this.state.toggleSpellsForm} klass={this.state.klass}/>}
 
         <Table klass={this.state.klass}/>
         <div className='header' style={{marginLeft: '2em'}}>Class Features</div>
