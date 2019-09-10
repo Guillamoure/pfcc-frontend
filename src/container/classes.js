@@ -22,7 +22,6 @@ class Classes extends React.Component {
     return sortedClasses.map(klass => {return (
       <div className='card' onClick={() => this.props.history.push(`/classes/${klass.name}`)} key={klass.id} >
         <div className='fill'></div>
-        {console.log(klass.img_url)}
         <span className='card-content'>
         {klass.name}
         </span>
@@ -33,10 +32,6 @@ class Classes extends React.Component {
     )})
   }
 
-
-  renderNewClass = () => {
-    console.log("clicked")
-  }
 
   // <button onClick={this.renderNewClass}>Create New Class</button>
   render() {

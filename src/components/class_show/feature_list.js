@@ -39,7 +39,7 @@ class Features extends React.Component {
     // })
 
     return sortedFeatures.map(feature => {
-      return <Feature key={feature.id} feature={feature}  klass_name={this.props.klass.name} renderClassFeature={this.props.renderClassFeature}/>
+      return <Feature key={feature.id} feature={feature} klass_name={this.props.klass.name} renderClassFeature={this.props.renderClassFeature} modal={this.props.modal} toggleModal={this.props.toggleModal}/>
     })
   }
 

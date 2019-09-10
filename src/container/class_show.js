@@ -19,7 +19,8 @@ class Class extends React.Component {
     toggleFeatureForm: false,
     toggleClassForm: false,
     toggleClassSkillsForm: false,
-    toggleSpellsForm: false
+    toggleSpellsForm: false,
+    modal: false
   }
 
   renderURL = () => {
@@ -125,6 +126,21 @@ class Class extends React.Component {
     })
   }
 
+  submitSpellsPerDay = (nestedSpells) => {
+    debugger
+    fetch(`http://localhost:3000/api/v1/class_skillset_skills`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        spells_per_day: nestedSpells,
+        klass_id: this.state.klass.id
+      })
+    })
+  }
+
   renderClassFeature = (newData) => {
     let remappedFeatures
     if (Number.isInteger(newData)) {
@@ -148,6 +164,11 @@ class Class extends React.Component {
     })
   }
 
+  toggleModal = (id) => {
+    console.log("this feature is being adjusted", id)
+    this.setState({modal: id})
+  }
+
 
   render() {
     console.log("Class info", this.state.klass)
@@ -159,17 +180,18 @@ class Class extends React.Component {
 
         {this.props.admin ? <button onClick={this.toggleClassSkillsForm}>{this.state.toggleClassSkillsForm ? "Hide Skills Form" : "Skills Form"}</button> : null}
         {this.props.admin ? <button onClick={this.toggleSpellsForm}>{this.state.toggleSpellsForm ? "Hide Spells Form" : "Spells Form"}</button> : null}
+
         {this.state.toggleClassSkillsForm && <ClassSkillsForm toggleClassSkillsForm={this.state.toggleClassSkillsForm} klass={this.state.klass} renderClassSkills={this.renderClassSkillsFetch} />}
 
-        {this.state.toggleSpellsForm && <SpellsForm toggleSpellsForm={this.state.toggleSpellsForm} klass={this.state.klass}/>}
+        {this.state.toggleSpellsForm && <SpellsForm submitSpellsPerDay={this.submitSpellsPerDay} toggleSpellsForm={this.state.toggleSpellsForm} klass={this.state.klass}/>}
 
         <Table klass={this.state.klass}/>
-        <div className='header' style={{marginLeft: '2em'}}>Class Features</div>
-        <Features klass={this.state.klass} renderClassFeature={this.renderClassFeature} />
 
+        <div className='header' style={{marginLeft: '2em'}}>Class Features</div>
+        <Features klass={this.state.klass} renderClassFeature={this.renderClassFeature} modal={this.state.modal} toggleModal={this.toggleModal}/>
         {this.props.admin ? <button onClick={this.changeAddFeatureToggle}>{this.state.toggleFeatureForm ? "Hide new Feature Form" : "Add a new Class Feature"}</button> : null}
-        < br />
-        < br />
+
+        < br />< br />
 
         <FeatureForm toggleFeatureForm={this.state.toggleFeatureForm} renderSubmit={this.renderSubmit}/>
       </span>
