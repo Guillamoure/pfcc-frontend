@@ -33,7 +33,7 @@ class Notifications extends React.Component{
           <div className="edit-form" name="background">
             <p>Yo dude, it's your boi</p>
             <NotificationTabs renderTabClick={this.renderTabClick} activeTab={this.state.activeTab}/>
-            <div style={{height: '100%'}}>
+            <div style={{height: '100%', overflow: 'auto'}}>
               {this.state.activeTab === "Communique" && <Notice exitModal={this.props.exitModal}/>}
               {this.state.activeTab === "Update Character" && <Update exitModal={this.props.exitModal}/>}
               {this.state.activeTab === "Literally Unplayable" && <Creation  exitModal={this.props.exitModal}/>}

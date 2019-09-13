@@ -12,6 +12,8 @@ import ClassForm from  '../components/class_form'
 import ClassSkillsForm from '../components/class_skills_form'
 import SpellsForm from '../components/spells_form'
 
+import FeatureEffect from '../modals/classes/effect'
+
 class Class extends React.Component {
 
   state ={
@@ -164,11 +166,41 @@ class Class extends React.Component {
     })
   }
 
+  fetchClassFeatureEffect = (state, effect) => {
+    debugger
+    fetch(`http://localhost:3000/api/v1/${effect}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        ability_score: state.abilityScore,
+        prepared: state.prepared,
+        limited: state.limited,
+        klass_feature_id: this.state.modal
+      })
+    })
+    .then(r =>  r.json())
+    .then(data => {
+      this.setState({klass: data.klass, modal: false})
+      // confirm that this works?
+    })
+  }
+
   toggleModal = (id) => {
     console.log("this feature is being adjusted", id)
     this.setState({modal: id})
   }
 
+  clickOut = (e) => {
+    if(e.target.classList[0] === "page-dimmer"){
+      this.setState({modal: false})
+    }
+  }
+  exitModal = () => {
+    this.setState({modal: false})
+  }
 
   render() {
     console.log("Class info", this.state.klass)
@@ -194,6 +226,8 @@ class Class extends React.Component {
         < br />< br />
 
         <FeatureForm toggleFeatureForm={this.state.toggleFeatureForm} renderSubmit={this.renderSubmit}/>
+
+        {this.state.modal && <FeatureEffect exitModal={this.exitModal} clickOut={this.clickOut} fetch={this.fetchClassFeatureEffect}/>}
       </span>
     )
   }

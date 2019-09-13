@@ -374,6 +374,7 @@
   border-radius: 1em;
   position: absolute;
   top: 20%;
+  bottom: 15%;
   left: 15%;
   right: 15%;
   padding: 1em;
@@ -383,6 +384,7 @@
   text-align: center;
   font-size: 16px;
   z-index: 1001;
+  overflow: hidden;
 }
 
 /* .badge1[data-badge-1]:after {
@@ -455,7 +457,7 @@
 }
 
 .page-dimmer {
-  position: absolute;
+  position: fixed;
   left: 0;
   top: 0;
   /* bottom: 0; */
