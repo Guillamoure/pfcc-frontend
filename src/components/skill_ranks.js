@@ -86,7 +86,7 @@ class SkillRanks extends React.Component {
 
   render() {
     return (
-      <div>
+      <div style={{overflow: "hidden", marginBottom: '2.5em'}}>
         <div>Available Ranks: {this.state.availableRanks}</div>
         {this.state.skillset && this.renderSkillSelection()}
         <button onClick={this.renderSubmit}>Submit!</button>
