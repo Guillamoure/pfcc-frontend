@@ -7,7 +7,8 @@ class Feature extends React.Component {
 
   state ={
     toggleFeatureForm: false,
-    deleteFeatureButton: false
+    deleteFeatureButton: false,
+    showEffects: false
   }
 
   renderClick = (option) => {
@@ -77,6 +78,28 @@ class Feature extends React.Component {
     }
   }
 
+  effectsButton = () => {
+    if (
+      this.props.feature.spellcasting
+      && this.props.admin
+    ){
+      return <button onClick={() => this.setState({showEffects: !this.state.showEffects})}>Toggle Linked Effects</button>
+    }
+  }
+
+  showEffects = () => {
+    let display = []
+    if (this.props.feature.spellcasting){
+      const sp = this.props.feature.spellcasting
+      display.push(`Spellcasting: ${sp.ability_score}, ${sp.limited ? "Limited Spells" : "All Spells"}, ${sp.prepared ? "Prepared" : "Spontaneous"}`)
+    }
+    return (
+      <ul>
+        {display.map(effect => <li>{effect}</li>)}
+      </ul>
+    )
+  }
+
   render () {
     return (
       <span>
@@ -89,6 +112,8 @@ class Feature extends React.Component {
 
           <li>A {this.props.klass_name} learns this at <strong>level {this.props.feature.level_learned}</strong></li>
           <li>Description: {this.renderDescription()}</li>
+          {this.effectsButton()}
+          {this.state.showEffects && this.showEffects()}
         </ul>
         {this.state.toggleFeatureForm ? this.renderForm() : null}
         < br />
