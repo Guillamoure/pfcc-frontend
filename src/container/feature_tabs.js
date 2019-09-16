@@ -2,7 +2,7 @@ import React from 'react'
 
 import Tab from '../components/character_show/tab'
 
-class Tabs extends React.Component {
+class FeatureTabs extends React.Component {
 
   render(){
 
@@ -15,4 +15,4 @@ class Tabs extends React.Component {
   }
 }
 
-export default Tabs
+export default FeatureTabs
