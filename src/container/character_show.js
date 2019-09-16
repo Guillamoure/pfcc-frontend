@@ -168,13 +168,11 @@ class Character extends React.Component {
         {this.state.character.race && this.state.display === "Adventure" && <AbilityScores character={this.state.character} editModal={this.editModal}/>}
         {this.state.character.race && this.state.display === "Adventure" && <FeaturesTraits character={this.state.character}/>}
         {this.state.character.race && this.state.display === "Adventure" && <Details character={this.state.character} editModal={this.editModal}/>}
-        {this.state.character.race && this.state.display === "Adventure" && <Saves character={this.state.character}/>}
-        {this.state.character.race && this.state.display === "Adventure" && <HP character={this.state.character} editModal={this.editModal}/>}
-        {this.state.character.race && this.state.display === "Adventure" && <AttackBonus character={this.state.character}/>}
-        {this.state.character.race && this.state.display === "Adventure" && <ArmorClass character={this.state.character}/>}
+        {this.state.character.race && (this.state.display === "Adventure" || this.state.display === "Combat") && <Saves character={this.state.character} display={this.state.display}/>}
+        {this.state.character.race && (this.state.display === "Adventure" || this.state.display === "Combat") && <HP character={this.state.character} editModal={this.editModal} display={this.state.display}/>}
+        {this.state.character.race && this.state.display === "Combat" && <AttackBonus character={this.state.character}/>}
+        {this.state.character.race && this.state.display === "Combat" && <ArmorClass character={this.state.character}/>}
         {this.state.character.race && this.state.display === "Adventure" && <Skills character={this.state.character}/>}
-
-        {this.state.character.race && this.state.display === "Combat" && <HP character={this.state.character}/>}
 
 
         {this.state.modal === 'background' && <BackgroundForm character={this.state.character} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
