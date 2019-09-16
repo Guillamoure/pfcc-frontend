@@ -93,11 +93,7 @@ class Feature extends React.Component {
       const sp = this.props.feature.spellcasting
       display.push(`Spellcasting: ${sp.ability_score}, ${sp.limited ? "Limited Spells" : "All Spells"}, ${sp.prepared ? "Prepared" : "Spontaneous"}`)
     }
-    return (
-      <ul>
-        {display.map(effect => <li>{effect}</li>)}
-      </ul>
-    )
+    return <ul>{display.map(effect => <li>{effect}</li>)}</ul>
   }
 
   render () {

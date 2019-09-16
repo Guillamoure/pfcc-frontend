@@ -129,8 +129,7 @@ class Class extends React.Component {
   }
 
   submitSpellsPerDay = (nestedSpells) => {
-    debugger
-    fetch(`http://localhost:3000/api/v1/class_skillset_skills`, {
+    fetch(`http://localhost:3000/api/v1/spells_per_day`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -140,6 +139,11 @@ class Class extends React.Component {
         spells_per_day: nestedSpells,
         klass_id: this.state.klass.id
       })
+    })
+    .then(r => r.json())
+    .then(data => {
+      debugger
+      this.setState({klass: data.klass, toggleSpellsForm: false})
     })
   }
 
