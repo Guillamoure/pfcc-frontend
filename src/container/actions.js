@@ -25,4 +25,16 @@ class Actions extends React.Component {
 }
 // {this.state.activeTab === "Attacks" && <Features character={this.props.character} />}
 
+
+/////////////////////////////
+////// COLOR SCHEME /////////
+/////////////////////////////
+
+// Full-round Action: Purple
+// Standard Action: Blue
+// Swift Action: Yellow
+// Move Action: Green
+// Immediate Action: Red
+// 10 minutes/1 hours/1 minute, etc.: brown? gold?
+
 export default Actions
