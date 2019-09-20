@@ -33,18 +33,38 @@ class AttackBonus extends React.Component {
     }
   }
 
+  renderSize = (size) => {
+    switch(size){
+      case "Fine":
+        return 8;
+      case "Diminutive":
+        return 4;
+      case "Tiny":
+        return 2;
+      case "Small":
+        return 1;
+      case "Large":
+        return -1;
+      case "Huge":
+        return -2;
+      case "Gargantuan":
+        return -4;
+      case "Colossal":
+        return -8;
+      default:
+        return 0;
+    }
+  }
+
   renderAB = (ability) => {
     let ab = 0
-    let klass_ids = {}
-    this.props.character.character_klasses.forEach(klass => {
-      klass_ids[klass.klass_id] = klass.level
-    })
-    this.props.character.klasses.forEach(klass => {
-      ab += Math.floor(this.renderBAB(klass.hit_die) * this.props.character_info.classes[klass.id])
-    })
-    if (this.props.character.race.size === 'Small'){
-      ab += 1
+    for (var klass_id in this.props.character_info.classes){
+      // find the class' info from the id
+      let currentClass = this.props.character.klasses.find(ck => ck.id === parseInt(klass_id))
+      // send the character's level in that class, and the relevant saving throw value
+      ab += Math.floor(this.renderBAB(currentClass.hit_die) * this.props.character_info.classes[klass_id])
     }
+    ab += this.renderSize(this.props.character.race.size)
     ab += this.renderAbilityScoreModifiers(ability)
     return ab < 0 ? ab : `+${ab}`
   }

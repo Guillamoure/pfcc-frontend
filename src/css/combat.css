@@ -46,3 +46,19 @@
   max-height: 1.2em;
   text-align: center;
 }
+
+.actions {
+  grid-column-start: 1;
+  grid-column-end: 6;
+  grid-row-start: 4;
+  grid-row-end: 9;
+  margin: .5em;
+  padding: .2em;
+  background-color: rgba(235, 235, 235, 0.95);
+  border: solid;
+  border-color: #000;
+  border-radius: 1em;
+  overflow: auto;
+  max-height: 23.75em;
+  position: relative;
+}

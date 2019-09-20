@@ -3,8 +3,6 @@ import _ from 'lodash'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 
-
-
 class Saves extends React.Component {
 
   renderSave = (num, save) => {
@@ -15,36 +13,26 @@ class Saves extends React.Component {
     }
   }
 
-  renderClassAbilityScoreModifiers = (scoreName) => {
-    let score = this.props.character[scoreName]
-    this.props.character.race.race_ability_score_modifiers.forEach(mod => {
-      if (_.capitalize(scoreName) === mod.ability_score){
-        score += mod.bonus
-      }
-    })
-    if (this.props.character.any_bonus === _.capitalize(scoreName)){
-      score +=2
-    }
-    return score
-  }
-
   renderCharacterSave = (save, score) => {
     let totalSavingThrow = 0
-    let klass_ids = {}
-    this.props.character.character_klasses.forEach(klass => {
-      klass_ids[klass.klass_id] = klass.level
-    })
-    this.props.character.klasses.forEach(klass => {
-      totalSavingThrow += this.renderSave(this.props.character_info.classes[klass.id], klass[save])
-    })
-    const mod = Math.floor((this.renderClassAbilityScoreModifiers(score) - 10) / 2)
+    // iterating over the character_info.classes in redux
+    // this is written as a key value pair
+    // first value is the class' id
+    // second value is the character's level for that class
+    for (var klass_id in this.props.character_info.classes){
+      // find the class' info from the id
+      let currentClass = this.props.character.klasses.find(ck => ck.id === parseInt(klass_id))
+      // send the character's level in that class, and the relevant saving throw value
+      totalSavingThrow += this.renderSave(this.props.character_info.classes[klass_id], currentClass[save])
+    }
+    // grab the character's ability score, and render its bonus
+    const mod = Math.floor((this.props.character_info.ability_scores[score] - 10) / 2)
     totalSavingThrow += mod
     return totalSavingThrow < 0 ? totalSavingThrow : `+${totalSavingThrow}`
   }
 
 
   render(){
-    console.log(this.props.character)
     return(
       <div id='saves' className='container-3 shadow'>
         <div id='saving-throw-title'>Saving Throws</div>

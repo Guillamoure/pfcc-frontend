@@ -38,7 +38,7 @@ class Table extends React.Component {
     let level = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
     return level.map(num => {
       return (
-        <tr key={_.random(1, 2000000)}>
+        <tr key={_.random(1, 2000000)} className={this.renderTableStyling(num)}>
           <td>{num}</td>
           <td>+{_.floor(num * this.renderBAB())}</td>
           <td>+{this.renderSave(num, this.props.klass.fortitude)}</td>
@@ -49,6 +49,10 @@ class Table extends React.Component {
         </tr>
       )
     })
+  }
+
+  renderTableStyling = (level) => {
+    return level%2 === 0 ? "even" : "odd"
   }
 
   renderClassTable = () => {
@@ -73,7 +77,8 @@ class Table extends React.Component {
   }
 
   spells = () => {
-    if (this.props.klass.spells_per_days){
+    if (this.props.klass.spells_per_days && this.props.klass.spells_per_days.length > 0){
+      console.log("Has spells per day!")
       return (
         <React.Fragment>
           <th >0</th>
@@ -92,7 +97,7 @@ class Table extends React.Component {
   }
 
   spellsPerDay = (lvl) => {
-    if (this.props.klass.spells_per_days){
+    if (this.props.klass.spells_per_days && this.props.klass.spells_per_days.length > 0){
       return (
         <React.Fragment>
           <th >{this.renderSpellsPerDayPerLevel(lvl, 0)}</th>
@@ -114,7 +119,7 @@ class Table extends React.Component {
     const spd =  this.props.klass.spells_per_days.find(spd => {
       return spd.klass_level === lvl && spd.spell_level === sp_lvl
     })
-    return spd ? spd.spells : ""
+    return spd ? spd.spells : "-"
   }
 
   render () {

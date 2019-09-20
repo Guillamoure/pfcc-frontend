@@ -490,3 +490,12 @@
 .spacing {
   margin: .5em;
 }
+
+.odd {
+  background-color: #F5ECCD;
+}
+
+.even {
+  box-shadow: 0px 1px #333, 0px -1px #333;
+
+}
