@@ -1,5 +1,6 @@
 import React from 'react'
 import _ from 'lodash'
+import { connect } from 'react-redux'
 
 class Spells extends React.Component {
 
@@ -9,7 +10,7 @@ class Spells extends React.Component {
   }
 
   componentDidMount(){
-    fetch(`http://localhost:3000/api/v1/spells`)
+    fetch(`http://localhost:3000/api/v1/prepared_spells/${this.props.character.id}`)
     .then(r => r.json())
     .then(data => {
       this.setState({spells: data})
@@ -70,15 +71,16 @@ class Spells extends React.Component {
   }
 
   renderSpell = (sp) => {
-    debugger
+    const level = this.props.character_info.classes[sp.klass.id]
+
     return(
       <tr>
         <td><button onClick={() => this.props.renderEdit({id: 1}, "cast_spell")}>Cast</button></td>
-        <td>{sp.name}</td>
-        <td>35 ft</td>
-        <td>3 min</td>
-        <td>14</td>
-        <td>{sp.spell_resistance ? "Y" : "N"}</td>
+        <td>{sp.spell.name}</td>
+        <td>{this.renderRange(level, sp.spell_range)}</td>
+        <td>5 min</td>
+        <td>{this.renderDC(sp.spell_level, sp.klass.id)}</td>
+        <td>{sp.spell.spell_resistance ? "Y" : "N"}</td>
       </tr>
     )
   }
@@ -103,6 +105,22 @@ class Spells extends React.Component {
     )
   }
 
+  renderDC = (sp_lvl, klass_id) => {
+    const spellcasting = this.props.character.klass_features.find(kf => kf.spellcasting && kf.klass_id === klass_id)
+    const score = spellcasting.spellcasting.ability_score
+    const mod = Math.floor((this.props.character_info.ability_scores[_.lowerCase(score)] - 10) / 2)
+    return (10 + sp_lvl + mod)
+  }
+
+  renderRange = (level, spell_range) => {
+    let newLevel = level
+    if (level%2 === 1){
+      newLevel -= 1
+    }
+    const distance = (spell_range.feet + (newLevel * spell_range.increase_per_level))
+    return distance !== 0 ? distance + " ft" : "Self"
+  }
+
   render(){
     return(
       <div style={{padding: '1em'}}>
@@ -114,4 +132,13 @@ class Spells extends React.Component {
   }
 }
 
-export default Spells
+const mapStatetoProps = (state) => {
+  return {
+    currentUser: state.currentUser,
+    admin: state.admin,
+    character: state.character,
+    character_info: state.character_info
+  }
+}
+
+export default connect(mapStatetoProps)(Spells)
