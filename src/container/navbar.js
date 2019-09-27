@@ -37,7 +37,7 @@ class NavBar extends React.Component {
 
   render() {
     // console.log("The navbar state", this.state)
-    console.log("The navbar props", this.props)
+    // console.log("The navbar props", this.props)
     // if (this.state.currentUser !== ""){
     //   this.setState({currentUser: this.props.currentUser})
     // }
