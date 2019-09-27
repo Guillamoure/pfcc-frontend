@@ -1,6 +1,5 @@
 import React from 'react'
 import Portal from '../portal'
-import _ from 'lodash'
 import { connect } from 'react-redux'
 
 class HPChanges extends React.Component {

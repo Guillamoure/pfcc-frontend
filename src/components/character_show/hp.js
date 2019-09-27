@@ -30,7 +30,6 @@ class HP extends React.Component {
 
   renderCharacterHP = () => {
     let totalHP = 0
-    let klass_ids = {}
     this.props.character.character_klasses.forEach(klass => {
       if (klass.hp !== null) {
         totalHP += klass.hp

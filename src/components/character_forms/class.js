@@ -32,7 +32,7 @@ class Class extends React.Component{
 
   mapClassDynamicFields = () => {
     return this.props.classes.map((val, idx)=> {
-      let classId = `class-${idx}`, level = `level-${idx}`
+      let classId = `class-${idx}`
       return (
         <div key={idx}>
           <label htmlFor={classId}>{`Class #${idx + 1}`} </label>

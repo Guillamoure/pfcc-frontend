@@ -1,5 +1,4 @@
 import React from 'react'
-import _ from 'lodash'
 import { connect } from 'react-redux'
 
 import SpellSummary from '../spell_summary'
@@ -21,21 +20,21 @@ class Spells extends React.Component {
 
   remainingSpells = () => {
     let spells = []
-    let klass_ids = {}
+    let klassIds = {}
     this.props.character.character_klasses.forEach(klass => {
-      if(klass_ids[klass.klass_id]){
-        klass_ids[klass.klass_id] += 1
+      if(klassIds[klass.klass_id]){
+        klassIds[klass.klass_id] += 1
       } else {
-        klass_ids[klass.klass_id] = 1
+        klassIds[klass.klass_id] = 1
       }
     })
-    for (var id in klass_ids){
+    for (var id in klassIds){
       let klass = this.props.character.klasses.find(klass => klass.id === parseInt(id))
       if (klass && klass.spells_per_days.length){
         // if the class has spells
-        // find the spells they can cast for that given level (klass_ids[id])
+        // find the spells they can cast for that given level (klassIds[id])
         let spellsAtThisLevel = klass.spells_per_days.filter(spd => {
-          return spd.klass_level === klass_ids[id]
+          return spd.klass_level === klassIds[id]
         })
         spells.push({spd: spellsAtThisLevel, name: klass.name})
       }

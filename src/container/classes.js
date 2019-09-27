@@ -26,7 +26,7 @@ class Classes extends React.Component {
         {klass.name}
         </span>
         <div className="fade"></div>
-        <img className='card-img' src={klass.img_url}>
+        <img className='card-img' alt={klass.name} src={klass.img_url}>
         </img>
       </div>
     )})
