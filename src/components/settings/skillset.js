@@ -120,7 +120,7 @@ class Skillset extends React.Component {
       return (<div>
       <label>
         {skill.name}:
-        <input type="checkbox" name={skill.name} checked={this.selectedSkill(skill.id)} onChange={() => this.renderSkillChange(skill.id)}/>
+        <input type="checkbox" name={skill.name} key={skill.id} checked={this.selectedSkill(skill.id)} onChange={() => this.renderSkillChange(skill.id)}/>
       </label>
       </div>
     )
@@ -207,7 +207,7 @@ class Skillset extends React.Component {
         <label>
           Active Skillset:
           <select name="activeSkillset" value={this.state.activeSkillset} onChange={this.renderActiveSkillsetChange}>
-            {this.state.skillsets.map(ss => <option value={ss.id}>{ss.name}</option>)}
+            {this.state.skillsets.map(ss => <option value={ss.id} key={ss.id}>{ss.name}</option>)}
           </select>
         </label>
       </div>
@@ -215,7 +215,7 @@ class Skillset extends React.Component {
   }
 
   render(){
-    console.log("skillset data", this.state)
+    // console.log("skillset data", this.state)
     return(
       <span>
         {(!this.state.addSkillset && this.props.admin) && <button onClick={this.renderAddSkillset}>+</button>}

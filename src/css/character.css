@@ -121,3 +121,38 @@
 .shadow {
   box-shadow: 5px 4px 2px #000;
 }
+
+#spin {
+  -webkit-animation: fa-spin 12s infinite ease-in;
+  animation: fa-spin 12s infinite ease-in;
+}
+
+#spin:hover {
+  -webkit-animation-name: fa-spin;
+  animation-name: fa-spin;
+  -webkit-animation-duration: .1s;
+  -webkit-animation-timing-function: ease-out;
+  -webkit-animation-iteration-count: 5;
+  animation-duration: .1s;
+  animation-timing-function: ease-out;
+  animation-iteration-count: 5;
+  /* -webkit-animation-name: spin-back;
+  -webkit-animation-duration : 2s;
+  animation-name: spin-back;
+  animation-duration: 2s; */
+}
+
+
+@-webkit-keyframes spin-back {
+  0% {color: red;};
+  70% {color: green;}
+}
+
+@keyframes spin-back {
+  0% {
+    -webkit-animation: fa-spin 1s infinite linear;
+    animation: fa-spin 1s infinite linear;
+  }
+  70% {
+  }
+}

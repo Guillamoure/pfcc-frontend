@@ -1,5 +1,5 @@
 import React from 'react'
-import { withRouter, Link } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 
@@ -47,7 +47,7 @@ class Characters extends React.Component {
   // })}
 
   render() {
-    console.log(this.props)
+    // console.log(this.props)
     return (
       <React.Fragment>
         {this.props.currentUser && this.renderCharacters()}

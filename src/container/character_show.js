@@ -1,6 +1,6 @@
 import React from 'react'
 import _ from 'lodash'
-import { withRouter, Link } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import AbilityScores from '../components/character_show/ability_scores'
@@ -162,7 +162,9 @@ class Character extends React.Component {
 
 
   render() {
+    //
     console.log("redux character adding", this.props)
+    //
     return (
       <span className="container-8 character">
         {this.state.character.race && <CharacterName character={this.state.character} editModal={this.editModal}/>}

@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 // import _ from 'lodash'
 import { connect } from 'react-redux'
 
@@ -26,12 +25,11 @@ class Races extends React.Component {
     return sortedRaces.map(race => {return (
       <div className='card' onClick={() => this.props.history.push(`/races/${race.name}`)} key={race.id} >
         <div className='fill'></div>
-        {console.log(race.img_url)}
         <span className='card-content'>
         {race.name}
         </span>
         <div className="fade"></div>
-        <img className='card-img' src={race.img_url}>
+        <img className='card-img' alt={race.name} src={race.img_url}>
         </img>
       </div>
     )})
