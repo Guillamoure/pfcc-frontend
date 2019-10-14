@@ -82,15 +82,26 @@ class Character extends React.Component {
   }
 
   dispatchClassLevels = () => {
-    let charKlassesLevels = {}
-    this.props.character.character_klasses.forEach(charKlass => {
-      if (charKlassesLevels[charKlass.klass_id]) {
-        charKlassesLevels[charKlass.klass_id]++
-      } else {
-        charKlassesLevels[charKlass.klass_id] = 1
+    // let charKlassesLevels = {}
+    // this.props.character.character_klasses.forEach(charKlass => {
+    //   if (charKlassesLevels[charKlass.klass_id]) {
+    //     charKlassesLevels[charKlass.klass_id]++
+    //   } else {
+    //     charKlassesLevels[charKlass.klass_id] = 1
+    //   }
+    // })
+    let cKArray = []
+    let completedClasses = []
+    this.props.character.character_klasses.forEach(cK => {
+      const id = cK.klass_id
+      if (!completedClasses.includes(id)){
+        const level = this.props.character.character_klasses.filter(ck => ck.klass_id === id).length
+        completedClasses.push(id)
+        cKArray.push({id:id, level:level})
       }
     })
-    this.props.dispatch({type: 'CLASSES', classes: charKlassesLevels})
+    // debugger
+    this.props.dispatch({type: 'CLASSES', classes: cKArray})
   }
 
   dispatchAbilityScores = () => {

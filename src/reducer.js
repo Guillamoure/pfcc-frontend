@@ -3,7 +3,8 @@ const initialState = {
   admin: false,
   character: {},
   character_info: {
-    ability_scores: []
+    ability_scores: {},
+    classes: []
   }
 }
 

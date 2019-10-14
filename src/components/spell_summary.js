@@ -2,10 +2,10 @@ import React from 'react'
 import _ from 'lodash'
 import { connect } from 'react-redux'
 
-const SpellSummary = (props) => {
+const SpellSummary = props => {
 
   const { spell: klassSpell } = props
-  const level = props.character_info.classes[klassSpell.klass.id]
+  const level = props.character_info.classes.find(klass => klass.id === klassSpell.klass.id).level
 
 
   const renderDC = (sp_lvl, klass_id) => {

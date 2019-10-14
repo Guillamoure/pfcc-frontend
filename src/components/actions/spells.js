@@ -20,23 +20,15 @@ class Spells extends React.Component {
 
   remainingSpells = () => {
     let spells = []
-    let klassIds = {}
-    this.props.character.character_klasses.forEach(klass => {
-      if(klassIds[klass.klass_id]){
-        klassIds[klass.klass_id] += 1
-      } else {
-        klassIds[klass.klass_id] = 1
-      }
-    })
-    for (var id in klassIds){
+    for (var id in this.props.character_info.classes){
       let klass = this.props.character.klasses.find(klass => klass.id === parseInt(id))
       if (klass && klass.spells_per_days.length){
         // if the class has spells
         // find the spells they can cast for that given level (klassIds[id])
         let spellsAtThisLevel = klass.spells_per_days.filter(spd => {
-          return spd.klass_level === klassIds[id]
+          return spd.klass_level === this.props.character_info.classes[id]
         })
-        spells.push({spd: spellsAtThisLevel, name: klass.name})
+        spells.push({spd: spellsAtThisLevel, name: klass.name, id: klass.name})
       }
     }
 

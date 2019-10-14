@@ -18,12 +18,19 @@ const Saves = props => {
     // this is written as a key value pair
     // first value is the class' id
     // second value is the character's level for that class
-    for (var klassId in props.character_info.classes){
-      // find the class' info from the id
-      let currentClass = findCurrentClass(klassId)
-      // send the character's level in that class, and the relevant saving throw value
-      totalSavingThrow += renderSave(props.character_info.classes[klassId], currentClass[save])
-    }
+
+    props.character_info.classes.forEach(klass => {
+      let currentClass = findCurrentClass(klass.id)
+      totalSavingThrow += renderSave(klass.id, currentClass[save])
+    })
+
+    // for (var klassId in props.character_info.classes){
+    //   // find the class' info from the id
+    //   let currentClass = findCurrentClass(klass.id)
+    //   // send the character's level in that class, and the relevant saving throw value
+    //   totalSavingThrow += renderSave(props.character_info.classes[klassId], currentClass[save])
+    // }
+    
     // grab the character's ability score, and render its bonus
     const mod = Math.floor((props.character_info.ability_scores[score] - 10) / 2)
     totalSavingThrow += mod
