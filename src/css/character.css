@@ -128,8 +128,8 @@
 }
 
 #spin:hover {
-  -webkit-animation-name: fa-spin;
-  animation-name: fa-spin;
+  /* -webkit-animation-name: fa-spin;
+  animation-name: fa-spin; */
   -webkit-animation-duration: .1s;
   -webkit-animation-timing-function: ease-out;
   -webkit-animation-iteration-count: 5;

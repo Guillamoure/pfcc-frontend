@@ -58,12 +58,17 @@ class AttackBonus extends React.Component {
 
   renderAB = (ability) => {
     let ab = 0
-    for (var klass_id in this.props.character_info.classes){
-      // find the class' info from the id
-      let currentClass = this.props.character.klasses.find(ck => ck.id === parseInt(klass_id))
-      // send the character's level in that class, and the relevant saving throw value
-      ab += Math.floor(this.renderBAB(currentClass.hit_die) * this.props.character_info.classes[klass_id])
-    }
+    this.props.character_info.classes.forEach(klass => {
+      let currentClass = this.props.character.klasses.find(ck => ck.id === parseInt(klass.id))
+      ab += Math.floor(this.renderBAB(currentClass.hit_die) * klass.level)
+
+    })
+    // for (var klass_id in this.props.character_info.classes){
+    //   // find the class' info from the id
+    //   let currentClass = this.props.character.klasses.find(ck => ck.id === parseInt(klass.id))
+    //   // send the character's level in that class, and the relevant saving throw value
+    //   ab += Math.floor(this.renderBAB(currentClass.hit_die) * this.props.character_info.classes[klass_id])
+    // }
     ab += this.renderSize(this.props.character.race.size)
     ab += this.renderAbilityScoreModifiers(ability)
     return ab < 0 ? ab : `+${ab}`
