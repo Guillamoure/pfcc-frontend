@@ -101,7 +101,7 @@ class Character extends React.Component {
       }
     })
     // debugger
-    this.props.dispatch({type: 'CLASSES', classes: cKArray})
+    this.props.dispatch({type: 'CHARACTER_CLASSES', classes: cKArray})
   }
 
   dispatchAbilityScores = () => {

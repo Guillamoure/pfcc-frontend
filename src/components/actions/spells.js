@@ -20,18 +20,23 @@ class Spells extends React.Component {
 
   remainingSpells = () => {
     let spells = []
-    for (var id in this.props.character_info.classes){
-      let klass = this.props.character.klasses.find(klass => klass.id === parseInt(id))
-      if (klass && klass.spells_per_days.length){
-        // if the class has spells
-        // find the spells they can cast for that given level (klassIds[id])
-        let spellsAtThisLevel = klass.spells_per_days.filter(spd => {
-          return spd.klass_level === this.props.character_info.classes[id]
+    // for each class that a character has levels in
+    this.props.character_info.classes.forEach(klass => {
+      //find that class
+      const c = this.props.classes.find(k => k.id === klass.id)
+      // if that class has spells
+      if (c && c.spells_per_days.length){
+        // go through the list of spells per day,
+        // and find the spells they can cast per day at their class level
+        let spellsAtThisLevel = c.spells_per_days.filter(spd => {
+          return spd.klass_level === klass.level
         })
-        spells.push({spd: spellsAtThisLevel, name: klass.name, id: klass.name})
+        // push into an array
+        // an object of each spell per day and the class name and id
+        spells.push({spd: spellsAtThisLevel, name: c.name, id: c.name})
       }
-    }
-
+    })
+    // set state
     this.setState({spellsPerDay: spells})
   }
 
@@ -99,7 +104,8 @@ const mapStatetoProps = (state) => {
     currentUser: state.currentUser,
     admin: state.admin,
     character: state.character,
-    character_info: state.character_info
+    character_info: state.character_info,
+    classes: state.classes
   }
 }
 

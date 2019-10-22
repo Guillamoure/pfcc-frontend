@@ -6,6 +6,7 @@ import './css/combat.css';
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { connect } from 'react-redux'
 
+
 import Home from './container/home'
 import Classes from './container/classes'
 import Races from './container/races'
@@ -26,6 +27,14 @@ import SkillForm from './components/skill_form'
 
 
 class App extends React.Component {
+
+  componentDidMount(){
+    fetch('http://localhost:3000/api/v1/data')
+    .then(r => r.json())
+    .then(data => {
+      this.props.dispatch({type: 'EVERYTHING', classes: data.klasses, races: data.races })
+    })
+  }
 
 
   render(){
