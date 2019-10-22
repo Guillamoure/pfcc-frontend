@@ -5,7 +5,13 @@ const initialState = {
   character_info: {
     ability_scores: {},
     classes: []
-  }
+  },
+  classes: [
+
+  ],
+  races: [
+
+  ]
 }
 
 
@@ -19,8 +25,12 @@ const reducer = (state = initialState, action) => {
       return {...state, character: action.character};
     case "ABILITY SCORE":
       return {...state, character_info: {...state.character_info, ability_scores: {...state.character_info.ability_scores, [action.ability]: action.score}}};
-    case "CLASSES":
+    case "CHARACTER_CLASSES":
       return {...state, character_info: {...state.character_info, classes: action.classes}};
+    // case "CLASSES":
+    //   return {...state, classes: action.classes}
+    case "EVERYTHING":
+      return {...state, classes: action.classes, races: action.races}
     default:
       return state
   }
