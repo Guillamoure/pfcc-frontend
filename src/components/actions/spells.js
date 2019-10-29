@@ -73,9 +73,12 @@ class Spells extends React.Component {
 
   extrapolateSPD = (spd) => {
     let specificClass = this.props.character_info.classes.find(cl => cl.id === spd.klass_id)
-    const casted = specificClass.castSpells[spd.spell_level]
+    let casted = 0
+    if (specificClass.castSpells) {
+      casted = specificClass.castSpells[spd.spell_level]
+    }
     const remainingSpells = spd.spells - casted
-    return <span> <strong>|</strong> <i>{this.renderTH(spd.spell_level)}</i>: <strong>{remainingSpells ? remainingSpells : spd.spells}</strong></span>
+    return <span> <strong>|</strong> <i>{this.renderTH(spd.spell_level)}</i>: <strong>{(remainingSpells || remainingSpells === 0) ? remainingSpells : spd.spells}</strong></span>
   }
 
   renderTH = (num) => {
