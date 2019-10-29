@@ -97,7 +97,18 @@ class Character extends React.Component {
       if (!completedClasses.includes(id)){
         const level = this.props.character.character_klasses.filter(ck => ck.klass_id === id).length
         completedClasses.push(id)
-        cKArray.push({id:id, level:level})
+        const classInfo = {id, level}
+        // look to see if there are any cast spells for the given class
+        const castSpellsForThisClass = this.props.character.cast_spells.filter(cs => cs.klass_id === id)
+        // if (castSpellsForThisClass[0]){
+        const castSpells = {}
+        const transformedCastSpellsToLevelCast = castSpellsForThisClass.map(cs => cs.spell_level)
+        transformedCastSpellsToLevelCast.forEach(lvl => {
+          castSpells[lvl] ? castSpells[lvl] = castSpells[lvl] + 1 : castSpells[lvl] = 1
+        })
+        classInfo.castSpells = castSpells
+        // }
+        cKArray.push(classInfo)
       }
     })
     // debugger

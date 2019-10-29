@@ -7,6 +7,7 @@ import NotificationTabs from '../container/notification_tabs'
 import Creation from './notifications/creation'
 import Notice from './notifications/notice'
 import Update from './notifications/update'
+import Rest from './notifications/rest'
 
 class Notifications extends React.Component{
 
@@ -37,6 +38,7 @@ class Notifications extends React.Component{
               {this.state.activeTab === "Communique" && <Notice exitModal={this.props.exitModal}/>}
               {this.state.activeTab === "Update Character" && <Update exitModal={this.props.exitModal}/>}
               {this.state.activeTab === "Literally Unplayable" && <Creation  exitModal={this.props.exitModal}/>}
+              {this.state.activeTab === "Rest" && <Rest  exitModal={this.props.exitModal}/>}
             </div>
           </div>
         </div>

@@ -18,6 +18,26 @@ class Spells extends React.Component {
     })
   }
 
+  renderCast = (level, klass_id) => {
+    const info = {
+      spell_level: level,
+      klass_id: klass_id,
+      character_id: this.props.currentUser.id
+    }
+    fetch('http://localhost:3000/api/v1/cast_spells', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(info)
+    })
+    .then(r => r.json())
+    .then(data => {
+      this.props.dispatch({type: 'CAST SPELL', spell: data})
+    })
+  }
+
   remainingSpells = () => {
     let spells = []
     // for each class that a character has levels in
@@ -52,7 +72,13 @@ class Spells extends React.Component {
   }
 
   extrapolateSPD = (spd) => {
-    return <span> <strong>|</strong> <i>{this.renderTH(spd.spell_level)}</i>: <strong>{spd.spells}</strong></span>
+    let specificClass = this.props.character_info.classes.find(cl => cl.id === spd.klass_id)
+    let casted = 0
+    if (specificClass.castSpells) {
+      casted = specificClass.castSpells[spd.spell_level]
+    }
+    const remainingSpells = spd.spells - casted
+    return <span> <strong>|</strong> <i>{this.renderTH(spd.spell_level)}</i>: <strong>{(remainingSpells || remainingSpells === 0) ? remainingSpells : spd.spells}</strong></span>
   }
 
   renderTH = (num) => {
@@ -82,7 +108,7 @@ class Spells extends React.Component {
           </tr>
         </thead>
         <tbody>
-          {this.state.spells.map(sp => <SpellSummary spell={sp}/>)}
+          {this.state.spells.map(sp => <SpellSummary spell={sp} renderCast={this.renderCast}/>)}
         </tbody>
       </table>
     )
