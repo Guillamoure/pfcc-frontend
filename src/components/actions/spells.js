@@ -34,7 +34,7 @@ class Spells extends React.Component {
     })
     .then(r => r.json())
     .then(data => {
-      debugger
+      this.props.dispatch({type: 'CAST SPELL', spell: data})
     })
   }
 

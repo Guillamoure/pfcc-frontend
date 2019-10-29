@@ -11,6 +11,7 @@ class NotificationTabs extends React.Component {
         <Tab label="Communique" renderTabClick={this.props.renderTabClick} activeTab={this.props.activeTab}/>
         <Tab label="Update Character" renderTabClick={this.props.renderTabClick} activeTab={this.props.activeTab}/>
         <Tab label="Literally Unplayable" renderTabClick={this.props.renderTabClick} activeTab={this.props.activeTab}/>
+        <Tab label="Rest" renderTabClick={this.props.renderTabClick} activeTab={this.props.activeTab}/>
       </span>
     )
   }
