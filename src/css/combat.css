@@ -62,3 +62,27 @@
   max-height: 23.75em;
   position: relative;
 }
+
+.standard {
+  border-color: #666;
+  border-radius: 1em;
+  background-color: #4666FF;
+  color: #fff;
+  box-shadow: 1px 1px #777
+}
+
+.move {
+
+}
+
+.full {
+
+}
+
+.swift {
+
+}
+
+.free {
+
+}

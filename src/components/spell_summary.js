@@ -35,9 +35,18 @@ const SpellSummary = props => {
     }
   }
 
+  const renderAction = (action) => {
+    switch(action){
+      case "Standard Action":
+        return "standard"
+      default:
+        return "none"
+    }
+  }
+
   return (
       <tr>
-        <td><button onClick={() => props.renderEdit({id: 1}, "cast_spell")}>Cast</button></td>
+        <td><button className={renderAction(klassSpell.action.name)} onClick={() => props.renderCast(klassSpell.spell_level, klassSpell.klass.id)}><strong>Cast</strong></button></td>
         <td>{klassSpell.spell.name}</td>
         <td>{renderRange(level, klassSpell.spell_range, klassSpell.spell.target)}</td>
         <td>{renderTime(level, klassSpell.spell)}</td>

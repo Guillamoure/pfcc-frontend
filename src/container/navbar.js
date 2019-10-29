@@ -9,7 +9,7 @@ class NavBar extends React.Component {
     currentUser : ""
   }
 
-  componentDidUpdate(){
+  componentDidMount(){
     const token = localStorage.getItem("token")
     if (!this.state.currentUser && token){
       fetch("http://localhost:3000/api/v1/auth", {
