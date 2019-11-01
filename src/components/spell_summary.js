@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 const SpellSummary = props => {
 
-  const { spell: klassSpell } = props
+  const { spell: klassSpell, spellsPerDay } = props
   const level = props.character_info.classes.find(klass => klass.id === klassSpell.klass.id).level
 
 
@@ -35,12 +35,19 @@ const SpellSummary = props => {
     }
   }
 
+  const areThereRemainingSpells = () => {
+    const spellLevel = klassSpell.spell_level
+    debugger
+  }
+
   const renderAction = (action) => {
-    switch(action){
-      case "Standard Action":
-        return "standard"
-      default:
-        return "none"
+    if (areThereRemainingSpells()){
+      switch(action){
+        case "Standard Action":
+          return "standard"
+        default:
+          return "none"
+      }
     }
   }
 

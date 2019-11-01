@@ -108,7 +108,7 @@ class Spells extends React.Component {
           </tr>
         </thead>
         <tbody>
-          {this.state.spells.map(sp => <SpellSummary spell={sp} renderCast={this.renderCast}/>)}
+          {this.state.spells.map(sp => <SpellSummary spell={sp} renderCast={this.renderCast} spellsPerDay={this.state.spellsPerDay}/>)}
         </tbody>
       </table>
     )
