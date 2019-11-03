@@ -86,3 +86,11 @@
 .free {
 
 }
+
+.cannot-cast {
+  border-color: #666;
+  border-radius: 1em;
+  background-color: #666;
+  color: #000;
+  box-shadow: 1px 1px #777
+}
