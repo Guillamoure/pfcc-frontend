@@ -11,17 +11,13 @@ class Spells extends React.Component {
   }
 
   componentDidMount(){
-    fetch(`http://localhost:3000/api/v1/prepared_spells/${this.props.character.id}`)
-    .then(r => r.json())
-    .then(data => {
-      this.setState({spells: data}, this.remainingSpells)
-    })
+    this.remainingSpells()
   }
 
-  renderCast = (level, klass_id) => {
+  renderCast = (level, klassId, klassSpellId) => {
     const info = {
       spell_level: level,
-      klass_id: klass_id,
+      klass_id: klassId,
       character_id: this.props.currentUser.id
     }
     fetch('http://localhost:3000/api/v1/cast_spells', {
@@ -35,7 +31,30 @@ class Spells extends React.Component {
     .then(r => r.json())
     .then(data => {
       this.props.dispatch({type: 'CAST SPELL', spell: data})
+      if (this.spontaneousOrPrepared(klassId)){
+        let id = klassSpellId
+        fetch(`http://localhost:3000/api/v1/prepared_spells/${id}`, {
+          method: 'DELETE'
+        })
+        .then(r => r.json())
+        .then(data => {
+          if (data.response){
+            let newPreparedSpells = this.props.character.prepared_spells.filter(ps => ps.id !== id)
+            this.props.dispatch({type: 'REMOVE PREPARED SPELL', newPreparedSpells: newPreparedSpells})
+          }
+        })
+      }
     })
+  }
+
+  spontaneousOrPrepared = (klassId) => {
+    // REFACTOR
+    // Doesn't check to see if spells can be cast at their current level
+    // Just at all levels
+    // Paladin/Ranger at lvl 4/3, etc.
+    const klass = this.props.classes.find(cl => cl.id === klassId)
+    let spellcasting = klass.klass_features.find(kf => kf.spellcasting).spellcasting
+    return spellcasting.prepared
   }
 
   remainingSpells = () => {
@@ -95,6 +114,7 @@ class Spells extends React.Component {
   }
 
   availableSpellsToCastTable = () => {
+
     return (
       <table>
         <thead>
@@ -108,7 +128,7 @@ class Spells extends React.Component {
           </tr>
         </thead>
         <tbody>
-          {this.state.spells.map(sp => <SpellSummary spell={sp} renderCast={this.renderCast} spellsPerDay={this.state.spellsPerDay}/>)}
+          {this.props.character.prepared_spells.map(sp => <SpellSummary spell={sp} renderCast={this.renderCast} spellsPerDay={this.state.spellsPerDay}/>)}
         </tbody>
       </table>
     )

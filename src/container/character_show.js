@@ -126,7 +126,6 @@ class Character extends React.Component {
   }
 
   renderEdit = (info, details) => {
-    debugger
     fetch(`http://localhost:3000/api/v1/${details}`, {
       method: 'PATCH',
       headers: {

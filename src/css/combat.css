@@ -94,3 +94,17 @@
   color: #000;
   box-shadow: 1px 1px #777
 }
+
+#damaged {
+  color: red;
+}
+
+#temporary {
+  color: blue;
+}
+
+#temp-damage {
+  background: -webkit-linear-gradient(#87ceeb, #C42021);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

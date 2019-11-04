@@ -34,6 +34,8 @@ const reducer = (state = initialState, action) => {
     case "CAST SPELL":
       const updatedState = castingSpells(state, action)
       return {...state, character_info: updatedState};
+    case "REMOVE PREPARED SPELL":
+      return {...state, character: {...state.character, prepared_spells: action.newPreparedSpells}};
     default:
       return state
   }
