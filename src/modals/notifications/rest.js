@@ -20,6 +20,10 @@ class Rest extends React.Component {
     .then(data => {
       // do you have any spells to prepare at the beginning of the day?
 
+      // Boolean for anyRemainingSpellsToPrepare
+      // check to see if it's true or false by checking spells per day against prepared spells and cast spell levels
+      // does not apply for spontaneous casters
+
       debugger
       // should return either updated character // RETURNS NEW CHARACTER
 

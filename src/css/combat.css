@@ -87,6 +87,14 @@
 
 }
 
+.long {
+  border-color: #666;
+  border-radius: 1em;
+  background-color: #d4af37;
+  color: #fff;
+  box-shadow: 1px 1px #777
+}
+
 .cannot-cast {
   border-color: #666;
   border-radius: 1em;

@@ -26,10 +26,10 @@ const SpellSummary = props => {
 
   const renderTime = (sp_lvl, spell) => {
     if (spell.duration === "instantaneous"){
-      return "inst"
+      return "Inst"
     } else {
       const startingDuration = spell.time
-      const additionalTime = (spell.increase_per_level * sp_lvl) - 1
+      const additionalTime = (spell.increase_per_level * sp_lvl) - spell.increase_per_level
       let totalTime = startingDuration + additionalTime
       return totalTime + " " + spell.unit_of_time + (totalTime > 1 ? "s" : null)
     }
@@ -52,6 +52,8 @@ const SpellSummary = props => {
       switch(action){
         case "Standard Action":
           return "standard"
+        case "Ten Minutes" || "One Hour" || "Eight Hours" || "One Minute":
+          return "long"
         default:
           return "none"
       }

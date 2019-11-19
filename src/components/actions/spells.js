@@ -31,7 +31,7 @@ class Spells extends React.Component {
     .then(r => r.json())
     .then(data => {
       this.props.dispatch({type: 'CAST SPELL', spell: data})
-      if (this.spontaneousOrPrepared(klassId)){
+      if (this.isThisCasterSpontaneous(klassId)){
         let id = klassSpellId
         fetch(`http://localhost:3000/api/v1/prepared_spells/${id}`, {
           method: 'DELETE'
@@ -47,7 +47,7 @@ class Spells extends React.Component {
     })
   }
 
-  spontaneousOrPrepared = (klassId) => {
+  isThisCasterSpontaneous = (klassId) => {
     // REFACTOR
     // Doesn't check to see if spells can be cast at their current level
     // Just at all levels
