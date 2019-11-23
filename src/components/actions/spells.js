@@ -14,11 +14,13 @@ class Spells extends React.Component {
     this.remainingSpells()
   }
 
-  renderCast = (level, klassId, klassSpellId) => {
+  renderCast = (preparedSpell) => {
     const info = {
-      spell_level: level,
-      klass_id: klassId,
-      character_id: this.props.currentUser.id
+      id: preparedSpell.id,
+      prepared: this.isThisCasterPrepared(preparedSpell.klass.id),
+      character_id: preparedSpell.character_id,
+      spell_level: preparedSpell.spell_level,
+      klass_id: preparedSpell.klass.id
     }
     fetch('http://localhost:3000/api/v1/cast_spells', {
       method: 'POST',
@@ -30,24 +32,28 @@ class Spells extends React.Component {
     })
     .then(r => r.json())
     .then(data => {
-      this.props.dispatch({type: 'CAST SPELL', spell: data})
-      if (this.isThisCasterSpontaneous(klassId)){
-        let id = klassSpellId
-        fetch(`http://localhost:3000/api/v1/prepared_spells/${id}`, {
-          method: 'DELETE'
-        })
-        .then(r => r.json())
-        .then(data => {
-          if (data.response){
-            let newPreparedSpells = this.props.character.prepared_spells.filter(ps => ps.id !== id)
-            this.props.dispatch({type: 'REMOVE PREPARED SPELL', newPreparedSpells: newPreparedSpells})
-          }
-        })
+      if (data.cast){
+        this.props.dispatch({type: 'CAST PREPARED NONCANTRIP SPELL', spell: data})
+      } else {
+        this.props.dispatch({type: 'CAST CANTRIP SPA OR SPONTANEOUS SPELL', spell: data})
       }
+      // if (this.isThisCasterPrepared(klassId)){
+      //   let id = klassSpellId
+      //   fetch(`http://localhost:3000/api/v1/prepared_spells/${id}`, {
+      //     method: 'DELETE'
+      //   })
+      //   .then(r => r.json())
+      //   .then(data => {
+      //     if (data.response){
+      //       let newPreparedSpells = this.props.character.prepared_spells.filter(ps => ps.id !== id)
+      //       this.props.dispatch({type: 'REMOVE PREPARED SPELL', newPreparedSpells: newPreparedSpells})
+      //     }
+      //   })
+      // }
     })
   }
 
-  isThisCasterSpontaneous = (klassId) => {
+  isThisCasterPrepared = (klassId) => {
     // REFACTOR
     // Doesn't check to see if spells can be cast at their current level
     // Just at all levels
@@ -128,10 +134,17 @@ class Spells extends React.Component {
           </tr>
         </thead>
         <tbody>
-          {this.props.character.prepared_spells.map(sp => <SpellSummary spell={sp} renderCast={this.renderCast} spellsPerDay={this.state.spellsPerDay}/>)}
+          {this.castableSpells().map(sp => <SpellSummary spell={sp} renderCast={this.renderCast} spellsPerDay={this.state.spellsPerDay}/>)}
         </tbody>
       </table>
     )
+  }
+
+  castableSpells = () => {
+    let castablePreparedSpells = this.props.character.prepared_spells.filter(pSp => {
+      return pSp.cast === false
+    })
+    return castablePreparedSpells
   }
 
 

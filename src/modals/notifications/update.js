@@ -41,12 +41,12 @@ class Update extends React.Component {
     }
   }
 
-  isThisCasterSpontaneous = (klassId) => {
+  isThisCasterPrepared = (klassId) => {
     // REFACTOR
     // Doesn't check to see if spells can be cast at their current level
     // Just at all levels
     // Paladin/Ranger at lvl 4/3, etc.
-    const klass = this.props.classes.find(cl => cl.id === klassId)
+    let klass = this.props.classes.find(cl => cl.id === klassId)
     let spellcasting = klass.klass_features.find(kf => kf.spellcasting).spellcasting
     return spellcasting.prepared
   }
@@ -54,7 +54,7 @@ class Update extends React.Component {
   prepareSpells = () => {
     let prepared = false
     this.props.character.klasses.forEach(kl => {
-      if (this.isThisCasterSpontaneous(kl.id)){
+      if (this.isThisCasterPrepared(kl.id)){
         prepared = true
       }
     })

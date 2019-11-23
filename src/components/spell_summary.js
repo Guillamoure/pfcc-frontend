@@ -63,7 +63,7 @@ const SpellSummary = props => {
   }
 
   const availableToCast = () => {
-    areThereRemainingSpells() && props.renderCast(klassSpell.spell_level, klassSpell.klass.id, klassSpell.id)
+    areThereRemainingSpells() && props.renderCast(klassSpell)
   }
 
   return (
