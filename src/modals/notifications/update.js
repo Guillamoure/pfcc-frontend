@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
 
 import SkillRanks from '../../components/skill_ranks'
-import PrepareSpells from '../../components/prepare_spells'
+import PrepareSpells from '../../container/prepare_spells'
 
 
 class Update extends React.Component {

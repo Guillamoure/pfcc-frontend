@@ -4,7 +4,8 @@ import { connect } from 'react-redux'
 class PrepareSpells extends React.Component {
 
   state = {
-    knownSpells: []
+    knownSpells: [],
+    selectedSpells: []
   }
 
   componentDidMount() {
@@ -25,7 +26,6 @@ class PrepareSpells extends React.Component {
     console.log(this.state.knownSpells)
     return (
       <div>
-        <p>Did it work?</p>
         <ul>
         {this.renderKnownSpells()}
         </ul>

@@ -35,8 +35,8 @@ const reducer = (state = initialState, action) => {
       let updatedState = castingCantripSPASpontaneous(state, action)
       return {...state, character_info: updatedState};
     case "CAST PREPARED NONCANTRIP SPELL":
-      updatedState = castingPrepared(state, action)
-      return {...state, character: updatedState}
+      let updatedPreparedSpellState = castingPrepared(state, action);
+      return {...state, character: updatedPreparedSpellState};
     case "REMOVE PREPARED SPELL":
       return {...state, character: {...state.character, prepared_spells: action.newPreparedSpells}};
     default:
@@ -62,7 +62,7 @@ const castingPrepared = (state, action) => {
   // duplicate state
   let modifiedState = {...state.character}
   // loop though all the character's prepared spells
-  modifiedState.prepared_spells.map(cs => {
+  let modifiedPrepared = modifiedState.prepared_spells.map(cs => {
     // find the cast spell within the character's prepared spells
     if (cs.id === action.spell.id){
       // return the updated cast spell
@@ -72,6 +72,7 @@ const castingPrepared = (state, action) => {
       return cs
     }
   })
+  modifiedState.prepared_spells = modifiedPrepared
   return modifiedState
 }
 
