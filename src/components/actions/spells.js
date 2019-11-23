@@ -102,6 +102,14 @@ class Spells extends React.Component {
     if (specificClass.castSpells) {
       casted = specificClass.castSpells[spd.spell_level]
     }
+    if (casted === undefined){
+      casted = 0
+    }
+    this.props.character.prepared_spells.forEach(pSp => {
+      if (pSp.spell_level == spd.spell_level && pSp.cast){
+        casted += 1
+      }
+    })
     const remainingSpells = spd.spells - casted
     return <span> <strong>|</strong> <i>{this.renderTH(spd.spell_level)}</i>: <strong>{(remainingSpells || remainingSpells === 0) ? remainingSpells : spd.spells}</strong></span>
   }
