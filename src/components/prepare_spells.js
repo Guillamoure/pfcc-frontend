@@ -17,11 +17,12 @@ class PrepareSpells extends React.Component {
 
   renderKnownSpells = () => {
     return this.state.knownSpells.map(ks => {
-      return <li><strong>{ks.name}</strong> | Level {ks.level}</li>
+      return <li><strong>{ks.spell.name}</strong> | {ks.klass.name} | Level {ks.klass_spell.spell_level}</li>
     })
   }
 
   render(){
+    console.log(this.state.knownSpells)
     return (
       <div>
         <p>Did it work?</p>
