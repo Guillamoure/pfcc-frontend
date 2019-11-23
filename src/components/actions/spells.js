@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import _ from 'lodash'
 
 import SpellSummary from '../spell_summary'
 
@@ -98,10 +99,17 @@ class Spells extends React.Component {
 
   extrapolateSPD = (spd) => {
     let specificClass = this.props.character_info.classes.find(cl => cl.id === spd.klass_id)
+    let totalSpellsPerDay = spd.spells
+    if (this.bonusSPD(spd.klass_id, spd.spell_level)){
+      totalSpellsPerDay += 1
+    }
     let casted = 0
     if (specificClass.castSpells) {
       casted = specificClass.castSpells[spd.spell_level]
     }
+    // this resets casted if it found no spells of the applicable level in the redux castSpells object
+    // because itll return undefined
+    // refactor when you get to it
     if (casted === undefined){
       casted = 0
     }
@@ -110,8 +118,15 @@ class Spells extends React.Component {
         casted += 1
       }
     })
-    const remainingSpells = spd.spells - casted
-    return <span> <strong>|</strong> <i>{this.renderTH(spd.spell_level)}</i>: <strong>{(remainingSpells || remainingSpells === 0) ? remainingSpells : spd.spells}</strong></span>
+    const remainingSpells = totalSpellsPerDay - casted
+    return <span> <strong>|</strong> <i>{this.renderTH(spd.spell_level)}</i>: <strong>{(remainingSpells || remainingSpells === 0) ? remainingSpells : totalSpellsPerDay}</strong></span>
+  }
+
+  bonusSPD = (klass_id, spell_level) => {
+    let klass = this.props.classes.find(cl => cl.id === klass_id)
+    let spellcasting = klass.klass_features.find(kf => kf.name === "Spells")
+    let ab = _.lowerCase(spellcasting.spellcasting.ability_score)
+    return ((this.props.character_info.ability_scores[ab] - 10) / 2.0) >= spell_level ? true : false
   }
 
   renderTH = (num) => {
