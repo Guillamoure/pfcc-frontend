@@ -100,7 +100,8 @@ class Spells extends React.Component {
   extrapolateSPD = (spd) => {
     let specificClass = this.props.character_info.classes.find(cl => cl.id === spd.klass_id)
     let totalSpellsPerDay = spd.spells
-    if (this.bonusSPD(spd.klass_id, spd.spell_level)){
+    // can't get bonus spells per day for cantrips
+    if (this.bonusSPD(spd.klass_id, spd.spell_level) && spd.spell_level !== 0){
       totalSpellsPerDay += 1
     }
     let casted = 0

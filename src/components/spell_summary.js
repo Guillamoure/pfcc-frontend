@@ -66,6 +66,10 @@ const SpellSummary = props => {
     areThereRemainingSpells() && props.renderCast(klassSpell)
   }
 
+  // when you need to do spontaneous metamagic or cure/inflict/summon nature's ally spell replacement for a prepared spell
+  // have another button before the cast spell button
+  // open up a tool tip or a modal
+  // give you options to cast
   return (
       <tr>
         <td><button className={renderAction(klassSpell.action.name)} onClick={availableToCast}><strong>Cast</strong></button></td>
