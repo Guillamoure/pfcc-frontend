@@ -87,7 +87,21 @@ class PrepareSpells extends React.Component {
         totalSpellsPerDay += 1
       }
       let prepared = this.state.selectedSpells.filter(ss => ss.level === spd.spell_level).length
-      const remainingSpells = totalSpellsPerDay - prepared
+      let remainingSpells = totalSpellsPerDay - prepared
+
+      // checking for cast spells from prepared spells
+      this.props.character.prepared_spells.forEach(ps => {
+        if (ps.spell_level === spd.spell_level && ps.cast){
+          remainingSpells--
+        }
+      })
+
+      // check from character_info for cantrips too!
+      let klassInfo = this.props.character_info.classes.find(cl => cl.id === spd.klass_id)
+      if (klassInfo.castSpells[spd.spell_level]){
+        remainingSpells -= klassInfo.castSpells[spd.spell_level]
+      }
+
       if (remainingSpells === 0 && this.state.availableSpellLevels.includes(spd.spell_level)){
         this.checkAvailableSpellLevel(spd.spell_level)
       }
