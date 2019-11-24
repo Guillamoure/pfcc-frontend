@@ -115,7 +115,7 @@ class Spells extends React.Component {
       casted = 0
     }
     this.props.character.prepared_spells.forEach(pSp => {
-      if (pSp.spell_level == spd.spell_level && pSp.cast){
+      if (pSp.spell_level === spd.spell_level && pSp.cast){
         casted += 1
       }
     })

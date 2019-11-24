@@ -26,6 +26,27 @@ class PrepareSpells extends React.Component {
     })
   }
 
+  renderSubmit = (e) => {
+    e.preventDefault()
+    let info = {
+      spells: this.state.selectedSpells,
+      character_id: this.props.character.id
+    }
+    fetch('http://localhost:3000/api/v1/prepared_spells', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(info)
+    })
+    .then(r => r.json())
+    .then(data => {
+      this.props.dispatch({type: 'PREPARE SPELLS', spells: data })
+      this.props.exitModal()
+    })
+  }
+
   renderKnownSpells = () => {
     let ksSortedSpellLevel = this.state.knownSpells.sort((ks1, ks2) => {
       return ks1.klass_spell.spell_level - ks2.klass_spell.spell_level
@@ -71,9 +92,11 @@ class PrepareSpells extends React.Component {
     if (this.state.spellLevel === "-"){
       return null
     } else {
+      let ksi = this.state.knownSpells.find(ks => ks.spell.id === this.state.activeSpell).klass_spell.id
       let spell = {
         id: this.state.activeSpell,
-        level: this.state.spellLevel
+        level: this.state.spellLevel,
+        known_spell_id: ksi
       }
       this.setState({selectedSpells: [...this.state.selectedSpells, spell], activeSpell: 0, spellLevel: "-"})
     }
@@ -154,8 +177,13 @@ class PrepareSpells extends React.Component {
   renderPreparedSpells = () => {
     return this.state.selectedSpells.map(ss => {
       let spell = this.state.knownSpells.find(ks => ks.id === ss.id).spell
-      return <PreparedCard spell={spell} level={ss.level} removePreparedSpell={this.removePreparedSpell}/>
+      return <PreparedCard spell={spell} level={ss.level} removePreparedSpell={this.removePreparedSpell} alreadyPrepared={false}/>
     })
+  }
+
+  renderAlreadyPreparedSpell = () => {
+    let klassPreparedSpells = this.props.character.prepared_spells.filter(ps => ps.klass.id === this.state.activeClass)
+    return klassPreparedSpells.map(kps => <PreparedCard spell={kps.spell} level={kps.spell_level} alreadyPrepared={true}/>)
   }
 
   checkAvailableSpellLevel = (lvl) => {
@@ -194,7 +222,9 @@ class PrepareSpells extends React.Component {
         <div>
           {this.state.spellsPerDay && this.displaySelectedSpells()}
           {!this.state.spellsPerDay && this.remainingSpells()}
+          {this.state.activeClass && this.renderAlreadyPreparedSpell()}
           {this.renderPreparedSpells()}
+          {this.state.selectedSpells.length ? <button onClick={this.renderSubmit}>Prepare your spells!</button> : null}
         </div>
       </div>
     )

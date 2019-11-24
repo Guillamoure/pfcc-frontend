@@ -39,6 +39,10 @@ const reducer = (state = initialState, action) => {
       return {...state, character: updatedPreparedSpellState};
     case "REMOVE PREPARED SPELL":
       return {...state, character: {...state.character, prepared_spells: action.newPreparedSpells}};
+    case "PREPARE SPELLS":
+      let preparedCopy = [...state.character.prepared_spells]
+      action.spells.forEach(sp => preparedCopy.push(sp))
+      return {...state, character: {...state.character, prepared_spells: preparedCopy}}
     default:
       return state
   }

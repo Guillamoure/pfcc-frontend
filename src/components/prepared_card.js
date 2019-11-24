@@ -6,7 +6,7 @@ const PreparedCard = props => {
     <div>
       <span><strong>{props.spell.name}</strong></span>
       <span> Lvl {props.level}</span>
-      <span><button onClick={() => props.removePreparedSpell(props.spell.id)}>X</button></span>
+      {!props.alreadyPrepared && <span><button onClick={() => props.removePreparedSpell(props.spell.id)}>X</button></span>}
     </div>
   )
 
