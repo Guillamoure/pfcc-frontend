@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import _ from 'lodash'
 
 import SpellSummary from '../spell_summary'
 
@@ -11,18 +12,16 @@ class Spells extends React.Component {
   }
 
   componentDidMount(){
-    fetch(`http://localhost:3000/api/v1/prepared_spells/${this.props.character.id}`)
-    .then(r => r.json())
-    .then(data => {
-      this.setState({spells: data}, this.remainingSpells)
-    })
+    this.remainingSpells()
   }
 
-  renderCast = (level, klass_id) => {
+  renderCast = (preparedSpell) => {
     const info = {
-      spell_level: level,
-      klass_id: klass_id,
-      character_id: this.props.currentUser.id
+      id: preparedSpell.id,
+      prepared: this.isThisCasterPrepared(preparedSpell.klass.id),
+      character_id: preparedSpell.character_id,
+      spell_level: preparedSpell.spell_level,
+      klass_id: preparedSpell.klass.id
     }
     fetch('http://localhost:3000/api/v1/cast_spells', {
       method: 'POST',
@@ -34,8 +33,35 @@ class Spells extends React.Component {
     })
     .then(r => r.json())
     .then(data => {
-      this.props.dispatch({type: 'CAST SPELL', spell: data})
+      if (data.cast){
+        this.props.dispatch({type: 'CAST PREPARED NONCANTRIP SPELL', spell: data})
+      } else {
+        this.props.dispatch({type: 'CAST CANTRIP SPA OR SPONTANEOUS SPELL', spell: data})
+      }
+      // if (this.isThisCasterPrepared(klassId)){
+      //   let id = klassSpellId
+      //   fetch(`http://localhost:3000/api/v1/prepared_spells/${id}`, {
+      //     method: 'DELETE'
+      //   })
+      //   .then(r => r.json())
+      //   .then(data => {
+      //     if (data.response){
+      //       let newPreparedSpells = this.props.character.prepared_spells.filter(ps => ps.id !== id)
+      //       this.props.dispatch({type: 'REMOVE PREPARED SPELL', newPreparedSpells: newPreparedSpells})
+      //     }
+      //   })
+      // }
     })
+  }
+
+  isThisCasterPrepared = (klassId) => {
+    // REFACTOR
+    // Doesn't check to see if spells can be cast at their current level
+    // Just at all levels
+    // Paladin/Ranger at lvl 4/3, etc.
+    const klass = this.props.classes.find(cl => cl.id === klassId)
+    let spellcasting = klass.klass_features.find(kf => kf.spellcasting).spellcasting
+    return spellcasting.prepared
   }
 
   remainingSpells = () => {
@@ -73,12 +99,35 @@ class Spells extends React.Component {
 
   extrapolateSPD = (spd) => {
     let specificClass = this.props.character_info.classes.find(cl => cl.id === spd.klass_id)
+    let totalSpellsPerDay = spd.spells
+    // can't get bonus spells per day for cantrips
+    if (this.bonusSPD(spd.klass_id, spd.spell_level) && spd.spell_level !== 0){
+      totalSpellsPerDay += 1
+    }
     let casted = 0
     if (specificClass.castSpells) {
       casted = specificClass.castSpells[spd.spell_level]
     }
-    const remainingSpells = spd.spells - casted
-    return <span> <strong>|</strong> <i>{this.renderTH(spd.spell_level)}</i>: <strong>{(remainingSpells || remainingSpells === 0) ? remainingSpells : spd.spells}</strong></span>
+    // this resets casted if it found no spells of the applicable level in the redux castSpells object
+    // because itll return undefined
+    // refactor when you get to it
+    if (casted === undefined){
+      casted = 0
+    }
+    this.props.character.prepared_spells.forEach(pSp => {
+      if (pSp.spell_level === spd.spell_level && pSp.cast){
+        casted += 1
+      }
+    })
+    const remainingSpells = totalSpellsPerDay - casted
+    return <span> <strong>|</strong> <i>{this.renderTH(spd.spell_level)}</i>: <strong>{(remainingSpells || remainingSpells === 0) ? remainingSpells : totalSpellsPerDay}</strong></span>
+  }
+
+  bonusSPD = (klass_id, spell_level) => {
+    let klass = this.props.classes.find(cl => cl.id === klass_id)
+    let spellcasting = klass.klass_features.find(kf => kf.name === "Spells")
+    let ab = _.lowerCase(spellcasting.spellcasting.ability_score)
+    return ((this.props.character_info.ability_scores[ab] - 10) / 2.0) >= spell_level ? true : false
   }
 
   renderTH = (num) => {
@@ -95,6 +144,7 @@ class Spells extends React.Component {
   }
 
   availableSpellsToCastTable = () => {
+
     return (
       <table>
         <thead>
@@ -108,10 +158,17 @@ class Spells extends React.Component {
           </tr>
         </thead>
         <tbody>
-          {this.state.spells.map(sp => <SpellSummary spell={sp} renderCast={this.renderCast} spellsPerDay={this.state.spellsPerDay}/>)}
+          {this.castableSpells().map(sp => <SpellSummary spell={sp} renderCast={this.renderCast} spellsPerDay={this.state.spellsPerDay}/>)}
         </tbody>
       </table>
     )
+  }
+
+  castableSpells = () => {
+    let castablePreparedSpells = this.props.character.prepared_spells.filter(pSp => {
+      return pSp.cast === false
+    })
+    return castablePreparedSpells
   }
 
 

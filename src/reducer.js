@@ -31,17 +31,24 @@ const reducer = (state = initialState, action) => {
     //   return {...state, classes: action.classes}
     case "EVERYTHING":
       return {...state, classes: action.classes, races: action.races};
-    case "CAST SPELL":
-      const updatedState = castingSpells(state, action)
+    case "CAST CANTRIP SPA OR SPONTANEOUS SPELL":
+      let updatedState = castingCantripSPASpontaneous(state, action)
       return {...state, character_info: updatedState};
+    case "CAST PREPARED NONCANTRIP SPELL":
+      let updatedPreparedSpellState = castingPrepared(state, action);
+      return {...state, character: updatedPreparedSpellState};
+    case "REMOVE PREPARED SPELL":
+      return {...state, character: {...state.character, prepared_spells: action.newPreparedSpells}};
+    case "PREPARE SPELLS":
+      let preparedCopy = [...state.character.prepared_spells]
+      action.spells.forEach(sp => preparedCopy.push(sp))
+      return {...state, character: {...state.character, prepared_spells: preparedCopy}}
     default:
       return state
   }
-
-
 }
 
-const castingSpells = (state, action) => {
+const castingCantripSPASpontaneous = (state, action) => {
   // duplicate state
   let modifiedState = {...state.character_info}
   // find out which class you are modifying
@@ -52,6 +59,24 @@ const castingSpells = (state, action) => {
   klass.castSpells[lvl] ? klass.castSpells[lvl] = klass.castSpells[lvl] + 1 : klass.castSpells[lvl] = 1
   // merge changes into duplicate of state
   modifiedState.classes.map(cl => cl.id === klass.id ? klass : cl)
+  return modifiedState
+}
+
+const castingPrepared = (state, action) => {
+  // duplicate state
+  let modifiedState = {...state.character}
+  // loop though all the character's prepared spells
+  let modifiedPrepared = modifiedState.prepared_spells.map(cs => {
+    // find the cast spell within the character's prepared spells
+    if (cs.id === action.spell.id){
+      // return the updated cast spell
+      return action.spell
+    } else {
+      // otherwise, return the original spell
+      return cs
+    }
+  })
+  modifiedState.prepared_spells = modifiedPrepared
   return modifiedState
 }
 

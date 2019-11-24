@@ -26,10 +26,10 @@ const SpellSummary = props => {
 
   const renderTime = (sp_lvl, spell) => {
     if (spell.duration === "instantaneous"){
-      return "inst"
+      return "Inst"
     } else {
       const startingDuration = spell.time
-      const additionalTime = (spell.increase_per_level * sp_lvl) - 1
+      const additionalTime = (spell.increase_per_level * sp_lvl) - spell.increase_per_level
       let totalTime = startingDuration + additionalTime
       return totalTime + " " + spell.unit_of_time + (totalTime > 1 ? "s" : null)
     }
@@ -37,7 +37,14 @@ const SpellSummary = props => {
 
   const areThereRemainingSpells = () => {
     const spellLevel = klassSpell.spell_level
-    debugger
+    const charKlass = props.character_info.classes.find(cl => cl.id === klassSpell.klass.id)
+    const castSpells = charKlass.castSpells
+    const charKlassLevel = charKlass.level
+    const targetKlass = props.classes.find(cl => cl.id === klassSpell.klass.id)
+    const availableSpells = targetKlass.spells_per_days.find(spd => spd.spell_level === spellLevel && spd.klass_level === charKlassLevel)
+
+    return castSpells[spellLevel] ? castSpells[spellLevel] < availableSpells.spells : true
+
   }
 
   const renderAction = (action) => {
@@ -45,15 +52,27 @@ const SpellSummary = props => {
       switch(action){
         case "Standard Action":
           return "standard"
+        case "Ten Minutes" || "One Hour" || "Eight Hours" || "One Minute":
+          return "long"
         default:
           return "none"
       }
+    } else {
+      return "cannot-cast"
     }
   }
 
+  const availableToCast = () => {
+    areThereRemainingSpells() && props.renderCast(klassSpell)
+  }
+
+  // when you need to do spontaneous metamagic or cure/inflict/summon nature's ally spell replacement for a prepared spell
+  // have another button before the cast spell button
+  // open up a tool tip or a modal
+  // give you options to cast
   return (
       <tr>
-        <td><button className={renderAction(klassSpell.action.name)} onClick={() => props.renderCast(klassSpell.spell_level, klassSpell.klass.id)}><strong>Cast</strong></button></td>
+        <td><button className={renderAction(klassSpell.action.name)} onClick={availableToCast}><strong>Cast</strong></button></td>
         <td>{klassSpell.spell.name}</td>
         <td>{renderRange(level, klassSpell.spell_range, klassSpell.spell.target)}</td>
         <td>{renderTime(level, klassSpell.spell)}</td>
@@ -67,7 +86,8 @@ const SpellSummary = props => {
 const mapStateToProps = (state) => {
   return {
     character: state.character,
-    character_info: state.character_info
+    character_info: state.character_info,
+    classes: state.classes
   }
 }
 

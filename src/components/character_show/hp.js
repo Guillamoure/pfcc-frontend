@@ -23,6 +23,20 @@ class HP extends React.Component {
     return Math.floor((this.props.character_info.ability_scores.constitution - 10) / 2)
   }
 
+  renderDamaged = () => {
+    // oh GOD please refactor
+
+    let id = "none"
+    if (this.props.character.lethal_damage && this.props.character.temp_hp){
+      id = "temp-damage"
+    } else if (this.props.character.lethal_damage){
+      id = "damaged"
+    } else if (this.props.character.temp_hp){
+      id = "temporary"
+    }
+    return id
+  }
+
   // firstClass = () => {
   //   let firstClassHD = this.props.character.klasses[0].hit_die
   //   return firstClassHD + this.conMod()
@@ -51,11 +65,13 @@ class HP extends React.Component {
     //   <div><button className="red hp-btn">+</button></div>
     //   <div><button className="blue hp-btn">t</button></div>
     // </span>
+
+
     return (
       <span className='centered'>
         <div className='dull'><strong>Hit Points</strong></div>
         <div className='middle'>
-          <span className='enhanced'>{totalHP - this.props.character.lethal_damage}</span>
+          <span id={this.renderDamaged()} className='enhanced'>{totalHP - this.props.character.lethal_damage + this.props.character.temp_hp}</span>
           <span className='enhanced'>/{totalHP}</span>
           <span><button className='spacing' style={{boxShadow: "1px 1px 2px #000", borderRadius: ".5em"}} onClick={() => this.props.editModal("hitPoints")}>Adjust</button></span>
         </div>
