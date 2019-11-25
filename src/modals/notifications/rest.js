@@ -24,7 +24,7 @@ class Rest extends React.Component {
       // check to see if it's true or false by checking spells per day against prepared spells and cast spell levels
       // does not apply for spontaneous casters
 
-      debugger
+      this.props.dispatch({type: 'CHARACTER', character: data.character })
       // should return either updated character // RETURNS NEW CHARACTER
 
       // dispatch new character, clear cast cast spells
@@ -32,6 +32,8 @@ class Rest extends React.Component {
       // or adjusted hps (lethal, non lethal, temp) due to resting
 
       // then do a delete with all cast spells
+      this.props.exitModal()
+
     })
   }
 
