@@ -22,7 +22,13 @@ const reducer = (state = initialState, action) => {
     case "SIGNOUT":
       return {...state, currentUser: "", admin: false};
     case "CHARACTER":
-      return {...state, character: action.character};
+      let classesCopy = state.character_info.classes
+      let clearedCopy = classesCopy.map(cc => {
+        let copiedClassInfo = {...cc}
+        copiedClassInfo.castSpells = {}
+        return copiedClassInfo
+      })
+      return {...state, character: action.character, character_info: {...state.character_info, classes: clearedCopy}};
     case "ABILITY SCORE":
       return {...state, character_info: {...state.character_info, ability_scores: {...state.character_info.ability_scores, [action.ability]: action.score}}};
     case "CHARACTER_CLASSES":
