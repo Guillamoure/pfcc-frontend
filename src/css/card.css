@@ -1,0 +1,10 @@
+.spell-card {
+  /* border: dashed #987321; */
+  margin: .3em;
+  background-color: rgba(255, 255, 255, 0.6);
+  border-radius: 1em;
+  padding: .2em;
+  padding-left: 1em;
+  display: grid;
+  grid-template-columns: 53% 9% 38%;
+}

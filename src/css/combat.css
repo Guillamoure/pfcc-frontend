@@ -116,3 +116,16 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+#init {
+  grid-column-start: 4;
+  grid-column-end: 5;
+  grid-row-start: 3;
+  grid-row-end: 4;
+  margin: .5em;
+  padding: .2em;
+  background-color: rgba(235, 235, 235, 0.95);
+  border: solid;
+  border-color: #000;
+  border-radius: 1em;
+}
