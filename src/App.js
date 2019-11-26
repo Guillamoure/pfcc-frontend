@@ -2,6 +2,8 @@ import React from 'react';
 import './App.css';
 import './css/character.css';
 import './css/combat.css';
+import './css/card.css';
+import './css/container.css';
 
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { connect } from 'react-redux'
@@ -11,6 +13,7 @@ import Home from './container/home'
 import Classes from './container/classes'
 import Races from './container/races'
 import Skills from './container/skills'
+import Spells from './container/spells'
 import Class from './container/class_show'
 import NavBar from './container/navbar'
 import Race from './container/race_show'
@@ -55,6 +58,7 @@ class App extends React.Component {
             <Route exact path="/skills" component={Skills} />
             <Route exact path="/skills-form" component={SkillForm} />
             <Route exact path="/skills/:slug" component={Skill} />
+            <Route exact path="/spells" component={Spells} />
             <Route exact path="/creation" component={CharacterCreation} />
             <Route exact path="/characters/:slug" component={Character} />
           </React.Fragment>

@@ -13,6 +13,7 @@ import Details from '../components/character_show/details'
 import Skills from '../components/character_show/skills'
 import FeaturesTraits from './features_traits'
 import Actions from './actions'
+import Initiative from '../components/character_show/initiative'
 
 import BackgroundForm from '../modals/background_form'
 import CharacterForm from '../modals/character_form'
@@ -198,6 +199,7 @@ class Character extends React.Component {
         {this.state.character.race && this.state.display === "Combat" && <ArmorClass character={this.state.character}/>}
         {this.state.character.race && this.state.display === "Adventure" && <Skills character={this.state.character}/>}
         {this.state.character.race && this.state.display === "Combat" && <Actions character={this.state.character}/>}
+        {this.state.character.race && this.state.display === "Combat" && <Initiative character={this.state.character}/>}
 
 
         {this.state.modal === 'background' && <BackgroundForm character={this.state.character} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}

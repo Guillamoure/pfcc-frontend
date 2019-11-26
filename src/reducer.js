@@ -6,12 +6,9 @@ const initialState = {
     ability_scores: {},
     classes: [],
   },
-  classes: [
-
-  ],
-  races: [
-
-  ]
+  classes: [],
+  races: [],
+  spells: []
 }
 
 
@@ -49,6 +46,8 @@ const reducer = (state = initialState, action) => {
       let preparedCopy = [...state.character.prepared_spells]
       action.spells.forEach(sp => preparedCopy.push(sp))
       return {...state, character: {...state.character, prepared_spells: preparedCopy}}
+    case "ALL SPELLS":
+      return {...state, spells: action.spells}
     default:
       return state
   }

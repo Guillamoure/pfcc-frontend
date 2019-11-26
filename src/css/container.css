@@ -1,0 +1,19 @@
+#spells-container {
+  display: grid;
+  grid-template-columns: 40% 60%;
+  /* border: solid #0f0; */
+  margin: 2em;
+}
+
+#all-spells {
+  /* border: solid #268121; */
+  margin: 1em;
+}
+
+#description-container {
+  /* border: solid #ea142b; */
+  margin-top: 1em;
+  margin-right: 1em;
+  list-style-type: none;
+  padding-left: 2em;
+}
