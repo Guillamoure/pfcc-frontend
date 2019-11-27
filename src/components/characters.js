@@ -6,19 +6,23 @@ import { connect } from 'react-redux'
 class Characters extends React.Component {
 
   renderClasses = (character) => {
-    let klasses = {}
-    character.klasses.forEach(klass => {
-      if (klasses[klass.name]) {
-        klasses[klass.name]++
-      } else {
-        klasses[klass.name] = 1
-      }
+    // let klasses = {}
+    // character.klasses.forEach(klass => {
+    //   if (klasses[klass.name]) {
+    //     klasses[klass.name]++
+    //   } else {
+    //     klasses[klass.name] = 1
+    //   }
+    // })
+    // let classesLevels = []
+    // Object.entries(klasses).forEach(klass => {
+    //   classesLevels.push(`${klass[0]} ${klass[1]}`)
+    // })
+    let mappedClasses = character.uniq_klasses.map(kl => {
+      const level = character.character_klasses.filter(ck => ck.klass_id === kl.id).length
+      return `${kl.name} ${level}`
     })
-    let classesLevels = []
-    Object.entries(klasses).forEach(klass => {
-      classesLevels.push(`${klass[0]} ${klass[1]}`)
-    })
-    return classesLevels.join(", ")
+    return mappedClasses.join(", ")
   }
 
   renderCharacters = () => {

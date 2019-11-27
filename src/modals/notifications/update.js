@@ -18,8 +18,9 @@ class Update extends React.Component {
       return true
     }
     let totalSkillRanks = 0
-    this.props.character.klasses.forEach(klass => {
-      totalSkillRanks += klass.skill_ranks
+    this.props.character.uniq_klasses.forEach(klass => {
+      let level = this.props.character_info.classes.find(cl => cl.id === klass.id).level
+      totalSkillRanks += (klass.skill_ranks * level)
     })
     let appliedSkillRanks = 0
     this.props.character.character_skillset_skills.forEach(chsss => {
@@ -53,7 +54,7 @@ class Update extends React.Component {
 
   prepareSpells = () => {
     let prepared = false
-    this.props.character.klasses.forEach(kl => {
+    this.props.character.uniq_klasses.forEach(kl => {
       if (this.isThisCasterPrepared(kl.id)){
         prepared = true
       }

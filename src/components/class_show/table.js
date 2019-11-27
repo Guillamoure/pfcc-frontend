@@ -26,12 +26,13 @@ class Table extends React.Component {
     }
   }
 
-  renderLevelFeatures = (num) => {
-    const levelFeatures = this.props.klass.klass_features.filter(feature => {
-      return feature.level_learned === num
+  renderLevelFeatures = (lvl) => {
+    let onlyFeatures = _.flatten(this.props.klass.klass_features.map(kf => kf.feature_levels))
+    const levelFeatures = onlyFeatures.filter(feature => {
+      return feature.level === lvl
     })
-    const nameOfFeatures = levelFeatures.map(feature => feature.name)
-    return nameOfFeatures.join(", ")
+    const nameOfFeatures = levelFeatures.map(feature => feature.table_description)
+    return nameOfFeatures.filter(feat => feat !== "none").join(", ")
   }
 
   renderClassTableRow = () => {
@@ -44,7 +45,7 @@ class Table extends React.Component {
           <td>+{this.renderSave(num, this.props.klass.fortitude)}</td>
           <td>+{this.renderSave(num, this.props.klass.reflex)}</td>
           <td>+{this.renderSave(num, this.props.klass.will)}</td>
-          <td style={{textAlign: 'left'}}>{this.props.klass.klass_features &&this.renderLevelFeatures(num)}</td>
+          <td style={{textAlign: 'left'}}>{this.props.klass.klass_features && this.renderLevelFeatures(num)}</td>
           {this.spellsPerDay(num)}
         </tr>
       )

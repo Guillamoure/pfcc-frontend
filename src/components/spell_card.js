@@ -13,6 +13,8 @@ const SpellCard = props => {
         return "standard"
       case "Ten Minutes" || "One Hour" || "Eight Hours" || "One Minute":
         return "long"
+      case "Immediate Action":
+        return "immediate"
       default:
         return "none"
     }

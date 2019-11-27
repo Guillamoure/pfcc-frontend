@@ -192,7 +192,7 @@ class Character extends React.Component {
         {this.state.character.race && <CharacterName character={this.state.character} editModal={this.editModal}/>}
         {this.state.character.race && this.state.display === "Adventure" && <AbilityScores character={this.state.character} editModal={this.editModal}/>}
         {this.state.character.race && this.state.display === "Adventure" && <FeaturesTraits character={this.state.character}/>}
-        {this.state.character.race && this.state.display === "Adventure" && <Details character={this.state.character} editModal={this.editModal}/>}
+        {this.state.character.race && this.state.display === "Character" && <Details character={this.state.character} editModal={this.editModal}/>}
         {this.state.character.race && (this.state.display === "Adventure" || this.state.display === "Combat") && <Saves character={this.state.character} display={this.state.display}/>}
         {this.state.character.race && (this.state.display === "Adventure" || this.state.display === "Combat") && <HP character={this.state.character} editModal={this.editModal} display={this.state.display}/>}
         {this.state.character.race && this.state.display === "Combat" && <AttackBonus character={this.state.character}/>}

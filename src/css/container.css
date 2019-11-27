@@ -17,3 +17,8 @@
   list-style-type: none;
   padding-left: 2em;
 }
+
+#class-intro {
+  display: grid;
+  grid-template-columns: 75% 25%;
+}

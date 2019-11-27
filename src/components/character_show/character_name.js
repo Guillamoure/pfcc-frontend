@@ -16,20 +16,15 @@ class CharacterName extends React.Component {
   //   return klasses.join(", ")
   // }
 
-  renderClasses = (character) => {
-    let klasses = {}
-    this.props.character.klasses.forEach(klass => {
-      if (klasses[klass.name]) {
-        klasses[klass.name]++
-      } else {
-        klasses[klass.name] = 1
-      }
+  renderClasses = () => {
+    if (!this.props.character_info || !this.props.classes.length){
+      return null
+    }
+    let remapped = this.props.character_info.classes.map(cl => {
+      let name = this.props.classes.find(k => k.id === cl.id).name
+      return `${name} ${cl.level}`
     })
-    let classesLevels = []
-    Object.entries(klasses).forEach(klass => {
-      classesLevels.push(`${klass[0]} ${klass[1]}`)
-    })
-    return classesLevels.join(", ")
+    return remapped.join(", ")
   }
 
   render(){
@@ -49,7 +44,9 @@ class CharacterName extends React.Component {
 const mapStatetoProps = (state) => {
   return {
     currentUser: state.currentUser,
-    admin: state.admin
+    admin: state.admin,
+    character_info: state.character_info,
+    classes: state.classes
   }
 }
 
