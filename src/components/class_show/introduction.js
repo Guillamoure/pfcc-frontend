@@ -37,12 +37,17 @@ class Introduction extends React.Component {
 
   render () {
     return (
-      <div className='show'>
-        <h2>{this.props.klass.name}</h2>
-        {this.renderDescription()}
-        <p><strong>Hit Die</strong>: d{this.props.klass.hit_die}</p>
-        <p><strong>Skill Ranks per Level</strong>: {this.props.klass.skill_ranks} + Int modifier</p>
-        {this.props.klass.skills[0] && <p><strong>Class Skills</strong>: The {_.lowerCase(this.props.klass.name)}'s class skills are {this.renderSkills()}</p>}
+      <div className='show' id='class-intro'>
+        <span>
+          <h2>{this.props.klass.name}</h2>
+          {this.renderDescription()}
+          <p><strong>Hit Die</strong>: d{this.props.klass.hit_die}</p>
+          <p><strong>Skill Ranks per Level</strong>: {this.props.klass.skill_ranks} + Int modifier</p>
+          {this.props.klass.skills[0] && <p><strong>Class Skills</strong>: The {_.lowerCase(this.props.klass.name)}'s class skills are {this.renderSkills()}</p>}
+        </span>
+        <span>
+          <img id='class-img' alt={this.props.klass.name} src={this.props.klass.img_url}/>
+        </span>
       </div>
     )
   }

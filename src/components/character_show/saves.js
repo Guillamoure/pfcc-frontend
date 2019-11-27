@@ -13,16 +13,24 @@ const Saves = props => {
   }
 
   const renderCharacterSave = (save, score) => {
-    let totalSavingThrow = 0
+    if (!props.classes.length){
+      return null
+    } else {
+      let totalSavingThrow = 0
+
+      props.character_info.classes.forEach(klass => {
+        let currentClass = findCurrentClass(klass.id)
+        totalSavingThrow += renderSave(klass.id, currentClass[save])
+      })
+      const mod = Math.floor((props.character_info.ability_scores[score] - 10) / 2)
+      totalSavingThrow += mod
+      return totalSavingThrow < 0 ? totalSavingThrow : `+${totalSavingThrow}`
+    }
     // iterating over the character_info.classes in redux
     // this is written as a key value pair
     // first value is the class' id
     // second value is the character's level for that class
 
-    props.character_info.classes.forEach(klass => {
-      let currentClass = findCurrentClass(klass.id)
-      totalSavingThrow += renderSave(klass.id, currentClass[save])
-    })
 
     // for (var klassId in props.character_info.classes){
     //   // find the class' info from the id
@@ -30,15 +38,12 @@ const Saves = props => {
     //   // send the character's level in that class, and the relevant saving throw value
     //   totalSavingThrow += renderSave(props.character_info.classes[klassId], currentClass[save])
     // }
-    
+
     // grab the character's ability score, and render its bonus
-    const mod = Math.floor((props.character_info.ability_scores[score] - 10) / 2)
-    totalSavingThrow += mod
-    return totalSavingThrow < 0 ? totalSavingThrow : `+${totalSavingThrow}`
   }
 
   const findCurrentClass = (klassId) => {
-    return props.character.klasses.find(ck => ck.id === parseInt(klassId))
+    return props.classes.find(ck => ck.id === klassId)
   }
 
 
@@ -66,7 +71,8 @@ const mapStateToProps = (state) => {
   return {
     currentUser: state.currentUser,
     admin: state.admin,
-    character_info: state.character_info
+    character_info: state.character_info,
+    classes: state.classes
   }
 }
 

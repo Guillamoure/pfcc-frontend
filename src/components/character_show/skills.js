@@ -37,7 +37,7 @@ class Skills extends React.Component {
 
   renderClassSkill = (skill) => {
     let isThisAClassSkill = false
-    this.props.character.klasses.forEach(klass => {
+    this.props.character.uniq_klasses.forEach(klass => {
       klass.class_skillset_skills.forEach(csss => {
         if (csss.skill_id === skill.id && csss.skillset_id === this.props.character.skillset.id) {
           isThisAClassSkill = true

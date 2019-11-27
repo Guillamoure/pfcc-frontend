@@ -57,21 +57,24 @@ class AttackBonus extends React.Component {
   }
 
   renderAB = (ability) => {
-    let ab = 0
-    this.props.character_info.classes.forEach(klass => {
-      let currentClass = this.props.character.klasses.find(ck => ck.id === parseInt(klass.id))
-      ab += Math.floor(this.renderBAB(currentClass.hit_die) * klass.level)
+    if(this.props.character_info.classes && this.props.classes){
 
-    })
-    // for (var klass_id in this.props.character_info.classes){
-    //   // find the class' info from the id
-    //   let currentClass = this.props.character.klasses.find(ck => ck.id === parseInt(klass.id))
-    //   // send the character's level in that class, and the relevant saving throw value
-    //   ab += Math.floor(this.renderBAB(currentClass.hit_die) * this.props.character_info.classes[klass_id])
-    // }
-    ab += this.renderSize(this.props.character.race.size)
-    ab += this.renderAbilityScoreModifiers(ability)
-    return ab < 0 ? ab : `+${ab}`
+      let ab = 0
+      this.props.character_info.classes.forEach(klass => {
+        let currentClass = this.props.classes.find(ck => ck.id === parseInt(klass.id))
+        ab += Math.floor(this.renderBAB(currentClass.hit_die) * klass.level)
+
+      })
+      // for (var klass_id in this.props.character_info.classes){
+      //   // find the class' info from the id
+      //   let currentClass = this.props.character.klasses.find(ck => ck.id === parseInt(klass.id))
+      //   // send the character's level in that class, and the relevant saving throw value
+      //   ab += Math.floor(this.renderBAB(currentClass.hit_die) * this.props.character_info.classes[klass_id])
+      // }
+      ab += this.renderSize(this.props.character.race.size)
+      ab += this.renderAbilityScoreModifiers(ability)
+      return ab < 0 ? ab : `+${ab}`
+    }
   }
 
   render () {
@@ -95,7 +98,8 @@ const mapStateToProps = (state) => {
   return {
     currentUser: state.currentUser,
     admin: state.admin,
-    character_info: state.character_info
+    character_info: state.character_info,
+    classes: state.classes
   }
 }
 

@@ -1,5 +1,6 @@
 import React from 'react'
 import _ from 'lodash'
+import { connect } from 'react-redux'
 
 class Features extends React.Component {
 
@@ -17,12 +18,16 @@ class Features extends React.Component {
   }
 
   renderClassFeatures = () => {
-    let klass_ids = {}
-    this.props.character.character_klasses.forEach(klass => {
-      klass_ids[klass.klass_id] = klass.level
-    })
-    return this.props.character.klass_features.map(feature => {
-      if (feature.level_learned <= klass_ids[feature.klass_id]){
+    // let klass_ids = {}
+    // this.props.character.character_klasses.forEach(klass => {
+    //   klass_ids[klass.klass_id] = klass.level
+    // })
+    let klasses = [...this.props.character.uniq_klasses]
+    let justFeatures = klasses.map(kl => kl.klass_features)
+    let features = _.flatten(justFeatures)
+    return features.map(feature => {
+      let level = this.props.character_info.classes.find(cl => cl.id === feature.klass_id).level
+      if (feature.level_learned <= level){
         return (
           <li data-id={feature.id} onClick={this.changeActiveFeature} className='highlight'>
             <strong data-id={feature.id}>{feature.name}</strong>
@@ -58,4 +63,14 @@ class Features extends React.Component {
   }
 }
 
-export default Features
+const mapStateToProps = (state) => {
+  return {
+    currentUser: state.currentUser,
+    admin: state.admin,
+    character_info: state.character_info,
+    classes: state.classes
+  }
+}
+
+
+export default connect(mapStateToProps)(Features)

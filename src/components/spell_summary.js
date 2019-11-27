@@ -9,7 +9,10 @@ const SpellSummary = props => {
 
 
   const renderDC = (sp_lvl, klass_id) => {
-    const spellcasting = props.character.klass_features.find(kf => kf.spellcasting && kf.klass_id === klass_id)
+    let klasses = [...props.character.uniq_klasses]
+    let justFeatures = klasses.map(kl => kl.klass_features)
+    let features = _.flatten(justFeatures)
+    const spellcasting = features.find(kf => kf.spellcasting && kf.klass_id === klass_id)
     const score = spellcasting.spellcasting.ability_score
     const mod = Math.floor((props.character_info.ability_scores[_.lowerCase(score)] - 10) / 2)
     return (10 + sp_lvl + mod)
@@ -54,6 +57,8 @@ const SpellSummary = props => {
           return "standard"
         case "Ten Minutes" || "One Hour" || "Eight Hours" || "One Minute":
           return "long"
+        case "Immediate Action":
+          return "immediate"
         default:
           return "none"
       }

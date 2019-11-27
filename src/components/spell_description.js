@@ -37,8 +37,13 @@ const SpellDescription = props => {
     return split.map(desc => <p>{desc}</p>)
   }
 
+  const start = (e) => {
+    console.log("scroll?")
+  }
+
+
     return (
-      <ul id='description-container'>
+      <ul id='description-container' onScroll={start}>
         <li><strong>{spell.name}</strong></li>
         <li>School | {spell.magic_school.name} [{spell.subschools.map(ss => ss.name).join(", ")}]</li>
         <li>Level | {spell.klass_spells.map(ks => `${ks.klass.name} ${ks.spell_level}`).join(", ")}</li>
@@ -48,7 +53,7 @@ const SpellDescription = props => {
         <li><strong>Effect</strong></li>
         <li>Range | {renderFeet()}</li>
         <li>Target | {spell.target}</li>
-        <li>Duration | {spell.duration}</li>
+        <li>Duration | {spell.duration}{spell.dismissible ? " (D)" : null}</li>
         <li>Saving Throw | {spell.saving_throw} | Spell Resistance | {spell.spell_resistance ? "Yes" : "No"}</li>
         <li><strong>Description</strong></li>
         <li>{renderDescription()}</li>

@@ -33,14 +33,19 @@ class Class extends React.Component {
 
   componentDidMount() {
     const klass = this.renderURL()
-    fetch(`http://localhost:3000/api/v1/klasses/${klass}`)
-    .then(r => r.json())
-    .then(data => this.setState({klass: data.klass}))
+    let fw = ""
+    if (klass === "Fate%20Weaver"){
+      fw = "Fate Weaver"
+    }
+    if (this.props.classes.find(kl => kl.name === klass || kl.name === fw)){
+      let selectedClass = this.props.classes.find(kl => kl.name === klass || kl.name === fw)
+      this.setState({klass: selectedClass})
+    } else {
+      fetch(`http://localhost:3000/api/v1/klasses/${klass}`)
+      .then(r => r.json())
+      .then(data => this.setState({klass: data.klass}))
+    }
   }
-
-
-
-
 
   changeAddFeatureToggle = () => {
     this.setState({toggleFeatureForm: !this.state.toggleFeatureForm})
@@ -240,7 +245,8 @@ class Class extends React.Component {
 const mapStatetoProps = (state) => {
   return {
     currentUser: state.currentUser,
-    admin: state.admin
+    admin: state.admin,
+    classes: state.classes
   }
 }
 
