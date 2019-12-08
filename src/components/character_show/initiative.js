@@ -10,7 +10,7 @@ const Initiative = props => {
   }
 
   return (
-    <div id='init' className='shadow'>
+    <div id='init' className='shadow shrink'>
       <span className='centered'>
         <div className='dull'><strong>Init</strong></div>
         <div className='enhanced'>{dexMod()}</div>

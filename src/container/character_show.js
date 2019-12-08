@@ -26,7 +26,19 @@ import { faCaretRight } from '@fortawesome/free-solid-svg-icons'
 import { faCaretLeft } from '@fortawesome/free-solid-svg-icons'
 
 
+// from here
+// ---------
+// keep track of rage/chimera/performance/panache points in state
 
+// children
+// -------
+// render rage/chimera/performance/panache
+// render weapons
+// hexes, shifter aspects, rage powers, rogue talents, arcane exploits
+// activatable class features (swashbuckler, vigilante?, arcanist, shifter)
+// feats
+// chubbs
+// modal of combat choices (charge, combat maneuvers, total defense)
 
 class Character extends React.Component {
 

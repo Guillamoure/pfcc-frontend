@@ -27,7 +27,13 @@ class Features extends React.Component {
     let features = _.flatten(justFeatures)
     return features.map(feature => {
       let level = this.props.character_info.classes.find(cl => cl.id === feature.klass_id).level
-      if (feature.level_learned <= level){
+      let startingLevel = 20
+      feature.feature_levels.forEach(fl => {
+        if (fl.level < startingLevel){
+          startingLevel = fl.level
+        }
+      })
+      if (startingLevel <= level){
         return (
           <li data-id={feature.id} onClick={this.changeActiveFeature} className='highlight'>
             <strong data-id={feature.id}>{feature.name}</strong>

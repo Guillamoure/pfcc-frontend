@@ -105,7 +105,7 @@ class HP extends React.Component {
 
   render () {
     return(
-      <div className='hp shadow'>
+      <div className='hp shadow shrink'>
       {this.renderCharacterHP()}
       </div>
     )
