@@ -8,3 +8,7 @@
   display: grid;
   grid-template-columns: 53% 9% 38%;
 }
+
+.shrink {
+  max-height: 5em;
+}

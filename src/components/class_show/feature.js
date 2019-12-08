@@ -95,6 +95,16 @@ class Feature extends React.Component {
     }
     return <ul>{display.map(effect => <li>{effect}</li>)}</ul>
   }
+  
+  startingLevel = (feature) => {
+    let startingLevel = 20
+    feature.feature_levels.forEach(fl => {
+      if (fl.level < startingLevel){
+        startingLevel = fl.level
+      }
+    })
+    return startingLevel
+  }
 
   render () {
     return (
@@ -106,7 +116,7 @@ class Feature extends React.Component {
           {!this.state.deleteFeatureButton && this.props.admin ? <button onClick={this.renderClick}>Edit</button> : null}
           {this.props.admin && <button onClick={() => this.props.toggleModal(this.props.feature.id)}>Toggle Feature Effect</button>}
 
-          <li>A {this.props.klass_name} learns this at <strong>level {this.props.feature.level_learned}</strong></li>
+          <li>A {this.props.klass_name} learns this at <strong>level {this.startingLevel(this.props.feature)}</strong></li>
           <li>Description: {this.renderDescription()}</li>
           {this.effectsButton()}
           {this.state.showEffects && this.showEffects()}

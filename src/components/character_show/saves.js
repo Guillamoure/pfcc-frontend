@@ -48,7 +48,7 @@ const Saves = props => {
 
 
     return(
-      <div id='saves' className='container-3 shadow'>
+      <div id='saves' className='container-3 shadow shrink'>
         <div id='saving-throw-title'>Saving Throws</div>
         <span className='centered' >
           <div className='enhanced'>{renderCharacterSave('fortitude', 'constitution')}</div>

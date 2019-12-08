@@ -2,6 +2,7 @@ import React from 'react'
 
 import ActionTabs from './action_tabs'
 import Spells from '../components/actions/spells'
+import Abilities from '../components/actions/abilities'
 
 class Actions extends React.Component {
   state= {
@@ -18,6 +19,7 @@ class Actions extends React.Component {
         <ActionTabs renderTabClick={this.renderTabClick} activeTab={this.state.activeTab}/>
         <div style={{height: '100%'}}>
         {this.state.activeTab === "Spells" && <Spells character={this.props.character}/>}
+        {this.state.activeTab === "Abilities" && <Abilities/>}
         </div>
       </div>
     )

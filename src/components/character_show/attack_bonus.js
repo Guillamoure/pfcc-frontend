@@ -79,9 +79,9 @@ class AttackBonus extends React.Component {
 
   render () {
     return(
-      <div id='attack-bonus' className='shadow'>
+      <div id='attack-bonus' className='shadow shrink'>
         <span className='centered'>
-          <div className='dull'><strong>Attack Bonus</strong></div>
+          <div className='duller'><strong>Attack Bonus</strong></div>
           <div className='container-2'>
             <span className='enhanced'>{this.renderAB('strength')}</span>
             <span className='enhanced'>{this.renderAB('dexterity')}</span>

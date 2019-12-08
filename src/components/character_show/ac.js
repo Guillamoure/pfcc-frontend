@@ -36,7 +36,7 @@ class ArmorClass extends React.Component {
 
   render () {
     return(
-      <div id='ac' className='shadow'>
+      <div id='ac' className='shadow shrink'>
         <span className='centered'>
           <div className='dull'><strong>Armor Class</strong></div>
           <div className='enhanced'>{10 + this.dexMod() + this.renderSize()}</div>

@@ -13,6 +13,7 @@ import ClassSkillsForm from '../components/class_skills_form'
 import SpellsForm from '../components/spells_form'
 
 import FeatureEffect from '../modals/classes/effect'
+import FeatureOptions from '../components/class_show/feature_options'
 
 class Class extends React.Component {
 
@@ -22,7 +23,8 @@ class Class extends React.Component {
     toggleClassForm: false,
     toggleClassSkillsForm: false,
     toggleSpellsForm: false,
-    modal: false
+    modal: false,
+    features: true
   }
 
   renderURL = () => {
@@ -211,6 +213,44 @@ class Class extends React.Component {
     this.setState({modal: false})
   }
 
+  featuresTab = () => {
+    let featureOptions = false
+    let feature = ""
+    let featureOptionsArray = []
+    this.state.klass.klass_features.forEach(kf => {
+      if (kf.feature_options.length){
+        featureOptions = true
+        feature = kf.name
+        featureOptionsArray = kf.feature_options
+      }
+    })
+    if (!featureOptions){
+      return <Features klass={this.state.klass} renderClassFeature={this.renderClassFeature} modal={this.state.modal} toggleModal={this.toggleModal}/>
+    } else {
+      return (
+        <div>
+          <div id='options-toggle'>
+            <span className={this.toggleFeatureOptionCSS("features")} onClick={() => this.setState({features: true})}>Class Features</span><span className={this.toggleFeatureOptionCSS("options")} onClick={() => this.setState({features: false})}>{feature}</span>
+          </div>
+          {
+            this.state.features ?
+              <Features klass={this.state.klass} renderClassFeature={this.renderClassFeature} modal={this.state.modal} toggleModal={this.toggleModal}/>
+            :
+              <FeatureOptions options={featureOptionsArray} />
+          }
+        </div>
+      )
+    }
+  }
+
+  toggleFeatureOptionCSS = (feature) => {
+    if ((this.state.features && feature === "features") || (!this.state.features && feature === "options")){
+      return "tab-list-active"
+    } else {
+      return "none"
+    }
+  }
+
   render() {
     console.log("Class info", this.state.klass)
     return (
@@ -229,7 +269,7 @@ class Class extends React.Component {
         <Table klass={this.state.klass}/>
 
         <div className='header' style={{marginLeft: '2em'}}>Class Features</div>
-        <Features klass={this.state.klass} renderClassFeature={this.renderClassFeature} modal={this.state.modal} toggleModal={this.toggleModal}/>
+        {this.state.klass.name && this.featuresTab()}
         {this.props.admin ? <button onClick={this.changeAddFeatureToggle}>{this.state.toggleFeatureForm ? "Hide new Feature Form" : "Add a new Class Feature"}</button> : null}
 
         < br />< br />

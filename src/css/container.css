@@ -22,3 +22,12 @@
   display: grid;
   grid-template-columns: 75% 25%;
 }
+
+#options-toggle {
+  display: flex;
+  justify-content: center;
+}
+
+#options-toggle span {
+  margin: .5em;
+}
