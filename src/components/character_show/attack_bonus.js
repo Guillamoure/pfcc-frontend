@@ -18,6 +18,32 @@ class AttackBonus extends React.Component {
     return Math.floor( ( score - 10 ) / 2)
   }
 
+  renderPolymorph = (ability) => {
+    let bonus = 0
+    let minor = this.props.character_info.hardcode.minor
+    let major = this.props.character_info.hardcode.major
+    const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major'].includes(major)
+    switch(ability){
+      case "strength":
+        if (minor === "Bull - Minor"){
+          bonus++
+          break
+        }
+        if (largeMorph){
+          bonus +=2
+          break
+        }
+      case "dexterity":
+        if (largeMorph){
+          bonus--
+          break
+        }
+      default:
+        break
+    }
+    return bonus
+  }
+
   renderBAB = (hd) => {
     switch (hd){
       case 6:
@@ -71,8 +97,9 @@ class AttackBonus extends React.Component {
       //   // send the character's level in that class, and the relevant saving throw value
       //   ab += Math.floor(this.renderBAB(currentClass.hit_die) * this.props.character_info.classes[klass_id])
       // }
-      ab += this.renderSize(this.props.character.race.size)
+      ab += this.renderSize(this.props.character_info.size)
       ab += this.renderAbilityScoreModifiers(ability)
+      ab += this.renderPolymorph(ability)
       return ab < 0 ? ab : `+${ab}`
     }
   }

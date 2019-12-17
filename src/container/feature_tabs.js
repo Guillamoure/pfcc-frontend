@@ -10,6 +10,7 @@ class FeatureTabs extends React.Component {
       <span className='tab-list'>
         <Tab label="Features" renderTabClick={this.props.renderTabClick} activeTab={this.props.activeTab}/>
         <Tab label="Traits" renderTabClick={this.props.renderTabClick} activeTab={this.props.activeTab}/>
+        <Tab label="Feats" renderTabClick={this.props.renderTabClick} activeTab={this.props.activeTab}/>
       </span>
     )
   }

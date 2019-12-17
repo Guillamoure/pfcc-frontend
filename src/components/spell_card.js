@@ -15,6 +15,8 @@ const SpellCard = props => {
         return "long"
       case "Immediate Action":
         return "immediate"
+      case "Full-Round Action":
+        return "full"
       default:
         return "none"
     }

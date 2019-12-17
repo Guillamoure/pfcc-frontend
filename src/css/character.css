@@ -8,17 +8,11 @@
   margin: .5em;
 }
 
-.features-traits {
+#features-traits {
   grid-column-start: 1;
-  grid-column-end: 4;
+  grid-column-end: 5;
   grid-row-start: 4;
   grid-row-end: 9;
-  margin: .5em;
-  padding: .2em;
-  background-color: rgba(235, 235, 235, 0.95);
-  border: solid;
-  border-color: #000;
-  border-radius: 1em;
   overflow: auto;
   max-height: 23.75em;
   position: relative;
@@ -76,29 +70,34 @@
   border: solid;
   border-color: #000;
   border-radius: 1em;
+  padding-top: 8%;
 }
 
 #details {
-  grid-column-start: 8;
+  grid-column-start: 6;
   grid-column-end: 9;
   grid-row-start: 3;
   grid-row-end: 9;
-  margin: .5em;
-  padding: .6em;
-  background-color: rgba(235, 235, 235, 0.95);
-  border: solid;
-  border-color: #000;
-  border-radius: 1em;
   overflow: auto;
   max-height: 100%;
   position: relative;
 }
 
-#skills {
-  grid-column-start: 4;
-  grid-column-end: 8;
+#allies{
+  grid-column-start: 1;
+  grid-column-end: 5;
   grid-row-start: 3;
-  grid-row-end: 10;
+  grid-row-end: 8;
+  overflow: auto;
+  max-height: 29em;
+  position: relative;
+}
+
+#skills {
+  grid-column-start: 6;
+  grid-column-end: 9;
+  grid-row-start: 3;
+  grid-row-end: 11;
   margin: .5em;
   padding: .6em;
   background-color: rgba(235, 235, 235, 0.95);
@@ -121,6 +120,10 @@
 
 .shadow {
   box-shadow: 5px 4px 2px #000;
+}
+
+.strike {
+  text-decoration: line-through;
 }
 
 #spin {

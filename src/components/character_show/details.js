@@ -14,10 +14,23 @@ class Details extends React.Component {
     this.setState({activeTab: choice})
   }
 
+  languages = (name) => {
+    switch(name){
+      case "Nettie":
+        return ["Common", "Draconic", "Aklo", "Infernal"]
+      case "Cedrick":
+        return ["Common", "Grippli", "Druidic", "Infernal", "Draconic", "Sylvan"]
+      case 'Maddox':
+        return ["Common", "Samsaran"]
+      default:
+        return []
+    }
+  }
+
   render(){
     console.log(this.props.character)
     return(
-      <div id="details" className='shadow'>
+      <div id="details" className='shadow character-show'>
         <span className='header'>Background</span>
         {this.props.character.user_id === this.props.currentUser.id && <span className='edit' onClick={() => this.props.editModal('background')}><FontAwesomeIcon icon={faPencilAlt} /></span>}
           <div className='nested'>
@@ -36,6 +49,10 @@ class Details extends React.Component {
             <div><strong>Eyes:</strong> {this.props.character.eyes}</div>
             <div><strong>Height:</strong> {this.props.character.height}</div>
             <div><strong>Weight:</strong> {this.props.character.weight}</div>
+          </div>
+        <div className='header'>Languages</div>
+          <div className='nested'>
+          {this.languages(this.props.character.name).join(", ")}
           </div>
       </div>
     )

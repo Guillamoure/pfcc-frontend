@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import _ from 'lodash'
 
 import SpellSummary from '../spell_summary'
+import HardcodeSpells from '../hardcode_spells'
 
 class Spells extends React.Component {
 
@@ -15,13 +16,16 @@ class Spells extends React.Component {
     this.remainingSpells()
   }
 
-  renderCast = (preparedSpell) => {
+  renderCast = (spell) => {
+    const action = _.lowerCase(spell.action.name.split(" ")[0])
+    let klass = this.props.classes.find(cl => cl.id === spell.klass.id)
+    let spellcasting = klass.klass_features.find(kf => kf.name === 'Spells').spellcasting
     const info = {
-      id: preparedSpell.id,
-      prepared: this.isThisCasterPrepared(preparedSpell.klass.id),
-      character_id: preparedSpell.character_id,
-      spell_level: preparedSpell.spell_level,
-      klass_id: preparedSpell.klass.id
+      id: spell.id,
+      expendable: this.isThisCasterExpendable(spell.klass.id),
+      character_id: spell.character_id,
+      spell_level: spell.spell_level,
+      klass_id: spell.klass.id
     }
     fetch('http://localhost:3000/api/v1/cast_spells', {
       method: 'POST',
@@ -33,10 +37,11 @@ class Spells extends React.Component {
     })
     .then(r => r.json())
     .then(data => {
-      if (data.cast){
+      this.props.dispatch({type: 'TRIGGER ACTION', action})
+      if (info.spell_level === 0 || !spellcasting.expendable){
+        this.props.dispatch({type: 'CAST CANTRIP SPA OR SPONTANEOUS SPELL', spell: data, infinite_zero_level: spellcasting.infinite_zero_level})
+      } else if (spellcasting.expendable){
         this.props.dispatch({type: 'CAST PREPARED NONCANTRIP SPELL', spell: data})
-      } else {
-        this.props.dispatch({type: 'CAST CANTRIP SPA OR SPONTANEOUS SPELL', spell: data})
       }
       // if (this.isThisCasterPrepared(klassId)){
       //   let id = klassSpellId
@@ -64,6 +69,12 @@ class Spells extends React.Component {
     return spellcasting.prepared
   }
 
+  isThisCasterExpendable = (klassId => {
+    const klass = this.props.classes.find(cl => cl.id === klassId)
+    let spellcasting = klass.klass_features.find(kf => kf.spellcasting).spellcasting
+    return spellcasting.expendable
+  })
+
   remainingSpells = () => {
     let spells = []
     // for each class that a character has levels in
@@ -79,10 +90,11 @@ class Spells extends React.Component {
         })
         // push into an array
         // an object of each spell per day and the class name and id
-        spells.push({spd: spellsAtThisLevel, name: c.name, id: c.name})
+        spells.push({spd: spellsAtThisLevel, name: c.name, id: c.id})
       }
     })
     // set state
+    console.log('spd', spells)
     this.setState({spellsPerDay: spells})
   }
 
@@ -92,6 +104,7 @@ class Spells extends React.Component {
         <div>
           <span>{spd.name}</span>
           {spd.spd.map(this.extrapolateSPD)}
+          {this.availableSpellsToCastTable(spd.id)}
         </div>
       )
     })
@@ -99,11 +112,22 @@ class Spells extends React.Component {
 
   extrapolateSPD = (spd) => {
     let specificClass = this.props.character_info.classes.find(cl => cl.id === spd.klass_id)
-    let totalSpellsPerDay = spd.spells
+    let spdCopy = {...spd}
+    let totalSpellsPerDay = spdCopy.spells
+    console.log(spd.spells)
+    console.log(totalSpellsPerDay)
+    let klass = this.props.classes.find(cl => cl.id === spd.klass_id)
+    let spellcasting = klass.klass_features.find(kf => kf.name === 'Spells').spellcasting
+
     // can't get bonus spells per day for cantrips
-    if (this.bonusSPD(spd.klass_id, spd.spell_level) && spd.spell_level !== 0){
-      totalSpellsPerDay += 1
+    // only if spellcasting ability bonus is greater than or equal to spell level
+    // not all classes allow bonus spells
+    console.log(spd.spell_level, totalSpellsPerDay)
+    let bonus = 0
+    if (this.bonusSPD(spd.klass_id, spd.spell_level) && spd.spell_level !== 0 && spellcasting.bonus_spells){
+      bonus = 1
     }
+    console.log(spd.spell_level, totalSpellsPerDay)
     let casted = 0
     if (specificClass.castSpells) {
       casted = specificClass.castSpells[spd.spell_level]
@@ -119,14 +143,15 @@ class Spells extends React.Component {
         casted += 1
       }
     })
-    const remainingSpells = totalSpellsPerDay - casted
+    const remainingSpells = totalSpellsPerDay - casted + bonus
     return <span> <strong>|</strong> <i>{this.renderTH(spd.spell_level)}</i>: <strong>{(remainingSpells || remainingSpells === 0) ? remainingSpells : totalSpellsPerDay}</strong></span>
   }
 
   bonusSPD = (klass_id, spell_level) => {
-    let klass = this.props.classes.find(cl => cl.id === klass_id)
-    let spellcasting = klass.klass_features.find(kf => kf.name === "Spells")
-    let ab = _.lowerCase(spellcasting.spellcasting.ability_score)
+    // let klass = this.props.classes.find(cl => cl.id === klass_id)
+    // let spellcasting = klass.klass_features.find(kf => kf.name === "Spells")
+    // let ab = _.lowerCase(spellcasting.spellcasting.ability_score)
+    let ab = this.props.character_info.classes.find(cl => cl.id === klass_id).spellcastingAbility
     return ((this.props.character_info.ability_scores[ab] - 10) / 2.0) >= spell_level ? true : false
   }
 
@@ -143,12 +168,12 @@ class Spells extends React.Component {
     }
   }
 
-  availableSpellsToCastTable = () => {
-
+  availableSpellsToCastTable = (klassId) => {
     return (
       <table>
         <thead>
           <tr>
+            <th>Lvl</th>
             <th>Action</th>
             <th>Name</th>
             <th>Range</th>
@@ -158,25 +183,82 @@ class Spells extends React.Component {
           </tr>
         </thead>
         <tbody>
-          {this.castableSpells().map(sp => <SpellSummary spell={sp} renderCast={this.renderCast} spellsPerDay={this.state.spellsPerDay}/>)}
+          {this.castableSpells(klassId).map(sp => <SpellSummary spell={sp} renderCast={this.renderCast} spellsPerDay={this.state.spellsPerDay} editModal={this.props.editModal} clickOut={this.props.clickOut}/>)}
         </tbody>
       </table>
     )
   }
 
-  castableSpells = () => {
-    let castablePreparedSpells = this.props.character.prepared_spells.filter(pSp => {
-      return pSp.cast === false
-    })
-    return castablePreparedSpells
+  castableSpells = (klassId) => {
+    let castableSpells = []
+
+    let klass = this.props.classes.find(cl => cl.id === klassId)
+    let spellcasting = klass.klass_features.find(kf => kf.name === 'Spells').spellcasting
+
+    if (!this.isThisCasterPrepared(klassId)){
+      let klassSpells = this.props.character.known_spells.filter(ks => ks.klass.id === klassId)
+      castableSpells = klassSpells.map(ks => {
+        return {
+          character_id: this.props.character.id,
+          spell: ks.spell,
+          klass_spell_id: ks.klass_spell.id,
+          spell_level: ks.klass_spell.spell_level,
+          action: ks.spell.action,
+          spell_range: ks.spell.spell_range,
+          magic_school: ks.spell.magic_school,
+          klass: ks.klass
+        }
+      })
+    } else {
+      castableSpells = this.props.character.prepared_spells.filter(pSp => {
+        // if spells are expended when they are cast, filter out cast spells
+        if (spellcasting.expendable){
+          return pSp.cast === false
+          // if they are not expended
+        } else {
+          return true
+        }
+      })
+    }
+    let sortedCastableSpells = this.sorted(castableSpells)
+    return sortedCastableSpells
   }
 
+  sorted = (spells) => {
+    let array = []
+    for (let i = 0; i < 10; i++) {
+      let onlySpecificSpellLevel = spells.filter(sp => sp.spell_level === i)
+      array.push(this.alphabetize(onlySpecificSpellLevel))
+    }
+    return _.flatten(array)
+  }
+
+  alphabetize = (spells) => {
+    let sortedSpells = [...spells].sort((sp1, sp2) => {
+      if (sp1.name > sp2.name){
+        return 1
+      } else if (sp1.name < sp2.name){
+        return -1
+      } else {
+        return 0
+      }
+    })
+    return sortedSpells
+  }
+
+  hardcodedSpells = () => {
+    let condor = this.props.character_info.hardcode.minor === 'Condor - Minor'
+    let cedrick = this.props.character.name === 'Cedrick'
+    if (condor || cedrick){
+      return <HardcodeSpells editModal={this.props.editModal}/>
+    }
+  }
 
   render(){
     return(
       <div style={{padding: '1em'}}>
+        {this.hardcodedSpells()}
         {!!this.state.spellsPerDay.length && this.renderSpellsPerDay()}
-        {this.availableSpellsToCastTable()}
       </div>
     )
   }
