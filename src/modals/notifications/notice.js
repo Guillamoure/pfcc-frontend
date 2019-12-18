@@ -56,6 +56,8 @@ class Notice extends React.Component {
         <h3>Hexes</h3>
         <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderActiveEffects("Protective Luck: Attackers have disadvantage")}>Protective Luck</button>
         {this.renderAdditionalButtons()}
+        <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderActiveEffects("Fortune: Target has advantage on one roll per round")}>Fortune</button>
+        {this.renderAdditionalButtons()}
       </span>
     )
   }

@@ -10,7 +10,7 @@ const Legendary = props => {
       name: "Ta'al'mon Ancestral Handwraps",
       description: ``,
       aura: "moderate enchantment",
-      price: "12000 gp",
+      price: "priceless",
       weight: 0,
       expendable: true
     }

@@ -17,7 +17,7 @@ class Details extends React.Component {
   languages = (name) => {
     switch(name){
       case "Nettie":
-        return ["Common", "Draconic", "Aklo", "Infernal"]
+        return ["Common", "Draconic", "Aklo", "Infernal", "Sylvan", "Terran", "Undercommon", "Abyssal", "Celestial", "Sphinx", "Auran"]
       case "Cedrick":
         return ["Common", "Grippli", "Druidic", "Infernal", "Draconic", "Sylvan"]
       case 'Maddox':

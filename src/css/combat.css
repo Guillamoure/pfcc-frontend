@@ -313,3 +313,7 @@
   z-index: 1001;
   overflow: scroll;
 }
+
+.table-details {
+  width: 69%;
+}

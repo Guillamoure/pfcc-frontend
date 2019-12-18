@@ -43,7 +43,7 @@ class Abilities extends React.Component {
         <tr>
           <td><button className={className} onClick={() => this.props.editModal('performance', className)}><strong>{action}</strong></button></td>
           <td>Bardic Performance</td>
-          <td>Select a performance to start</td>
+          <td className='table-details'>Select a performance to start</td>
         </tr>
       </React.Fragment>
     )
@@ -65,12 +65,12 @@ class Abilities extends React.Component {
         <tr>
           <td><button className={this.props.character_info.hardcode.rage ? 'cannot-cast' : 'free'} onClick={() => this.props.editModal('rage')}><strong>{this.props.character_info.hardcode.rage ? 'Active' : 'Activate'}</strong></button></td>
           <td>Rage</td>
-          <td>+2 to melee attacks, thrown attacks, melee damage, will saves. -2 to AC. +14 temp hp</td>
+          <td className='table-details'>+2 to melee attacks, thrown attacks, melee damage, will saves. -2 to AC. +14 temp hp</td>
         </tr>
         <tr>
           <td><button className={powerClassName} onClick={() => this.props.dispatch({type: 'POWER ATTACK'})}><strong>{powerAction}</strong></button></td>
           <td>Power Attack</td>
-          <td>-2 to melee attacks, +4 to melee attack damage</td>
+          <td className='table-details'>-2 to melee attacks, +4 to melee attack damage</td>
         </tr>
         {this.props.character_info.hardcode.rage && this.sparks()}
       </React.Fragment>
@@ -92,7 +92,7 @@ class Abilities extends React.Component {
         <tr>
           <td><button className='free' onClick={() => this.props.editModal('age')}><strong>Alter</strong></button></td>
           <td>Change Age</td>
-          <td>Alter Age</td>
+          <td className='table-details'>Alter Age</td>
         </tr>
       </React.Fragment>
     )
@@ -109,7 +109,12 @@ class Abilities extends React.Component {
         <tr>
           <td><button className={hex} onClick={() => this.props.dispatch({type: 'TRIGGER ACTION', action: 'standard'})}><strong>Hex</strong></button></td>
           <td>Protective Luck Hex</td>
-          <td>Target creature within 30 ft, if it's targeted by an attack roll, attacker must roll twice and take the worse result</td>
+          <td className='table-details'>Target creature within 30 ft, if it's targeted by an attack roll, attacker must roll twice and take the worse result</td>
+        </tr>
+        <tr>
+          <td><button className={hex} onClick={() => this.props.dispatch({type: 'TRIGGER ACTION', action: 'standard'})}><strong>Hex</strong></button></td>
+          <td>Fortune Hex</td>
+          <td className='table-details'>Target creature within 30 ft, for one round, once a round, may reroll any ability check, attack roll, saving throw, or skill check, and take the better result. A creature can only benefit from this hex every 24 hours.</td>
         </tr>
       </React.Fragment>
     )
@@ -130,52 +135,52 @@ class Abilities extends React.Component {
         <tr>
           <td><button className={powerClassName} onClick={() => this.props.dispatch({type: 'POWER ATTACK'})}><strong>{powerAction}</strong></button></td>
           <td>Power Attack</td>
-          <td>-2 to melee attacks, +4 to melee attack damage</td>
+          <td className='table-details'>-2 to melee attacks, +4 to melee attack damage</td>
         </tr>
         <tr>
           <td><button className={this.renderShifterFormClass('Bull - Combat', 'combat', 'class', 'swift', 1)} onClick={() => this.shift('Bull - Combat', 'combat', 1, 'swift')}><strong>{this.renderShifterFormClass('Bull - Combat', 'combat', 'button', null, 1)}</strong></button></td>
           <td>Bull - Combat Form (1 pt)</td>
-          <td>On successful Bull Rush, make a melee attack against FF AC, push target back +5ft, and if impact hard surface deal melee attack damage (7 rounds)</td>
+          <td className='table-details'>On successful Bull Rush, make a melee attack against FF AC, push target back +5ft, and if impact hard surface deal melee attack damage (7 rounds)</td>
         </tr>
         <tr>
           <td><button className={this.renderShifterFormClass('Bull - Minor', 'minor', 'class', 'swift', 1)} onClick={() => this.shift('Bull - Minor', 'minor', 1, 'swift')}><strong>{this.renderShifterFormClass('Bull - Minor', 'minor', 'button', null, 1)}</strong></button></td>
           <td>Bull - Minor Form (1 pt)</td>
-          <td>+2 bonus to Strength</td>
+          <td className='table-details'>+2 bonus to Strength</td>
         </tr>
         <tr>
           <td><button className={this.renderShifterFormClass('Bull - Major', 'major', 'class', 'standard', 1)} onClick={() => this.shift('Bull - Major', 'major', 2, 'standard', 'Large')}><strong>{this.renderShifterFormClass('Bull - Major', 'major', 'button', null, 1)}</strong></button></td>
           <td>Bull - Major Form (2 pts)</td>
-          <td>Polymorph into Bull</td>
+          <td className='table-details'>Polymorph into Bull</td>
         </tr>
         <tr>
           <td><button className={this.renderShifterFormClass('Condor - Combat', 'combat', 'class', 'swift', 1)} onClick={() => this.shift('Condor - Combat', 'combat', 1, 'swift')}><strong>{this.renderShifterFormClass('Condor - Combat', 'combat', 'button', null, 1)}</strong></button></td>
           <td>Condor - Combat Form (1 pt)</td>
-          <td>Gain <em>Cleave</em> feat</td>
+          <td className='table-details'>Gain <em>Cleave</em> feat</td>
         </tr>
         <tr>
           <td><button className={this.renderShifterFormClass('Condor - Minor', 'minor', 'class', 'swift', 1)} onClick={() => this.shift('Condor - Minor', 'minor', 1, 'swift')}><strong>{this.renderShifterFormClass('Condor - Minor', 'minor', 'button', null, 1)}</strong></button></td>
           <td>Condor - Minor Form (1 pt)</td>
-          <td>Can cast <em>feather fall</em></td>
+          <td className='table-details'>Can cast <em>feather fall</em></td>
         </tr>
         <tr>
           <td><button className={this.renderShifterFormClass('Condor - Major', 'major', 'class', 'standard', 1)} onClick={() => this.shift('Condor - Major', 'major', 2, 'standard', 'Large')}><strong>{this.renderShifterFormClass('Condor - Major', 'major', 'button', null, 1)}</strong></button></td>
           <td>Condor - Major Form (2 pts)</td>
-          <td>Polymorph into Condor</td>
+          <td className='table-details'>Polymorph into Condor</td>
         </tr>
         <tr>
           <td><button className={this.renderShifterFormClass('Frog - Combat', 'combat', 'class', 'swift', 1)} onClick={() => this.shift('Frog - Combat', 'combat', 1, 'swift')}><strong>{this.renderShifterFormClass('Frog - Combat', 'combat', 'button', null, 1)}</strong></button></td>
           <td>Frog - Combat Form (1 pt)</td>
-          <td>Excrete a poison through claws. Select the type of Poison. Creatures that fail a DC 17 Fortitude save are affected.</td>
+          <td className='table-details'>Excrete a poison through claws. Select the type of Poison. Creatures that fail a DC 17 Fortitude save are affected.</td>
         </tr>
         <tr>
           <td><button className={this.renderShifterFormClass('Frog - Minor', 'minor', 'class', 'swift', 1)} onClick={() => this.shift('Frog - Minor', 'minor', 1, 'swift')}><strong>{this.renderShifterFormClass('Frog - Minor', 'minor', 'button', null, 1)}</strong></button></td>
           <td>Frog - Minor Form (1 pt)</td>
-          <td>+4 bonus to Acrobatics when jumping and a +2 bonus to Swim</td>
+          <td className='table-details'>+4 bonus to Acrobatics when jumping and a +2 bonus to Swim</td>
         </tr>
         <tr>
           <td><button className={this.renderShifterFormClass('Frog - Major', 'major', 'class', 'standard', 1)} onClick={() => this.shift('Frog - Major', 'major', 2, 'standard', 'Large')}><strong>{this.renderShifterFormClass('Frog - Major', 'major', 'button', null, 1)}</strong></button></td>
           <td>Frog - Major Form (2 pts)</td>
-          <td>Polymorph into Frog</td>
+          <td className='table-details'>Polymorph into Frog</td>
         </tr>
       </React.Fragment>
     )

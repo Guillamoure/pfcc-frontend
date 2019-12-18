@@ -17,7 +17,10 @@ class Spells extends React.Component {
   }
 
   renderCast = (spell) => {
-    const action = _.lowerCase(spell.action.name.split(" ")[0])
+    let action = _.lowerCase(spell.action.name.split(" ")[0])
+    if (action === "full round"){
+      action = "full"
+    }
     let klass = this.props.classes.find(cl => cl.id === spell.klass.id)
     let spellcasting = klass.klass_features.find(kf => kf.name === 'Spells').spellcasting
     const info = {
@@ -37,6 +40,7 @@ class Spells extends React.Component {
     })
     .then(r => r.json())
     .then(data => {
+
       this.props.dispatch({type: 'TRIGGER ACTION', action})
       if (info.spell_level === 0 || !spellcasting.expendable){
         this.props.dispatch({type: 'CAST CANTRIP SPA OR SPONTANEOUS SPELL', spell: data, infinite_zero_level: spellcasting.infinite_zero_level})
@@ -114,20 +118,16 @@ class Spells extends React.Component {
     let specificClass = this.props.character_info.classes.find(cl => cl.id === spd.klass_id)
     let spdCopy = {...spd}
     let totalSpellsPerDay = spdCopy.spells
-    console.log(spd.spells)
-    console.log(totalSpellsPerDay)
     let klass = this.props.classes.find(cl => cl.id === spd.klass_id)
     let spellcasting = klass.klass_features.find(kf => kf.name === 'Spells').spellcasting
 
     // can't get bonus spells per day for cantrips
     // only if spellcasting ability bonus is greater than or equal to spell level
     // not all classes allow bonus spells
-    console.log(spd.spell_level, totalSpellsPerDay)
     let bonus = 0
     if (this.bonusSPD(spd.klass_id, spd.spell_level) && spd.spell_level !== 0 && spellcasting.bonus_spells){
       bonus = 1
     }
-    console.log(spd.spell_level, totalSpellsPerDay)
     let casted = 0
     if (specificClass.castSpells) {
       casted = specificClass.castSpells[spd.spell_level]
@@ -249,7 +249,8 @@ class Spells extends React.Component {
   hardcodedSpells = () => {
     let condor = this.props.character_info.hardcode.minor === 'Condor - Minor'
     let cedrick = this.props.character.name === 'Cedrick'
-    if (condor || cedrick){
+    let pepper = this.props.character.name === 'Persephone'
+    if (condor || cedrick || pepper){
       return <HardcodeSpells editModal={this.props.editModal}/>
     }
   }

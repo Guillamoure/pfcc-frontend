@@ -46,7 +46,7 @@ const reducer = (state = initialState, action) => {
       })
       return {...state, character: action.character, character_info: {...state.character_info, classes: clearedCopy, size: size}};
     case "ABILITY SCORE":
-      return {...state, character_info: {...state.character_info, ability_scores: {...state.character_info.ability_scores, [action.ability]: action.score}}};
+      return {...state, character_info: {...state.character_info, ability_scores: {...state.character_info.ability_scores, [action.ability]: action.score, }, hardcode: {} }};
     case "CHARACTER_CLASSES":
       return {...state, character_info: {...state.character_info, classes: action.classes}};
     // case "CLASSES":
@@ -164,6 +164,27 @@ const reducer = (state = initialState, action) => {
       return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, ringPoints: ringAmount}}}
     case 'TIME TRAVEL':
       return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, age: action.age}}}
+    case 'LIMIT CASTING':
+      // check to see if limits has been created
+      let limits = state.character_info.hardcode.limits || []
+      // find a specific spell that is limited
+      let chosenLimit = limits.find(l => l.name === action.name)
+      // if found
+      if (chosenLimit){
+        // go through all limits, update that one with ++ to cast
+        limits = limits.map(l => {
+          if (l.name === action.name){
+            return {name: l.name, cast: l.cast+1}
+          } else {
+            return l
+          }
+        })
+      } else {
+        // else, create it
+        limits.push({name: action.name, cast: 1})
+      }
+      // add limits to hardcode
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, limits}}}
     default:
       return state
   }

@@ -4,12 +4,13 @@ import { connect } from 'react-redux'
 const HardcodeSpells = props => {
 
   const condor = props.character_info.hardcode.minor === 'Condor - Minor'
-  const cedrick = props.character.name
+  const cedrick = props.character.name === "Cedrick"
+  const pepper = props.character.name === "Persephone"
 
   const spells = () => {
     let availableSpells = []
     let allSpells = [...props.spells]
-    if (condor){
+    if (condor || pepper){
       let feather_fall = {
         id: 18,
         level: 0,
@@ -72,11 +73,36 @@ const HardcodeSpells = props => {
       }
       availableSpells.push(dominate)
     }
+    if (pepper){
+      let levitate = {
+        id: 56,
+        level: 2,
+        action: "standard",
+        name: "Levitate",
+        range: "personal",
+        duration: "5 minutes",
+        dc: "-",
+        sr: false,
+        limit: 1
+      }
+      availableSpells.push(levitate)
+      let fly = {
+        id: 57,
+        level: 3,
+        action: "standard",
+        name: "Fly",
+        range: "personal",
+        duration: "5 minutes",
+        dc: "-",
+        sr: false
+      }
+      availableSpells.push(fly)
+    }
     return availableSpells.map(sp => {
       return (
         <tr>
           <td>{sp.level}</td>
-          <td ><button className={className(sp.action, sp.commandRing)} onClick={() => dispatchCasting(className(sp.action, sp.commandRing))}><strong>Cast{sp.commandRing && ` (${sp.commandRing})`}</strong></button></td>
+          <td ><button className={className(sp.action, sp.commandRing, sp.limit, sp.name)} onClick={() => dispatchCasting(className(sp.action, sp.commandRing, sp.limit, sp.name), sp.limit, sp.name)}><strong>Cast{sp.commandRing && ` (${sp.commandRing})`}</strong></button></td>
           <td className='underline-hover' onClick={() => props.editModal('spell', null, sp.id)}>{sp.name}</td>
           <td>{sp.range}</td>
           <td>{sp.duration}</td>
@@ -87,17 +113,42 @@ const HardcodeSpells = props => {
     })
   }
 
-  const className = (action, commandRing) => {
+  const className = (action, commandRing, limit, name) => {
     let availableAction = props.character_info.actions[action]
-    if (props.character_info.hardcode.ringPoints < commandRing){
-      return 'cannot-cast'
+    // are the number of ring points left less than the number of points it costs to cast
+    // is the limited number of times you can cast this spell greater or equal to the number of times you already cast it?
+    if (commandRing || limit){
+      // if limited spells have already been cast, return true, otherwise, there have been no limited spell cast
+      let unableToCast = props.character_info.hardcode.limits
+      if (unableToCast){
+        // find that spell, and see if the max limit is less or equal to the number of times its been cast
+        // if it is maxed out, you cannot-cast it
+        unableToCast = !!props.character_info.hardcode.limits.find(l => l.name === name && limit <= l.cast)
+      }
+      if (props.character_info.hardcode.ringPoints < commandRing || unableToCast){
+        return 'cannot-cast'
+      }
     }
     return availableAction ? 'cannot-cast' : action
   }
 
-  const dispatchCasting = (action) => {
+  const dispatchCasting = (action, limit, name) => {
     if (action !== 'cannot-cast'){
       props.dispatch({type: 'TRIGGER ACTION', action})
+    }
+    // if limit was passed in
+    if (limit){
+      // if limits exist in redux
+      let limits = props.character_info.hardcode.limits
+      let ableToCast = false
+      if (limits){
+        // see if there is this specific one
+        ableToCast = props.character_info.hardcode.limits.find(l => l.name === name && limit < l.cast)
+      }
+      // if it is found, send a dispatch, or if limits doesn't exist in redux
+      if (!limits || ableToCast){
+        props.dispatch({type: 'LIMIT CASTING', name})
+      }
     }
   }
 
