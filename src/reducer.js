@@ -44,7 +44,8 @@ const reducer = (state = initialState, action) => {
         copiedClassInfo.castSpells = {}
         return copiedClassInfo
       })
-      return {...state, character: action.character, character_info: {...state.character_info, classes: clearedCopy, size: size}};
+      let staticStats = hardcoded(state, {name: action.character.name})
+      return {...state, character: action.character, character_info: {...state.character_info, classes: clearedCopy, size: size, hardcode: staticStats}};
     case "ABILITY SCORE":
       return {...state, character_info: {...state.character_info, ability_scores: {...state.character_info.ability_scores, [action.ability]: action.score, }, hardcode: {} }};
     case "CHARACTER_CLASSES":
@@ -79,11 +80,10 @@ const reducer = (state = initialState, action) => {
       }
       return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, performance: action.name, points: state.character_info.hardcode.points - 1}}}
     case "SUMMON MONSTER":
+      let monsters = state.character_info.hardcode.monsters ? [...state.character_info.hardcode.monsters] : []
       let monster = action.monster
-      if (monster === state.character_info.hardcode.monster){
-        monster = null
-      }
-      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, monster: monster}}}
+      monsters.push(monster)
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, monsters}}}
     case "TRIGGER ACTION":
       let actionDupe = state.character_info.actions
       if(action.action === 'full' && actionDupe.full === false){
@@ -96,7 +96,7 @@ const reducer = (state = initialState, action) => {
       return {...state, character_info: {...state.character_info, actions: actionDupe}}
     case "NEW TURN":
       let actions = {full: false, standard: false, move: false, swift: false, immediate: false}
-      return {...state, character_info: {...state.character_info, actions: actions, hardcode: {...state.character_info.hardcode, power: false, eBloodActive: false, ffs: false, fd: false, charge: false, cleave: false}}}
+      return {...state, character_info: {...state.character_info, actions: actions, hardcode: {...state.character_info.hardcode, power: false, eBloodActive: false, ffs: false, fd: false, charge: false, cleave: false, arcane_strike: false}}}
     case "POWER ATTACK":
       return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, power: true}}}
     case "RAGE":
@@ -185,6 +185,18 @@ const reducer = (state = initialState, action) => {
       }
       // add limits to hardcode
       return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, limits}}}
+    case 'ABILITY SCORE IMPROVEMENT':
+      let ability_scores = {...state.character_info.ability_scores}
+      ability_scores[action.ability_score]++
+      return {...state, character_info: {...state.character_info, ability_scores}}
+    case 'REMOVE ALLY':
+      let monstersToBeRemoved = [...state.character_info.hardcode.monsters]
+      monstersToBeRemoved.splice(action.monster, 1)
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, monsters: monstersToBeRemoved}}}
+    case 'I CAN FLY':
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, fly: !state.character_info.hardcode.fly}}}
+    case 'ARCANE STRIKE':
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, arcane_strike: true}}}
     default:
       return state
   }
@@ -236,6 +248,8 @@ const hardcoded = (state, action) => {
       return {points: 7, speed: 30, ringPoints: 2}
     case 'Maddox':
       return {speed: 30, age: 'Venerable'}
+    case 'Persephone':
+      return {speed: 30}
     default:
       return {}
   }

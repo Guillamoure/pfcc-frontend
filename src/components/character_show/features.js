@@ -36,7 +36,7 @@ class Features extends React.Component {
       })
       if (startingLevel <= level){
         return (
-          <li data-id={feature.id} onClick={this.changeActiveFeature} className='highlight'>
+          <li key={feature.id *3 -1} data-id={feature.id} onClick={this.changeActiveFeature} className='highlight'>
             <strong data-id={feature.id}>{feature.name}</strong>
             {this.state.activeFeature === feature.id && <div style={{color: '#000'}}>{feature.description}</div>}
           </li>

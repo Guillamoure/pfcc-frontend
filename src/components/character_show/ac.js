@@ -9,8 +9,9 @@ const ArmorClass = props => {
   const charging = hc.charge ? -2 : 0
   const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major'].includes(hc.major)
   const cleave = hc.cleave ? -2 : 0
+  const name = props.character.name
 
-  const cedrick = props.character.name === "Cedrick" ? 5 : 0
+  const cedrick = name === "Cedrick" ? 5 : 0
 
   const dexMod = () => {
     let dex = props.character.dexterity
@@ -55,6 +56,9 @@ const ArmorClass = props => {
     if (fd){
       bonus += 2
     }
+    if (name === "Persephone"){
+      bonus+=1
+    }
     return bonus
   }
 
@@ -82,7 +86,6 @@ const ArmorClass = props => {
   const colorStyle = (type) => {
     let dex = Math.floor((props.character_info.ability_scores.dexterity-10)/2)
     let size = 0
-    let name = props.character.name
     if (name === 'Cedrick'){
       size = 1
     } else if (name === 'Nettie'){
@@ -94,8 +97,10 @@ const ArmorClass = props => {
       bonus = 5
     }
     let defaultAC = 10 + dex + size + armor + bonus
+    defaultAC += name === "Persephone" ? 1 : 0 // dodge feat
     if (type === 't'){
       defaultAC = 10 + dex + size + bonus
+      defaultAC += name === "Persephone" ? 1 : 0 // dodge feat
     } else if (type === 'ff'){
       defaultAC = 10 + size + armor + bonus
     }

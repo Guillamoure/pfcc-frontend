@@ -20,11 +20,11 @@ class Notice extends React.Component {
     return(
       <section>
         <h3>Available Summoned Monsters</h3>
-          <button onClick={() => this.dispatchMonster('air elemental')}>Air Elemental</button>
-          <button onClick={() => this.dispatchMonster('earth elemental')}>Earth Elemental</button>
-          <button onClick={() => this.dispatchMonster('fire elemental')}>Fire Elemental</button>
-          <button onClick={() => this.dispatchMonster('water elemental')}>Water Elemental</button>
-          <button onClick={() => this.dispatchMonster('lemure')}>Lemure</button>
+          <button onClick={() => this.dispatchMonster('air elemental')}>+1 Air Elemental</button>
+          <button onClick={() => this.dispatchMonster('earth elemental')}>+1 Earth Elemental</button>
+          <button onClick={() => this.dispatchMonster('fire elemental')}>+1 Fire Elemental</button>
+          <button onClick={() => this.dispatchMonster('water elemental')}>+1 Water Elemental</button>
+          <button onClick={() => this.dispatchMonster('lemure')}>+1 Lemure</button>
       </section>
     )
   }
@@ -55,7 +55,6 @@ class Notice extends React.Component {
         <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderActiveEffects("Fascinate")}>Fascinate</button>
         <h3>Hexes</h3>
         <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderActiveEffects("Protective Luck: Attackers have disadvantage")}>Protective Luck</button>
-        {this.renderAdditionalButtons()}
         <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderActiveEffects("Fortune: Target has advantage on one roll per round")}>Fortune</button>
         {this.renderAdditionalButtons()}
       </span>

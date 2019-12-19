@@ -3,6 +3,8 @@ import { connect } from 'react-redux'
 
 import Rings from './equipment/rings'
 import Legendary from './equipment/legendary'
+import Weapons from './equipment/weapons'
+import Magic from './equipment/magic'
 
 const Equipment = props => {
 
@@ -20,6 +22,8 @@ const Equipment = props => {
         </thead>
         <tbody>
           <Legendary editModal={props.editModal}/>
+          <Weapons editModal={props.editModal}/>
+          <Magic editModal={props.editModal}/>
           <Rings editModal={props.editModal}/>
         </tbody>
       </table>

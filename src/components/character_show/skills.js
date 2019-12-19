@@ -2,8 +2,6 @@ import React from 'react'
 import _ from 'lodash'
 import { connect } from 'react-redux'
 
-import Tooltip from '../../modals/tooltip'
-
 class Skills extends React.Component {
 
   state = {

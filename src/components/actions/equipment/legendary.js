@@ -7,6 +7,7 @@ const Legendary = props => {
 
   if (name === 'Cedrick'){
     const sergeant = {
+      id: 101,
       name: "Ta'al'mon Ancestral Handwraps",
       description: ``,
       aura: "moderate enchantment",
@@ -22,9 +23,9 @@ const Legendary = props => {
   }
 
   const renderLegendary = () => {
-    return legendaries.map(r => {
+    return legendaries.map((r, idx) => {
       return (
-        <tr>
+        <tr className={renderTableStyling(idx)} key={r.id*3-1}>
           <td>{r.expendable ? <button onClick={() => renderClick(r.name)}>View</button> : null}</td>
           <td><strong>{r.name}</strong></td>
           <td>{r.weight} lb{(r.weight > 1 || r.weight === 0) ? "s" : null}</td>
@@ -33,6 +34,10 @@ const Legendary = props => {
         </tr>
       )
     })
+  }
+
+  const renderTableStyling = (index) => {
+    return index%2 === 0 ? "even-row-weapons" : "odd-row"
   }
 
   return (

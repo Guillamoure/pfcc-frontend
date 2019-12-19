@@ -27,6 +27,12 @@ class Feats extends React.Component {
       case("Nettie"):
         feats = this.nettie()
         break
+      case("Cedrick"):
+        feats = this.cedrick()
+        break
+      case("Persephone"):
+        feats = this.pepper()
+        break
       default:
         break
     }
@@ -68,9 +74,29 @@ class Feats extends React.Component {
   cedrick = () => {
     return [
       {
-        id: 1005,
+        id: 2000,
         description: "You gain a +1 bonus on all attack rolls you make using the selected weapon.",
         name: "Weapon Focus (shifter claws)"
+      }
+    ]
+  }
+
+  pepper = () => {
+    return [
+      {
+        id: 3000,
+        description: "You gain a +1 dodge bonus to your AC. A condition that makes you lose your Dex bonus to AC also makes you lose the benefits of this feat.",
+        name: "Dodge"
+      },
+      {
+        id: 3001,
+        description: "As a swift action, you can imbue your weapons with a fraction of your power. For 1 round, your weapons deal +1 damage and are treated as magic for the purpose of overcoming damage reduction. For every five caster levels you possess, this bonus increases by +1, to a maximum of +5 at 20th level.",
+        name: "Arcane Strike"
+      },
+      {
+        id: 3002,
+        description: "You get a +1 bonus on attack and damage rolls with ranged weapons at ranges of up to 30 feet.",
+        name: "Point-Blank Shot"
       }
     ]
   }

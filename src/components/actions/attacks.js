@@ -11,6 +11,8 @@ const Attacks = props => {
         return merg()
       case "Cedrick":
         return cedrick()
+      case "Persephone":
+        return pepper()
       default:
         return null
     }
@@ -116,6 +118,22 @@ const Attacks = props => {
     )
   }
 
+  const pepper = () => {
+    return (
+      <React.Fragment>
+        <tr>
+          <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
+          <td>Light Crossbow</td>
+          <td style={renderNum('abD', null, true)} onMouseOver={e => renderTooltip(e, 'PBS')} onMouseOut={props.mouseOut}>+{renderNum('abD')+1}*</td>
+          <td>80 ft</td>
+          <td onMouseOver={e => renderTooltip(e, 'PBS')} onMouseOut={props.mouseOut}>1d8+<span style={renderNum('damageD', null, true)}>{renderNum('damageD')}</span> P*</td>
+          <td>19-20/x2</td>
+          <td><span onMouseOver={e => renderTooltip(e, 'Load Light')} onMouseOut={props.mouseOut}>Load*</span>{props.character_info.hardcode.arcane_strike ? ', Ignore DR/magic' : null}</td>
+        </tr>
+      </React.Fragment>
+    )
+  }
+
   const cedrick = () => {
     return (
       <React.Fragment>
@@ -156,9 +174,11 @@ const Attacks = props => {
     let bullMinor = hc.minor === 'Bull - Minor'
     let largeMorph = hc.major === 'Bull - Major' || hc.major === 'Condor - Major'
     let taalmon = n === "Cedrick"
+    let arcaneStrike = hc.arcane_strike
 
     bab = n === "Merg" ? 7 : bab
     bab = n === "Cedrick" ? 7 : bab
+    bab = n === "Persephone" ? 3 : bab
     size = size === "Large" ? -1 : size
     size = size === "Medium" ? 0 : size
     size = size === "Small" ? 1 : size
@@ -197,6 +217,9 @@ const Attacks = props => {
     abSBonus += !!fd ? -4 : 0
     abDBonus += !!fd ? -4 : 0
 
+    damageSBonus += arcaneStrike ? 2 : 0
+    damageDBonus += arcaneStrike ? 2 : 0
+
     if (type === 'abS'){
       if (!style){
         return ogABS + abSBonus
@@ -231,6 +254,18 @@ const Attacks = props => {
       return {color: 'green'}
     } else {
       return {color: 'black'}
+    }
+  }
+
+  const renderTooltip = (e, name) => {
+    let comment = null
+    if (name === "Load Light"){
+      comment = 'Loading a light crossbow is a move action that provokes attacks of opportunity.'
+    } else if (name === 'PBS'){
+      comment = '+1 to Attack and Damage Rolls if target is within 30 ft'
+    }
+    if (comment){
+      props.renderTooltip(e, comment)
     }
   }
 

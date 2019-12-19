@@ -14,6 +14,7 @@ const AgeModal = props => {
           ""
         ]
       }
+      break
     default:
       break
   }

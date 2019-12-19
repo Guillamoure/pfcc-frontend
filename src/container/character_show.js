@@ -79,6 +79,7 @@ class Character extends React.Component {
         this.dispatchAbilityScores()
         this.dispatchClassLevels()
         this.props.dispatch({type: 'SPECIFIC USER', name: data.character.name})
+        this.dispatchAbilityScoreImprovements(data.character.character_klasses)
         this.setState({character: data.character})
       // } else {
       //   this.props.history.push('/')
@@ -167,6 +168,14 @@ class Character extends React.Component {
     this.renderAbilityScoreCalc("Intelligence")
     this.renderAbilityScoreCalc("Wisdom")
     this.renderAbilityScoreCalc("Charisma")
+  }
+
+  dispatchAbilityScoreImprovements = (levels) => {
+    levels.forEach(lvl => {
+      if (lvl.ability_score_improvement){
+        this.props.dispatch({type: "ABILITY SCORE IMPROVEMENT", ability_score: lvl.ability_score_improvement})
+      }
+    })
   }
 
   renderEdit = (info, details) => {
@@ -266,7 +275,7 @@ class Character extends React.Component {
         {this.state.character.race && this.state.display === "Combat" && <AttackBonus character={this.state.character}/>}
         {this.state.character.race && this.state.display === "Combat" && <ArmorClass character={this.state.character} size={this.props.character_info.size}/>}
         {this.state.character.race && this.state.display === "Adventure" && <Skills character={this.state.character} renderTooltip={this.renderTooltip} mouseOut={this.mouseOut}/>}
-        {this.state.character.race && this.state.display === "Combat" && <Actions character={this.state.character} editModal={this.editModal} clickOut={this.clickOut}/>}
+        {this.state.character.race && this.state.display === "Combat" && <Actions character={this.state.character} editModal={this.editModal} clickOut={this.clickOut} renderTooltip={this.renderTooltip} mouseOut={this.mouseOut}/>}
         {this.state.character.race && this.state.display === "Combat" && <Initiative character={this.state.character}/>}
         {this.state.character.race && this.state.display === "Combat" && <TurnActions/>}
 

@@ -105,7 +105,7 @@ class Spells extends React.Component {
   renderSpellsPerDay = () => {
     return this.state.spellsPerDay.map(spd => {
       return (
-        <div>
+        <div key={spd.id*3-2}>
           <span>{spd.name}</span>
           {spd.spd.map(this.extrapolateSPD)}
           {this.availableSpellsToCastTable(spd.id)}
@@ -144,7 +144,7 @@ class Spells extends React.Component {
       }
     })
     const remainingSpells = totalSpellsPerDay - casted + bonus
-    return <span> <strong>|</strong> <i>{this.renderTH(spd.spell_level)}</i>: <strong>{(remainingSpells || remainingSpells === 0) ? remainingSpells : totalSpellsPerDay}</strong></span>
+    return <span key={spd.id*3-1}> <strong>|</strong> <i>{this.renderTH(spd.spell_level)}</i>: <strong>{(remainingSpells || remainingSpells === 0) ? remainingSpells : totalSpellsPerDay}</strong></span>
   }
 
   bonusSPD = (klass_id, spell_level) => {
@@ -183,10 +183,14 @@ class Spells extends React.Component {
           </tr>
         </thead>
         <tbody>
-          {this.castableSpells(klassId).map(sp => <SpellSummary spell={sp} renderCast={this.renderCast} spellsPerDay={this.state.spellsPerDay} editModal={this.props.editModal} clickOut={this.props.clickOut}/>)}
+          {this.castableSpells(klassId).map((sp, idx) => <tr className={this.renderTableStyling(idx)} key={sp.id*3-1}><SpellSummary spell={sp} renderCast={this.renderCast} spellsPerDay={this.state.spellsPerDay} editModal={this.props.editModal} clickOut={this.props.clickOut}/></tr>)}
         </tbody>
       </table>
     )
+  }
+
+  renderTableStyling = (index) => {
+    return index%2 === 0 ? "even-row-general" : "odd-row-general"
   }
 
   castableSpells = (klassId) => {

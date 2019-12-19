@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 const SpellSummary = props => {
 
-  let { spell: klassSpell, spellsPerDay } = props
+  let { spell: klassSpell } = props
   // if (!klassSpell.action){
   //   klassSpell = klassSpell.spell
   // }
@@ -129,7 +129,7 @@ const SpellSummary = props => {
   // open up a tool tip or a modal
   // give you options to cast
   return (
-      <tr>
+      <React.Fragment>
         <td>{klassSpell.spell_level}</td>
         <td><button className={renderAction(klassSpell.action.name)} onClick={availableToCast}><strong>Cast</strong></button></td>
         <td className='underline-hover' onClick={() => props.editModal('spell', null, klassSpell.spell.id)}>{klassSpell.spell.name}</td>
@@ -137,7 +137,7 @@ const SpellSummary = props => {
         <td>{renderTime(level, klassSpell.spell)}</td>
         <td>{renderDC(klassSpell.spell_level, klassSpell.klass.id)}</td>
         <td>{klassSpell.spell.spell_resistance ? "Y" : "N"}</td>
-      </tr>
+      </React.Fragment>
     )
 
 }

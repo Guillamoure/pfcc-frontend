@@ -9,7 +9,7 @@ const HardcodeSpells = props => {
 
   const spells = () => {
     let availableSpells = []
-    let allSpells = [...props.spells]
+    // let allSpells = [...props.spells]
     if (condor || pepper){
       let feather_fall = {
         id: 18,
@@ -98,9 +98,9 @@ const HardcodeSpells = props => {
       }
       availableSpells.push(fly)
     }
-    return availableSpells.map(sp => {
+    return availableSpells.map((sp, idx) => {
       return (
-        <tr>
+        <tr className={renderTableStyling(idx)} key={sp.id*3-1}>
           <td>{sp.level}</td>
           <td ><button className={className(sp.action, sp.commandRing, sp.limit, sp.name)} onClick={() => dispatchCasting(className(sp.action, sp.commandRing, sp.limit, sp.name), sp.limit, sp.name)}><strong>Cast{sp.commandRing && ` (${sp.commandRing})`}</strong></button></td>
           <td className='underline-hover' onClick={() => props.editModal('spell', null, sp.id)}>{sp.name}</td>
@@ -150,12 +150,19 @@ const HardcodeSpells = props => {
         props.dispatch({type: 'LIMIT CASTING', name})
       }
     }
+    if (name === "Fly"){
+      props.dispatch({type: 'I CAN FLY'})
+    }
+  }
+
+  const renderTableStyling = (index) => {
+    return index%2 === 0 ? "even-row-general" : "odd-row-general"
   }
 
   return (
     <table>
       <thead>
-        <tr>
+        <tr >
           <th>Lvl</th>
           <th>Action</th>
           <th>Name</th>

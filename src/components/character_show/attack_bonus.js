@@ -27,17 +27,16 @@ class AttackBonus extends React.Component {
       case "strength":
         if (minor === "Bull - Minor"){
           bonus++
-          break
         }
         if (largeMorph){
           bonus +=2
-          break
         }
+        break
       case "dexterity":
         if (largeMorph){
           bonus--
-          break
         }
+        break
       default:
         break
     }

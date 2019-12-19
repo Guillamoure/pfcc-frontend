@@ -10,7 +10,7 @@ class Abilities extends React.Component {
   // list them with their action buttons
 
   renderAbilities = () => {
-    let option = this.collectClassFeatureOptions()
+    // let option = this.collectClassFeatureOptions()
     switch(this.props.character.name){
       case 'Nettie':
         return this.nettie()
@@ -21,11 +21,10 @@ class Abilities extends React.Component {
       case 'Maddox':
         return this.maddox()
       case 'Persephone':
-        return this.persephone()
+        return this.pepper()
       default:
         return 0
     }
-    return 0
   }
 
   nettie = () => {
@@ -63,7 +62,7 @@ class Abilities extends React.Component {
     return(
       <React.Fragment>
         <tr>
-          <td><button className={this.props.character_info.hardcode.rage ? 'cannot-cast' : 'free'} onClick={() => this.props.editModal('rage')}><strong>{this.props.character_info.hardcode.rage ? 'Active' : 'Activate'}</strong></button></td>
+          <td><button className={rage ? 'cannot-cast' : 'free'} onClick={() => this.props.editModal('rage')}><strong>{rage ? 'Active' : 'Activate'}</strong></button></td>
           <td>Rage</td>
           <td className='table-details'>+2 to melee attacks, thrown attacks, melee damage, will saves. -2 to AC. +14 temp hp</td>
         </tr>
@@ -98,11 +97,15 @@ class Abilities extends React.Component {
     )
   }
 
-  persephone = () => {
+  pepper = () => {
     // const power = this.props.character_info.hardcode.power
     let hex = 'standard'
     if (this.props.character_info.actions.standard){
       hex = 'cast-standard'
+    }
+    let arcane = 'swift'
+    if (this.props.character_info.actions.swift){
+      arcane = 'cast-swift'
     }
     return(
       <React.Fragment>
@@ -115,6 +118,11 @@ class Abilities extends React.Component {
           <td><button className={hex} onClick={() => this.props.dispatch({type: 'TRIGGER ACTION', action: 'standard'})}><strong>Hex</strong></button></td>
           <td>Fortune Hex</td>
           <td className='table-details'>Target creature within 30 ft, for one round, once a round, may reroll any ability check, attack roll, saving throw, or skill check, and take the better result. A creature can only benefit from this hex every 24 hours.</td>
+        </tr>
+        <tr>
+          <td><button className={arcane} onClick={this.arcaneStrike}><strong>Activate</strong></button></td>
+          <td>Arcane Strike</td>
+          <td className='table-details'>As a swift action, you can imbue your weapons with a fraction of your power. For 1 round, your weapons deal +2 damage and are treated as magic for the purpose of overcoming damage reduction.</td>
         </tr>
       </React.Fragment>
     )
@@ -265,6 +273,13 @@ class Abilities extends React.Component {
           this.props.editModal('frogCombat')
         }
       }
+    }
+  }
+
+  arcaneStrike = () => {
+    if (!this.props.character_info.actions.swift){
+      this.props.dispatch({type: 'TRIGGER ACTION', action: 'swift'})
+      this.props.dispatch({type: 'ARCANE STRIKE'})
     }
   }
 

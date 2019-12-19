@@ -20,7 +20,9 @@ const Basics =  props => {
     } else if (!actions[action]){
       switch(details){
         case 'run':
-        return null
+          return null
+        default:
+          break
       }
       props.dispatch({type: 'TRIGGER ACTION', action})
       switch(details){
@@ -29,6 +31,8 @@ const Basics =  props => {
           break
         case 'charge':
           props.dispatch({type: 'CHARGE'})
+          break
+        default:
           break
       }
     } else {
@@ -69,6 +73,7 @@ const Basics =  props => {
     if (props.character.name === 'Cedrick' && cm === 'bull rush'){
       ab += 2
     }
+    ab = Math.floor(ab)
     return ab >= 0 ? `+${ab}` : ab
   }
 
@@ -134,6 +139,7 @@ const Basics =  props => {
           {props.character.name === "Festus" && alternateMove('Fly', 50)}
           {props.character_info.hardcode.major === "Condor - Major" && alternateMove('Fly', 80)}
           {props.character_info.hardcode.major === "Frog - Major" && alternateMove('Swim', 30)}
+          {props.character_info.hardcode.fly && alternateMove('Fly', 60)}
           <tr>
             <td><button className={canCast('full', 'run')} onClick={() => renderDispatch('full', 'run')}><strong>Move</strong></button></td>
             <td>Run</td>
@@ -201,38 +207,15 @@ const Basics =  props => {
         <td>{type}</td>
         <td>{speed} ft</td>
       </tr>
-      <tr>
+      {!props.character_info.hardcode.fly && <tr>
         <td><button className={canCast('full')}><strong>Move</strong></button></td>
         <td>{type}</td>
         <td>{speed * 4} ft</td>
-      </tr>
+      </tr>}
       </React.Fragment>
     )
   }
 
-  const festus = () => {
-    return (
-      <React.Fragment>
-      <tr>
-        <td><button className={canCast('move')}><strong>Move</strong></button></td>
-        <td>Fly</td>
-        <td>50 ft</td>
-      </tr>
-      </React.Fragment>
-    )
-  }
-
-  const frog = () => {
-    return (
-      <React.Fragment>
-      <tr>
-        <td><button className={canCast('move')}><strong>Move</strong></button></td>
-        <td>Swim</td>
-        <td>30 ft</td>
-      </tr>
-      </React.Fragment>
-    )
-  }
 
   const cannotRun = (details) => {
     const isFatigued = props.character_info.conditions.includes('Fatigued')
