@@ -3,6 +3,7 @@
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-image: linear-gradient(#CFB997 60%, #fff);
+
 }
 
 .container-4 {
@@ -34,6 +35,15 @@
 .container-7 {
   display: grid;
   grid-template-columns: 3fr 3fr 3fr 3fr 3fr 3fr .1fr;
+}
+
+.character-show {
+  margin: .5em;
+  padding: .2em;
+  background-color: rgba(235, 235, 235, 0.95);
+  border: solid;
+  border-color: #000;
+  border-radius: 1em;
 }
 
 .muted {
@@ -502,8 +512,31 @@
 
 .even {
   box-shadow: 0px 1px #333, 0px -1px #333;
-
 }
+
+/* Rows and Columns in Character Show */
+.odd-row {
+  background-color: rgba(233, 233, 233, 0.90);
+}
+.odd-row-general {
+  background-color: #b99566;
+}
+.even-row-general {
+  background-color: #d9b99b;
+}
+.even-row-legendary {
+  background-color: #faf0e6;
+}
+.even-row-weapons {
+  background-color: #e4d5b7;
+}
+.even-row-rings {
+  background-color: #eed9c4;
+}
+.even-row-magic {
+  background-color: #fff0db;
+}
+
 
 #class-img {
   width: 20em;
@@ -528,3 +561,68 @@
     margin-bottom: 1%;
 }
 */
+
+.underline-hover:hover {
+  text-decoration: underline;
+  color: cyan;
+}
+
+#tooltip {
+  position: absolute;
+  left: 50px; top: 50px;
+  font-family: Helvetica Neue,Helvetica,Arial,sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: normal;
+  line-height: 1.42857143;
+  text-align: left;
+  text-align: start;
+  text-shadow: none;
+  text-transform: none;
+  white-space: normal;
+  word-break: normal;
+  word-spacing: normal;
+  word-wrap: normal;
+  font-size: 12px;
+
+  display: inline-block;
+}
+
+/* Tooltips! Copied from blog by Arseniy Tomkevich, url: https://medium.com/@jsmuster/building-a-tooltip-component-with-react-2de14761e02 */
+
+#tooltip.top {
+  margin-top: -5px;
+}
+
+#tooltip .tooltip-arrow {
+  top: 50%;
+  left: 0;
+  margin-top: -5px;
+  border-width: 5px 5px 5px 0;
+  border-right-color: #000;
+}
+
+#tooltip.top .tooltip-arrow {
+  top: auto;
+  bottom: -5px;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px 5px 0;
+  border-top-color: #000;
+}
+
+#tooltip .tooltip-inner {
+  max-width: 200px;
+  padding: 3px 8px;
+  color: #fff;
+  text-align: center;
+  background-color: #000;
+  border-radius: 4px;
+}
+
+#tooltip.on {
+  pointer-events: none;
+  display: block;
+}
+
+/* End of tooltips */

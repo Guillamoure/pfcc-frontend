@@ -1,6 +1,13 @@
 import React from 'react'
 
 class Tab extends React.Component {
+
+  renderCancel = () => {
+    if (this.props.allies && (this.props.character === "Nettie")){
+      return <button onClick={() => this.props.removeAlly(this.props.index)}>X</button>
+    }
+  }
+
   render(){
 
     let className = 'tab-list-item';
@@ -10,8 +17,9 @@ class Tab extends React.Component {
     }
 
     return(
-      <span className={className} onClick={() => this.props.renderTabClick(this.props.label)}>
+      <span className={className} onClick={() => this.props.renderTabClick(this.props.label, this.props.index)}>
         {this.props.label}
+        {this.renderCancel()}
       </span>
     )
   }

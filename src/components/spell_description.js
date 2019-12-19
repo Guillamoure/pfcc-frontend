@@ -50,12 +50,12 @@ const SpellDescription = props => {
         <li><strong><u>Casting</u></strong></li>
         <li>Casting Time | {spell.action.name}</li>
         <li>Components | {spell.spell_components.map(sc => sc.component.abbreviation).join(", ")}{renderComponentItems()}</li>
-        <li><strong>Effect</strong></li>
+        <li><strong><u>Effect</u></strong></li>
         <li>Range | {renderFeet()}</li>
         <li>Target | {spell.target}</li>
         <li>Duration | {spell.duration}{spell.dismissible ? " (D)" : null}</li>
         <li>Saving Throw | {spell.saving_throw} | Spell Resistance | {spell.spell_resistance ? "Yes" : "No"}</li>
-        <li><strong>Description</strong></li>
+        <li><strong><u>Description</u></strong></li>
         <li>{renderDescription()}</li>
       </ul>
     )

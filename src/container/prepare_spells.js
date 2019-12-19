@@ -91,13 +91,16 @@ class PrepareSpells extends React.Component {
     e.preventDefault()
     if (this.state.spellLevel === "-"){
       return null
+      // if the prepare button was clicked while a spell level is present
     } else {
+      // grab klass spell id by going through all known spells, looking for specific chosen spell
       let ksi = this.state.knownSpells.find(ks => ks.spell.id === this.state.activeSpell).klass_spell.id
       let spell = {
-        id: this.state.activeSpell,
+        spell_id: this.state.activeSpell,
         level: this.state.spellLevel,
         known_spell_id: ksi
       }
+      // add selected spell to state, reset active spell and selected spell level
       this.setState({selectedSpells: [...this.state.selectedSpells, spell], activeSpell: 0, spellLevel: "-"})
     }
   }
@@ -176,7 +179,7 @@ class PrepareSpells extends React.Component {
 
   renderPreparedSpells = () => {
     return this.state.selectedSpells.map(ss => {
-      let spell = this.state.knownSpells.find(ks => ks.id === ss.id).spell
+      let spell = this.state.knownSpells.find(ks => ks.spell.id === ss.spell_id).spell
       return <PreparedCard spell={spell} level={ss.level} removePreparedSpell={this.removePreparedSpell} alreadyPrepared={false}/>
     })
   }

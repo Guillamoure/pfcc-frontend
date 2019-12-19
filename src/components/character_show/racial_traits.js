@@ -17,8 +17,10 @@ class Traits extends React.Component {
   }
 
   renderRacialTraits = () => {
+    let traits = this.props.character.race.racial_traits
+    traits = this.circumventTraits(this.props.character.name, traits)
 
-    return this.props.character.race.racial_traits.map(trait => {
+    return traits.map(trait => {
         return (
           <li data-id={trait.id} onClick={this.changeActiveFeature} className='highlight'>
             <strong data-id={trait.id}>{trait.name}</strong>
@@ -27,6 +29,25 @@ class Traits extends React.Component {
         )
 
     })
+  }
+
+  circumventTraits = (name, traits) => {
+    let newTraits = []
+    let replacedTraits = []
+    let addedTraits = []
+    if (name === "Persephone"){
+      replacedTraits = ['Green Widow', 'Hulking Changeling', 'Sea Lungs']
+      addedTraits = [
+        {
+          id: 1000,
+          name: 'Object of Desire',
+          description: <div>The changeling adds +1 to her caster level when casting <em>charm person</em> and <em>charm monster</em>.</div>
+        }
+      ]
+    }
+    newTraits = traits.filter(f => !replacedTraits.includes(f.name))
+    addedTraits.forEach(af => newTraits.push(af))
+    return newTraits
   }
 
   render(){

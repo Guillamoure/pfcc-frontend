@@ -48,7 +48,11 @@ class Update extends React.Component {
     // Just at all levels
     // Paladin/Ranger at lvl 4/3, etc.
     let klass = this.props.classes.find(cl => cl.id === klassId)
-    let spellcasting = klass.klass_features.find(kf => kf.spellcasting).spellcasting
+    let isThisKlassACaster = klass.klass_features.find(kf => kf.spellcasting)
+    if (!isThisKlassACaster){
+      return false
+    }
+    let spellcasting = isThisKlassACaster.spellcasting
     return spellcasting.prepared
   }
 

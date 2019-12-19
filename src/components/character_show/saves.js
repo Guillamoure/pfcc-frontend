@@ -12,7 +12,7 @@ const Saves = props => {
     }
   }
 
-  const renderCharacterSave = (save, score) => {
+  const renderCharacterSave = (save, score, style) => {
     if (!props.classes.length){
       return null
     } else {
@@ -20,11 +20,31 @@ const Saves = props => {
 
       props.character_info.classes.forEach(klass => {
         let currentClass = findCurrentClass(klass.id)
-        totalSavingThrow += renderSave(klass.id, currentClass[save])
+        totalSavingThrow += renderSave(klass.level, currentClass[save])
       })
       const mod = Math.floor((props.character_info.ability_scores[score] - 10) / 2)
       totalSavingThrow += mod
-      return totalSavingThrow < 0 ? totalSavingThrow : `+${totalSavingThrow}`
+      const ogST = totalSavingThrow
+      // hardcoding
+      const hc = props.character_info.hardcode
+      if (save === 'will' && hc.rage){
+        totalSavingThrow += 2
+      }
+      const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major'].includes(hc.major)
+      if (save === 'reflex' && largeMorph){
+        totalSavingThrow -= 1
+      }
+      if (!style){
+        return totalSavingThrow < 0 ? totalSavingThrow : `+${totalSavingThrow}`
+      } else {
+        if (ogST > totalSavingThrow){
+          return {color: 'maroon'}
+        } else if (ogST < totalSavingThrow){
+          return {color: 'green'}
+        } else {
+          return {color: 'black'}
+        }
+      }
     }
     // iterating over the character_info.classes in redux
     // this is written as a key value pair
@@ -51,15 +71,15 @@ const Saves = props => {
       <div id='saves' className='container-3 shadow shrink'>
         <div id='saving-throw-title'>Saving Throws</div>
         <span className='centered' >
-          <div className='enhanced'>{renderCharacterSave('fortitude', 'constitution')}</div>
+          <div className='enhanced' style={renderCharacterSave('fortitude', 'constitution', true)}>{renderCharacterSave('fortitude', 'constitution')}</div>
           <div className='muted'><strong>Fortitude</strong></div>
         </span>
         <span className='centered' >
-          <div className='enhanced'>{renderCharacterSave('reflex', 'dexterity')}</div>
+          <div className='enhanced' style={renderCharacterSave('reflex', 'dexterity', true)}>{renderCharacterSave('reflex', 'dexterity')}</div>
           <div className='muted'><strong>Reflex</strong></div>
         </span>
         <span className='centered' >
-          <div className='enhanced'>{renderCharacterSave('will', 'wisdom')}</div>
+          <div className='enhanced' style={renderCharacterSave('will', 'wisdom', true)}>{renderCharacterSave('will', 'wisdom')}</div>
           <div className='muted'><strong>Will</strong></div>
         </span>
       </div>

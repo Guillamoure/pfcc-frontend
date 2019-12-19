@@ -14,6 +14,21 @@ import Skills from '../components/character_show/skills'
 import FeaturesTraits from './features_traits'
 import Actions from './actions'
 import Initiative from '../components/character_show/initiative'
+import TurnActions from '../components/character_show/turn_actions'
+
+// unfinished hardcoded features
+import Points from '../components/character_show/points'
+import PointModal from '../modals/points'
+import PerformanceModal from '../modals/performance'
+import RageModal from '../modals/rage'
+import Active from '../components/character_show/active'
+import Allies from '../components/character_show/allies'
+import SpellDescriptionModal from '../modals/spell'
+import FrogCombat from '../modals/frog'
+import Tooltip from '../modals/tooltip'
+import CommandRingModal from '../modals/command'
+import AgeModal from '../modals/age'
+import CurioModal from '../modals/curios'
 
 import BackgroundForm from '../modals/background_form'
 import CharacterForm from '../modals/character_form'
@@ -29,6 +44,7 @@ import { faCaretLeft } from '@fortawesome/free-solid-svg-icons'
 // from here
 // ---------
 // keep track of rage/chimera/performance/panache points in state
+// UPDATE: did it redux <3
 
 // children
 // -------
@@ -45,7 +61,12 @@ class Character extends React.Component {
   state = {
     character: {},
     modal: false,
-    display: "Adventure"
+    display: "Adventure",
+    activeEffects: [],
+    spellId: 0,
+    toolTip: false,
+    toolTipX: 0,
+    toolTipY: 0
   }
 
   componentDidMount() {
@@ -57,6 +78,8 @@ class Character extends React.Component {
         this.props.dispatch({type: 'CHARACTER', character: data.character })
         this.dispatchAbilityScores()
         this.dispatchClassLevels()
+        this.props.dispatch({type: 'SPECIFIC USER', name: data.character.name})
+        this.dispatchAbilityScoreImprovements(data.character.character_klasses)
         this.setState({character: data.character})
       // } else {
       //   this.props.history.push('/')
@@ -120,6 +143,15 @@ class Character extends React.Component {
           castSpells[lvl] ? castSpells[lvl] = castSpells[lvl] + 1 : castSpells[lvl] = 1
         })
         classInfo.castSpells = castSpells
+
+        // hardcoded start
+        let name = this.props.character.name
+          if (name === "Nettie" || name === "Persephone" || name === "Maddox"){
+            classInfo.spellcastingAbility = 'intelligence'
+          } else if (name === "Sylvester"){
+            classInfo.spellcastingAbility = 'charisma'
+          }
+        // hardcoded end
         // }
         cKArray.push(classInfo)
       }
@@ -136,6 +168,14 @@ class Character extends React.Component {
     this.renderAbilityScoreCalc("Intelligence")
     this.renderAbilityScoreCalc("Wisdom")
     this.renderAbilityScoreCalc("Charisma")
+  }
+
+  dispatchAbilityScoreImprovements = (levels) => {
+    levels.forEach(lvl => {
+      if (lvl.ability_score_improvement){
+        this.props.dispatch({type: "ABILITY SCORE IMPROVEMENT", ability_score: lvl.ability_score_improvement})
+      }
+    })
   }
 
   renderEdit = (info, details) => {
@@ -155,17 +195,42 @@ class Character extends React.Component {
     })
   }
 
-  editModal = (section) => {
-    this.setState({modal: section})
+  editModal = (section, className, id) => {
+    if (className && className !== "free"){
+      this.props.dispatch({type: 'TRIGGER ACTION', action: className})
+    }
+    if (section === 'spell' && !!id){
+      this.setState({modal: section, spellId: id})
+    } else {
+      this.setState({modal: section})
+    }
   }
 
   clickOut = (e) => {
     if(e.target.classList[0] === "page-dimmer"){
-      this.setState({modal: false})
+      this.setState({modal: false, spellId: 0})
     }
   }
   exitModal = () => {
     this.setState({modal: false})
+  }
+
+  renderTooltip = (e, comment) => {
+    this.setState({toolTip: true, toolTipX: e.clientX, toolTipY: e.clientY, toolTipComment: comment})
+  }
+
+  mouseOut = () => {
+    console.log('is this being hit?')
+    this.setState({toolTip: false, toolTipX: 0, toolTipY: 0, toolTipComment: null})
+  }
+
+  changeActiveEffects = (string) => {
+    if (this.state.activeEffects.includes(string)){
+      let knockOffActiveEffects = this.state.activeEffects.filter(ae => ae !== string)
+      this.setState({activeEffects: knockOffActiveEffects})
+    } else {
+      this.setState({activeEffects: [...this.state.activeEffects, string]})
+    }
   }
 
   rightArrow = () => {
@@ -203,22 +268,41 @@ class Character extends React.Component {
       <span className="container-8 character">
         {this.state.character.race && <CharacterName character={this.state.character} editModal={this.editModal}/>}
         {this.state.character.race && this.state.display === "Adventure" && <AbilityScores character={this.state.character} editModal={this.editModal}/>}
-        {this.state.character.race && this.state.display === "Adventure" && <FeaturesTraits character={this.state.character}/>}
+        {this.state.character.race && this.state.display === "Adventure" && <FeaturesTraits character={this.state.character} editModal={this.editModal}/>}
         {this.state.character.race && this.state.display === "Character" && <Details character={this.state.character} editModal={this.editModal}/>}
         {this.state.character.race && (this.state.display === "Adventure" || this.state.display === "Combat") && <Saves character={this.state.character} display={this.state.display}/>}
         {this.state.character.race && (this.state.display === "Adventure" || this.state.display === "Combat") && <HP character={this.state.character} editModal={this.editModal} display={this.state.display}/>}
         {this.state.character.race && this.state.display === "Combat" && <AttackBonus character={this.state.character}/>}
-        {this.state.character.race && this.state.display === "Combat" && <ArmorClass character={this.state.character}/>}
-        {this.state.character.race && this.state.display === "Adventure" && <Skills character={this.state.character}/>}
-        {this.state.character.race && this.state.display === "Combat" && <Actions character={this.state.character}/>}
+        {this.state.character.race && this.state.display === "Combat" && <ArmorClass character={this.state.character} size={this.props.character_info.size}/>}
+        {this.state.character.race && this.state.display === "Adventure" && <Skills character={this.state.character} renderTooltip={this.renderTooltip} mouseOut={this.mouseOut}/>}
+        {this.state.character.race && this.state.display === "Combat" && <Actions character={this.state.character} editModal={this.editModal} clickOut={this.clickOut} renderTooltip={this.renderTooltip} mouseOut={this.mouseOut}/>}
         {this.state.character.race && this.state.display === "Combat" && <Initiative character={this.state.character}/>}
+        {this.state.character.race && this.state.display === "Combat" && <TurnActions/>}
+
+        {/* unfinished, hardcoded features */}
+        {!!this.state.character && this.state.display === "Combat" && <Points editModal={this.editModal}/>}
+        {!!this.state.character && this.state.display === "Combat" && <Active activeEffects={this.state.activeEffects}/>}
+        {!!this.state.character && this.state.display === "Character" && <Allies/>}
+        {/* unfinished, hardcoded features */}
 
 
         {this.state.modal === 'background' && <BackgroundForm character={this.state.character} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
         {this.state.modal === 'character' && <CharacterForm character={this.state.character} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
         {this.state.modal === 'ability' && <AbilityForm character={this.state.character} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
-        {this.state.modal === 'notifications' && <Notifications exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
+        {this.state.modal === 'notifications' && <Notifications exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit} changeActiveEffects={this.changeActiveEffects}/>}
         {this.state.modal === 'hitPoints' && <HPChanges exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
+
+        {/* unfinished, hardcoded features */}
+        {this.state.modal === 'points' && <PointModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
+        {this.state.modal === 'performance' && <PerformanceModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
+        {this.state.modal === 'frogCombat' && <FrogCombat exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
+        {this.state.modal === 'rage' && <RageModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
+        {(this.state.modal === 'spell' && this.state.spellId !== 0) && <SpellDescriptionModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} spellId={this.state.spellId}/>}
+        {this.state.toolTip && <Tooltip x={this.state.toolTipX} y={this.state.toolTipY} comment={this.state.toolTipComment}/>}
+        {this.state.modal === 'command ring' && <CommandRingModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
+        {this.state.modal === 'age' && <AgeModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
+        {this.state.modal === 'curio' && <CurioModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
+        {/* unfinished, hardcoded features */}
 
         <div id='right' onClick={() => this.setState({display: this.rightArrow()})}><FontAwesomeIcon icon={faCaretRight} size='9x'/><div>{this.rightArrow()}</div></div>
         <div id='left' onClick={() => this.setState({display: this.leftArrow()})}><FontAwesomeIcon icon={faCaretLeft} size='9x'/><div>{this.leftArrow()}</div></div>
