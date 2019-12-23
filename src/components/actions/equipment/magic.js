@@ -13,7 +13,7 @@ const MagicItems = props => {
       aura: "faint conjuration",
       price: "3400 gp",
       weight: 0,
-      expendable: true,
+      activatable: true,
       action: 'standard'
     }
     magicItems.push(tricks)
@@ -24,7 +24,7 @@ const MagicItems = props => {
       aura: "strong (no school)",
       price: "11000 gp",
       weight: 5,
-      expendable: true,
+      activatable: true,
       limit: 3,
       action: 'free'
     }
@@ -36,7 +36,7 @@ const MagicItems = props => {
       aura: "faint illusion",
       price: "650 gp",
       weight: '-',
-      expendable: true,
+      activatable: true,
       action: 'move'
     }
     magicItems.push(quickChangeMask)
@@ -47,7 +47,7 @@ const MagicItems = props => {
       aura: "moderate transmutation",
       price: "4000 gp",
       weight: '1',
-      expendable: false
+      activatable: false
     }
     magicItems.push(vastIntelligence)
     const wandUnseenServant = {
@@ -57,7 +57,7 @@ const MagicItems = props => {
       aura: "faint conjuration",
       price: "750 gp",
       weight: '-',
-      expendable: true,
+      activatable: true,
       action: 'standard',
       limit: 50,
       starting: 49
@@ -73,13 +73,27 @@ const MagicItems = props => {
       aura: "faint transmutation",
       price: "4800 gp",
       weight: '.5',
-      expendable: false
+      activatable: false
     }
     magicItems.push(spiderClimb)
+    const potCureModerate = {
+      id: 22022,
+      name: "Potion of Cure Moderate Wounds",
+      description: 'Heal 2d8+3',
+      aura: "faint conjuration",
+      price: "300 gp",
+      weight: '-',
+      activatable: true,
+      action: 'standard',
+      expendable: true
+    }
+    magicItems.push(potCureModerate)
+    const eek = {id: 22023, name: "Pint of Eek", description: 'After consuming, you immediately breath out a blast of sonic energy in a 30 ft line. All affected creatures take 3d6 sonic damage, or half that if they succeed at a DC 15 Reflex save.', aura: "moderate evocation", price: "???", weight: '-', activatable: true, action: 'standard', expendable: true}
+    magicItems.push(eek)
 
   }
 
-  const renderClick = (name, limit, startingValue) => {
+  const renderClick = (name, limit, startingValue, expendable) => {
     if (name === "Rod of Grasping Hexes" || name === 'Wand of Unseen Servant'){
       if (limit){
         // if limits exist in redux
@@ -112,6 +126,9 @@ const MagicItems = props => {
     if (name === "Bag of Tricks (Grey)" || name === 'Wand of Unseen Servant'){
       props.dispatch({type: 'TRIGGER ACTION', action: 'standard'})
     }
+    if (expendable){
+      props.dispatch({type: 'USED ITEM', name})
+    }
   }
 
   const renderMagicItems = () => {
@@ -128,15 +145,20 @@ const MagicItems = props => {
       } else {
         amount = mi.starting ? mi.starting : mi.limit
       }
-      return (
-        <tr className={renderTableStyling(idx)} key={mi.id*3-1}>
-          <td>{mi.expendable ? <button className={mi.action && !props.character_info.actions[mi.action] ? mi.action : 'cannot-cast'} onClick={() => renderClick(mi.name, mi.limit, mi.starting)}>Use</button> : null}</td>
-          <td><strong>{mi.name}</strong>{mi.limit ? `(${amount}/${mi.limit})` : null}</td>
-          <td>{mi.weight} lb{(mi.weight > 1 || mi.weight === 0) ? "s" : null}</td>
-          <td>{mi.price}</td>
-          <td>{mi.description}</td>
-        </tr>
-      )
+      let used = props.character_info.hardcode.usedItems
+      if (used && used.includes(mi.name)){
+        return null
+      } else {
+        return (
+          <tr className={renderTableStyling(idx)} key={mi.id*3-1}>
+            <td>{mi.activatable ? <button className={mi.action && !props.character_info.actions[mi.action] ? mi.action : 'cannot-cast'} onClick={() => renderClick(mi.name, mi.limit, mi.starting, mi.expendable)}>Use</button> : null}</td>
+            <td><strong>{mi.name}</strong>{mi.limit ? `(${amount}/${mi.limit})` : null}</td>
+            <td>{mi.weight} lb{(mi.weight > 1 || mi.weight === 0) ? "s" : null}</td>
+            <td>{mi.price}</td>
+            <td>{mi.description}</td>
+          </tr>
+        )
+      }
     })
   }
 

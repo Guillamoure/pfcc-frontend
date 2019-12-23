@@ -29,6 +29,7 @@ class Skills extends React.Component {
     const name = this.props.character.name
     const size = this.props.character_info.size
     const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major'].includes(hc.major)
+    const armor = hc.armor
     if (skill.name === "Stealth"){
       const size = this.props.character_info.size
       if (size === "Small"){
@@ -41,6 +42,12 @@ class Skills extends React.Component {
     }
     if (skill.ability_score === 'Dexterity' && name === 'Cedrick'){
       mod += 1
+    }
+    if (armor){
+      // ARMOR CHECK PENALTY FROM ARMOR
+      if (skill.ability_score === 'Dexterity' || skill.ability_score === 'Strength'){
+        mod += armor === 'Wooden' ? -1 : 0
+      }
     }
     if (skill.ability_score === "Intelligence" && name === "Persephone"){
       mod += 1
@@ -129,11 +136,19 @@ class Skills extends React.Component {
   renderAbilityScoreAbbreviation = (skill) => {
     const name = skill.name === "Climb" || skill.name === "Swim"
     const size = this.props.character_info.size === 'Tiny'
+    let armor = this.props.character_info.hardcode.armor
+    let abbrev
     if (name && size){
-      return 'Dex'
+      abbrev = 'Dex'
     } else {
-      return skill.ability_score.slice(0, 3)
+      abbrev = skill.ability_score.slice(0, 3)
     }
+    if (armor){
+      if (abbrev === 'Dex' || abbrev === 'Str'){
+        abbrev += armor === 'Wooden' ? '*' : null
+      }
+    }
+    return abbrev
   }
 
   renderSkillTableRow = () => {
@@ -142,7 +157,7 @@ class Skills extends React.Component {
       return (
         <tr key={_.random(1, 2000000)}>
           <td>{this.renderClassSkill(skill) ? "X" : null}</td>
-          <td><strong>{this.renderAbilityScoreAbbreviation(skill)}</strong></td>
+          <td onMouseOver={(e) => this.renderTooltip(e, null, skill.ability_score)} onMouseOut={this.props.mouseOut}><strong>{this.renderAbilityScoreAbbreviation(skill)}</strong></td>
           <td className={this.raging(skill.name)} style={this.renderSkillBonus(skill, true)} onMouseOver={(e) => this.renderTooltip(e, skill.name)} onMouseOut={this.props.mouseOut}>{this.asteriks(skill.name)}</td>
           <td style={this.renderSkillBonus(skill, true)}>{this.renderSkillBonus(skill)}</td>
           <td>{this.renderNumOfRanks(skill)}</td>
@@ -227,10 +242,11 @@ class Skills extends React.Component {
     }
   }
 
-  renderTooltip = (e, skill) => {
+  renderTooltip = (e, skill, ability) => {
     let comment = null
     let name = this.props.character.name
     let hc = this.props.character_info.hardcode
+    let armor = hc.armor
     if ((skill === "Survival" || skill === "Heal") && name === "Nettie"){
       comment = "Scrivener's Versatility"
     }
@@ -272,6 +288,12 @@ class Skills extends React.Component {
           alterEgo = 'Persephone'
         }
         comment = <span>+20 circumstance bonus to appear as {currently} if suspected to be {alterEgo}</span>
+      }
+    }
+    if (ability){
+      let armor = hc.armor
+      if (armor && (ability === 'Strength' || ability === 'Dexterity')){
+        comment = armor === 'Wooden' ? 'Armor Check Penalty: -1' : comment
       }
     }
     if (comment){

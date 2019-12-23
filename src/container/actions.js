@@ -25,7 +25,7 @@ class Actions extends React.Component {
         {this.state.activeTab === "Basics" && <Basics renderTooltip={this.props.renderTooltip} mouseOut={this.props.mouseOut}/>}
         {this.state.activeTab === "Spells" && <Spells character={this.props.character} editModal={this.props.editModal} clickOut={this.props.clickOut}/>}
         {this.state.activeTab === "Abilities" && <Abilities editModal={this.props.editModal}/>}
-        {this.state.activeTab === "Equipment" && <Equipment editModal={this.props.editModal}/>}
+        {this.state.activeTab === "Equipment" && <Equipment editModal={this.props.editModal} renderTooltip={this.props.renderTooltip} mouseOut={this.props.mouseOut}/>}
         </div>
       </div>
     )

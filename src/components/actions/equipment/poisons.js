@@ -16,7 +16,7 @@ const Poisons = props => {
       frequency: '1/minute for 6 minutes',
       cure: '2 consecutive saves',
       effect: '1d3 Con damage and 1 Str damage',
-      expendable: false,
+      activatable: false,
       limit: '2'
     }
     poisons.push(darkReaver)
@@ -30,7 +30,7 @@ const Poisons = props => {
       frequency: '1/round for 6 rounds',
       cure: '2 consecutive saves',
       effect: '1d3 Str damage',
-      expendable: false,
+      activatable: false,
       limit: '8'
     }
     poisons.push(purpleWorm)
@@ -44,7 +44,7 @@ const Poisons = props => {
       frequency: '1/round for 6 rounds',
       cure: '1 save',
       effect: '1d3 Wis damage',
-      expendable: false,
+      activatable: false,
       limit: '1'
     }
     poisons.push(insanityMist)
@@ -58,7 +58,7 @@ const Poisons = props => {
       frequency: '1/round for 6 rounds',
       cure: '2 consecutive saves',
       effect: '1d4 Con damage',
-      expendable: false,
+      activatable: false,
       limit: '1'
     }
     poisons.push(wyvernPoison)

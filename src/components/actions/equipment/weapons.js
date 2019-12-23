@@ -13,7 +13,7 @@ const Weapons = props => {
       aura: "-",
       price: "35gp",
       weight: 4,
-      expendable: false
+      activatable: false
     }
     weapons.push(lightCrossbow)
   }
@@ -25,7 +25,7 @@ const Weapons = props => {
     return weapons.map((w, idx) => {
       return (
         <tr className={renderTableStyling(idx)} key={w.id*3-1}>
-          <td>{w.expendable ? <button onClick={() => renderClick(w.name)}>View</button> : null}</td>
+          <td>{w.activatable ? <button onClick={() => renderClick(w.name)}>View</button> : null}</td>
           <td><strong>{w.name}</strong></td>
           <td>{w.weight} lb{(w.weight > 1 || w.weight === 0) ? "s" : null}</td>
           <td>{w.price}</td>

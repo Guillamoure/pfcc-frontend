@@ -6,6 +6,7 @@ import Legendary from './equipment/legendary'
 import Weapons from './equipment/weapons'
 import Magic from './equipment/magic'
 import Poisons from './equipment/poisons'
+import Armor from './equipment/armor'
 
 const Equipment = props => {
 
@@ -23,11 +24,12 @@ const Equipment = props => {
         </thead>
         <tbody>
           <Legendary editModal={props.editModal}/>
-          <Weapons editModal={props.editModal}/>
           <Magic editModal={props.editModal}/>
           <Rings editModal={props.editModal}/>
+          <Weapons editModal={props.editModal}/>
         </tbody>
       </table>
+      <Armor editModal={props.editModal} renderTooltip={props.renderTooltip} mouseOut={props.mouseOut}/>
       <Poisons editModal={props.editModal}/>
     </section>
   )

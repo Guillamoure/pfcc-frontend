@@ -527,9 +527,6 @@
 .even-row-legendary {
   background-color: #faf0e6;
 }
-.even-row-weapons {
-  background-color: #e4d5b7;
-}
 .even-row-rings {
   background-color: #eed9c4;
 }
@@ -538,6 +535,9 @@
 }
 .even-row-poisons {
   background-color: #dba766;
+}
+.even-row-armor {
+  background-color: #d8a994;
 }
 
 

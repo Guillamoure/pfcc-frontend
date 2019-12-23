@@ -428,7 +428,7 @@ const Attacks = props => {
             <tr>
               <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
               <td>Chakram</td>
-              <td style={renderNum('abD', null, true)}>+{renderNum('abD')-4/*Not Proficient*/}/+{renderNum('abS')-4-1/*Not Proficient, melee Chakram*/}</td>
+              <td style={renderNum('abD', null, true)}>+{renderNum('abD')-4/*Not Proficient*/}, +{renderNum('abS')-4-1/*Not Proficient, melee Chakram*/}</td>
               <td>30 ft</td>
               <td>1d6+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')}</span> S</td>
               <td>x2</td>

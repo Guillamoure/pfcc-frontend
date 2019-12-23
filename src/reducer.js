@@ -206,6 +206,14 @@ const reducer = (state = initialState, action) => {
     case 'AUTUMN EQUINOX':
       let autumn = !state.character_info.hardcode.autumn
       return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, autumn}}}
+    case 'USED ITEM':
+      let usedItems = state.character_info.hardcode.usedItems || []
+      usedItems.push(action.name)
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, usedItems}}}
+    case 'ACTIVE ARMOR':
+      let armor = state.character_info.hardcode.armor
+      armor = armor === action.name ? null : action.name
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, armor}}}
     default:
       return state
   }

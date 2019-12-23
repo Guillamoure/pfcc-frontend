@@ -13,7 +13,7 @@ const Rings = props => {
       aura: "moderate enchantment",
       price: "12000 gp",
       weight: 0,
-      expendable: true
+      activatable: true
     }
     rings.push(sergeant)
     const feather = {
@@ -23,7 +23,7 @@ const Rings = props => {
       aura: "faint transmutation",
       price: "2200 gp",
       weight: 0,
-      expendable: false
+      activatable: false
     }
     rings.push(feather)
   }
@@ -36,7 +36,7 @@ const Rings = props => {
       aura: "moderate evocation",
       price: "50000 gp",
       weight: 0,
-      expendable: false,
+      activatable: false,
     }
     rings.push(storing)
     const autumn = {
@@ -46,7 +46,7 @@ const Rings = props => {
       aura: "faint universal",
       price: "250 gp",
       weight: 0,
-      expendable: true,
+      activatable: true,
       limit: 10,
       action: 'standard'
     }
@@ -61,7 +61,7 @@ const Rings = props => {
       aura: "moderate conjuration",
       price: "1000 gp",
       weight: 0,
-      expendable: false,
+      activatable: false,
     }
     rings.push(kyton)
     const swimming = {
@@ -71,7 +71,7 @@ const Rings = props => {
       aura: "faint transmutation",
       price: "2500 gp",
       weight: 0,
-      expendable: false,
+      activatable: false,
     }
     rings.push(swimming)
     const psychopomp = {
@@ -81,7 +81,7 @@ const Rings = props => {
       aura: "faint conjuration",
       price: "7600 gp",
       weight: 0,
-      expendable: true,
+      activatable: true,
       limit: 1,
       action: 'full'
     }
@@ -142,7 +142,7 @@ const Rings = props => {
       }
       return (
         <tr className={renderTableStyling(idx)} key={r.id*3-1}>
-          <td>{r.expendable ?  <button className={r.action && !props.character_info.actions[r.action] ? r.action : 'cannot-cast'} onClick={() => renderClick(r.name, r.limit, r.starting)}>Use</button> : null}</td>
+          <td>{r.activatable ?  <button className={r.action && !props.character_info.actions[r.action] ? r.action : 'cannot-cast'} onClick={() => renderClick(r.name, r.limit, r.starting)}>Use</button> : null}</td>
           <td><strong>{r.name}</strong>{r.limit ? `(${amount}/${r.limit})` : null}</td>
           <td>{r.weight} lb{(r.weight > 1 || r.weight === 0) ? "s" : null}</td>
           <td>{r.price}</td>

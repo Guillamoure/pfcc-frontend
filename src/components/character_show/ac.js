@@ -10,6 +10,7 @@ const ArmorClass = props => {
   const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major'].includes(hc.major)
   const cleave = hc.cleave ? -2 : 0
   const name = props.character.name
+  const armor = hc.armor
 
   const cedrick = name === "Cedrick" ? 5 : 0
 
@@ -24,10 +25,16 @@ const ArmorClass = props => {
       dex +=2
     }
     if (largeMorph){
-      dex--
+      dex-=2
     }
     if (name === "Cedrick"){
-      dex++
+      dex+=2
+    }
+    if (armor){
+      // Mex Dex Bonus from Armor
+      if (armor === 'Wooden' && dex > 17){
+        dex = 17
+      }
     }
     return Math.floor((dex - 10) / 2)
   }
@@ -76,14 +83,24 @@ const ArmorClass = props => {
     return bonus
   }
 
+  const armorBonus = () => {
+    let bonus = 0
+    if (armor){
+      if (armor === "Wooden"){
+        bonus += 3
+      }
+    }
+    return bonus
+  }
+
   const acCalc = (type) => {
     switch(type){
       case 'ac':
-        return (10 + dexMod() + renderSize() + dodge() + natural() + raging + charging + cleave + cedrick)
+        return (10 + dexMod() + renderSize() + armorBonus() + dodge() + natural() + raging + charging + cleave + cedrick)
       case 't':
         return (10 + dexMod() + renderSize() + dodge() + raging + charging + cleave + cedrick)
       case 'ff':
-        return (10 + renderSize() + natural() + raging + charging + cleave + cedrick)
+        return (10 + renderSize() + armorBonus() + natural() + raging + charging + cleave + cedrick)
       default:
         return 10
     }
@@ -94,22 +111,28 @@ const ArmorClass = props => {
     let size = 0
     if (name === 'Cedrick'){
       size = 1
+      dex += 1
     } else if (name === 'Nettie'){
       size = 2
     }
-    let armor = 0
+    let natural = 0
     let bonus = 0
     if (name === 'Cedrick'){
       bonus = 5
     }
-    let defaultAC = 10 + dex + size + armor + bonus
+    let armorBonus = 0
+    if (armor){
+      armorBonus += armor === 'Wooden' ? 3 : 0
+      dex = armor === 'Wooden' && dex > 3 ? 3 : dex
+    }
+    let defaultAC = 10 + dex + size + armorBonus + natural + bonus
     defaultAC += name === "Persephone" ? 1 : 0 // dodge feat
     defaultAC += name === "Persephone" ? 1 : 0 // natural armor
     if (type === 't'){
       defaultAC = 10 + dex + size + bonus
       defaultAC += name === "Persephone" ? 1 : 0 // dodge feat
     } else if (type === 'ff'){
-      defaultAC = 10 + size + armor + bonus
+      defaultAC = 10 + size + armorBonus + natural + bonus
       defaultAC += name === "Persephone" ? 1 : 0 // natural armor
     }
     if (defaultAC > acCalc(type)){
