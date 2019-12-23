@@ -75,6 +75,26 @@ class Feats extends React.Component {
     return [
       {
         id: 2000,
+        description: "You gain +3 hit points. For every Hit Die you possess beyond 3, you gain an additional +1 hit point. If you have more than 3 Hit Dice, you gain +1 hit points whenever you gain a Hit Die (such as when you gain a level).",
+        name: "Toughness"
+      },
+      {
+        id: 2001,
+        description: "You make attack rolls with simple weapons without penalty.",
+        name: "Simple Weapon Proficiency"
+      },
+      {
+        id: 2002,
+        description: "You can choose to take a –1 penalty on all melee attack rolls and combat maneuver checks to gain a +2 bonus on all melee damage rolls. This bonus to damage is increased by half (+50%) if you are making an attack with a two-handed weapon, a one handed weapon using two hands, or a primary natural weapon that adds 1-1/2 times your Strength modifier on damage rolls. This bonus to damage is halved (–50%) if you are making an attack with an off-hand weapon or secondary natural weapon. When your base attack bonus reaches +4, and every 4 points thereafter, the penalty increases by –1 and the bonus to damage increases by +2. You must choose to use this feat before making an attack roll, and its effects last until your next turn. The bonus damage does not apply to touch attacks or effects that do not deal hit point damage.",
+        name: "Power Attack"
+      },
+      {
+        id: 2003,
+        description: "You do not provoke an attack of opportunity when performing a bull rush combat maneuver. In addition, you receive a +2 bonus on checks made to bull rush a foe. You also receive a +2 bonus to your Combat Maneuver Defense whenever an opponent tries to bull rush you.",
+        name: "Improved Bull Rush"
+      },
+      {
+        id: 2004,
         description: "You gain a +1 bonus on all attack rolls you make using the selected weapon.",
         name: "Weapon Focus (shifter claws)"
       }

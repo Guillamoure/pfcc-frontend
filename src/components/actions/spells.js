@@ -16,13 +16,25 @@ class Spells extends React.Component {
     this.remainingSpells()
   }
 
+  spellcasting = (klass) => {
+    // HARDCODE
+    let spellcasting
+    if (klass.name === 'Vigilante'){
+      spellcasting = {ability_score: 'Charisma', klass_feature_id: 2000300, prepared: false, limited: true, expendable: false, infinite_zero_level: true, bonus_spells: true}
+    } else {
+      spellcasting = klass.klass_features.find(kf => kf.name === 'Spells').spellcasting
+    }
+    return spellcasting
+    // HARDCODE ENDS
+  }
+
   renderCast = (spell) => {
     let action = _.lowerCase(spell.action.name.split(" ")[0])
     if (action === "full round"){
       action = "full"
     }
     let klass = this.props.classes.find(cl => cl.id === spell.klass.id)
-    let spellcasting = klass.klass_features.find(kf => kf.name === 'Spells').spellcasting
+    let spellcasting = this.spellcasting(klass)
     const info = {
       id: spell.id,
       expendable: this.isThisCasterExpendable(spell.klass.id),
@@ -40,7 +52,6 @@ class Spells extends React.Component {
     })
     .then(r => r.json())
     .then(data => {
-
       this.props.dispatch({type: 'TRIGGER ACTION', action})
       if (info.spell_level === 0 || !spellcasting.expendable){
         this.props.dispatch({type: 'CAST CANTRIP SPA OR SPONTANEOUS SPELL', spell: data, infinite_zero_level: spellcasting.infinite_zero_level})
@@ -69,15 +80,15 @@ class Spells extends React.Component {
     // Just at all levels
     // Paladin/Ranger at lvl 4/3, etc.
     const klass = this.props.classes.find(cl => cl.id === klassId)
-    let spellcasting = klass.klass_features.find(kf => kf.spellcasting).spellcasting
+    let spellcasting = this.spellcasting(klass)
     return spellcasting.prepared
   }
 
-  isThisCasterExpendable = (klassId => {
+  isThisCasterExpendable = (klassId) => {
     const klass = this.props.classes.find(cl => cl.id === klassId)
-    let spellcasting = klass.klass_features.find(kf => kf.spellcasting).spellcasting
+    let spellcasting = this.spellcasting(klass)
     return spellcasting.expendable
-  })
+  }
 
   remainingSpells = () => {
     let spells = []
@@ -99,6 +110,18 @@ class Spells extends React.Component {
     })
     // set state
     console.log('spd', spells)
+    // HARDCODE
+    let magicalChild = {
+      name: 'Magical Child',
+      id: 7,
+      spd: [
+        {id: 1001, spell_level: 1, klass_level: 2, spells: 2, klass_id: 7}
+      ]
+    }
+    if (this.props.character.name === 'Persephone'){
+      spells.push(magicalChild)
+    }
+    // HARDCODE ENDS
     this.setState({spellsPerDay: spells})
   }
 
@@ -119,7 +142,7 @@ class Spells extends React.Component {
     let spdCopy = {...spd}
     let totalSpellsPerDay = spdCopy.spells
     let klass = this.props.classes.find(cl => cl.id === spd.klass_id)
-    let spellcasting = klass.klass_features.find(kf => kf.name === 'Spells').spellcasting
+    let spellcasting = this.spellcasting(klass)
 
     // can't get bonus spells per day for cantrips
     // only if spellcasting ability bonus is greater than or equal to spell level
@@ -170,7 +193,7 @@ class Spells extends React.Component {
 
   availableSpellsToCastTable = (klassId) => {
     return (
-      <table>
+      <table key={klassId*3-1}>
         <thead>
           <tr>
             <th>Lvl</th>
@@ -197,7 +220,7 @@ class Spells extends React.Component {
     let castableSpells = []
 
     let klass = this.props.classes.find(cl => cl.id === klassId)
-    let spellcasting = klass.klass_features.find(kf => kf.name === 'Spells').spellcasting
+    let spellcasting = this.spellcasting(klass)
 
     if (!this.isThisCasterPrepared(klassId)){
       let klassSpells = this.props.character.known_spells.filter(ks => ks.klass.id === klassId)

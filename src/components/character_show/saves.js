@@ -24,6 +24,9 @@ const Saves = props => {
       })
       const mod = Math.floor((props.character_info.ability_scores[score] - 10) / 2)
       totalSavingThrow += mod
+      if (save === 'reflex' && props.character.name === "Cedrick"){
+        totalSavingThrow += 1
+      }
       const ogST = totalSavingThrow
       // hardcoding
       const hc = props.character_info.hardcode
@@ -31,8 +34,10 @@ const Saves = props => {
         totalSavingThrow += 2
       }
       const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major'].includes(hc.major)
-      if (save === 'reflex' && largeMorph){
-        totalSavingThrow -= 1
+      if (save === 'reflex'){
+        if (largeMorph){
+          totalSavingThrow -= 1
+        }
       }
       if (!style){
         return totalSavingThrow < 0 ? totalSavingThrow : `+${totalSavingThrow}`

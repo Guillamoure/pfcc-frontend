@@ -124,11 +124,20 @@ const Attacks = props => {
         <tr>
           <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
           <td>Light Crossbow</td>
-          <td style={renderNum('abD', null, true)} onMouseOver={e => renderTooltip(e, 'PBS')} onMouseOut={props.mouseOut}>+{renderNum('abD')+1}*</td>
+          <td style={renderNum('abD', null, true)} onMouseOver={e => renderTooltip(e, 'PBS')} onMouseOut={props.mouseOut}>+{renderNum('abD')/*There was an extra +1 from here but, i removed it. Unsure what it came from*/}*</td>
           <td>80 ft</td>
-          <td onMouseOver={e => renderTooltip(e, 'PBS')} onMouseOut={props.mouseOut}>1d8+<span style={renderNum('damageD', null, true)}>{renderNum('damageD')}</span> P*</td>
+          <td onMouseOver={e => renderTooltip(e, 'PBS')} onMouseOut={props.mouseOut}>1d8+<span style={renderNum('damageD', null, true)}>{renderNum('damageD')}*</span> P</td>
           <td>19-20/x2</td>
           <td><span onMouseOver={e => renderTooltip(e, 'Load Light')} onMouseOut={props.mouseOut}>Load*</span>{props.character_info.hardcode.arcane_strike ? ', Ignore DR/magic' : null}</td>
+        </tr>
+        <tr>
+          <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
+          <td>Claws</td>
+          <td style={renderNum('abS', null, true)} onMouseOver={e => renderTooltip(e, 'PBS')} onMouseOut={props.mouseOut}>+{renderNum('abS')}</td>
+          <td>-</td>
+          <td>1d4<span style={renderNum('damageS', null, true)}>{renderNum('damageS')}</span> S</td>
+          <td>x2</td>
+          <td>{props.character_info.hardcode.arcane_strike ? ', Ignore DR/magic' : null}</td>
         </tr>
       </React.Fragment>
     )
@@ -139,16 +148,27 @@ const Attacks = props => {
       <React.Fragment>
         {polymorph()}
         {props.character_info.hardcode.combat === 'Condor - Combat' &&
-        <tr>
-          <td><button className={canCast('standard')} onClick={() => renderDispatch('standard', 'cleave')}><strong>Attack</strong></button></td>
-          <td>Cleave - Shifter Claws</td>
-          <td style={renderNum('abS', null, true)}>+{renderNum('abS')+1+1 /*Ta'al'mon wraps*/}/+{renderNum('abS')+1+1 /*Ta'al'mon wraps*/}</td>
-          <td>-</td>
-          <td>1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> P</td>
-          <td>x2</td>
-          <td>If you hit the first target, you may make a second attack on a target adjacent to the first and within reach</td>
-        </tr>
-      }
+          <tr>
+            <td><button className={canCast('standard')} onClick={() => renderDispatch('standard', 'cleave')}><strong>Attack</strong></button></td>
+            <td>Cleave - Shifter Claws</td>
+            <td style={renderNum('abS', null, true)}>+{renderNum('abS')+1+1 /*Ta'al'mon wraps*/}/+{renderNum('abS')+1+1 /*Ta'al'mon wraps*/}</td>
+            <td>-</td>
+            <td>1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> P</td>
+            <td>x2</td>
+            <td>If you hit the first target, you may make a second attack on a target adjacent to the first and within reach</td>
+          </tr>
+        }
+        {props.character_info.hardcode.combat === 'Squid - Combat' &&
+          <tr>
+            <td><button className={canCast('standard')} onClick={() => renderDispatch('standard', 'cleave')}><strong>Attack</strong></button></td>
+            <td>Tentacle</td>
+            <td style={renderNum('abS', null, true)}>+{renderNum('abS')-5}</td>
+            <td>-</td>
+            <td>1d3+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')}</span> B</td>
+            <td>x2</td>
+            <td>Secondary natural attack</td>
+          </tr>
+        }
       </React.Fragment>
     )
   }
@@ -212,7 +232,6 @@ const Attacks = props => {
     damageSBonus += !!power ? 4 : 0
 
     abSBonus += !!charge ? 2 : 0
-    abDBonus += !!charge ? 2 : 0
 
     abSBonus += !!fd ? -4 : 0
     abDBonus += !!fd ? -4 : 0
@@ -263,6 +282,8 @@ const Attacks = props => {
       comment = 'Loading a light crossbow is a move action that provokes attacks of opportunity.'
     } else if (name === 'PBS'){
       comment = '+1 to Attack and Damage Rolls if target is within 30 ft'
+    } else if (name === 'ominous'){
+      comment = 'When this weapon confirms a critical hit, the target is shaken for 1 minute (DC 13 Will negates); if the weapon’s critical multiplier is greater than x2, this condition lasts 1 additional minute per multiple over x2. A creature that gains the shaken condition from an ominous weapon cannot gain that condition again from the same weapon for 24 hours.'
     }
     if (comment){
       props.renderTooltip(e, comment)
@@ -337,6 +358,7 @@ const Attacks = props => {
           </React.Fragment>
         )
       default:
+        let sc = props.character_info.hardcode.combat === 'Squid - Combat'
         return (
           <React.Fragment>
             <tr>
@@ -346,16 +368,16 @@ const Attacks = props => {
               <td>-</td>
               <td>1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> S {renderFrogCombat()}</td>
               <td>x2</td>
-              <td>Ignore DR/silver & DR/cold iron</td>
+              <td>Ignore DR/silver & DR/cold iron, <em onMouseOver={e => renderTooltip(e, 'ominous')} onMouseOut={props.mouseOut}>ominous</em></td>
             </tr>
             <tr>
               <td><button className={canCast('full')} onClick={() => renderDispatch('full')}><strong>Attack</strong></button></td>
-              <td>Shifter Claws</td>
-              <td style={renderNum('abS', null, true)}>+{renderNum('abS')+1+1 /* Weapon Focus (shifter claws) && Ta'al'mon wraps*/}/+{renderNum('abS')+1+1-5 /* Weapon Focus (shifter claws) && Ta'al'mon wraps*/}</td>
+              <td>Shifter Claws{sc ? ', 2 Tentacles' : null}</td>
+              <td style={renderNum('abS', null, true)}>+{renderNum('abS')+1+1 /* Weapon Focus (shifter claws) && Ta'al'mon wraps*/}/+{renderNum('abS')+1+1-5 /* Weapon Focus (shifter claws) && Ta'al'mon wraps*/}{sc ? `/+${renderNum('abS')-5}/+${renderNum('abS')-5}`/*tentacle attacks attack at full attack bonus*/ : null}</td>
               <td>-</td>
-              <td>1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> S {renderFrogCombat()}</td>
+              <td>1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/} S{sc ? `/1d3+${renderNum('damageS')} B`/*tentacle attacks attack at full attack bonus*/ : null} </span> {renderFrogCombat()}</td>
               <td>x2</td>
-              <td>Ignore DR/silver & DR/cold iron</td>
+              <td>Ignore DR/silver & DR/cold iron, <em onMouseOver={e => renderTooltip(e, 'ominous')} onMouseOut={props.mouseOut}>ominous</em>{sc ? ', 2 Tentacle attacks': null }</td>
             </tr>
             <tr>
               <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
@@ -364,7 +386,7 @@ const Attacks = props => {
               <td>-</td>
               <td><span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> B</td>
               <td>x2</td>
-              <td>Non-lethal</td>
+              <td>Non-lethal, <em onMouseOver={e => renderTooltip(e, 'ominous')} onMouseOut={props.mouseOut}>ominous</em></td>
             </tr>
             <tr>
               <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>

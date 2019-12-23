@@ -96,7 +96,7 @@ const reducer = (state = initialState, action) => {
       return {...state, character_info: {...state.character_info, actions: actionDupe}}
     case "NEW TURN":
       let actions = {full: false, standard: false, move: false, swift: false, immediate: false}
-      return {...state, character_info: {...state.character_info, actions: actions, hardcode: {...state.character_info.hardcode, power: false, eBloodActive: false, ffs: false, fd: false, charge: false, cleave: false, arcane_strike: false}}}
+      return {...state, character_info: {...state.character_info, actions: actions, hardcode: {...state.character_info.hardcode, power: false, eBloodActive: false, ffs: false, fd: false, charge: false, cleave: false, arcane_strike: false, taal_tele: false}}}
     case "POWER ATTACK":
       return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, power: true}}}
     case "RAGE":
@@ -197,6 +197,15 @@ const reducer = (state = initialState, action) => {
       return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, fly: !state.character_info.hardcode.fly}}}
     case 'ARCANE STRIKE':
       return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, arcane_strike: true}}}
+    case 'INIT REROLL':
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, init_reroll: true}}}
+    case 'DOUBLE DAMAGE':
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, double_damage: true}}}
+    case 'TAALMON TELEPORT':
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, taal_tele: true}}}
+    case 'AUTUMN EQUINOX':
+      let autumn = !state.character_info.hardcode.autumn
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, autumn}}}
     default:
       return state
   }
@@ -206,7 +215,8 @@ const castingCantripSPASpontaneous = (state, action) => {
   // duplicate state
   let modifiedState = {...state.character_info}
   // find out which class you are modifying
-  const klass = modifiedState.classes.find(cl => ((cl.id === action.spell.klass_id)|| (cl.id === action.spell.klass.id)))
+  let klassId = action.spell.klass_id || action.spell.klass.id
+  const klass = modifiedState.classes.find(cl => cl.id === klassId)
   // find out which level spell you cast
   const lvl = action.spell.spell_level
   // if redux doesn't have that spell level, create it. if not, update the value by one

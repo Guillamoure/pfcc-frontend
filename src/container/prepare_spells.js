@@ -94,11 +94,14 @@ class PrepareSpells extends React.Component {
       // if the prepare button was clicked while a spell level is present
     } else {
       // grab klass spell id by going through all known spells, looking for specific chosen spell
-      let ksi = this.state.knownSpells.find(ks => ks.spell.id === this.state.activeSpell).klass_spell.id
+      let selectedSpell = this.state.knownSpells.find(ks => ks.spell.id === this.state.activeSpell)
+      let ksi = selectedSpell.klass_spell.id
+      let klassId = selectedSpell.klass.id
       let spell = {
         spell_id: this.state.activeSpell,
         level: this.state.spellLevel,
-        known_spell_id: ksi
+        known_spell_id: ksi,
+        klass: klassId
       }
       // add selected spell to state, reset active spell and selected spell level
       this.setState({selectedSpells: [...this.state.selectedSpells, spell], activeSpell: 0, spellLevel: "-"})

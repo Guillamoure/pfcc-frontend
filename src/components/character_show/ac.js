@@ -26,6 +26,9 @@ const ArmorClass = props => {
     if (largeMorph){
       dex--
     }
+    if (name === "Cedrick"){
+      dex++
+    }
     return Math.floor((dex - 10) / 2)
   }
 
@@ -67,6 +70,9 @@ const ArmorClass = props => {
     if (largeMorph){
       bonus +=4
     }
+    if (name === "Persephone"){
+      bonus+=1
+    }
     return bonus
   }
 
@@ -98,11 +104,13 @@ const ArmorClass = props => {
     }
     let defaultAC = 10 + dex + size + armor + bonus
     defaultAC += name === "Persephone" ? 1 : 0 // dodge feat
+    defaultAC += name === "Persephone" ? 1 : 0 // natural armor
     if (type === 't'){
       defaultAC = 10 + dex + size + bonus
       defaultAC += name === "Persephone" ? 1 : 0 // dodge feat
     } else if (type === 'ff'){
       defaultAC = 10 + size + armor + bonus
+      defaultAC += name === "Persephone" ? 1 : 0 // natural armor
     }
     if (defaultAC > acCalc(type)){
       return {color: 'maroon'}

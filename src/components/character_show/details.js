@@ -22,6 +22,8 @@ class Details extends React.Component {
         return ["Common", "Grippli", "Druidic", "Infernal", "Draconic", "Sylvan"]
       case 'Maddox':
         return ["Common", "Samsaran"]
+      case 'Merg':
+        return ['Common', 'Orc', 'Sylvan', 'Terran', 'Draconic', 'Giant', 'Undercommon']
       default:
         return []
     }

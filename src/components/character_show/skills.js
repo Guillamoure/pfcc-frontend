@@ -39,6 +39,12 @@ class Skills extends React.Component {
         mod += 8
       }
     }
+    if (skill.ability_score === 'Dexterity' && name === 'Cedrick'){
+      mod += 1
+    }
+    if (skill.ability_score === "Intelligence" && name === "Persephone"){
+      mod += 1
+    }
     // check to see if the starting mod is modified
     let ogMod = mod
     if (skill.ability_score === 'Strength'){
@@ -76,6 +82,12 @@ class Skills extends React.Component {
         mod += dexMod
       }
     }
+    if (skill.name === 'Intimidate'){
+      if (name === "Cedrick"){
+        mod += 1
+        ogMod += 1
+      }
+    }
     if (!style){
       return mod < 0 ? mod : `+${mod}`
     } else {
@@ -91,6 +103,9 @@ class Skills extends React.Component {
 
   renderNumOfRanks = (skill) => {
     let skillRanks = this.props.character.character_skillset_skills.find(chsss => chsss.skill_id === skill.id)
+    if (skill.name === 'Religion' && this.props.character.name === "Persephone"){
+      skillRanks = skillRanks || {ranks: this.props.character.character_klasses.length}
+    }
     return skillRanks !== undefined ? skillRanks.ranks : 0
   }
 
@@ -98,7 +113,12 @@ class Skills extends React.Component {
     let isThisAClassSkill = false
     this.props.character.uniq_klasses.forEach(klass => {
       klass.class_skillset_skills.forEach(csss => {
-        if (csss.skill_id === skill.id && csss.skillset_id === this.props.character.skillset.id) {
+        if (klass.name === "Vigilante" && this.props.character.name === "Persephone"){
+          let validClassSkills = ['Acrobatics', 'Bluff', 'Climb', 'Craft', 'Diplomacy', 'Disguise', 'Intimidate', 'Perform', 'Profession', 'Sense Motive', 'Stealth', 'Swim', 'Investigation', 'Society', 'Spellcraft', 'Religion']
+          if (csss.skill_id === skill.id && csss.skillset_id === this.props.character.skillset.id && validClassSkills.includes(skill.name)){
+            isThisAClassSkill = true
+          }
+        } else if (csss.skill_id === skill.id && csss.skillset_id === this.props.character.skillset.id) {
           isThisAClassSkill = true
         }
       })
@@ -177,6 +197,24 @@ class Skills extends React.Component {
         } else {
           return skill
         }
+      case 'Intimidate':
+        if (name === 'Cedrick'){
+          return asterik
+        } else {
+          return skill
+        }
+      case 'Religion':
+        if (name === 'Persephone'){
+          return asterik
+        } else {
+          return skill
+        }
+      case 'Disguise':
+        if (name === 'Persephone'){
+          return asterik
+        } else {
+          return skill
+        }
       default:
         return skill
     }
@@ -213,6 +251,27 @@ class Skills extends React.Component {
     if (skill === "Stealth"){
       if (name === 'Cedrick'){
         comment = '+4 bonus in Marshes and Forests'
+      }
+    }
+    if (skill === 'Intimidate'){
+      if (name === 'Cedrick'){
+        comment = <span>+1 enchancement bonus from <em>ominous</em> from Ta'al'mon Ancestral Handwraps</span>
+      }
+    }
+    if (skill === 'Religion'){
+      if (name === 'Persephone'){
+        comment = <span>{this.props.character.character_klasses.length} skill ranks from <em>Headband of Vast Intelligence +2</em></span>
+      }
+    }
+    if (skill === 'Disguise'){
+      if (name === 'Persephone'){
+        let currently = 'Persephone'
+        let alterEgo = 'the Autumn Equinox'
+        if (hc.autumn) {
+          currently = 'the Autumn Equinox'
+          alterEgo = 'Persephone'
+        }
+        comment = <span>+20 circumstance bonus to appear as {currently} if suspected to be {alterEgo}</span>
       }
     }
     if (comment){

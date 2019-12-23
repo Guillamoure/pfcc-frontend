@@ -5,6 +5,7 @@ import _ from 'lodash'
 function AbilityScore (props) {
   const mod = Math.floor((props.ability_score - 10) / 2)
   const truncate = _.upperCase(props.name.substring(0,3))
+  const name = props.character.name
   const additionalMods = () => {
     let bonus = 0
     const hc = props.character_info.hardcode
@@ -17,6 +18,14 @@ function AbilityScore (props) {
     if (props.name === "Dexterity"){
       if (largeMorph){
         bonus -= 2
+      }
+      if (name === "Cedrick"){
+        bonus += 2
+      }
+    }
+    if (props.name === "Intelligence"){
+      if (name === "Persephone"){
+        bonus += 2
       }
     }
     return bonus

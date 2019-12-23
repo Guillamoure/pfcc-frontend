@@ -275,7 +275,7 @@ class Allies extends React.Component {
       ref: 'CALCULATE: PEPPERS SAVES',
       will: 'CALCULATE: PEPPERS SAVES',
       def: [],
-      dr: [],
+      dr: ['In Vigilante Form, DR 2/magic'],
       immune: [],
       resist: [],
       speed: [

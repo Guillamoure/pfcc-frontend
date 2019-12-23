@@ -61,7 +61,11 @@ class SkillRanks extends React.Component {
     let availableRanks = 0
     this.props.character.uniq_klasses.forEach(klass => {
       let level = this.props.character_info.classes.find(cl => cl.id === klass.id).level
-      availableRanks += (klass.skill_ranks * level)
+      if (this.props.character.name === 'Persephone' && klass.name === "Vigilante"){
+        availableRanks += (4 * level)
+      } else {
+        availableRanks += (klass.skill_ranks * level)
+      }
     })
     availableRanks += (Math.floor((this.props.character_info.ability_scores.intelligence - 10) / 2) * this.props.character.character_klasses.length)
     if (this.state.previousRanks.length > 1){

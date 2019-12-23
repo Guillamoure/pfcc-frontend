@@ -5,6 +5,7 @@ import Rings from './equipment/rings'
 import Legendary from './equipment/legendary'
 import Weapons from './equipment/weapons'
 import Magic from './equipment/magic'
+import Poisons from './equipment/poisons'
 
 const Equipment = props => {
 
@@ -27,6 +28,7 @@ const Equipment = props => {
           <Rings editModal={props.editModal}/>
         </tbody>
       </table>
+      <Poisons editModal={props.editModal}/>
     </section>
   )
 }

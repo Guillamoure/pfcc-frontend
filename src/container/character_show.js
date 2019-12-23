@@ -29,6 +29,7 @@ import Tooltip from '../modals/tooltip'
 import CommandRingModal from '../modals/command'
 import AgeModal from '../modals/age'
 import CurioModal from '../modals/curios'
+import PoisonModal from '../modals/poison'
 
 import BackgroundForm from '../modals/background_form'
 import CharacterForm from '../modals/character_form'
@@ -261,9 +262,6 @@ class Character extends React.Component {
 
 
   render() {
-    //
-    console.log("redux character adding", this.props)
-    //
     return (
       <span className="container-8 character">
         {this.state.character.race && <CharacterName character={this.state.character} editModal={this.editModal}/>}
@@ -302,6 +300,7 @@ class Character extends React.Component {
         {this.state.modal === 'command ring' && <CommandRingModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
         {this.state.modal === 'age' && <AgeModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
         {this.state.modal === 'curio' && <CurioModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
+        {this.state.modal === 'poisons' && <PoisonModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
         {/* unfinished, hardcoded features */}
 
         <div id='right' onClick={() => this.setState({display: this.rightArrow()})}><FontAwesomeIcon icon={faCaretRight} size='9x'/><div>{this.rightArrow()}</div></div>

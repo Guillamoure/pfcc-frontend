@@ -13,7 +13,8 @@ const MagicItems = props => {
       aura: "faint conjuration",
       price: "3400 gp",
       weight: 0,
-      expendable: false
+      expendable: true,
+      action: 'standard'
     }
     magicItems.push(tricks)
     const grasping = {
@@ -28,39 +29,109 @@ const MagicItems = props => {
       action: 'free'
     }
     magicItems.push(grasping)
+    const quickChangeMask = {
+      id: 1002,
+      name: "Quick-Change Mask",
+      description: <span>A wearer can remove this mask as a move action to change his appearance as if using <em className='underline-hover' onClick={() => props.editModal('spell', null, 55)}>disguise self</em>. The effect persists for 10 minutes. A vigilante can instead remove a quick-change mask to switch his identity as a move action. If the mask is used in this way, the effect functions just like changing identities normally (except faster), and doesn’t have a limited duration. Regardless of which way he is using a quick-change mask, the user can attempt a Bluff check to create a diversion so he can use Stealth as part of the same move action he uses to activate the mask. The mask dissolves when used.</span>,
+      aura: "faint illusion",
+      price: "650 gp",
+      weight: '-',
+      expendable: true,
+      action: 'move'
+    }
+    magicItems.push(quickChangeMask)
+    const vastIntelligence = {
+      id: 1003,
+      name: "Headband of Vast Intelligence +2",
+      description: <span>This intricate gold headband is decorated with several small blue and deep purple gemstones.The headband grants the wearer an enhancement bonus to Intelligence of +2. A <em>headband of vast intelligence</em> has one skill associated with it: <strong>Religion</strong>. The headband grants a number of skill ranks in Religion equal to the wearer’s total Hit Dice (<strong>7 skill ranks</strong>). These ranks <strong>do not</strong> stack with the ranks a creature already possesses.</span>,
+      aura: "moderate transmutation",
+      price: "4000 gp",
+      weight: '1',
+      expendable: false
+    }
+    magicItems.push(vastIntelligence)
+    const wandUnseenServant = {
+      id: 1004,
+      name: "Wand of Unseen Servant",
+      description: <span>Cast <em className='underline-hover' onClick={() => props.editModal('spell', null, 62)}>unseen servant</em> 50 times</span>,
+      aura: "faint conjuration",
+      price: "750 gp",
+      weight: '-',
+      expendable: true,
+      action: 'standard',
+      limit: 50,
+      starting: 49
+    }
+    magicItems.push(wandUnseenServant)
   }
 
-  const renderClick = (name, limit) => {
-    if (name === "Rod of Grasping Hexes"){
+  if (name === "Cedrick"){
+    const spiderClimb = {
+      id: 22000,
+      name: "Slippers of Spider Climb",
+      description: 'When worn, a pair of these slippers enables movement on vertical surfaces or even upside down along ceilings, leaving the wearer’s hands free. Her climb speed is 20 feet. Severely slippery surfaces—icy, oiled, or greased surfaces—make these slippers useless. The slippers can be used for 10 minutes per day, split up as the wearer chooses (minimum 1 minute per use).',
+      aura: "faint transmutation",
+      price: "4800 gp",
+      weight: '.5',
+      expendable: false
+    }
+    magicItems.push(spiderClimb)
+
+  }
+
+  const renderClick = (name, limit, startingValue) => {
+    if (name === "Rod of Grasping Hexes" || name === 'Wand of Unseen Servant'){
       if (limit){
         // if limits exist in redux
         let limits = props.character_info.hardcode.limits
-        let ableToCast = false
+        // if limits doesn't exist, dispatch
+        // if limits does exist, try to find the specifc one
+        // if that one isn't found, dispatch
+        // if that one is found, check to see if the number of casts is equal to the limit
+        // if casts is less than limit, dispatch
+        // if casts is equal to limit, don't
         if (limits){
-          // see if there is this specific one
-          ableToCast = props.character_info.hardcode.limits.find(l => l.name === name && limit > l.cast)
-        }
-        // if it is found, send a dispatch, or if limits doesn't exist in redux
-        if (!limits || ableToCast){
+          let found = props.character_info.hardcode.limits.find(l => l.name === name)
+          if (found){
+            if (startingValue && found.cast < startingValue){
+              props.dispatch({type: 'LIMIT CASTING', name})
+            } else if (found.cast < limit){
+              props.dispatch({type: 'LIMIT CASTING', name})
+            }
+          } else {
+            props.dispatch({type: 'LIMIT CASTING', name})
+          }
+        } else {
           props.dispatch({type: 'LIMIT CASTING', name})
         }
       }
+    }
+    if (name === "Quick-Change Mask" ){
+      props.dispatch({type: 'TRIGGER ACTION', action: 'move'})
+    }
+    if (name === "Bag of Tricks (Grey)" || name === 'Wand of Unseen Servant'){
+      props.dispatch({type: 'TRIGGER ACTION', action: 'standard'})
     }
   }
 
   const renderMagicItems = () => {
     return magicItems.map((mi, idx) => {
-      let limit = props.character_info.hardcode.limits
-      if (limit && mi.limit){
-        // see if there is this specific one
-        limit = mi.limit - (limit.find(l => l.name === mi.name).cast)
+      let limits = props.character_info.hardcode.limits
+      let amount
+      if (limits && mi.limit){
+        let found = limits.find(l => l.name === mi.name)
+        if (mi.starting){
+          amount = found ? mi.starting - found.cast : mi.starting
+        } else {
+          amount = found ? mi.limit - found.cast : mi.limit
+        }
       } else {
-        limit = mi.limit
+        amount = mi.starting ? mi.starting : mi.limit
       }
       return (
         <tr className={renderTableStyling(idx)} key={mi.id*3-1}>
-          <td>{mi.expendable ? <button className={mi.action ? mi.action : 'free'} onClick={() => renderClick(mi.name, mi.limit)}>Use</button> : null}</td>
-          <td><strong>{mi.name}</strong>{mi.limit ? `(${limit}/${mi.limit})` : null}</td>
+          <td>{mi.expendable ? <button className={mi.action && !props.character_info.actions[mi.action] ? mi.action : 'cannot-cast'} onClick={() => renderClick(mi.name, mi.limit, mi.starting)}>Use</button> : null}</td>
+          <td><strong>{mi.name}</strong>{mi.limit ? `(${amount}/${mi.limit})` : null}</td>
           <td>{mi.weight} lb{(mi.weight > 1 || mi.weight === 0) ? "s" : null}</td>
           <td>{mi.price}</td>
           <td>{mi.description}</td>
