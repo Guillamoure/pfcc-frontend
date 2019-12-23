@@ -9,7 +9,7 @@ function AbilityScore (props) {
   const additionalMods = () => {
     let bonus = 0
     const hc = props.character_info.hardcode
-    const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major'].includes(hc.major)
+    const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major'].includes(hc.major)
     if (props.name === "Strength"){
       if (largeMorph){
         bonus += 4

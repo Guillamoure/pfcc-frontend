@@ -33,7 +33,7 @@ const Saves = props => {
       if (save === 'will' && hc.rage){
         totalSavingThrow += 2
       }
-      const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major'].includes(hc.major)
+      const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major'].includes(hc.major)
       if (save === 'reflex'){
         if (largeMorph){
           totalSavingThrow -= 1

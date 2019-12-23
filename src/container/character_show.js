@@ -30,6 +30,7 @@ import CommandRingModal from '../modals/command'
 import AgeModal from '../modals/age'
 import CurioModal from '../modals/curios'
 import PoisonModal from '../modals/poison'
+import Size from '../components/character_show/size'
 
 import BackgroundForm from '../modals/background_form'
 import CharacterForm from '../modals/character_form'
@@ -281,6 +282,7 @@ class Character extends React.Component {
         {!!this.state.character && this.state.display === "Combat" && <Points editModal={this.editModal}/>}
         {!!this.state.character && this.state.display === "Combat" && <Active activeEffects={this.state.activeEffects}/>}
         {!!this.state.character && this.state.display === "Character" && <Allies/>}
+        {!!this.state.character && this.state.display === "Combat" && <Size/>}
         {/* unfinished, hardcoded features */}
 
 

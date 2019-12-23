@@ -28,7 +28,7 @@ class Skills extends React.Component {
     const hc = this.props.character_info.hardcode
     const name = this.props.character.name
     const size = this.props.character_info.size
-    const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major'].includes(hc.major)
+    const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major'].includes(hc.major)
     if (skill.name === "Stealth"){
       const size = this.props.character_info.size
       if (size === "Small"){

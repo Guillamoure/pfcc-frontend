@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-const Basics =  props => {
+const Basics = props => {
 
   // const renderButtonCSS = action => {
   //   if (props.character_info.actions[action] && action !== 'free'){
@@ -141,6 +141,7 @@ const Basics =  props => {
           {props.character_info.hardcode.major === "Frog - Major" && alternateMove('Swim', 30)}
           {props.character.name === "Cedrick" && alternateMove('Climb', 20)}
           {props.character_info.hardcode.fly && alternateMove('Fly', 60)}
+          {props.character_info.hardcode.major === "Squid - Major" && alternateMove('Swim', 60)}
           <tr>
             <td><button className={canCast('full', 'run')} onClick={() => renderDispatch('full', 'run')}><strong>Move</strong></button></td>
             <td>Run</td>

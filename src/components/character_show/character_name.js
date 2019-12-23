@@ -44,6 +44,9 @@ class CharacterName extends React.Component {
         case 'Condor - Major':
           name += ', but a Condor'
           break
+        case 'Squid - Major':
+          name += ', but a Squid'
+          break
         case 'Tiger':
           name += ', but a Tiger'
           break

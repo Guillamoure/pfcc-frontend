@@ -169,6 +169,7 @@ class Abilities extends React.Component {
         </tr>
         {hc.combat === 'Squid - Combat' ? this.squidCombat() : null}
         {hc.minor === 'Squid - Minor' ? this.squidMinor() : null}
+        {hc.major === 'Squid - Major' ? this.squidMajor() : null}
         <tr>
           <td><button className={this.renderShifterFormClass('Bull - Combat', 'combat', 'class', 'swift', 1)} onClick={() => this.shift('Bull - Combat', 'combat', 1, 'swift')}><strong>{this.renderShifterFormClass('Bull - Combat', 'combat', 'button', null, 1)}</strong></button></td>
           <td>Bull - Combat Form (1 pt)</td>
@@ -192,7 +193,7 @@ class Abilities extends React.Component {
         <tr>
           <td><button className={this.renderShifterFormClass('Condor - Minor', 'minor', 'class', 'swift', 1)} onClick={() => this.shift('Condor - Minor', 'minor', 1, 'swift')}><strong>{this.renderShifterFormClass('Condor - Minor', 'minor', 'button', null, 1)}</strong></button></td>
           <td>Condor - Minor Form (1 pt)</td>
-          <td className='table-details'>Can cast <em>feather fall</em></td>
+          <td className='table-details'>Can cast <em className='underline-hover' onClick={() => this.props.editModal('spell', null, 18)}>feather fall</em></td>
         </tr>
         <tr>
           <td><button className={this.renderShifterFormClass('Condor - Major', 'major', 'class', 'standard', 1)} onClick={() => this.shift('Condor - Major', 'major', 2, 'standard', 'Large')}><strong>{this.renderShifterFormClass('Condor - Major', 'major', 'button', null, 1)}</strong></button></td>
@@ -364,6 +365,25 @@ class Abilities extends React.Component {
         <td>Squid Jet ({amount}/4)</td>
         <td className='table-details'>Jet up to {this.props.character_info.hardcode.speed * 2} ft in one direction. If you impact a surface, take 2d8 bludgeoning damage. If you are underwater, you move up to {this.props.character_info.hardcode.speed * 4} ft, and if you impact a surface, take 2d4 bludgeoning damage.</td>
       </tr>
+    )
+  }
+
+  squidMajor = () => {
+    let className = !this.props.character_info.actions.full ? 'full' :'cannot-cast'
+    let dispatch = !this.props.character_info.actions.full ? () => this.props.dispatch({type: 'TRIGGER ACTION', action: 'full'}) : null
+    return (
+      <React.Fragment>
+        <tr>
+          <td><button className='free'><strong>Ink</strong></button></td>
+          <td>Ink Cloud</td>
+          <td className='table-details'>Emit a 10-foot-radius cloud of ink once per minute while underwater. This cloud provides total concealment, and persists for 1 minute.</td>
+        </tr>
+        <tr>
+          <td><button className={className} onClick={dispatch}><strong>Jet</strong></button></td>
+          <td>Jet</td>
+          <td className='table-details'>Move in a straight line up to 260 ft.</td>
+        </tr>
+      </React.Fragment>
     )
   }
 

@@ -7,7 +7,7 @@ const ArmorClass = props => {
   const raging = hc.rage ? -2 : 0
   const fd = hc.fd
   const charging = hc.charge ? -2 : 0
-  const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major'].includes(hc.major)
+  const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major'].includes(hc.major)
   const cleave = hc.cleave ? -2 : 0
   const name = props.character.name
 

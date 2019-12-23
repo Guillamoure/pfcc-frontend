@@ -26,11 +26,18 @@ class Points extends React.Component {
             <div className='muted'>Chimera Points</div>
           </span>
         )
-      case "Robbie":
+      case "Robby":
         return (
           <span className='centered' onClick={() => this.props.editModal('points')}>
             <div className='enhanced'>{this.props.character_info.hardcode.points}</div>
             <div className='muted'>Panache Points</div>
+          </span>
+        )
+      case "Maddox":
+        return (
+          <span className='centered' onClick={() => this.props.editModal('points')}>
+            <div className='enhanced'>{this.props.character_info.hardcode.points}</div>
+            <div className='muted'>Arcane Reservoir</div>
           </span>
         )
       default:
