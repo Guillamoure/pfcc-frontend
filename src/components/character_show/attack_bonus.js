@@ -22,7 +22,8 @@ class AttackBonus extends React.Component {
     let bonus = 0
     let minor = this.props.character_info.hardcode.minor
     let major = this.props.character_info.hardcode.major
-    const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major'].includes(major)
+    let name = this.props.character.name
+    const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major'].includes(major)
     switch(ability){
       case "strength":
         if (minor === "Bull - Minor"){

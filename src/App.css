@@ -399,7 +399,7 @@
   text-align: center;
   font-size: 16px;
   z-index: 1001;
-  overflow: hidden;
+  overflow: scroll;
 }
 
 /* .badge1[data-badge-1]:after {
@@ -527,14 +527,17 @@
 .even-row-legendary {
   background-color: #faf0e6;
 }
-.even-row-weapons {
-  background-color: #e4d5b7;
-}
 .even-row-rings {
   background-color: #eed9c4;
 }
 .even-row-magic {
   background-color: #fff0db;
+}
+.even-row-poisons {
+  background-color: #dba766;
+}
+.even-row-armor {
+  background-color: #d8a994;
 }
 
 

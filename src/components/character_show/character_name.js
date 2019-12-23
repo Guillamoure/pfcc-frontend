@@ -27,10 +27,41 @@ class CharacterName extends React.Component {
     return remapped.join(", ")
   }
 
+  name = () => {
+    let name = this.props.character.name
+    let major = this.props.character_info.hardcode.major
+    if (this.props.character_info.hardcode.autumn){
+      name = 'The Autumn Equinox'
+    }
+    if (major){
+      switch (major){
+        case 'Bull - Major':
+          name += ', but a Bull'
+          break
+        case 'Frog - Major':
+          name += ', but a big Frog'
+          break
+        case 'Condor - Major':
+          name += ', but a Condor'
+          break
+        case 'Squid - Major':
+          name += ', but a Squid'
+          break
+        case 'Tiger':
+          name += ', but a Tiger'
+          break
+        default:
+          break
+      }
+    }
+    return name
+  }
+
   render(){
+    console.log('REDUX', this.props)
     return(
       <div id='character' className='shrink'>
-        <div className='first-row' style={{padding: '.25em'}} id='title'>{this.props.character.name}</div>
+        <div className='first-row' style={{padding: '.25em'}} id='title'>{this.name()}</div>
         <span className='second-row' style={{padding: '.5em'}}>{this.props.character.race.name} {this.renderClasses()}</span>
         {this.props.character.user_id === this.props.currentUser.id && <span className='edit' onClick={() => this.props.editModal('character')}><FontAwesomeIcon icon={faPencilAlt} /></span>}
         <span className="notif" data-badge-1="3" data-badge-2="12" data-badge-3="1">

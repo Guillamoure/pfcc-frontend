@@ -45,6 +45,16 @@ class Traits extends React.Component {
         }
       ]
     }
+    if (name === "Cedrick"){
+      replacedTraits = ['Swamp Stride']
+      addedTraits = [
+        {
+          id: 2000,
+          name: 'Glider',
+          description: 'Gripplis’ aerodynamic bodies and thick webbing between the toes enable a falling grippli to treat the distance fallen as half the actual distance. The grippli can steer himself while falling, moving horizontally up to a number of feet equal to half the vertical distance fallen. The grippli cannot use this trait if it is wearing heavy armor, is carrying a heavy load, or is unable to react to the fall (such as being helpless).'
+        }
+      ]
+    }
     newTraits = traits.filter(f => !replacedTraits.includes(f.name))
     addedTraits.forEach(af => newTraits.push(af))
     return newTraits

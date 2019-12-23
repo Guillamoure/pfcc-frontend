@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-const Basics =  props => {
+const Basics = props => {
 
   // const renderButtonCSS = action => {
   //   if (props.character_info.actions[action] && action !== 'free'){
@@ -139,7 +139,9 @@ const Basics =  props => {
           {props.character.name === "Festus" && alternateMove('Fly', 50)}
           {props.character_info.hardcode.major === "Condor - Major" && alternateMove('Fly', 80)}
           {props.character_info.hardcode.major === "Frog - Major" && alternateMove('Swim', 30)}
+          {props.character.name === "Cedrick" && alternateMove('Climb', 20)}
           {props.character_info.hardcode.fly && alternateMove('Fly', 60)}
+          {props.character_info.hardcode.major === "Squid - Major" && alternateMove('Swim', 60)}
           <tr>
             <td><button className={canCast('full', 'run')} onClick={() => renderDispatch('full', 'run')}><strong>Move</strong></button></td>
             <td>Run</td>
@@ -200,17 +202,26 @@ const Basics =  props => {
   }
 
   const alternateMove = (type, speed) => {
+    let fast = speed * 4
+    let action = 'move'
+    let fastAction = 'full'
+    let asterik = null
+    if (type === 'Climb'){
+      fast  = speed * 2
+      fastAction = 'move'
+      asterik = '*'
+    }
     return (
       <React.Fragment>
       <tr>
-        <td><button className={canCast('move')}><strong>Move</strong></button></td>
+        <td><button className={canCast(action)}><strong>Move</strong></button></td>
         <td>{type}</td>
         <td>{speed} ft</td>
       </tr>
       {!props.character_info.hardcode.fly && <tr>
-        <td><button className={canCast('full')}><strong>Move</strong></button></td>
-        <td>{type}</td>
-        <td>{speed * 4} ft</td>
+        <td><button className={canCast(fastAction)}><strong>Move</strong></button></td>
+        <td onMouseOver={e => renderTooltip(e, type)} onMouseOut={props.mouseOut}>{type}{asterik}</td>
+        <td>{fast} ft</td>
       </tr>}
       </React.Fragment>
     )
@@ -220,6 +231,14 @@ const Basics =  props => {
   const cannotRun = (details) => {
     const isFatigued = props.character_info.conditions.includes('Fatigued')
     return details === 'run' && isFatigued ? true : false
+  }
+
+  const renderTooltip = (e, type) => {
+    let message = ''
+    if (type === "Climb"){
+      message = '-5 penalty to Climb check, but you can take a 10'
+    }
+    props.renderTooltip(e, message)
   }
 
   return (

@@ -124,11 +124,20 @@ const Attacks = props => {
         <tr>
           <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
           <td>Light Crossbow</td>
-          <td style={renderNum('abD', null, true)} onMouseOver={e => renderTooltip(e, 'PBS')} onMouseOut={props.mouseOut}>+{renderNum('abD')+1}*</td>
+          <td style={renderNum('abD', null, true)} onMouseOver={e => renderTooltip(e, 'PBS')} onMouseOut={props.mouseOut}>+{renderNum('abD')/*There was an extra +1 from here but, i removed it. Unsure what it came from*/}*</td>
           <td>80 ft</td>
-          <td onMouseOver={e => renderTooltip(e, 'PBS')} onMouseOut={props.mouseOut}>1d8+<span style={renderNum('damageD', null, true)}>{renderNum('damageD')}</span> P*</td>
+          <td onMouseOver={e => renderTooltip(e, 'PBS')} onMouseOut={props.mouseOut}>1d8+<span style={renderNum('damageD', null, true)}>{renderNum('damageD')}*</span> P</td>
           <td>19-20/x2</td>
           <td><span onMouseOver={e => renderTooltip(e, 'Load Light')} onMouseOut={props.mouseOut}>Load*</span>{props.character_info.hardcode.arcane_strike ? ', Ignore DR/magic' : null}</td>
+        </tr>
+        <tr>
+          <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
+          <td>Claws</td>
+          <td style={renderNum('abS', null, true)} onMouseOver={e => renderTooltip(e, 'PBS')} onMouseOut={props.mouseOut}>+{renderNum('abS')}</td>
+          <td>-</td>
+          <td>1d4<span style={renderNum('damageS', null, true)}>{renderNum('damageS')}</span> S</td>
+          <td>x2</td>
+          <td>{props.character_info.hardcode.arcane_strike ? ', Ignore DR/magic' : null}</td>
         </tr>
       </React.Fragment>
     )
@@ -139,16 +148,27 @@ const Attacks = props => {
       <React.Fragment>
         {polymorph()}
         {props.character_info.hardcode.combat === 'Condor - Combat' &&
-        <tr>
-          <td><button className={canCast('standard')} onClick={() => renderDispatch('standard', 'cleave')}><strong>Attack</strong></button></td>
-          <td>Cleave - Shifter Claws</td>
-          <td style={renderNum('abS', null, true)}>+{renderNum('abS')+1+1 /*Ta'al'mon wraps*/}/+{renderNum('abS')+1+1 /*Ta'al'mon wraps*/}</td>
-          <td>-</td>
-          <td>1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> P</td>
-          <td>x2</td>
-          <td>If you hit the first target, you may make a second attack on a target adjacent to the first and within reach</td>
-        </tr>
-      }
+          <tr>
+            <td><button className={canCast('standard')} onClick={() => renderDispatch('standard', 'cleave')}><strong>Attack</strong></button></td>
+            <td>Cleave - Shifter Claws</td>
+            <td style={renderNum('abS', null, true)}>+{renderNum('abS')+1+1 /*Ta'al'mon wraps*/}/+{renderNum('abS')+1+1 /*Ta'al'mon wraps*/}</td>
+            <td>-</td>
+            <td>1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> P</td>
+            <td>x2</td>
+            <td>If you hit the first target, you may make a second attack on a target adjacent to the first and within reach</td>
+          </tr>
+        }
+        {props.character_info.hardcode.combat === 'Squid - Combat' &&
+          <tr>
+            <td><button className={canCast('standard')} onClick={() => renderDispatch('standard', 'cleave')}><strong>Attack</strong></button></td>
+            <td>Tentacle</td>
+            <td style={renderNum('abS', null, true)}>+{renderNum('abS')-5}</td>
+            <td>-</td>
+            <td>1d3+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')}</span> B</td>
+            <td>x2</td>
+            <td>Secondary natural attack</td>
+          </tr>
+        }
       </React.Fragment>
     )
   }
@@ -165,6 +185,8 @@ const Attacks = props => {
     let abDBonus = 0
     let damageSBonus = 0
     let damageDBonus = 0
+    let otherABS = 0
+    let otherABD = 0
     const hc = props.character_info.hardcode
     const n = props.character.name
     let rage = hc.rage
@@ -172,7 +194,7 @@ const Attacks = props => {
     let fd = hc.fd
     let charge = hc.charge
     let bullMinor = hc.minor === 'Bull - Minor'
-    let largeMorph = hc.major === 'Bull - Major' || hc.major === 'Condor - Major'
+    let largeMorph = hc.major === 'Bull - Major' || hc.major === 'Condor - Major' || hc.major === 'Frog - Major' || hc.major === 'Squid - Major'
     let taalmon = n === "Cedrick"
     let arcaneStrike = hc.arcane_strike
 
@@ -184,8 +206,11 @@ const Attacks = props => {
     size = size === "Small" ? 1 : size
     size = size === "Tiny" ? 2 : size
 
-    const ogABS = bab + size + str
-    const ogABD = bab + size + dex
+    // +2 to dex (+1 mod) from the wraps
+    otherABD += !!taalmon ? 1 : 0
+
+    const ogABS = bab + size + str + otherABS
+    const ogABD = bab + size + dex + otherABD
     const ogDS = str
     const ogDD = 0
     // STRENGTH FIRST
@@ -202,8 +227,6 @@ const Attacks = props => {
     }
 
     // OTHER BONUSES NEXT
-    // +2 to dex (+1 mod) from the wraps
-    abDBonus += !!taalmon ? 1 : 0
 
     abSBonus += !!rage ? 2 :0
     damageSBonus += !!rage ? 2 :0
@@ -212,7 +235,6 @@ const Attacks = props => {
     damageSBonus += !!power ? 4 : 0
 
     abSBonus += !!charge ? 2 : 0
-    abDBonus += !!charge ? 2 : 0
 
     abSBonus += !!fd ? -4 : 0
     abDBonus += !!fd ? -4 : 0
@@ -263,6 +285,10 @@ const Attacks = props => {
       comment = 'Loading a light crossbow is a move action that provokes attacks of opportunity.'
     } else if (name === 'PBS'){
       comment = '+1 to Attack and Damage Rolls if target is within 30 ft'
+    } else if (name === 'ominous'){
+      comment = 'When this weapon confirms a critical hit, the target is shaken for 1 minute (DC 13 Will negates); if the weapon’s critical multiplier is greater than x2, this condition lasts 1 additional minute per multiple over x2. A creature that gains the shaken condition from an ominous weapon cannot gain that condition again from the same weapon for 24 hours.'
+    } else if (name === 'grab'){
+      comment = 'When this attack hits a creature, you may attempt to grapple that creature as a free action, provoking an AoO. The creature must be your size or smaller. If you succeed, you deal constrict damage. Each subsequent round, if you succeed on the grapple check, the creature takes the constrict damage.'
     }
     if (comment){
       props.renderTooltip(e, comment)
@@ -336,7 +362,40 @@ const Attacks = props => {
             </tr>
           </React.Fragment>
         )
+      case 'Squid - Major':
+        return (
+          <React.Fragment>
+            <tr>
+              <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
+              <td>Bite</td>
+              <td style={renderNum('abS', null, true)}>+{renderNum('abS')}</td>
+              <td>-</td>
+              <td>1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')}</span> P</td>
+              <td>x2</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
+              <td>Tentacle</td>
+              <td style={renderNum('abS', null, true)}>+{renderNum('abS')+1-5 /*Ta'al'mon wraps && Secondary attack*/}</td>
+              <td>-</td>
+              <td>1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> B</td>
+              <td>x2</td>
+              <td>Secondary Natural Attack, <em onMouseOver={e => renderTooltip(e, 'grab')} onMouseOut={props.mouseOut}>grab</em>, constrict (2d6+5)</td>
+            </tr>
+            <tr>
+              <td><button className={canCast('full')} onClick={() => renderDispatch('full')}><strong>Attack</strong></button></td>
+              <td>Bite, 2 Tentacles</td>
+              <td style={renderNum('abS', null, true)}>+{renderNum('abS')}/+{renderNum('abS')+1-5 /*Ta'al'mon wraps && secondary attack*/}/+{renderNum('abS')+1-5 /*Ta'al'mon wraps && secondary attack*/}</td>
+              <td>-</td>
+              <td>1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')}</span> P, 1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> S, 1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> S</td>
+              <td>x2</td>
+              <td>Tentacles: Secondary Natural Attacks, <em onMouseOver={e => renderTooltip(e, 'grab')} onMouseOut={props.mouseOut}>grab</em>, constrict (2d6+5)</td>
+            </tr>
+          </React.Fragment>
+        )
       default:
+        let sc = props.character_info.hardcode.combat === 'Squid - Combat'
         return (
           <React.Fragment>
             <tr>
@@ -346,16 +405,34 @@ const Attacks = props => {
               <td>-</td>
               <td>1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> S {renderFrogCombat()}</td>
               <td>x2</td>
-              <td>Ignore DR/silver & DR/cold iron</td>
+              <td>Ignore DR/silver & DR/cold iron, <em onMouseOver={e => renderTooltip(e, 'ominous')} onMouseOut={props.mouseOut}>ominous</em></td>
             </tr>
             <tr>
               <td><button className={canCast('full')} onClick={() => renderDispatch('full')}><strong>Attack</strong></button></td>
-              <td>Shifter Claws</td>
-              <td style={renderNum('abS', null, true)}>+{renderNum('abS')+1+1 /* Weapon Focus (shifter claws) && Ta'al'mon wraps*/}/+{renderNum('abS')+1+1-5 /* Weapon Focus (shifter claws) && Ta'al'mon wraps*/}</td>
+              <td>Shifter Claws{sc ? ', 2 Tentacles' : null}</td>
+              <td style={renderNum('abS', null, true)}>+{renderNum('abS')+1+1 /* Weapon Focus (shifter claws) && Ta'al'mon wraps*/}/+{renderNum('abS')+1+1-5 /* Weapon Focus (shifter claws) && Ta'al'mon wraps*/}{sc ? `/+${renderNum('abS')-5}/+${renderNum('abS')-5}`/*tentacle attacks attack at full attack bonus*/ : null}</td>
               <td>-</td>
-              <td>1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> S {renderFrogCombat()}</td>
+              <td>1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/} S{sc ? `/1d3+${renderNum('damageS')} B`/*tentacle attacks attack at full attack bonus*/ : null} </span> {renderFrogCombat()}</td>
               <td>x2</td>
-              <td>Ignore DR/silver & DR/cold iron</td>
+              <td>Ignore DR/silver & DR/cold iron, <em onMouseOver={e => renderTooltip(e, 'ominous')} onMouseOut={props.mouseOut}>ominous</em>{sc ? ', 2 Tentacle attacks': null }</td>
+            </tr>
+            <tr>
+              <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
+              <td><em>+1 Underwater Light Crossbow</em></td>
+              <td style={renderNum('abD', null, true)}>+{renderNum('abD')+1}</td>
+              <td>80 ft/20 ft</td>
+              <td>1d6+<span style={renderNum('damageD', null, true)}>{renderNum('damageD')+1}</span> B</td>
+              <td>x2</td>
+              <td>Use second range number if underwater.<span onMouseOver={e => renderTooltip(e, 'Load Light')} onMouseOut={props.mouseOut}> Load*</span></td>
+            </tr>
+            <tr>
+              <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
+              <td>Chakram</td>
+              <td style={renderNum('abD', null, true)}>+{renderNum('abD')-4/*Not Proficient*/}, +{renderNum('abS')-4-1/*Not Proficient, melee Chakram*/}</td>
+              <td>30 ft</td>
+              <td>1d6+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')}</span> S</td>
+              <td>x2</td>
+              <td>not proficient, if used as a melee weapon (second numbers), make a DC 15 Reflex save or cut yourself (1d6 slashing)</td>
             </tr>
             <tr>
               <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
@@ -364,16 +441,7 @@ const Attacks = props => {
               <td>-</td>
               <td><span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> B</td>
               <td>x2</td>
-              <td>Non-lethal</td>
-            </tr>
-            <tr>
-              <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
-              <td><em>+1 Underwater Light Crossbow</em></td>
-              <td style={renderNum('abD', null, true)}>+{renderNum('abD')+1}</td>
-              <td>80 ft</td>
-              <td>1d6+<span style={renderNum('damageD', null, true)}>{renderNum('damageD')+1}</span> B</td>
-              <td>x2</td>
-              <td>ACCOUNT FOR THIS WITH THE STATS CHANGING CUZ ITS DEX NOT STR</td>
+              <td>Non-lethal, <em onMouseOver={e => renderTooltip(e, 'ominous')} onMouseOut={props.mouseOut}>ominous</em></td>
             </tr>
           </React.Fragment>
         )

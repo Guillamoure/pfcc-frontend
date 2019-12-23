@@ -28,7 +28,8 @@ class Skills extends React.Component {
     const hc = this.props.character_info.hardcode
     const name = this.props.character.name
     const size = this.props.character_info.size
-    const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major'].includes(hc.major)
+    const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major'].includes(hc.major)
+    const armor = hc.armor
     if (skill.name === "Stealth"){
       const size = this.props.character_info.size
       if (size === "Small"){
@@ -38,6 +39,18 @@ class Skills extends React.Component {
       } else if (size === "Tiny"){
         mod += 8
       }
+    }
+    if (skill.ability_score === 'Dexterity' && name === 'Cedrick'){
+      mod += 1
+    }
+    if (armor){
+      // ARMOR CHECK PENALTY FROM ARMOR
+      if (skill.ability_score === 'Dexterity' || skill.ability_score === 'Strength'){
+        mod += armor === 'Wooden' ? -1 : 0
+      }
+    }
+    if (skill.ability_score === "Intelligence" && name === "Persephone"){
+      mod += 1
     }
     // check to see if the starting mod is modified
     let ogMod = mod
@@ -76,6 +89,12 @@ class Skills extends React.Component {
         mod += dexMod
       }
     }
+    if (skill.name === 'Intimidate'){
+      if (name === "Cedrick"){
+        mod += 1
+        ogMod += 1
+      }
+    }
     if (!style){
       return mod < 0 ? mod : `+${mod}`
     } else {
@@ -91,6 +110,9 @@ class Skills extends React.Component {
 
   renderNumOfRanks = (skill) => {
     let skillRanks = this.props.character.character_skillset_skills.find(chsss => chsss.skill_id === skill.id)
+    if (skill.name === 'Religion' && this.props.character.name === "Persephone"){
+      skillRanks = skillRanks || {ranks: this.props.character.character_klasses.length}
+    }
     return skillRanks !== undefined ? skillRanks.ranks : 0
   }
 
@@ -98,7 +120,12 @@ class Skills extends React.Component {
     let isThisAClassSkill = false
     this.props.character.uniq_klasses.forEach(klass => {
       klass.class_skillset_skills.forEach(csss => {
-        if (csss.skill_id === skill.id && csss.skillset_id === this.props.character.skillset.id) {
+        if (klass.name === "Vigilante" && this.props.character.name === "Persephone"){
+          let validClassSkills = ['Acrobatics', 'Bluff', 'Climb', 'Craft', 'Diplomacy', 'Disguise', 'Intimidate', 'Perform', 'Profession', 'Sense Motive', 'Stealth', 'Swim', 'Investigation', 'Society', 'Spellcraft', 'Religion']
+          if (csss.skill_id === skill.id && csss.skillset_id === this.props.character.skillset.id && validClassSkills.includes(skill.name)){
+            isThisAClassSkill = true
+          }
+        } else if (csss.skill_id === skill.id && csss.skillset_id === this.props.character.skillset.id) {
           isThisAClassSkill = true
         }
       })
@@ -109,11 +136,19 @@ class Skills extends React.Component {
   renderAbilityScoreAbbreviation = (skill) => {
     const name = skill.name === "Climb" || skill.name === "Swim"
     const size = this.props.character_info.size === 'Tiny'
+    let armor = this.props.character_info.hardcode.armor
+    let abbrev
     if (name && size){
-      return 'Dex'
+      abbrev = 'Dex'
     } else {
-      return skill.ability_score.slice(0, 3)
+      abbrev = skill.ability_score.slice(0, 3)
     }
+    if (armor){
+      if (abbrev === 'Dex' || abbrev === 'Str'){
+        abbrev += armor === 'Wooden' ? '*' : null
+      }
+    }
+    return abbrev
   }
 
   renderSkillTableRow = () => {
@@ -122,7 +157,7 @@ class Skills extends React.Component {
       return (
         <tr key={_.random(1, 2000000)}>
           <td>{this.renderClassSkill(skill) ? "X" : null}</td>
-          <td><strong>{this.renderAbilityScoreAbbreviation(skill)}</strong></td>
+          <td onMouseOver={(e) => this.renderTooltip(e, null, skill.ability_score)} onMouseOut={this.props.mouseOut}><strong>{this.renderAbilityScoreAbbreviation(skill)}</strong></td>
           <td className={this.raging(skill.name)} style={this.renderSkillBonus(skill, true)} onMouseOver={(e) => this.renderTooltip(e, skill.name)} onMouseOut={this.props.mouseOut}>{this.asteriks(skill.name)}</td>
           <td style={this.renderSkillBonus(skill, true)}>{this.renderSkillBonus(skill)}</td>
           <td>{this.renderNumOfRanks(skill)}</td>
@@ -177,6 +212,24 @@ class Skills extends React.Component {
         } else {
           return skill
         }
+      case 'Intimidate':
+        if (name === 'Cedrick'){
+          return asterik
+        } else {
+          return skill
+        }
+      case 'Religion':
+        if (name === 'Persephone'){
+          return asterik
+        } else {
+          return skill
+        }
+      case 'Disguise':
+        if (name === 'Persephone'){
+          return asterik
+        } else {
+          return skill
+        }
       default:
         return skill
     }
@@ -189,10 +242,11 @@ class Skills extends React.Component {
     }
   }
 
-  renderTooltip = (e, skill) => {
+  renderTooltip = (e, skill, ability) => {
     let comment = null
     let name = this.props.character.name
     let hc = this.props.character_info.hardcode
+    let armor = hc.armor
     if ((skill === "Survival" || skill === "Heal") && name === "Nettie"){
       comment = "Scrivener's Versatility"
     }
@@ -213,6 +267,33 @@ class Skills extends React.Component {
     if (skill === "Stealth"){
       if (name === 'Cedrick'){
         comment = '+4 bonus in Marshes and Forests'
+      }
+    }
+    if (skill === 'Intimidate'){
+      if (name === 'Cedrick'){
+        comment = <span>+1 enchancement bonus from <em>ominous</em> from Ta'al'mon Ancestral Handwraps</span>
+      }
+    }
+    if (skill === 'Religion'){
+      if (name === 'Persephone'){
+        comment = <span>{this.props.character.character_klasses.length} skill ranks from <em>Headband of Vast Intelligence +2</em></span>
+      }
+    }
+    if (skill === 'Disguise'){
+      if (name === 'Persephone'){
+        let currently = 'Persephone'
+        let alterEgo = 'the Autumn Equinox'
+        if (hc.autumn) {
+          currently = 'the Autumn Equinox'
+          alterEgo = 'Persephone'
+        }
+        comment = <span>+20 circumstance bonus to appear as {currently} if suspected to be {alterEgo}</span>
+      }
+    }
+    if (ability){
+      let armor = hc.armor
+      if (armor && (ability === 'Strength' || ability === 'Dexterity')){
+        comment = armor === 'Wooden' ? 'Armor Check Penalty: -1' : comment
       }
     }
     if (comment){

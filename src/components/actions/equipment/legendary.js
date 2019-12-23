@@ -13,7 +13,7 @@ const Legendary = props => {
       aura: "moderate enchantment",
       price: "priceless",
       weight: 0,
-      expendable: true
+      activatable: true
     }
     legendaries.push(sergeant)
   }
@@ -26,7 +26,7 @@ const Legendary = props => {
     return legendaries.map((r, idx) => {
       return (
         <tr className={renderTableStyling(idx)} key={r.id*3-1}>
-          <td>{r.expendable ? <button onClick={() => renderClick(r.name)}>View</button> : null}</td>
+          <td>{r.activatable ? <button onClick={() => renderClick(r.name)}>View</button> : null}</td>
           <td><strong>{r.name}</strong></td>
           <td>{r.weight} lb{(r.weight > 1 || r.weight === 0) ? "s" : null}</td>
           <td>{r.price}</td>

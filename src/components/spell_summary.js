@@ -16,11 +16,11 @@ const SpellSummary = props => {
     let klasses = [...props.character.uniq_klasses]
     let justFeatures = klasses.map(kl => kl.klass_features)
     let features = _.flatten(justFeatures)
-    const spellcasting = features.find(kf => kf.spellcasting && kf.klass_id === klass_id)
-    const score = spellcasting.spellcasting.ability_score
+    const spellcasting = spellcastingObject(klasses.find(k => k.id === klass_id))
+    const score = spellcasting.ability_score
     const mod = Math.floor((props.character_info.ability_scores[_.lowerCase(score)] - 10) / 2)
     if (props.character.name === "Persephone"){
-      bonus = klassSpell.subschools.find(ss => ss.name === "Acid") ? bonus+=1 : bonus
+      bonus = klassSpell.subschools && klassSpell.subschools.find(ss => ss.name === "Acid") ? bonus+=1 : bonus
     }
     if (klassSpell.spell.saving_throw === "none"){
       return "-"
@@ -60,6 +60,18 @@ const SpellSummary = props => {
     }
   }
 
+  const spellcastingObject = (klass) => {
+    // HARDCODE
+    let spellcasting
+    if (klass.name === 'Vigilante'){
+      spellcasting = {ability_score: 'Charisma', klass_feature_id: 2000300, prepared: false, limited: true, expendable: false, infinite_zero_level: true, bonus_spells: true}
+    } else {
+      spellcasting = klass.klass_features.find(kf => kf.name === 'Spells').spellcasting
+    }
+    return spellcasting
+    // HARDCODE ENDS
+  }
+
   const areThereRemainingSpells = () => {
     const spellLevel = klassSpell.spell_level
     const charKlass = props.character_info.classes.find(cl => cl.id === klassSpell.klass.id)
@@ -72,13 +84,15 @@ const SpellSummary = props => {
     if (availableSpells === undefined && spellLevel === 0){
       availableSpells = {spells: 100}
     }
-    let spellcasting = copyKlass.klass_features.find(kf => kf.name === 'Spells').spellcasting
-
+    if (availableSpells === undefined && copyKlass.name === 'Vigilante'){
+      availableSpells = {spells: 2}
+    }
+    let spellcastingObj = spellcastingObject(copyKlass)
     // can't get bonus spells per day for cantrips
     // only if spellcasting ability bonus is greater than or equal to spell level
     // not all classes allow bonus spells
     let bonus = 0
-    if (bonusSPD(charKlass.id, spellLevel) && spellLevel !== 0 && spellcasting.bonus_spells){
+    if (bonusSPD(charKlass.id, spellLevel) && spellLevel !== 0 && spellcastingObj.bonus_spells){
       bonus = 1
     }
     // console.log('total number of cast spells for a given level', castSpells)

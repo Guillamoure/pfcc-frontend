@@ -5,8 +5,12 @@ const Initiative = props => {
 
   const dexMod = (style) => {
     const hc = props.character_info.hardcode
-    const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major'].includes(hc.major)
+    const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major'].includes(hc.major)
+    const name = props.character.name
     let mod = Math.floor((props.character_info.ability_scores.dexterity - 10) / 2)
+    if (name === "Cedrick"){
+      mod += 1
+    }
     const ogMod = mod
     if (largeMorph){
       mod -= 1
