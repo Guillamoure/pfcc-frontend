@@ -33,6 +33,12 @@ class Feats extends React.Component {
       case("Persephone"):
         feats = this.pepper()
         break
+      case("Maddox"):
+        feats = this.maddox()
+        break
+      case("Merg"):
+        feats = this.merg()
+        break
       default:
         break
     }
@@ -117,6 +123,56 @@ class Feats extends React.Component {
         id: 3002,
         description: "You get a +1 bonus on attack and damage rolls with ranged weapons at ranges of up to 30 feet.",
         name: "Point-Blank Shot"
+      }
+    ]
+  }
+
+  maddox = () => {
+    return [
+      {
+        id: 4000,
+        description: 'You get a +4 bonus on initiative checks.',
+        name: 'Improved Initiative'
+      },
+      {
+        id: 4001,
+        description: 'You get a +2 bonus on caster level checks (1d20 + caster level) made to overcome a creature’s spell resistance.',
+        name: 'Spell Penetration'
+      },
+      {
+        id: 4002,
+        description: 'You get a +2 bonus on caster level checks (1d20 + caster level) made to overcome a creature’s spell resistance. This bonus stacks with the one from Spell Penetration.',
+        name: 'Greater Spell Penetration'
+      },
+      {
+        id: 4003,
+        description: 'You can react to danger before your senses would normally allow you to do so. You cannot be caught flat-footed, nor do you lose your Dex bonus to AC if the attacker is invisible. You still loses your Dexterity bonus to AC if immobilized. You can still lose her Dexterity bonus to AC if an opponent successfully uses the feint action against you.',
+        name: 'Uncanny Timing'
+      },
+    ]
+  }
+
+  merg = () => {
+    return [
+      {
+        id: 5000,
+        description: "You can choose to take a –1 penalty on all melee attack rolls and combat maneuver checks to gain a +2 bonus on all melee damage rolls. This bonus to damage is increased by half (+50%) if you are making an attack with a two-handed weapon, a one handed weapon using two hands, or a primary natural weapon that adds 1-1/2 times your Strength modifier on damage rolls. This bonus to damage is halved (–50%) if you are making an attack with an off-hand weapon or secondary natural weapon. When your base attack bonus reaches +4, and every 4 points thereafter, the penalty increases by –1 and the bonus to damage increases by +2. You must choose to use this feat before making an attack roll, and its effects last until your next turn. The bonus damage does not apply to touch attacks or effects that do not deal hit point damage.",
+        name: "Power Attack"
+      },
+      {
+        id: 5001,
+        description: 'Your penalties on attack rolls for fighting with two weapons are reduced. The penalty for your primary hand lessens by 2 and the one for your off hand lessens by 6.',
+        name: 'Two-Weapon Fighting'
+      },
+      {
+        id: 5002,
+        description: 'If you are dying and a creature gives you at least a sip of alcohol (a standard action for an adjacent creature), you immediately stabilize.',
+        name: "Drunkard's Recovery"
+      },
+      {
+        id: 5003,
+        description: "You gain a +1 bonus on all attack rolls you make using the selected weapon.",
+        name: 'Weapon Focus (Orc Double-Axe)'
       }
     ]
   }

@@ -31,6 +31,7 @@ import AgeModal from '../modals/age'
 import CurioModal from '../modals/curios'
 import PoisonModal from '../modals/poison'
 import Size from '../components/character_show/size'
+import SpellAugmentModal from '../modals/augment'
 
 import BackgroundForm from '../modals/background_form'
 import CharacterForm from '../modals/character_form'
@@ -280,7 +281,7 @@ class Character extends React.Component {
 
         {/* unfinished, hardcoded features */}
         {!!this.state.character && this.state.display === "Combat" && <Points editModal={this.editModal}/>}
-        {!!this.state.character && this.state.display === "Combat" && <Active activeEffects={this.state.activeEffects}/>}
+        {!!this.state.character && this.state.display === "Combat" && <Active activeEffects={this.state.activeEffects} editModal={this.editModal}/>}
         {!!this.state.character && this.state.display === "Character" && <Allies/>}
         {!!this.state.character && this.state.display === "Combat" && <Size/>}
         {/* unfinished, hardcoded features */}
@@ -303,6 +304,7 @@ class Character extends React.Component {
         {this.state.modal === 'age' && <AgeModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
         {this.state.modal === 'curio' && <CurioModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
         {this.state.modal === 'poisons' && <PoisonModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
+        {this.state.modal === 'reservoir' && <SpellAugmentModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
         {/* unfinished, hardcoded features */}
 
         <div id='right' onClick={() => this.setState({display: this.rightArrow()})}><FontAwesomeIcon icon={faCaretRight} size='9x'/><div>{this.rightArrow()}</div></div>

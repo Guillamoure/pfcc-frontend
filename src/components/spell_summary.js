@@ -9,6 +9,7 @@ const SpellSummary = props => {
   //   klassSpell = klassSpell.spell
   // }
   const level = props.character_info.classes.find(klass => klass.id === klassSpell.klass.id).level
+  const augment = props.character_info.hardcode.augment ? props.character_info.hardcode.augment : {spellId: 0, augment: 'none'}
 
 
   const renderDC = (sp_lvl, klass_id) => {
@@ -22,6 +23,7 @@ const SpellSummary = props => {
     if (props.character.name === "Persephone"){
       bonus = klassSpell.subschools && klassSpell.subschools.find(ss => ss.name === "Acid") ? bonus+=1 : bonus
     }
+    bonus += augment.spellId === klassSpell.spell.id && augment.augment === 'dc' ? 1 : 0
     if (klassSpell.spell.saving_throw === "none"){
       return "-"
     } else {
@@ -36,6 +38,7 @@ const SpellSummary = props => {
         newLevel+= 1
       }
     }
+    newLevel += augment.spellId === klassSpell.spell.id && augment.augment === 'caster' ? 1 : 0
     if (newLevel%2 === 1){
       newLevel -= 1
     }
@@ -55,6 +58,7 @@ const SpellSummary = props => {
           additionalTime+=spell.increase_per_level
         }
       }
+      additionalTime += augment.spellId === klassSpell.spell.id && augment.augmnet === 'caster' ? spell.increase_per_level : 0
       let totalTime = startingDuration + additionalTime
       return totalTime + " " + spell.unit_of_time + (totalTime > 1 ? "s" : null)
     }
@@ -138,6 +142,23 @@ const SpellSummary = props => {
     }
   }
 
+  const augmented = (option, type) => {
+    let color = 'black'
+    if (klassSpell.spell.id === augment.spellId){
+      color = augment.augment === option ? 'green' : color
+    }
+    if (type === 'range' && !['close', 'medium', 'long'].includes(klassSpell.spell.range)){
+      color = 'black'
+    }
+    if (type === 'time' && klassSpell.spell.increase_per_level === 0){
+      color = 'black'
+    }
+    if (option === 'dc' && klassSpell.spell.saving_throw){
+      color = 'black'
+    }
+    return {color}
+  }
+
   // when you need to do spontaneous metamagic or cure/inflict/summon nature's ally spell replacement for a prepared spell
   // have another button before the cast spell button
   // open up a tool tip or a modal
@@ -147,9 +168,9 @@ const SpellSummary = props => {
         <td>{klassSpell.spell_level}</td>
         <td><button className={renderAction(klassSpell.action.name)} onClick={availableToCast}><strong>Cast</strong></button></td>
         <td className='underline-hover' onClick={() => props.editModal('spell', null, klassSpell.spell.id)}>{klassSpell.spell.name}</td>
-        <td>{renderRange(level, klassSpell.spell_range, klassSpell.spell.target, klassSpell.spell.name)}</td>
-        <td>{renderTime(level, klassSpell.spell)}</td>
-        <td>{renderDC(klassSpell.spell_level, klassSpell.klass.id)}</td>
+        <td style={augmented('caster', 'range')}>{renderRange(level, klassSpell.spell_range, klassSpell.spell.target, klassSpell.spell.name)}</td>
+        <td style={augmented('caster', 'time')}>{renderTime(level, klassSpell.spell)}</td>
+        <td style={augmented('dc')}>{renderDC(klassSpell.spell_level, klassSpell.klass.id)}</td>
         <td>{klassSpell.spell.spell_resistance ? "Y" : "N"}</td>
       </React.Fragment>
     )

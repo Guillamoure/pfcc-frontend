@@ -40,6 +40,11 @@ class Notice extends React.Component {
     this.props.exitModal()
   }
 
+  renderDispatch = type => {
+    this.props.dispatch({type})
+    this.props.exitModal()
+  }
+
 
   render(){
     return(
@@ -56,6 +61,8 @@ class Notice extends React.Component {
         <h3>Hexes</h3>
         <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderActiveEffects("Protective Luck: Attackers have disadvantage")}>Protective Luck</button>
         <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderActiveEffects("Fortune: Target has advantage on one roll per round")}>Fortune</button>
+        <h3>Spell Effects</h3>
+        <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderDispatch("ENLARGE")}>Enlarged</button>
         {this.renderAdditionalButtons()}
       </span>
     )

@@ -7,14 +7,20 @@ const Initiative = props => {
     const hc = props.character_info.hardcode
     const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major'].includes(hc.major)
     const name = props.character.name
+    const enlarger = hc.enlarge
     let mod = Math.floor((props.character_info.ability_scores.dexterity - 10) / 2)
     if (name === "Cedrick"){
       mod += 1
+    }
+    if (name === 'Maddox'){
+      // improved initiative
+      mod += 4
     }
     const ogMod = mod
     if (largeMorph){
       mod -= 1
     }
+    mod += enlarger ? -1 : 0
     if (!style){
       return mod < 0 ? mod : `+${mod}`
     } else {

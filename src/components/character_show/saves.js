@@ -34,10 +34,12 @@ const Saves = props => {
         totalSavingThrow += 2
       }
       const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major'].includes(hc.major)
+      const enlarger = hc.enlarge
       if (save === 'reflex'){
         if (largeMorph){
-          totalSavingThrow -= 1
+          totalSavingThrow += -1
         }
+        totalSavingThrow += enlarger ? -1 : 0
       }
       if (!style){
         return totalSavingThrow < 0 ? totalSavingThrow : `+${totalSavingThrow}`

@@ -96,7 +96,7 @@ const reducer = (state = initialState, action) => {
       return {...state, character_info: {...state.character_info, actions: actionDupe}}
     case "NEW TURN":
       let actions = {full: false, standard: false, move: false, swift: false, immediate: false}
-      return {...state, character_info: {...state.character_info, actions: actions, hardcode: {...state.character_info.hardcode, power: false, eBloodActive: false, ffs: false, fd: false, charge: false, cleave: false, arcane_strike: false, taal_tele: false}}}
+      return {...state, character_info: {...state.character_info, actions: actions, hardcode: {...state.character_info.hardcode, power: false, eBloodActive: false, ffs: false, fd: false, charge: false, cleave: false, arcane_strike: false, taal_tele: false, augment: false, slide: false}}}
     case "POWER ATTACK":
       return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, power: true}}}
     case "RAGE":
@@ -214,6 +214,27 @@ const reducer = (state = initialState, action) => {
       let armor = state.character_info.hardcode.armor
       armor = armor === action.name ? null : action.name
       return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, armor}}}
+    case 'AUGMENT SPELL':
+      let augment = {spellId: action.spellId, augment: action.augment}
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, augment}}}
+    case 'DIMENSIONAL SLIDE':
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, slide: true}}}
+    case 'SIZE STAFF':
+      let sizeStaff = (state.character_info.hardcode.sizeStaff || 0) + action.amount
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, sizeStaff}}}
+    case 'ENLARGE':
+      let enlarge = !state.character_info.hardcode.enlarge
+      let staticSize = 'Medium'
+      staticSize = state.character.name === 'Nettie' ? 'Tiny' : staticSize
+      staticSize = state.character.name === 'Cedrick' ? 'Small' : staticSize
+      staticSize = state.character_info.hardcode.age === 'Young' ? 'Small' : staticSize
+      let newSize = 'Large'
+      newSize = state.character.name === 'Nettie' ? 'Small' : newSize
+      newSize = state.character.name === 'Cedrick' ? 'Medium' : newSize
+      newSize = state.character_info.hardcode.age === 'Young' ? 'Medium' : newSize
+
+      newSize = state.character_info.size === staticSize ? newSize : staticSize
+      return {...state, character_info: {...state.character_info, size: newSize, hardcode: {...state.character_info.hardcode, enlarge}}}
     default:
       return state
   }
@@ -265,7 +286,7 @@ const hardcoded = (state, action) => {
     case 'Cedrick':
       return {points: 7, speed: 30, ringPoints: 2}
     case 'Maddox':
-      return {speed: 30, age: 'Venerable'}
+      return {points: 6, speed: 30, age: 'Venerable'}
     case 'Persephone':
       return {speed: 30}
     default:

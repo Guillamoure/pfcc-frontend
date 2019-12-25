@@ -131,6 +131,7 @@ class Spells extends React.Component {
         <div key={spd.id*3-2}>
           <span>{spd.name}</span>
           {spd.spd.map(this.extrapolateSPD)}
+          {this.additionalSpellStats(spd.name)}
           {this.availableSpellsToCastTable(spd.id)}
         </div>
       )
@@ -277,9 +278,29 @@ class Spells extends React.Component {
     let condor = this.props.character_info.hardcode.minor === 'Condor - Minor'
     let cedrick = this.props.character.name === 'Cedrick'
     let pepper = this.props.character.name === 'Persephone'
-    if (condor || cedrick || pepper){
+    let maddox = this.props.character.name === 'Maddox'
+    if (condor || cedrick || pepper || maddox){
       return <HardcodeSpells editModal={this.props.editModal}/>
     }
+  }
+
+  additionalSpellStats = (name) => {
+    // caster level
+    // concentration
+    let cl = 0
+    let concentration = 0
+    let klass = this.props.classes.find(cl => cl.name === name)
+    let level = this.props.character_info.classes.find(cl => cl.id === klass.id).level
+    cl += level
+    concentration += level
+    if (this.props.character.name === 'Maddox'){
+      cl +=4
+      // spell penetration
+      // greater spell penetration
+      concentration += 5
+      // intelligence
+    }
+    return <span> | <strong>SR check</strong>: +{cl} | <strong>Concentration</strong>: +{concentration}</span>
   }
 
   render(){

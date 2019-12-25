@@ -17,6 +17,38 @@ const Weapons = props => {
     }
     weapons.push(lightCrossbow)
   }
+  if (name === 'Maddox'){
+    const quarter = {
+      id: 2002,
+      name: "Quarterstaff",
+      description: `A quarterstaff is a simple piece of wood, about 5 feet in length.`,
+      aura: "-",
+      price: "-",
+      weight: 4,
+      activatable: false
+    }
+    weapons.push(quarter)
+    const dagger = {
+      id: 2003,
+      name: "Dagger",
+      description: `A dagger has a blade that is about 1 foot in length. You get a +2 bonus on Sleight of Hand skill checks made to conceal a dagger on your body.`,
+      aura: "-",
+      price: "2gp",
+      weight: 1,
+      activatable: false
+    }
+    weapons.push(dagger)
+    const flamingCestus = {
+      id: 2004,
+      name: "+1 Flaming Cestus",
+      description: `Considered armed is wielded.`,
+      aura: "moderate evocation",
+      price: "8305gp",
+      weight: 1,
+      activatable: false
+    }
+    weapons.push(flamingCestus)
+  }
 
   const renderClick = name => {
   }

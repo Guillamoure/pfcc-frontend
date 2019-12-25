@@ -281,6 +281,30 @@ class Features extends React.Component {
           spellcasting: false
         },
       ]
+    } else if (name === 'Maddox'){
+      replacedFeatures = []
+      addedFeatures = [
+        {
+          id: 4000,
+          actions: [],
+          description: 'An arcanist with this exploit can acquire a familiar as the arcane bond wizard class feature, using her arcanist level as her wizard level to determine any of the statistics and abilities of the familiar. If the arcanist receives a familiar from another class, her levels of arcanist stack with the levels from that class when determining the familiar’s statistics and abilities (this ability does not stack with a familiar gained through the bloodline development exploit; she must choose one or the other).',
+          feature_levels: [{level: 6}],
+          feature_options: [],
+          klass_id: 8,
+          name: 'Arcanist Exploit - Familiar',
+          spellcasting: false
+        },
+        {
+          id: 4001,
+          actions: [],
+          description: 'The arcanist can expend 1 point from her arcane reservoir to create a dimensional crack that she can step through to reach another location. This ability is used as part of a move action or withdraw action, allowing her to move up to 10 feet per arcanist level to any location she can see. This counts as 5 feet of movement. She can only use this ability once per round. She does not provoke attacks of opportunity when moving in this way, but any other movement she attempts as part of her move action provokes as normal.',
+          feature_levels: [{level: 1}],
+          feature_options: [],
+          klass_id: 8,
+          name: 'Arcanist Exploit - Dimensional Slide',
+          spellcasting: false
+        }
+      ]
     }
     newFeatures = features.filter(f => {
       let klass = this.props.classes.find(cl => cl.id === f.klass_id)

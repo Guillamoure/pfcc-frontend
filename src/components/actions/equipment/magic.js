@@ -90,11 +90,14 @@ const MagicItems = props => {
     magicItems.push(potCureModerate)
     const eek = {id: 22023, name: "Pint of Eek", description: 'After consuming, you immediately breath out a blast of sonic energy in a 30 ft line. All affected creatures take 3d6 sonic damage, or half that if they succeed at a DC 15 Reflex save.', aura: "moderate evocation", price: "???", weight: '-', activatable: true, action: 'standard', expendable: true}
     magicItems.push(eek)
-
+  }
+  if (name === "Maddox"){
+    const sizeStaff = {id: 3010, name: "Staff of Size Alteration", description: <span>This staff of dark wood is stouter and sturdier than most magical staves, with a gnarled and twisted knot of wood at the top end. It allows use of the following spells: <em className='underline-hover' onClick={() => props.editModal('spell', null, 64)}>enlarge person</em> (1 charge), <em>reduce person</em> (1 charge), <em>shrink item</em> (2 charges), <em>mass enlarge person</em> (3 charges), <em>mass reduce person</em>(3 charges)</span>, aura: "moderate transmutation", price: "26150 gp", weight: '5', limit: 10, redux: 'sizeStaff' }
+    magicItems.push(sizeStaff)
   }
 
   const renderClick = (name, limit, startingValue, expendable) => {
-    if (name === "Rod of Grasping Hexes" || name === 'Wand of Unseen Servant'){
+    if (name === "Rod of Grasping Hexes" || name === 'Wand of Unseen Servant' || name === "Staff of Size Alteration"){
       if (limit){
         // if limits exist in redux
         let limits = props.character_info.hardcode.limits
@@ -149,10 +152,11 @@ const MagicItems = props => {
       if (used && used.includes(mi.name)){
         return null
       } else {
+        console.log(props.character_info.hardcode.sizeStaff)
         return (
           <tr className={renderTableStyling(idx)} key={mi.id*3-1}>
             <td>{mi.activatable ? <button className={mi.action && !props.character_info.actions[mi.action] ? mi.action : 'cannot-cast'} onClick={() => renderClick(mi.name, mi.limit, mi.starting, mi.expendable)}>Use</button> : null}</td>
-            <td><strong>{mi.name}</strong>{mi.limit ? `(${amount}/${mi.limit})` : null}</td>
+            <td><strong>{mi.name}</strong>{mi.limit && mi.activate ? `(${amount}/${mi.limit})` : null}{mi.redux ? `(${mi.limit - props.character_info.hardcode[mi.redux] || 10}/${mi.limit})` : null}</td>
             <td>{mi.weight} lb{(mi.weight > 1 || mi.weight === 0) ? "s" : null}</td>
             <td>{mi.price}</td>
             <td>{mi.description}</td>

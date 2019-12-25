@@ -6,6 +6,7 @@ const HardcodeSpells = props => {
   const condor = props.character_info.hardcode.minor === 'Condor - Minor'
   const cedrick = props.character.name === "Cedrick"
   const pepper = props.character.name === "Persephone"
+  const maddox = props.character.name === "Maddox"
 
   const spells = () => {
     let availableSpells = []
@@ -110,6 +111,10 @@ const HardcodeSpells = props => {
       }
       availableSpells.push(fly)
     }
+    if (maddox) {
+      let enlargePerson = {id: 64, level: 1, action: "full", name: "Enlarge Person", range: "40 ft", duration: "7 minutes", dc: "Fort 16", sr: true}
+      availableSpells.push(enlargePerson)
+    }
     return availableSpells.map((sp, idx) => {
       const hc = props.character_info.hardcode
       let limits = hc.limits
@@ -158,14 +163,20 @@ const HardcodeSpells = props => {
   }
 
   const dispatchCasting = (action, limit, name, starting) => {
+    let enlargePerson = (name === 'Enlarge Person' && (!props.character_info.hardcode.sizeStaff || props.character_info.hardcode.sizeStaff <= 9))
     if (action !== 'cannot-cast'){
-      props.dispatch({type: 'TRIGGER ACTION', action})
+      if (enlargePerson){
+        props.dispatch({type: 'TRIGGER ACTION', action})
+      }
     }
     if (limit){
       renderLimits(name, limit, starting)
     }
     if (name === "Fly"){
       props.dispatch({type: 'I CAN FLY'})
+    }
+    if (enlargePerson){
+      props.dispatch({type: 'SIZE STAFF', amount: 1})
     }
   }
 

@@ -11,6 +11,9 @@ const ArmorClass = props => {
   const cleave = hc.cleave ? -2 : 0
   const name = props.character.name
   const armor = hc.armor
+  const enlarger = hc.enlarge
+  // for enlarge person, you automatically have a -1 penalty to AC
+  const enlarge = enlarger ? -1 : 0
 
   const cedrick = name === "Cedrick" ? 5 : 0
 
@@ -30,6 +33,7 @@ const ArmorClass = props => {
     if (name === "Cedrick"){
       dex+=2
     }
+    dex += enlarger ? -2 : 0
     if (armor){
       // Mex Dex Bonus from Armor
       if (armor === 'Wooden' && dex > 17){
@@ -96,11 +100,11 @@ const ArmorClass = props => {
   const acCalc = (type) => {
     switch(type){
       case 'ac':
-        return (10 + dexMod() + renderSize() + armorBonus() + dodge() + natural() + raging + charging + cleave + cedrick)
+        return (10 + dexMod() + renderSize() + armorBonus() + dodge() + natural() + raging + charging + cleave + cedrick + enlarge)
       case 't':
-        return (10 + dexMod() + renderSize() + dodge() + raging + charging + cleave + cedrick)
+        return (10 + dexMod() + renderSize() + dodge() + raging + charging + cleave + cedrick + enlarge)
       case 'ff':
-        return (10 + renderSize() + armorBonus() + natural() + raging + charging + cleave + cedrick)
+        return (10 + renderSize() + armorBonus() + natural() + raging + charging + cleave + cedrick + enlarge)
       default:
         return 10
     }

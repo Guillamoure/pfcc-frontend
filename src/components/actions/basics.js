@@ -24,13 +24,21 @@ const Basics = props => {
         default:
           break
       }
-      props.dispatch({type: 'TRIGGER ACTION', action})
+      if (!action === 'free'){
+        props.dispatch({type: 'TRIGGER ACTION', action})
+      }
       switch(details){
         case 'fight defensively':
           props.dispatch({type: 'FIGHT DEFENSIVELY'})
           break
         case 'charge':
           props.dispatch({type: 'CHARGE'})
+          break
+        case 'dimensionalSlide':
+          if (!props.character_info.hardcode.slide){
+            props.dispatch({type: 'DIMENSIONAL SLIDE'})
+            props.dispatch({type: 'POINTS CHANGE', amount: 'decrease'})
+          }
           break
         default:
           break
@@ -142,6 +150,7 @@ const Basics = props => {
           {props.character.name === "Cedrick" && alternateMove('Climb', 20)}
           {props.character_info.hardcode.fly && alternateMove('Fly', 60)}
           {props.character_info.hardcode.major === "Squid - Major" && alternateMove('Swim', 60)}
+          {props.character.name === 'Maddox' && dimensionalSlide()}
           <tr>
             <td><button className={canCast('full', 'run')} onClick={() => renderDispatch('full', 'run')}><strong>Move</strong></button></td>
             <td>Run</td>
@@ -239,6 +248,19 @@ const Basics = props => {
       message = '-5 penalty to Climb check, but you can take a 10'
     }
     props.renderTooltip(e, message)
+  }
+
+  const dimensionalSlide = () => {
+    let className = props.character_info.hardcode.slide ? 'cannot-cast' : 'free'
+    return (
+      <React.Fragment>
+        <tr>
+          <td><button className={className} onClick={() => renderDispatch('free', 'dimensionalSlide')}><strong>Teleport</strong></button></td>
+          <td>Dimensional Slide</td>
+          <td>Teleport up to 70 ft to a location you can see. This is used as part of your move action or withdraw action. However, this counts as 5 ft of movement.</td>
+        </tr>
+      </React.Fragment>
+    )
   }
 
   return (

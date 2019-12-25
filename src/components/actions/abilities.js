@@ -93,6 +93,11 @@ class Abilities extends React.Component {
           <td>Change Age</td>
           <td className='table-details'>Alter Age</td>
         </tr>
+        <tr>
+          <td><button className='free' onClick={() => this.props.editModal('reservoir')}><strong>Augment</strong></button></td>
+          <td>Augment Spell</td>
+          <td className='table-details'>When you cast a spell, expend a point from your reservoir to either incrase the caster level by 1, or increase the DC by +1. You can spend no more than 1 point from your reservoir on a given spell this way.</td>
+        </tr>
       </React.Fragment>
     )
   }

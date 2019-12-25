@@ -18,6 +18,8 @@ const Active = props => {
     combat += ` (${hc.frogCombat})`
   }
   const age = hc.age
+  const augment = hc.augment ? props.character.known_spells.find(ks => ks.spell.id === hc.augment.spellId).spell.name : null
+  const enlarge = hc.enlarge
 
   return (
     <div id='active' className='shadow shrink'>
@@ -34,6 +36,8 @@ const Active = props => {
         {minor && <li>{minor}</li>}
         {major && <li>{major}</li>}
         {age && <li>Age Catergory: {age}</li>}
+        {augment && <li>Augmented {augment}: {hc.augment.augment === 'dc' ? '+1 DC' : '+1 Caster Level'}</li>}
+        {enlarge && <li>Affected by <em className='underline-hover' onClick={() => props.editModal('spell', null, 64)}>enlarge person</em></li>}
       </ul>
     </div>
   )

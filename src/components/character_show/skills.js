@@ -30,6 +30,7 @@ class Skills extends React.Component {
     const size = this.props.character_info.size
     const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major'].includes(hc.major)
     const armor = hc.armor
+    const enlarger = hc.enlarge
     if (skill.name === "Stealth"){
       const size = this.props.character_info.size
       if (size === "Small"){
@@ -61,11 +62,13 @@ class Skills extends React.Component {
       if (hc.minor === 'Bull - Minor'){
         mod +=1
       }
+      mod += enlarger ? 1 : 0
     }
     if (skill.ability_score === 'Dexterity'){
       if (largeMorph){
         mod -= 1
       }
+      mod += enlarger ? -1 : 0
     }
     if (skill.name === 'Swim'){
       if (hc.minor === 'Frog - Minor'){
