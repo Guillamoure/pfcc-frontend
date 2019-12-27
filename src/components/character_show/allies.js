@@ -44,7 +44,7 @@ class Allies extends React.Component {
 
   renderAlly = () => {
     let monster = this.collectMonsters()[this.state.activeAlly]
-    if (monster || this.props.character.name === "Persephone" || this.props.character.name == 'Cedrick' || this.props.character.name === 'Maddox'){
+    if (monster || this.props.character.name === "Persephone" || this.props.character.name === 'Cedrick' || this.props.character.name === 'Maddox'){
       if (!monster){
         monster = this.collectMonsters()[0]
       }
@@ -335,24 +335,24 @@ class Allies extends React.Component {
     let hoo = {
       name: "Hoo",
       alignment: "N",
-      size: "Small",
+      size: "Medium",
       type: "outsider (air, cold, elemental, extraplanar, water)",
-      init: "-1",
+      init: "+0",
       senses: [
         "darkvision 60 ft.",
         "snow vision",
-        "Perception +5"
+        "Perception +7"
       ],
       ac: {
         base: 16,
         touch: 10,
         ff: 16,
-        details: "-1 Dex, +6 natural, +1 size"
+        details: "+6 natural"
       },
-      hp: 13,
-      fort: '+4',
-      ref: '+2',
-      will: '+0',
+      hp: 30,
+      fort: '+6',
+      ref: '+4',
+      will: '+1',
       def: [],
       dr: [],
       immune: [
@@ -376,33 +376,34 @@ class Allies extends React.Component {
         'swim 60 ft.'
       ],
       melee: [
-        "slam +4 (1d4+1 plus 1d3 cold)"
+        "slam +7 (1d6+4 plus 1d4 cold)"
       ],
       range: [],
       space: null,
       reach: null,
       spAtt: [
-        'numbing cold (DC 12)'
+        'numbing cold (DC 14)'
       ],
       stats: {
-        str: 12,
-        dex: 8,
-        con: 13,
+        str: 16,
+        dex: 10,
+        con: 15,
         int: 4,
         wis: 11,
         cha: 11
       },
-      bab: "+2",
-      cmb: '+2',
-      cmd: "11 (can't be tripped)",
+      bab: "+4",
+      cmb: '+7',
+      cmd: "17 (can't be tripped)",
       feats: [
-        "Power Attack"
+        "Power Attack",
+        "Cleave"
       ],
       skills: [
-        "Religion +2",
-        "Perception +5",
-        "Stealth +8",
-        "Swim +9"
+        "Religion +4",
+        "Perception +7",
+        "Stealth +7",
+        "Swim +11"
       ],
       languages: [
         'Aquan'
@@ -496,12 +497,12 @@ class Allies extends React.Component {
       special: [
         {name: "Ioun Affinity", description: "An ioun wyrd can integrate a number of ioun stones into its body equal to 1 + half its Hit Dice. Because an ioun wyrd sees all ioun stones as equal and gains no bene ts from them, the wyrd’s ioun stones can be swapped out by any creature the wyrd trusts.", type: "Su"},
         {name: "Share Iouns", description: "A character with an ioun wyrd familiar gains the bene t of the wyrd’s ioun stones as long as the character is within 30 feet of the ioun wyrd.", type: "Su"},
-        {name: "Echo", description: "Once per day when delivering a touch spell, an arcane amplifier can apply the Extend Spell metamagic feat to the spell.", type: "Su"},
+        {name: "Echo", description: <span>Once per day when delivering a touch spell, an arcane amplifier can apply the <span className='underline-hover' onClick={() => this.props.editModal('metamagic')}>Extend Spell metamagic feat</span> to the spell.</span>, type: "Su"},
         {name: "Share Spells", description: "You may cast a spell with a target of “You” on his familiar (as a touch spell) instead of on yourself. You may cast spells on your familiar even if the spells do not normally affect creatures of the familiar’s type.", type: "Su"},
         {name: "Empathic Link", description: "You have an empathic link with your familiar to a 1 mile distance. You can communicate empathically with the familiar, but cannot see through its eyes. Because of the link’s limited nature, only general emotions can be shared. You have the same connection to an item or place that his familiar does.", type: "Su"},
         {name: "Deliver Touch Spells", description: "Your familiar can deliver touch spells for you. If you and the familiar are in contact at the time you cast a touch spell, you can designate your familiar as the “toucher.” The familiar can then deliver the touch spell just as you would. As usual, if you cast another spell before the touch is delivered, the touch spell dissipates.", type: "Su"},
         {name: "Speak with Master", description: "You and your familiar can communicate verbally as if you were using a common language. Other creatures do not understand the communication without magical help.", type: "Ex"},
-        {name: "Reverberate", description: "Once per day when delivering a touch spell, an arcane amplifier can apply either the Empower Spell metamagic feat to the spell or use the Heighten Spell metamagic feat to increase its spell level by 2.", type: "Su"}
+        {name: "Reverberate", description: <span>Once per day when delivering a touch spell, an arcane amplifier can apply either the <span className='underline-hover' onClick={() => this.props.editModal('metamagic')}>Empower Spell metamagic feat</span> to the spell or use the <span className='underline-hover' onClick={() => this.props.editModal('metamagic')}>Heighten Spell metamagic feat</span> to increase its spell level by 2.</span>, type: "Su"}
       ]
     }
     monsters.push(b8)

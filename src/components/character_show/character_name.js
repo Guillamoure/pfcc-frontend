@@ -22,6 +22,31 @@ class CharacterName extends React.Component {
     }
     let remapped = this.props.character_info.classes.map(cl => {
       let name = this.props.classes.find(k => k.id === cl.id).name
+      switch(name){
+        case 'Barbarian':
+          name = 'Drunken Brute Invulnerable Rager' + name
+          break
+        case 'Rogue':
+          name = 'Pirate ' + name
+          break
+        case 'Shifter':
+          name = 'Chimera Weapon ' + name
+          break
+        case 'Witch':
+          name = 'Autumn Season ' + name
+          break
+        case 'Vigilante':
+          name = 'Magical Child ' + name
+          break
+        case 'Arcanist':
+          name = 'Chronomancer ' + name
+          break
+        case 'Bard':
+          name = 'Chronicler of Worlds ' + name
+          break
+        default:
+          break
+      }
       return `${name} ${cl.level}`
     })
     return remapped.join(", ")

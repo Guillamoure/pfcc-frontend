@@ -12,8 +12,10 @@ const ArmorClass = props => {
   const name = props.character.name
   const armor = hc.armor
   const enlarger = hc.enlarge
+  const reducer = hc.reduce
   // for enlarge person, you automatically have a -1 penalty to AC
   const enlarge = enlarger ? -1 : 0
+  const reduce = reducer ? 1 : 0
 
   const cedrick = name === "Cedrick" ? 5 : 0
 
@@ -34,10 +36,14 @@ const ArmorClass = props => {
       dex+=2
     }
     dex += enlarger ? -2 : 0
+    dex += reducer ? 2 : 0
     if (armor){
       // Mex Dex Bonus from Armor
       if (armor === 'Wooden' && dex > 17){
         dex = 17
+      }
+      if (armor === '+1 chain shirt' && dex > 19){
+        dex = 19
       }
     }
     return Math.floor((dex - 10) / 2)
@@ -93,6 +99,9 @@ const ArmorClass = props => {
       if (armor === "Wooden"){
         bonus += 3
       }
+      if (armor === "+1 chain shirt"){
+        bonus += 5
+      }
     }
     return bonus
   }
@@ -100,11 +109,11 @@ const ArmorClass = props => {
   const acCalc = (type) => {
     switch(type){
       case 'ac':
-        return (10 + dexMod() + renderSize() + armorBonus() + dodge() + natural() + raging + charging + cleave + cedrick + enlarge)
+        return (10 + dexMod() + renderSize() + armorBonus() + dodge() + natural() + raging + charging + cleave + cedrick + enlarge + reduce)
       case 't':
-        return (10 + dexMod() + renderSize() + dodge() + raging + charging + cleave + cedrick + enlarge)
+        return (10 + dexMod() + renderSize() + dodge() + raging + charging + cleave + cedrick + enlarge + reduce)
       case 'ff':
-        return (10 + renderSize() + armorBonus() + natural() + raging + charging + cleave + cedrick + enlarge)
+        return (10 + renderSize() + armorBonus() + natural() + raging + charging + cleave + cedrick + enlarge + reduce)
       default:
         return 10
     }
@@ -128,6 +137,8 @@ const ArmorClass = props => {
     if (armor){
       armorBonus += armor === 'Wooden' ? 3 : 0
       dex = armor === 'Wooden' && dex > 3 ? 3 : dex
+      armorBonus += armor === '+1 chain shirt' ? 5 : 0
+      dex = armor === '+1 chain shirt' && dex > 4 ? 4 : dex
     }
     let defaultAC = 10 + dex + size + armorBonus + natural + bonus
     defaultAC += name === "Persephone" ? 1 : 0 // dodge feat

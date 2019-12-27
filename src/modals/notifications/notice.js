@@ -63,6 +63,7 @@ class Notice extends React.Component {
         <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderActiveEffects("Fortune: Target has advantage on one roll per round")}>Fortune</button>
         <h3>Spell Effects</h3>
         <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderDispatch("ENLARGE")}>Enlarged</button>
+        <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderDispatch("REDUCE")}>Reduced</button>
         {this.renderAdditionalButtons()}
       </span>
     )

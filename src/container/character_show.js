@@ -32,6 +32,8 @@ import CurioModal from '../modals/curios'
 import PoisonModal from '../modals/poison'
 import Size from '../components/character_show/size'
 import SpellAugmentModal from '../modals/augment'
+import MetamagicModal from '../modals/metamagic'
+import HandyModal from '../modals/handy'
 
 import BackgroundForm from '../modals/background_form'
 import CharacterForm from '../modals/character_form'
@@ -84,6 +86,9 @@ class Character extends React.Component {
         this.props.dispatch({type: 'SPECIFIC USER', name: data.character.name})
         this.dispatchAbilityScoreImprovements(data.character.character_klasses)
         this.setState({character: data.character})
+        if (data.character.name === 'Merg'){
+          this.props.dispatch({type: 'ACTIVE ARMOR', name: '+1 chain shirt'})
+        }
       // } else {
       //   this.props.history.push('/')
       // }
@@ -282,7 +287,7 @@ class Character extends React.Component {
         {/* unfinished, hardcoded features */}
         {!!this.state.character && this.state.display === "Combat" && <Points editModal={this.editModal}/>}
         {!!this.state.character && this.state.display === "Combat" && <Active activeEffects={this.state.activeEffects} editModal={this.editModal}/>}
-        {!!this.state.character && this.state.display === "Character" && <Allies/>}
+        {!!this.state.character && this.state.display === "Character" && <Allies editModal={this.editModal}/>}
         {!!this.state.character && this.state.display === "Combat" && <Size/>}
         {/* unfinished, hardcoded features */}
 
@@ -305,6 +310,8 @@ class Character extends React.Component {
         {this.state.modal === 'curio' && <CurioModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
         {this.state.modal === 'poisons' && <PoisonModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
         {this.state.modal === 'reservoir' && <SpellAugmentModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
+        {this.state.modal === 'metamagic' && <MetamagicModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
+        {this.state.modal === 'handy' && <HandyModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
         {/* unfinished, hardcoded features */}
 
         <div id='right' onClick={() => this.setState({display: this.rightArrow()})}><FontAwesomeIcon icon={faCaretRight} size='9x'/><div>{this.rightArrow()}</div></div>

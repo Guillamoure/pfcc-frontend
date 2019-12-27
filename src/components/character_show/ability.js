@@ -11,11 +11,13 @@ function AbilityScore (props) {
     const hc = props.character_info.hardcode
     const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major'].includes(hc.major)
     const enlarger = hc.enlarge
+    const reducer = hc.reduce
     if (props.name === "Strength"){
       if (largeMorph){
         bonus += 4
       }
       bonus += enlarger ? 2 : 0
+      bonus += reducer ? -2 : 0
     }
     if (props.name === "Dexterity"){
       if (largeMorph){
@@ -25,6 +27,7 @@ function AbilityScore (props) {
         bonus += 2
       }
       bonus += enlarger ? -2 : 0
+      bonus += reducer ? 2 : 0
     }
     if (props.name === "Intelligence"){
       if (name === "Persephone"){

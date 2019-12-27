@@ -25,6 +25,7 @@ class AttackBonus extends React.Component {
     let name = this.props.character.name
     const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major'].includes(major)
     const enlarger = this.props.character_info.hardcode.enlarge
+    const reducer = this.props.character_info.hardcode.reduce
     switch(ability){
       case "strength":
         if (minor === "Bull - Minor"){
@@ -35,6 +36,9 @@ class AttackBonus extends React.Component {
         }
         bonus += enlarger ? 1 : 0
         bonus += enlarger ? -1 : 0
+
+        bonus += reducer ? 1 : 0
+        bonus += reducer ? -1 : 0
         break
       case "dexterity":
         if (largeMorph){
@@ -42,6 +46,9 @@ class AttackBonus extends React.Component {
         }
         bonus += enlarger ? -1 : 0
         bonus += enlarger ? -1 : 0
+
+        bonus += reducer ? 1 : 0
+        bonus += reducer ? 1 : 0
         break
       default:
         break
@@ -103,8 +110,8 @@ class AttackBonus extends React.Component {
       //   ab += Math.floor(this.renderBAB(currentClass.hit_die) * this.props.character_info.classes[klass_id])
       // }
       ab += this.renderAbilityScoreModifiers(ability)
-      let ogAB = ab
       ab += this.renderSize(this.props.character_info.size)
+      let ogAB = ab
       ab += this.renderPolymorph(ability)
       if (style){
         if (ogAB > ab){

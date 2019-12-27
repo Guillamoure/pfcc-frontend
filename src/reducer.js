@@ -224,17 +224,32 @@ const reducer = (state = initialState, action) => {
       return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, sizeStaff}}}
     case 'ENLARGE':
       let enlarge = !state.character_info.hardcode.enlarge
-      let staticSize = 'Medium'
+      var staticSize = 'Medium'
       staticSize = state.character.name === 'Nettie' ? 'Tiny' : staticSize
       staticSize = state.character.name === 'Cedrick' ? 'Small' : staticSize
       staticSize = state.character_info.hardcode.age === 'Young' ? 'Small' : staticSize
-      let newSize = 'Large'
+      var newSize = 'Large'
       newSize = state.character.name === 'Nettie' ? 'Small' : newSize
       newSize = state.character.name === 'Cedrick' ? 'Medium' : newSize
       newSize = state.character_info.hardcode.age === 'Young' ? 'Medium' : newSize
 
       newSize = state.character_info.size === staticSize ? newSize : staticSize
+      // ^this^ code doesn't account for polymorph size changes
       return {...state, character_info: {...state.character_info, size: newSize, hardcode: {...state.character_info.hardcode, enlarge}}}
+    case 'REDUCE':
+      let reduce = !state.character_info.hardcode.reduce
+      var staticSize = 'Medium'
+      staticSize = state.character.name === 'Nettie' ? 'Tiny' : staticSize
+      staticSize = state.character.name === 'Cedrick' ? 'Small' : staticSize
+      staticSize = state.character_info.hardcode.age === 'Young' ? 'Small' : staticSize
+      var newSize = 'Small'
+      newSize = state.character.name === 'Nettie' ? 'Diminutive' : newSize
+      newSize = state.character.name === 'Cedrick' ? 'Tiny' : newSize
+      newSize = state.character_info.hardcode.age === 'Young' ? 'Tiny' : newSize
+
+      newSize = state.character_info.size === staticSize ? newSize : staticSize
+      // ^this^ code doesn't account for polymorph size changes
+      return {...state, character_info: {...state.character_info, size: newSize, hardcode: {...state.character_info.hardcode, reduce}}}
     default:
       return state
   }

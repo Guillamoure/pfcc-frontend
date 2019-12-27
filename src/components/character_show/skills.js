@@ -31,6 +31,7 @@ class Skills extends React.Component {
     const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major'].includes(hc.major)
     const armor = hc.armor
     const enlarger = hc.enlarge
+    const reducer = hc.reduce
     if (skill.name === "Stealth"){
       const size = this.props.character_info.size
       if (size === "Small"){
@@ -48,6 +49,7 @@ class Skills extends React.Component {
       // ARMOR CHECK PENALTY FROM ARMOR
       if (skill.ability_score === 'Dexterity' || skill.ability_score === 'Strength'){
         mod += armor === 'Wooden' ? -1 : 0
+        mod += armor === '+1 chain shirt' ? -1 : 0
       }
     }
     if (skill.ability_score === "Intelligence" && name === "Persephone"){
@@ -63,12 +65,14 @@ class Skills extends React.Component {
         mod +=1
       }
       mod += enlarger ? 1 : 0
+      mod += reducer ? -1 : 0
     }
     if (skill.ability_score === 'Dexterity'){
       if (largeMorph){
         mod -= 1
       }
       mod += enlarger ? -1 : 0
+      mod += reducer ? 1 : 0
     }
     if (skill.name === 'Swim'){
       if (hc.minor === 'Frog - Minor'){
@@ -112,9 +116,25 @@ class Skills extends React.Component {
   }
 
   renderNumOfRanks = (skill) => {
+    let name = this.props.character.name
     let skillRanks = this.props.character.character_skillset_skills.find(chsss => chsss.skill_id === skill.id)
-    if (skill.name === 'Religion' && this.props.character.name === "Persephone"){
+    if (skill.name === 'Religion' && name === "Persephone"){
       skillRanks = skillRanks || {ranks: this.props.character.character_klasses.length}
+    }
+    if (skill.name === 'Profession (fence)' && name === "Merg"){
+      skillRanks = {ranks: 100}
+    }
+    if (skill.name === 'Profession (sailor)' && name === "Merg"){
+      skillRanks = {ranks: 100}
+    }
+    if (skill.name === 'Profession (sailor)' && name === "Robby"){
+      skillRanks = {ranks: 100}
+    }
+    if (skill.name === 'Perform (percussion)' && name === "Nettie"){
+      skillRanks = {ranks: 100}
+    }
+    if (skill.name === 'Perform (strings)' && name === "Nettie"){
+      skillRanks = {ranks: 100}
     }
     return skillRanks !== undefined ? skillRanks.ranks : 0
   }
@@ -133,6 +153,9 @@ class Skills extends React.Component {
         }
       })
     })
+    if (skill.name.includes('Profession') || skill.name.includes('Perform')){
+      isThisAClassSkill = true
+    }
     return isThisAClassSkill
   }
 
@@ -148,14 +171,35 @@ class Skills extends React.Component {
     }
     if (armor){
       if (abbrev === 'Dex' || abbrev === 'Str'){
-        abbrev += armor === 'Wooden' ? '*' : null
+        abbrev += armor === 'Wooden' ? '*' : ''
+        abbrev += armor === '+1 chain shirt' ? '*' : ''
       }
     }
     return abbrev
   }
 
+  modifiedSkills = () => {
+    let skills = [...this.state.skillset.skills]
+    let name = this.props.character.name
+    if (name === 'Merg'){
+      skills.push({name: 'Profession (fence)', ability_score: 'Wisdom'})
+      skills.push({name: 'Profession (sailor)', ability_score: 'Wisdom'})
+      skills = skills.filter(sk => sk.name !== 'Profession')
+    }
+    if (name === 'Robby'){
+      skills.push({name: 'Profession (sailor)', ability_score: 'Wisdom'})
+      skills = skills.filter(sk => sk.name !== 'Profession')
+    }
+    if (name === 'Nettie'){
+      skills.push({name: 'Perform (percussion)', ability_score: 'Charisma'})
+      skills.push({name: 'Perform (strings)', ability_score: 'Charisma'})
+      skills = skills.filter(sk => sk.name !== 'Perform')
+    }
+    return skills.sort((a,b) => a.name > b.name ? 1 : -1)
+  }
+
   renderSkillTableRow = () => {
-    const sortedSkills = this.state.skillset.skills.sort((a,b) => a.name > b.name ? 1 : -1)
+    const sortedSkills = this.modifiedSkills()
     return sortedSkills.map(skill => {
       return (
         <tr key={_.random(1, 2000000)}>
@@ -297,6 +341,7 @@ class Skills extends React.Component {
       let armor = hc.armor
       if (armor && (ability === 'Strength' || ability === 'Dexterity')){
         comment = armor === 'Wooden' ? 'Armor Check Penalty: -1' : comment
+        comment = armor === '+1 chain shirt' ? 'Armor Check Penalty: -1' : comment
       }
     }
     if (comment){

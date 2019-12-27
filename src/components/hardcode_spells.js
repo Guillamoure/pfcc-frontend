@@ -114,6 +114,23 @@ const HardcodeSpells = props => {
     if (maddox) {
       let enlargePerson = {id: 64, level: 1, action: "full", name: "Enlarge Person", range: "40 ft", duration: "7 minutes", dc: "Fort 16", sr: true}
       availableSpells.push(enlargePerson)
+      let reducePerson = {id: 65, level: 1, action: "full", name: "Reduce Person", range: "40 ft", duration: "7 minutes", dc: "Fort 16", sr: true}
+      availableSpells.push(reducePerson)
+      let shrinkItem = {id: 66, level: 3, action: "standard", name: "Shrink Item", range: "touch", duration: "7 days", dc: "Will 18", sr: true}
+      availableSpells.push(shrinkItem)
+      let massEnlargePerson = {id: 67, level: 4, action: "full", name: "Mass Enlarge Person", range: "40 ft", duration: "7 minutes", dc: "Fort 19", sr: true}
+      availableSpells.push(massEnlargePerson)
+      let massReducePerson = {id: 68, level: 4, action: "full", name: "Mass Reduce Person", range: "40 ft", duration: "7 minutes", dc: "Fort 19", sr: true}
+      availableSpells.push(massReducePerson)
+      let fireball3 = {id: 69, level: 3, action: "standard", name: "Fireball 3d6", range: "70 ft", duration: "instantaneous", dc: "Ref 14", sr: true, limit: 4, expendable: true}
+      availableSpells.push(fireball3)
+      let fireball5 = {id: 69, level: 3, action: "standard", name: "Fireball 5d6", range: "70 ft", duration: "instantaneous", dc: "Ref 14", sr: true, limit: 2, expendable: true}
+      availableSpells.push(fireball5)
+      let fireball7 = {id: 69, level: 3, action: "standard", name: "Fireball 7d6", range: "70 ft", duration: "instantaneous", dc: "Ref 14", sr: true, limit: 1, expendable: true}
+      availableSpells.push(fireball7)
+      // has a limit
+      // if the last limit is used, expend it by its id not name
+       // check fir expendibility, but keep track of limits throughout
     }
     return availableSpells.map((sp, idx) => {
       const hc = props.character_info.hardcode
@@ -129,17 +146,22 @@ const HardcodeSpells = props => {
       } else {
         amount = sp.starting ? sp.starting : sp.limit
       }
-      return (
-        <tr className={renderTableStyling(idx)} key={sp.id*3-1}>
-          <td>{sp.level}</td>
-          <td ><button className={className(sp.action, sp.commandRing, sp.limit, sp.name)} onClick={() => dispatchCasting(className(sp.action, sp.commandRing, sp.limit, sp.name), sp.limit, sp.name, sp.starting)}><strong>Cast{sp.commandRing && ` (${sp.commandRing})`}{sp.limit ? `(${amount}/${sp.limit})` : null}</strong></button></td>
-          <td className='underline-hover' onClick={() => props.editModal('spell', null, sp.id)}>{sp.name}</td>
-          <td>{sp.range}</td>
-          <td>{sp.duration}</td>
-          <td>{sp.dc}</td>
-          <td>{sp.sr ? "Y" : "N"}</td>
-        </tr>
-      )
+      console.log(amount)
+      if (amount <= 0 && sp.expendable){
+        return null
+      } else {
+        return (
+          <tr className={renderTableStyling(idx)} key={sp.id*3-1}>
+            <td>{sp.level}</td>
+            <td ><button className={className(sp.action, sp.commandRing, sp.limit, sp.name)} onClick={() => dispatchCasting(className(sp.action, sp.commandRing, sp.limit, sp.name), sp.limit, sp.name, sp.starting)}><strong>Cast{sp.commandRing && ` (${sp.commandRing})`}{sp.limit ? `(${amount}/${sp.limit})` : null}</strong></button></td>
+            <td className='underline-hover' onClick={() => props.editModal('spell', null, sp.id)}>{sp.name}</td>
+            <td>{sp.range}</td>
+            <td>{sp.duration}</td>
+            <td>{sp.dc}</td>
+            <td>{sp.sr ? "Y" : "N"}</td>
+          </tr>
+        )
+      }
     })
   }
 
@@ -164,8 +186,12 @@ const HardcodeSpells = props => {
 
   const dispatchCasting = (action, limit, name, starting) => {
     let enlargePerson = (name === 'Enlarge Person' && (!props.character_info.hardcode.sizeStaff || props.character_info.hardcode.sizeStaff <= 9))
+    let reducePerson = (name === 'Reduce Person' && (!props.character_info.hardcode.sizeStaff || props.character_info.hardcode.sizeStaff <= 9))
+    let shrinkItem = (name === 'Shrink Item' && (!props.character_info.hardcode.sizeStaff || props.character_info.hardcode.sizeStaff <= 8))
+    let massEnlargePerson = (name === 'Mass Enlarge Person' && (!props.character_info.hardcode.sizeStaff || props.character_info.hardcode.sizeStaff <= 7))
+    let massReducePerson = (name === 'Mass Reduce Person' && (!props.character_info.hardcode.sizeStaff || props.character_info.hardcode.sizeStaff <= 7))
     if (action !== 'cannot-cast'){
-      if (enlargePerson){
+      if (enlargePerson || reducePerson || shrinkItem || massEnlargePerson || massReducePerson){
         props.dispatch({type: 'TRIGGER ACTION', action})
       }
     }
@@ -175,8 +201,14 @@ const HardcodeSpells = props => {
     if (name === "Fly"){
       props.dispatch({type: 'I CAN FLY'})
     }
-    if (enlargePerson){
+    if (enlargePerson || reducePerson){
       props.dispatch({type: 'SIZE STAFF', amount: 1})
+    }
+    if (shrinkItem){
+      props.dispatch({type: 'SIZE STAFF', amount: 2})
+    }
+    if (massEnlargePerson || massReducePerson){
+      props.dispatch({type: 'SIZE STAFF', amount: 3})
     }
   }
 
@@ -208,6 +240,7 @@ const HardcodeSpells = props => {
     }
   }
 
+  console.log('array', spells())
   return (
     <table>
       <thead>
@@ -222,7 +255,7 @@ const HardcodeSpells = props => {
         </tr>
       </thead>
       <tbody>
-        {spells()}
+        {spells().filter(sp => sp !== null)}
       </tbody>
     </table>
   )

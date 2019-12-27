@@ -60,7 +60,7 @@ const Attacks = props => {
           <td><em>+1 Glammered Rapier</em></td>
           <td>+10</td>
           <td>-</td>
-          <td>{renderDamageDice('1d3')}+3 P</td>
+          <td>{renderDamageDice('1d6')}+3 P</td>
           <td>18-20/x2</td>
           <td>Finesse</td>
         </tr>
@@ -82,30 +82,39 @@ const Attacks = props => {
       <React.Fragment>
         <tr>
           <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
-          <td><em>+3 unholy/- orc double axe</em></td>
+          <td><em>+3 unholy/- Orc Double Axe</em></td>
           <td style={renderNum('abS', null, true)}>+{renderNum('abS')+3+1 /*Weapon Focus*/}</td>
           <td>-</td>
           <td>{renderDamageDice('1d8')}+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+3}</span> S {sparks()}(+2d6 v. good)</td>
           <td>x2</td>
-          <td>Double</td>
+          <td>Double, <em onMouseOver={e => renderTooltip(e, 'unholy')} onMouseOut={props.mouseOut}>unholy</em> on one blade</td>
         </tr>
         <tr>
           <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
-          <td><em>+1 Great Mace</em></td>
-          <td style={renderNum('abS', null, true)}>+{renderNum('ab')+1}</td>
+          <td><em>+1 construct bane Morningstar</em></td>
+          <td style={renderNum('abS', null, true)}>+{renderNum('abS')+1}</td>
           <td>-</td>
-          <td>{renderDamageDice('1d10')}+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1}</span> S {sparks()}(+2d6 v. construct)</td>
+          <td>{renderDamageDice('1d10')}+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1}</span> S {sparks()}</td>
           <td>x2</td>
-          <td>Double</td>
+          <td><em onMouseOver={e => renderTooltip(e, 'bane')} onMouseOut={props.mouseOut}>bane</em></td>
         </tr>
         <tr>
           <td><button className={canCast('full')} onClick={() => renderDispatch('full')}><strong>Attack</strong></button></td>
-          <td><em>+3 unholy/- orc double axe</em></td>
+          <td><em>+3 unholy/- Orc Double Axe</em></td>
           <td style={renderNum('abS', null, true)}>+{renderNum('abS')+3-2+1 /*Weapon Focus*/}/+{renderNum('abS')-2+1 /*Weapon Focus*/}/+{renderNum('abS')-2-5+1 /*Weapon Focus*/}</td>
           <td>-</td>
-          <td>{renderDamageDice('1d8')}+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+3}</span> S {sparks()}(+2d6 v. good) / {renderDamageDice('1d8')}+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')}</span> S {sparks()}</td>
+          <td>{renderDamageDice('1d8')}+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+3}</span> S {sparks()}/ {renderDamageDice('1d8')}+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')}</span> S {sparks()}</td>
           <td>x2</td>
-          <td>Double</td>
+          <td>Double, <em onMouseOver={e => renderTooltip(e, 'unholy')} onMouseOut={props.mouseOut}>unholy</em> on one blade</td>
+        </tr>
+        <tr>
+          <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
+          <td>Dagger</td>
+          <td style={renderNum('abS', null, true)}>{renderNum('abS') >= 0 ? '+' + renderNum('abS') : renderNum('abS')}, {renderNum('abD') >= 0 ? '+' + renderNum('abD') : renderNum('abD')}</td>
+          <td>10 ft.</td>
+          <td>{renderDamageDice('1d4')}<span style={renderNum('damageS', null, true)}>{renderNum('damageS') >= 0 ? '+' + renderNum('damageS') : renderNum('damageS')}</span> S/P</td>
+          <td>19-20/x2</td>
+          <td>If thrown, use second attack bonus</td>
         </tr>
         <tr>
           <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
@@ -242,6 +251,7 @@ const Attacks = props => {
     let taalmon = n === "Cedrick"
     let arcaneStrike = hc.arcane_strike
     let enlarger = hc.enlarge
+    let reducer = hc.reduce
 
     bab = n === "Merg" ? 7 : bab
     bab = n === "Cedrick" ? 7 : bab
@@ -288,10 +298,17 @@ const Attacks = props => {
     damageSBonus += arcaneStrike ? 2 : 0
     damageDBonus += arcaneStrike ? 2 : 0
 
-    // +2 to str, -2 Dex, -1 to attacks, -1 to AC
+    // +2 to str, -2 Dex, -1 to attacks
     abDBonus += enlarger ? -2 : 0
     damageSBonus += enlarger ? 1 : 0
-    damageDBonus += enlarger ? -1 : 0
+    // dex doesn't effect damage
+    // damageDBonus += enlarger ? -1 : 0
+
+    // -2 to str, +2 Dex, +1 to attacks
+    abDBonus += reducer ? 2 : 0
+    damageSBonus += reducer ? -1 : 0
+    // dex doesn't effect damage
+    // damageDBonus += reducer ? 1 : 0
 
     if (type === 'abS'){
       if (!style){
@@ -335,25 +352,61 @@ const Attacks = props => {
     let newDice = dice
     if (size === "Large"){
       switch(dice){
-        case '1d6':
-          newDice = '1d8'
+        case '1d3':
+          newDice = '1d4'
           break
         case '1d4':
           newDice = '1d6'
           break
+        case '1d6':
+          newDice = '1d8'
+          break
         case '1d8':
           newDice = '2d6'
+          break
+        case '1d10':
+          newDice = '2d8'
           break
         default:
           break
       }
     } else if (size === 'Small'){
       switch(dice){
+        case '1d3':
+          newDice = '1d2'
+          break
+        case '1d4':
+          newDice = '1d3'
+          break
+        case '1d6':
+          newDice = '1d4'
+          break
+        case '1d8':
+          newDice = '1d6'
+          break
+        case '1d10':
+          newDice = '1d8'
+          break
         default:
           break
       }
     } else if (size === 'Tiny'){
       switch(dice){
+        case '1d3':
+          newDice = '1'
+          break
+        case '1d4':
+          newDice = '1d2'
+          break
+        case '1d6':
+          newDice = '1d3'
+          break
+        case '1d8':
+          newDice = '1d4'
+          break
+        case '1d10':
+          newDice = '1d6'
+          break
         default:
           break
       }
@@ -373,6 +426,10 @@ const Attacks = props => {
       comment = 'When this attack hits a creature, you may attempt to grapple that creature as a free action, provoking an AoO. The creature must be your size or smaller. If you succeed, you deal constrict damage. Each subsequent round, if you succeed on the grapple check, the creature takes the constrict damage.'
     } else if (name === 'flaming'){
       comment = 'Upon command, a flaming weapon is sheathed in fire that deals an extra 1d6 points of fire damage on a successful hit. The fire does not harm the wielder. The effect remains until another command is given.'
+    } else if (name === 'bane'){
+      comment = 'A bane weapon excels against certain foes. Against a designated foe, the weapon’s enhancement bonus is +2 better than its actual bonus. It also deals an extra 2d6 points of damage against the foe.'
+    } else if (name === 'unholy'){
+      comment = 'An unholy weapon is imbued with unholy power. This power makes the weapon evil-aligned and thus bypasses the corresponding damage reduction. It deals an extra 2d6 points of damage against all creatures of good alignment. It bestows one permanent negative level on any good creature attempting to wield it. The negative level remains as long as the weapon is in hand and disappears when the weapon is no longer wielded. This negative level cannot be overcome in any way (including restoration spells) while the weapon is wielded.'
     }
     if (comment){
       props.renderTooltip(e, comment)
@@ -390,7 +447,7 @@ const Attacks = props => {
               <td>Gore</td>
               <td style={renderNum('abS', null, true)}>+{renderNum('abS')}</td>
               <td>-</td>
-              <td>{renderDamageDice('1d8')}+<span style={renderNum('damageS', null, true)}>{renderNum('damageS', 1.5)}</span> P</td>
+              <td>1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS', 1.5)}</span> P</td>
               <td>x2</td>
               <td></td>
             </tr>
@@ -399,7 +456,7 @@ const Attacks = props => {
               <td>Powerful Charge</td>
               <td style={renderNum('abS', null, true)}>+{renderNum('abS')+2+1 /*Ta'al'mon wraps*/}</td>
               <td>-</td>
-              <td>{renderDamageDice('2d8')}+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> P</td>
+              <td>2d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> P</td>
               <td>x2</td>
               <td>Move up to {props.character.race.speed * 2} ft, make Attack. +2 to attack, -2 to AC</td>
             </tr>
@@ -408,7 +465,7 @@ const Attacks = props => {
               <td>Trample</td>
               <td>-</td>
               <td>-</td>
-              <td>{renderDamageDice('1d8')}+<span style={renderNum('damageS', null, true)}>{renderNum('damageS', 1.5)+1 /*Ta'al'mon wraps*/}</span> B</td>
+              <td>1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS', 1.5)+1 /*Ta'al'mon wraps*/}</span> B</td>
               <td>-</td>
               <td>Overrun target(s) Medium or smaller. Targets get AoO (-4 penalty), or can forgo to make a DC {10 + 3 + renderNum('damage')} Reflex save for half damage</td>
             </tr>
@@ -422,7 +479,7 @@ const Attacks = props => {
               <td>Talon</td>
               <td style={renderNum('abS', null, true)}>+{renderNum('abS')+1 /*Ta'al'mon wraps*/}</td>
               <td>-</td>
-              <td>{renderDamageDice('1d8')}+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> S</td>
+              <td>1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> S</td>
               <td>x2</td>
               <td></td>
             </tr>
@@ -431,7 +488,7 @@ const Attacks = props => {
               <td>Bite</td>
               <td style={renderNum('abS', null, true)}>+{renderNum('abS')}</td>
               <td>-</td>
-              <td>{renderDamageDice('1d8')}+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')}</span> P</td>
+              <td>1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')}</span> P</td>
               <td>x2</td>
               <td></td>
             </tr>
@@ -440,7 +497,7 @@ const Attacks = props => {
               <td>2 Talons, Bite</td>
               <td style={renderNum('abS', null, true)}>+{renderNum('abS')+1 /*Ta'al'mon wraps*/}/+{renderNum('abS')+1 /*Ta'al'mon wraps*/}/+{renderNum('abS')}</td>
               <td>-</td>
-              <td>{renderDamageDice('1d8')}+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> S, {renderDamageDice('1d8')}+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> S, {renderDamageDice('1d8')}+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')}</span> P</td>
+              <td>1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> S, 1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> S, 1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')}</span> P</td>
               <td>x2</td>
               <td></td>
             </tr>
@@ -454,7 +511,7 @@ const Attacks = props => {
               <td>Bite</td>
               <td style={renderNum('abS', null, true)}>+{renderNum('abS')}</td>
               <td>-</td>
-              <td>{renderDamageDice('1d8')}+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')}</span> P</td>
+              <td>1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')}</span> P</td>
               <td>x2</td>
               <td></td>
             </tr>
@@ -463,7 +520,7 @@ const Attacks = props => {
               <td>Tentacle</td>
               <td style={renderNum('abS', null, true)}>+{renderNum('abS')+1-5 /*Ta'al'mon wraps && Secondary attack*/}</td>
               <td>-</td>
-              <td>{renderDamageDice('1d8')}+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> B</td>
+              <td>1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> B</td>
               <td>x2</td>
               <td>Secondary Natural Attack, <em onMouseOver={e => renderTooltip(e, 'grab')} onMouseOut={props.mouseOut}>grab</em>, constrict (2d6+5)</td>
             </tr>
@@ -472,7 +529,7 @@ const Attacks = props => {
               <td>Bite, 2 Tentacles</td>
               <td style={renderNum('abS', null, true)}>+{renderNum('abS')}/+{renderNum('abS')+1-5 /*Ta'al'mon wraps && secondary attack*/}/+{renderNum('abS')+1-5 /*Ta'al'mon wraps && secondary attack*/}</td>
               <td>-</td>
-              <td>{renderDamageDice('1d8')}+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')}</span> P, {renderDamageDice('1d8')}+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> S, {renderDamageDice('1d8')}+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> S</td>
+              <td>1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')}</span> P, 1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> S, 1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> S</td>
               <td>x2</td>
               <td>Tentacles: Secondary Natural Attacks, <em onMouseOver={e => renderTooltip(e, 'grab')} onMouseOut={props.mouseOut}>grab</em>, constrict (2d6+5)</td>
             </tr>
@@ -487,7 +544,7 @@ const Attacks = props => {
               <td>Shifter Claws</td>
               <td style={renderNum('abS', null, true)}>+{renderNum('abS')+1+1 /* Weapon Focus (shifter claws) && Ta'al'mon wraps*/}</td>
               <td>-</td>
-              <td>{renderDamageDice('1d8')}+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> S {renderFrogCombat()}</td>
+              <td>{renderDamageDice('1d10')}+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> S {renderFrogCombat()}</td>
               <td>x2</td>
               <td>Ignore DR/silver & DR/cold iron, <em onMouseOver={e => renderTooltip(e, 'ominous')} onMouseOut={props.mouseOut}>ominous</em></td>
             </tr>
@@ -496,7 +553,7 @@ const Attacks = props => {
               <td>Shifter Claws{sc ? ', 2 Tentacles' : null}</td>
               <td style={renderNum('abS', null, true)}>+{renderNum('abS')+1+1 /* Weapon Focus (shifter claws) && Ta'al'mon wraps*/}/+{renderNum('abS')+1+1-5 /* Weapon Focus (shifter claws) && Ta'al'mon wraps*/}{sc ? `/+${renderNum('abS')-5}/+${renderNum('abS')-5}`/*tentacle attacks attack at full attack bonus*/ : null}</td>
               <td>-</td>
-              <td>{renderDamageDice('1d8')}+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/} S{sc ? `/1d3+${renderNum('damageS')} B`/*tentacle attacks attack at full attack bonus*/ : null} </span> {renderFrogCombat()}</td>
+              <td>{renderDamageDice('1d10')}+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/} S{sc ? `/${renderDamageDice('1d4')}+${renderNum('damageS')} B`/*tentacle attacks attack at full attack bonus*/ : null} </span> {renderFrogCombat()}</td>
               <td>x2</td>
               <td>Ignore DR/silver & DR/cold iron, <em onMouseOver={e => renderTooltip(e, 'ominous')} onMouseOut={props.mouseOut}>ominous</em>{sc ? ', 2 Tentacle attacks': null }</td>
             </tr>
@@ -505,7 +562,7 @@ const Attacks = props => {
               <td><em>+1 Underwater Light Crossbow</em></td>
               <td style={renderNum('abD', null, true)}>+{renderNum('abD')+1}</td>
               <td>80 ft/20 ft</td>
-              <td>{renderDamageDice('1d6')}+<span style={renderNum('damageD', null, true)}>{renderNum('damageD')+1}</span> B</td>
+              <td>{renderDamageDice('1d8')}+<span style={renderNum('damageD', null, true)}>{renderNum('damageD')+1}</span> B</td>
               <td>x2</td>
               <td>Use second range number if underwater.<span onMouseOver={e => renderTooltip(e, 'Load Light')} onMouseOut={props.mouseOut}> Load*</span></td>
             </tr>
@@ -514,7 +571,7 @@ const Attacks = props => {
               <td>Chakram</td>
               <td style={renderNum('abD', null, true)}>+{renderNum('abD')-4/*Not Proficient*/}, +{renderNum('abS')-4-1/*Not Proficient, melee Chakram*/}</td>
               <td>30 ft</td>
-              <td>{renderDamageDice('1d6')}+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')}</span> S</td>
+              <td>{renderDamageDice('1d8')}+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')}</span> S</td>
               <td>x2</td>
               <td>not proficient, if used as a melee weapon (second numbers), make a DC 15 Reflex save or cut yourself (1d6 slashing)</td>
             </tr>

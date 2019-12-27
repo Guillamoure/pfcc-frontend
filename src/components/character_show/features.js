@@ -224,9 +224,7 @@ class Features extends React.Component {
           name: "Vigilante Talent - None",
           spellcasting: false
         },
-
       ]
-
     } else if (name === 'Cedrick'){
       replacedFeatures = []
       addedFeatures = [
@@ -304,6 +302,70 @@ class Features extends React.Component {
           name: 'Arcanist Exploit - Dimensional Slide',
           spellcasting: false
         }
+      ]
+    } else if (name === 'Merg'){
+      replacedFeatures = ['Fast Movement', 'Uncanny Dodge', 'Improved Uncanny Dodge', 'Damage Reduction', 'Trap Sense']
+      addedFeatures = [
+        {
+          id: 4999,
+          actions: [],
+          description: 'While raging, the drunken brute can drink a potion, or a tankard of ale or similar quantity of alcohol, as a move action that does not provoke attacks of opportunity. A potion has its normal effect, while an alcoholic drink allows the barbarian to maintain her rage that round without expending a round of rage for the day (instead of the alcohol’s normal effects). For each alcoholic drink consumed while raging, the barbarian is nauseated for 1 round when her rage expires, in addition to the normal fatigue that follows a rage. Tireless rage does not negate this nauseated condition but the internal fortitude rage power does. ',
+          feature_levels: [{level: 1}],
+          feature_options: [],
+          klass_id: 5,
+          name: 'Drunken Brute - Raging Drunk',
+          spellcasting: false
+        },
+        {
+          id: 5000,
+          actions: [],
+          description: 'Choose an energy type: acid, cold, fire, or electricity. While raging, as a swift action up to three times a day, the barbarian can imbue her melee attacks with elemental energy, dealing an additional 1d6 points of damage of the chosen energy type for 1 round.',
+          feature_levels: [{level: 2}],
+          feature_options: [],
+          klass_id: 5,
+          name: 'Rage Power - Lesser Elemental Blood',
+          spellcasting: false
+        },
+        {
+          id: 5001,
+          actions: [],
+          description: 'While raging, you gain a +1 morale bonus on Intimidate checks and to the save DC of any fear effects you create for each alcoholic drink you have consumed during your rage, to a maximum of +1 per four barbarian levels.',
+          feature_levels: [{level: 4}],
+          feature_options: [],
+          klass_id: 5,
+          name: 'Rage Power - Roaring Drunk',
+          spellcasting: false
+        },
+        {
+          id: 5002,
+          actions: [],
+          description: 'While raging, the barbarian gains energy resistance 10 against the energy type chosen when she took lesser elemental blood.',
+          feature_levels: [{level: 6}],
+          feature_options: [],
+          klass_id: 5,
+          name: 'Rage Power - Elemental Blood',
+          spellcasting: false
+        },
+        {
+          id: 5003,
+          actions: [],
+          description: 'At 2nd level, the invulnerable rager gains DR/— equal to half her barbarian level. This damage reduction is doubled against nonlethal damage.',
+          feature_levels: [{level: 2}],
+          feature_options: [],
+          klass_id: 5,
+          name: 'Invulnerable Rager - Invulnerability',
+          spellcasting: false
+        },
+        {
+          id: 5004,
+          actions: [],
+          description: 'At 3rd level, the invulnerable rager is inured to either hot or cold climate effects (choose one) as if using endure elements. In addition, the barbarian gains 1 point of fire or cold resistance for every three levels beyond 3rd.',
+          feature_levels: [{level: 3}],
+          feature_options: [],
+          klass_id: 5,
+          name: 'Invulnerable Rager - Extreme Endurance',
+          spellcasting: false
+        },
       ]
     }
     newFeatures = features.filter(f => {

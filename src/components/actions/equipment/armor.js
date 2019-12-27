@@ -31,11 +31,27 @@ const Armor = props => {
       weight: 50,
       armorBonus: 9,
       maxDex: 1,
-      acp: 6,
+      acp: 5,
       arcane: 35,
       speed: '20 ft/15 ft'
     }
     armors.push(bolsteringFull)
+  }
+  if (name === 'Merg'){
+    const chainShirt = {
+      id: 171,
+      name: "+1 chain shirt",
+      description: `Covering the torso, this shirt is made up of thousands of interlocking metal rings.`,
+      type: "Light",
+      price: "1250 gp",
+      weight: 25,
+      armorBonus: 5,
+      maxDex: 4,
+      acp: 1,
+      arcane: 20,
+      speed: '30 ft/20 ft'
+    }
+    armors.push(chainShirt)
   }
 
   const renderClick = name => {

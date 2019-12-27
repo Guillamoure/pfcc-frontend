@@ -37,7 +37,8 @@ const MagicItems = props => {
       price: "650 gp",
       weight: '-',
       activatable: true,
-      action: 'move'
+      action: 'move',
+      expendable: true
     }
     magicItems.push(quickChangeMask)
     const vastIntelligence = {
@@ -92,11 +93,19 @@ const MagicItems = props => {
     magicItems.push(eek)
   }
   if (name === "Maddox"){
-    const sizeStaff = {id: 3010, name: "Staff of Size Alteration", description: <span>This staff of dark wood is stouter and sturdier than most magical staves, with a gnarled and twisted knot of wood at the top end. It allows use of the following spells: <em className='underline-hover' onClick={() => props.editModal('spell', null, 64)}>enlarge person</em> (1 charge), <em>reduce person</em> (1 charge), <em>shrink item</em> (2 charges), <em>mass enlarge person</em> (3 charges), <em>mass reduce person</em>(3 charges)</span>, aura: "moderate transmutation", price: "26150 gp", weight: '5', limit: 10, redux: 'sizeStaff' }
+    const sizeStaff = {id: 3010, name: "Staff of Size Alteration", description: <span>This staff of dark wood is stouter and sturdier than most magical staves, with a gnarled and twisted knot of wood at the top end. It allows use of the following spells: <em className='underline-hover' onClick={() => props.editModal('spell', null, 64)}>enlarge person</em> (1 charge), <em className='underline-hover' onClick={() => props.editModal('spell', null, 65)}>reduce person</em> (1 charge), <em className='underline-hover' onClick={() => props.editModal('spell', null, 66)}>shrink item</em> (2 charges), <em className='underline-hover' onClick={() => props.editModal('spell', null, 67)}>mass enlarge person</em> (3 charges), <em className='underline-hover' onClick={() => props.editModal('spell', null, 67)}>mass reduce person</em> (3 charges)</span>, aura: "moderate transmutation", price: "26150 gp", weight: '5', limit: 10, redux: 'sizeStaff' }
     magicItems.push(sizeStaff)
+    const fireballNecklace = {id: 3011, name: "Necklace of Fireballs III", description: <span><p>This item appears to be a string or cluster of spherical beads, sometimes with the ends tied together to form a necklace.</p><p>(It does not count as an item worn around the neck for the purpose of determining which of a character’s worn magic items is effective.) If a character holds it, however, all can see the strand as it really is—a golden chain from which hang a number of golden spheres. The spheres are detachable by the wearer (and only by the wearer), who can easily hurl one of them up to 70 feet. When a sphere arrives at the end of its trajectory, it detonates as a <em className='underline-hover' onClick={() => props.editModal('spell', null, 66)}>fireball</em> spell (Reflex DC 14 half).</p><p>Spheres come in different strengths, ranging from those that deal 2d6 points of fire damage to those that deal 10d6. The market price of a sphere is 150 gp for each die of damage it deals.</p><p>Each necklace of fireballs contains a combination of spheres of various strengths. Some traditional combinations, designated types I through VII, are detailed above.</p><p>If the necklace is being worn or carried by a character who fails her saving throw against a magical fire attack, the item must make a saving throw as well (with a save bonus of +7). If the necklace fails to save, all its remaining spheres detonate simultaneously, often with regrettable consequences for the wearer.</p></span>, aura: "moderate evocation", price: "4350 gp", weight: 1}
+    magicItems.push(fireballNecklace)
+    const handy = {id: 3012, name: "Handy Haversack", description: 'A backpack of this sort appears to be well made, well used, and quite ordinary. It is constructed of finely tanned leather, and the straps have brass hardware and buckles. It has two side pouches, each of which appears large enough to hold about a quart of material. In fact, each is like a bag of holding and can actually hold material of as much as 2 cubic feet in volume or 20 pounds in weight. The large central portion of the pack can contain up to 8 cubic feet or 80 pounds of material. Even when so filled, the backpack always weighs only 5 pounds. While such storage is useful enough, the pack has an even greater power. When the wearer reaches into it for a specific item, that item is always on top. Thus, no digging around and fumbling is ever necessary to find what a haversack contains. Retrieving any specific item from a haversack is a move action, but it does not provoke the attacks of opportunity that retrieving a stored item usually does.', aura: "moderate conjuration", price: "2000 gp", weight: 5, activatable: true, action: 'move', modal: 'handy'}
+    magicItems.push(handy)
+  }
+  if (name === 'Merg'){
+    const elixirFire = {id: 2004, name: "Elixir of Fire Breath", description: 'This strange bubbling elixir bestows upon the drinker the ability to spit gouts of flame. He can breathe fire up to three times, each time dealing 4d6 points of fire damage to a single target up to 25 feet away. The victim can attempt a DC 13 Reflex save for half damage. Unused blasts of fire dissipate 1 hour after the liquid is consumed.', aura: "moderate evocation", price: "1100", weight: '-', activatable: true, action: 'standard', expendable: true}
+    magicItems.push(elixirFire)
   }
 
-  const renderClick = (name, limit, startingValue, expendable) => {
+  const renderClick = (name, limit, startingValue, expendable, modal) => {
     if (name === "Rod of Grasping Hexes" || name === 'Wand of Unseen Servant' || name === "Staff of Size Alteration"){
       if (limit){
         // if limits exist in redux
@@ -132,6 +141,9 @@ const MagicItems = props => {
     if (expendable){
       props.dispatch({type: 'USED ITEM', name})
     }
+    if (modal){
+      props.editModal(modal)
+    }
   }
 
   const renderMagicItems = () => {
@@ -155,7 +167,7 @@ const MagicItems = props => {
         console.log(props.character_info.hardcode.sizeStaff)
         return (
           <tr className={renderTableStyling(idx)} key={mi.id*3-1}>
-            <td>{mi.activatable ? <button className={mi.action && !props.character_info.actions[mi.action] ? mi.action : 'cannot-cast'} onClick={() => renderClick(mi.name, mi.limit, mi.starting, mi.expendable)}>Use</button> : null}</td>
+            <td>{mi.activatable ? <button className={mi.action && !props.character_info.actions[mi.action] ? mi.action : 'cannot-cast'} onClick={() => renderClick(mi.name, mi.limit, mi.starting, mi.expendable, mi.modal)}>Use</button> : null}</td>
             <td><strong>{mi.name}</strong>{mi.limit && mi.activate ? `(${amount}/${mi.limit})` : null}{mi.redux ? `(${mi.limit - props.character_info.hardcode[mi.redux] || 10}/${mi.limit})` : null}</td>
             <td>{mi.weight} lb{(mi.weight > 1 || mi.weight === 0) ? "s" : null}</td>
             <td>{mi.price}</td>
