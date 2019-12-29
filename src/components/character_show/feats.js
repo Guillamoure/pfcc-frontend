@@ -39,6 +39,12 @@ class Feats extends React.Component {
       case("Merg"):
         feats = this.merg()
         break
+      case 'Robby':
+        feats = this.robby()
+        break
+      case 'Festus':
+        feats = this.festus()
+        break
       default:
         break
     }
@@ -46,7 +52,7 @@ class Feats extends React.Component {
       return (
         <li onClick={() => this.changeActiveFeature(f.id)} className='highlight'>
           <strong data-id={f.id}>{f.name}</strong>
-          {this.state.activeFeat === f.id && <div style={{color: '#000'}}>{this.renderDescription(f.description)}</div>}
+          {this.state.activeFeat === f.id && <div style={{color: '#000'}}>{typeof f.description === 'string' ? this.renderDescription(f.description) : f.description}</div>}
         </li>
       )
     })
@@ -174,6 +180,46 @@ class Feats extends React.Component {
         description: "You gain a +1 bonus on all attack rolls you make using the selected weapon.",
         name: 'Weapon Focus (Orc Double-Axe)'
       }
+    ]
+  }
+
+  robby = () => {
+    return [
+      {
+        id: 6000,
+        description: 'With a light weapon, elven curve blade, rapier, whip, or spiked chain made for a creature of your size category, you may use your Dexterity modifier instead of your Strength modifier on attack rolls. If you carry a shield, its armor check penalty applies to your attack rolls.',
+        name: 'Weapon Finesse'
+      },
+      {
+        id: 6001,
+        description: <span>You gain a new spell-like ability, each usable twice per day, from the following list, in order: <em className='underline-hover' onClick={() => this.props.editModal('spell', null, 55)}>disguise self</em>, <em className='underline-hover' onClick={() => this.props.editModal('spell', null, 1)}>charm person</em>, <em className='underline-hover' onClick={() => this.props.editModal('spell', null, 47)}>misdirection</em>, <em className='underline-hover' onClick={() => this.props.editModal('spell', null, 16)}>invisibility</em>, <em className='underline-hover' onClick={() => this.props.editModal('spell', null, 1)}>suggestion</em>, displacement, confusion, <em className='underline-hover' onClick={() => this.props.editModal('spell', null, 29)}>dominate person</em>. Your caster level for these spells is equal to your Hit Dice. The DCs for these abilities are Charisma-based.</span>,
+        name: 'Magical Tails'
+      },
+      {
+        id: 6002,
+        description: 'You make attack rolls with the weapon normally.',
+        name: 'Exotic Weapon Proficiency - Net'
+      },
+      {
+        id: 6003,
+        description: 'You can draw a weapon as a free action instead of as a move action. You can draw a hidden weapon (see the Sleight of Hand skill) as a move action. A character who has selected this feat may throw weapons at his full normal rate of attacks (much like a character with a bow). Alchemical items, potions, scrolls, and wands cannot be drawn quickly using this feat.',
+        name: 'Quick Draw'
+      },
+      {
+        id: 6003,
+        description: 'You gain a +2 bonus on Acrobatics, Climb, and Swim checks.',
+        name: 'Sea Legs'
+      },
+    ]
+  }
+
+  festus = () => {
+    return [
+      {
+        id: 7000,
+        description: '',
+        name: ''
+      },
     ]
   }
 

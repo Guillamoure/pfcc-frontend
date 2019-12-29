@@ -2,6 +2,7 @@ import React from 'react'
 import _ from 'lodash'
 import FeatureForm from './feature_form'
 import { connect } from 'react-redux'
+import localhost from '../../localhost'
 
 class Feature extends React.Component {
 
@@ -17,7 +18,7 @@ class Feature extends React.Component {
 
   renderSubmit = (e, feature) => {
     e.preventDefault();
-    fetch(`http://localhost:3000/api/v1/klass_features/${this.props.feature.id}`, {
+    fetch(`${localhost}/api/v1/klass_features/${this.props.feature.id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -50,7 +51,7 @@ class Feature extends React.Component {
     e.preventDefault();
     if (answer === "yes") {
 
-      fetch(`http://localhost:3000/api/v1/klass_features/${this.props.feature.id}`, {
+      fetch(`${localhost}/api/v1/klass_features/${this.props.feature.id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -95,7 +96,7 @@ class Feature extends React.Component {
     }
     return <ul>{display.map(effect => <li>{effect}</li>)}</ul>
   }
-  
+
   startingLevel = (feature) => {
     let startingLevel = 20
     feature.feature_levels.forEach(fl => {

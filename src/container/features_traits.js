@@ -21,7 +21,7 @@ class FeaturesTraits extends React.Component {
         <div style={{height: '100%'}}>
           {this.state.activeTab === "Features" && <Features character={this.props.character} editModal={this.props.editModal}/>}
           {this.state.activeTab === "Traits" && <Traits character={this.props.character}/>}
-          {this.state.activeTab === "Feats" && <Feats/>}
+          {this.state.activeTab === "Feats" && <Feats editModal={this.props.editModal}/>}
         </div>
       </div>
     )

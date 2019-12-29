@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import _ from 'lodash'
+import localhost from '../../localhost'
 
 import SpellSummary from '../spell_summary'
 import HardcodeSpells from '../hardcode_spells'
@@ -42,7 +43,7 @@ class Spells extends React.Component {
       spell_level: spell.spell_level,
       klass_id: spell.klass.id
     }
-    fetch('http://localhost:3000/api/v1/cast_spells', {
+    fetch(`${localhost}/api/v1/cast_spells`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -279,7 +280,8 @@ class Spells extends React.Component {
     let cedrick = this.props.character.name === 'Cedrick'
     let pepper = this.props.character.name === 'Persephone'
     let maddox = this.props.character.name === 'Maddox'
-    if (condor || cedrick || pepper || maddox){
+    let robby = this.props.character.name === 'Robby'
+    if (condor || cedrick || pepper || maddox || robby){
       return <HardcodeSpells editModal={this.props.editModal}/>
     }
   }
@@ -290,7 +292,12 @@ class Spells extends React.Component {
     let cl = 0
     let concentration = 0
     let klass = this.props.classes.find(cl => cl.name === name)
-    let level = this.props.character_info.classes.find(cl => cl.id === klass.id).level
+    let level
+    if (name === 'Magical Child'){
+      level = 2
+    } else {
+      level = this.props.character_info.classes.find(cl => cl.id === klass.id).level
+    }
     cl += level
     concentration += level
     if (this.props.character.name === 'Maddox'){
@@ -300,6 +307,9 @@ class Spells extends React.Component {
       concentration += 5
       // intelligence
     }
+    concentration += this.props.character.name === 'Persephone' && name === 'Witch' ? 5 : 0
+    concentration += this.props.character.name === 'Persephone' && name === 'Magical Child' ? 3 : 0
+    concentration += this.props.character.name === 'Nettie' && name === 'Bard' ? 3 : 0
     return <span> | <strong>SR check</strong>: +{cl} | <strong>Concentration</strong>: +{concentration}</span>
   }
 

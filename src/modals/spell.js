@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import Portal from '../portal'
+import localhost from '../localhost'
 
 import SpellDescription from '../components/spell_description'
 
@@ -12,7 +13,7 @@ class SpellDescriptionModal extends React.Component {
 
   componentDidMount() {
     if (!this.props.spells.length){
-      fetch(`http://localhost:3000/api/v1/spells/${this.props.spellId}`)
+      fetch(`${localhost}/api/v1/spells/${this.props.spellId}`)
       .then(r => r.json())
       .then(data => {
         this.setState({spell: data.spell})

@@ -11,14 +11,6 @@ class Race extends React.Component{
   }
 
 
-  componentDidMount() {
-    fetch('http://localhost:3000/api/v1/races')
-    .then(r => r.json())
-    .then(data => {
-      this.setState({races: data})
-    })
-  }
-
   // componentWillUpdate() {
   //   if (mod.ability_score !== 'Any' && this.state.raceAnyModifier) {
   //     this.setState({raceAnyModifier: false})
@@ -46,18 +38,18 @@ class Race extends React.Component{
   }
 
   renderRaces = () => {
-    return this.state.races.map(race => {
+    return this.props.races.map(race => {
       return <option key={race.id} value={race.id}>{race.name}</option>
     })
   }
 
   renderChosenRace = () => {
-    let chosen = this.state.races.find(el => el.id === _.toNumber(this.props.chosenRaceId))
+    let chosen = this.props.races.find(el => el.id === _.toNumber(this.props.chosenRaceId))
     return <Link to={`/races/${chosen.name}`} > Info< br /></Link>
   }
 
   renderRacialAbilityModifiers = () => {
-    let chosen = this.state.races.find(el => el.id === _.toNumber(this.props.chosenRaceId))
+    let chosen = this.props.races.find(el => el.id === _.toNumber(this.props.chosenRaceId))
     return <span>{this.renderAbilityScoreModifiers(chosen)}</span>
   }
 
@@ -80,10 +72,10 @@ class Race extends React.Component{
       <label>Race Options </label>
         <select name="race" value={this.props.chosenRaceId} onChange={(e) => this.props.renderChange(e)}>
           <option value= "" >Select One</option>
-          {this.state.races[0] ? this.renderRaces() : null}
+          {this.props.races[0] ? this.renderRaces() : null}
         </select>
-      {this.state.races[0] && this.props.chosenRaceId ? this.renderChosenRace() : null}
-      {this.state.races[0] && this.props.chosenRaceId ? this.renderRacialAbilityModifiers() : null}
+      {this.props.races[0] && this.props.chosenRaceId ? this.renderChosenRace() : null}
+      {this.props.races[0] && this.props.chosenRaceId ? this.renderRacialAbilityModifiers() : null}
       {this.state.raceAnyModifier ? this.renderAnyChoiceField() : null}
       </div>
     )
@@ -94,7 +86,8 @@ class Race extends React.Component{
 const mapStateToProps = (state) => {
   return {
     currentUser: state.currentUser,
-    admin: state.admin
+    admin: state.admin,
+    races: state.races
   }
 }
 

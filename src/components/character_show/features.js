@@ -367,7 +367,147 @@ class Features extends React.Component {
           spellcasting: false
         },
       ]
+    } else if (name === 'Robby'){
+      replacedFeatures = ['Trapfinding', 'Danger Sense']
+      addedFeatures = [
+        {
+          id: 6000,
+          actions: [],
+          description: 'At 1st level, a swashbuckler can spend 1 panache point when she makes an Acrobatics, Climb, Finesse, Animal Handling (Ride), or Swim check to roll 1d6 and add the result to the check. She can do this after she makes the check but before the result is revealed. If the result of the d6 roll is a natural 6, she rolls another 1d6 and adds it to the check. She can continue to do this as long as she rolls natural 6s, up to a number of times equal to her Dexterity modifier (minimum 1).',
+          feature_levels: [{level: 1}],
+          feature_options: [],
+          klass_id: 2,
+          name: 'Deed - Derring-Do',
+          spellcasting: false
+        },
+        {
+          id: 6001,
+          actions: [],
+          description: 'At 1st level, when an opponent attempts a melee attack against the swashbuckler, the swashbuckler can as an immediate action spend 1 panache point to move 5 feet; doing so grants the swashbuckler a dodge bonus to AC equal to her Charisma modifier (minimum 0) against the triggering attack. This movement doesn’t negate the attack, which is still resolved as if the swashbuckler had not moved from the original square. This movement is not a 5-foot step; it provokes attacks of opportunity from creatures other than the one who triggered this deed. The swashbuckler can only perform this deed while wearing light or no armor, and while carrying no heavier than a light load.',
+          feature_levels: [{level: 1}],
+          feature_options: [],
+          klass_id: 2,
+          name: 'Deed - Dodging Panache',
+          spellcasting: false
+        },
+        {
+          id: 6002,
+          actions: [],
+          description: 'At 1st level, when an opponent makes a melee attack against the swashbuckler, she can spend 1 panache point and expend a use of an attack of opportunity to attempt to parry that attack. The swashbuckler makes an attack roll as if she were making an attack of opportunity; for each size category the attacking creature is larger than the swashbuckler, the swashbuckler takes a –2 penalty on this roll. If her result is greater than the attacking creature’s result, the creature’s attack automatically misses. The swashbuckler must declare the use of this ability after the creature’s attack is announced, but before its attack roll is made. Upon performing a successful parry and if she has at least 1 panache point, the swashbuckler can as an immediate action make an attack against the creature whose attack she parried, provided that creature is within her reach. This deed’s cost cannot be reduced by any ability or effect that reduces the number of panache points a deed costs.',
+          feature_levels: [{level: 1}],
+          feature_options: [],
+          klass_id: 2,
+          name: 'Deed - Opportune Parry and Riposte',
+          spellcasting: false
+        },
+        {
+          id: 6003,
+          actions: [],
+          description: 'At 3rd level, while the swashbuckler has at least 1 panache point, she can kip-up from prone as a move action without provoking an attack of opportunity. She can kip-up as a swift action instead by spending 1 panache point.',
+          feature_levels: [{level: 3}],
+          feature_options: [],
+          klass_id: 2,
+          name: 'Deed - Kip-Up',
+          spellcasting: false
+        },
+        {
+          id: 6004,
+          actions: [],
+          description: 'At 3rd level, while she has at least 1 panache point, when a swashbuckler hits an opponent with a light or one-handed piercing melee weapon, she can choose to use Intimidate to demoralize that opponent as a swift action instead of a standard action.',
+          feature_levels: [{level: 3}],
+          feature_options: [],
+          klass_id: 2,
+          name: 'Deed - Meanacing Swordplay',
+          spellcasting: false
+        },
+        {
+          id: 6005,
+          actions: [],
+          description: 'At 3rd level, while she has at least 1 panache point, a swashbuckler gains the ability to strike precisely with a light or one-handed piercing melee weapon (though not natural weapon attacks), adding her swashbuckler level to the damage dealt. To use this deed, a swashbuckler cannot attack with a weapon in her other hand or use a shield other than a buckler. She can even use this ability with thrown light or one-handed piercing melee weapons, so long as the target is within 30 feet of her. Any creature that is immune to sneak attacks is immune to the additional damage granted by precise strike, and any item or ability that protects a creature from critical hits also protects a creature from the additional damage of a precise strike. This additional damage is precision damage, and isn’t multiplied on a critical hit. As a swift action, a swashbuckler can spend 1 panache point to double her precise strike’s damage bonus on the next attack. This benefit must be used before the end of her turn, or it is lost. This deed’s cost cannot be reduced by any ability or effect that reduces the amount of panache points a deed costs (such as the Signature Deed feat).',
+          feature_levels: [{level: 3}],
+          feature_options: [],
+          klass_id: 2,
+          name: 'Deed - Precise Strike',
+          spellcasting: false
+        },
+        {
+          id: 6006,
+          actions: [],
+          description: 'At 3rd level, while the swashbuckler has at least 1 panache point, she gains a +2 bonus on initiative checks. In addition, if she has the Quick Draw feat, her hands are free and unrestrained, and she has any single light or one-handed piercing melee weapon that isn’t hidden, she can draw that weapon as part of the initiative check.',
+          feature_levels: [{level: 3}],
+          feature_options: [],
+          klass_id: 2,
+          name: 'Deed - Swashbuckler Initiative',
+          spellcasting: false
+        },
+        {
+          id: 6007,
+          actions: [],
+          description: 'Whenever she makes a successful melee attack with the selected weapon, she adds her Dexterity modifier instead of her Strength modifier to the damage roll. If any effect would prevent the rogue from adding her Strength modifier to the damage roll, she does not add her Dexterity modifier.',
+          feature_levels: [{level: 3}],
+          feature_options: [],
+          klass_id: 3,
+          name: 'Finesse Training - Trident',
+          spellcasting: false
+        },
+        {
+          id: 6008,
+          actions: [],
+          description: 'At 1st level, a pirate becomes adept at moving on ships, boats, and similar vessels. She gains the Sea Legs feat as a bonus feat, even if she does not meet the prerequisites.',
+          feature_levels: [{level: 1}],
+          feature_options: [],
+          klass_id: 3,
+          name: 'Sea Legs',
+          spellcasting: false
+        },
+        {
+          id: 6009,
+          actions: [],
+          description: 'At 2nd level, a pirate incorporates a ship’s masts, rigging, ropes, sails, and other such structures into her combat style. Provided she is wearing light armor or no armor, when fighting in an environment where such structures exist, the rogue incorporates them into her movement, and does not have to move in a straight line when making either a charge attack or bull rush combat maneuver. Once she completes her attack or maneuver, she can reposition herself. Immediately after making the charge or bull rush, she can move 5 feet as a free action, even if the charge ends her turn. This movement does not provoke attacks of opportunity.',
+          feature_levels: [{level: 2}],
+          feature_options: [],
+          klass_id: 3,
+          name: 'Swinging Reposition',
+          spellcasting: false
+        },
+        {
+          id: 6010,
+          actions: [],
+          description: 'Pirates are a salty and steadfast lot. At 3rd level, a pirate gains a +1 bonus on saving throws against fear and mind-affecting effects. This bonus increases by +1 for every three levels, to a maximum of +6 at 18th level.',
+          feature_levels: [{level: 3}],
+          feature_options: [],
+          klass_id: 3,
+          name: 'Unflinching',
+          spellcasting: false
+        },
+        {
+          id: 6011,
+          actions: [],
+          description: 'Needs to be picked',
+          feature_levels: [{level: 4}],
+          feature_options: [],
+          klass_id: 3,
+          name: 'Rogue Talent - None',
+          spellcasting: false
+        },
+      ]
+    } else if (name === 'Festus'){
+      replacedFeatures = []
+      addedFeatures = [
+        {
+          id: 7000,
+          actions: [],
+          description: '',
+          feature_levels: [{level: 1}],
+          feature_options: [],
+          klass_id: 9,
+          name: '',
+          spellcasting: false
+        }
+      ]
     }
+
+
     newFeatures = features.filter(f => {
       let klass = this.props.classes.find(cl => cl.id === f.klass_id)
       let name = f.name

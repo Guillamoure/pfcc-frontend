@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import localhost from '../localhost'
 
 class HP extends React.Component {
 
@@ -53,7 +54,7 @@ class HP extends React.Component {
   }
 
   renderSubmit = () => {
-    fetch('http://localhost:3000/api/v1/hp', {
+    fetch(`${localhost}/api/v1/hp`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',

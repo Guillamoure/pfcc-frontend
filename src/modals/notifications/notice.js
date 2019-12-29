@@ -64,6 +64,8 @@ class Notice extends React.Component {
         <h3>Spell Effects</h3>
         <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderDispatch("ENLARGE")}>Enlarged</button>
         <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderDispatch("REDUCE")}>Reduced</button>
+        <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderDispatch("EXPEDITIOUS RETREAT")}>Expeditious Retreat</button>
+        <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderDispatch("SWIM SPEED")}>Swim Speed 30 ft</button>
         {this.renderAdditionalButtons()}
       </span>
     )

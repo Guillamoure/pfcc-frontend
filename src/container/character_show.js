@@ -2,6 +2,7 @@ import React from 'react'
 import _ from 'lodash'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
+import localhost from '../localhost'
 
 import AbilityScores from '../components/character_show/ability_scores'
 import CharacterName from '../components/character_show/character_name'
@@ -34,6 +35,7 @@ import Size from '../components/character_show/size'
 import SpellAugmentModal from '../modals/augment'
 import MetamagicModal from '../modals/metamagic'
 import HandyModal from '../modals/handy'
+import DebilitatingModal from '../modals/debilitating'
 
 import BackgroundForm from '../modals/background_form'
 import CharacterForm from '../modals/character_form'
@@ -63,6 +65,7 @@ import { faCaretLeft } from '@fortawesome/free-solid-svg-icons'
 
 class Character extends React.Component {
 
+
   state = {
     character: {},
     modal: false,
@@ -75,7 +78,7 @@ class Character extends React.Component {
   }
 
   componentDidMount() {
-    fetch(`http://localhost:3000/api/v1${this.props.location.pathname}`)
+    fetch(`${localhost}/api/v1${this.props.location.pathname}`)
     .then(r => r.json())
     .then(data => {
       // IF YOU WANT THE PAGE TO BE PRIVATE
@@ -187,7 +190,7 @@ class Character extends React.Component {
   }
 
   renderEdit = (info, details) => {
-    fetch(`http://localhost:3000/api/v1/${details}`, {
+    fetch(`${localhost}/api/v1/${details}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -269,13 +272,14 @@ class Character extends React.Component {
 
 
   render() {
+
     return (
       <span className="container-8 character">
         {this.state.character.race && <CharacterName character={this.state.character} editModal={this.editModal}/>}
         {this.state.character.race && this.state.display === "Adventure" && <AbilityScores character={this.state.character} editModal={this.editModal}/>}
         {this.state.character.race && this.state.display === "Adventure" && <FeaturesTraits character={this.state.character} editModal={this.editModal}/>}
         {this.state.character.race && this.state.display === "Character" && <Details character={this.state.character} editModal={this.editModal}/>}
-        {this.state.character.race && (this.state.display === "Adventure" || this.state.display === "Combat") && <Saves character={this.state.character} display={this.state.display}/>}
+        {this.state.character.race && (this.state.display === "Adventure" || this.state.display === "Combat") && <Saves character={this.state.character} display={this.state.display} renderTooltip={this.renderTooltip} mouseOut={this.mouseOut}/>}
         {this.state.character.race && (this.state.display === "Adventure" || this.state.display === "Combat") && <HP character={this.state.character} editModal={this.editModal} display={this.state.display}/>}
         {this.state.character.race && this.state.display === "Combat" && <AttackBonus character={this.state.character}/>}
         {this.state.character.race && this.state.display === "Combat" && <ArmorClass character={this.state.character} size={this.props.character_info.size}/>}
@@ -312,6 +316,7 @@ class Character extends React.Component {
         {this.state.modal === 'reservoir' && <SpellAugmentModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
         {this.state.modal === 'metamagic' && <MetamagicModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
         {this.state.modal === 'handy' && <HandyModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
+        {this.state.modal === 'debilitating' && <DebilitatingModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
         {/* unfinished, hardcoded features */}
 
         <div id='right' onClick={() => this.setState({display: this.rightArrow()})}><FontAwesomeIcon icon={faCaretRight} size='9x'/><div>{this.rightArrow()}</div></div>

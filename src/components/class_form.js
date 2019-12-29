@@ -1,5 +1,6 @@
 import React from 'react'
 // import { Redirect } from 'react-router-dom'
+import localhost from '../localhost'
 
 class NewClass extends React.Component {
 
@@ -32,7 +33,7 @@ class NewClass extends React.Component {
 
   renderSubmit = (e) => {
     e.preventDefault()
-    fetch('http://localhost:3000/api/v1/klasses', {
+    fetch(`${localhost}/api/v1/klasses`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -143,7 +144,7 @@ class NewClass extends React.Component {
   deleteClassConfirm = (e, answer) => {
     e.preventDefault();
     if (answer === "yes") {
-      fetch(`http://localhost:3000/api/v1/klasses/${this.props.klass.id}`, {
+      fetch(`${localhost}/api/v1/klasses/${this.props.klass.id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

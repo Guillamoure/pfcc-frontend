@@ -80,6 +80,43 @@ const Weapons = props => {
       activatable: false
     }
     weapons.push(morningstar)
+  } else if (name === 'Robby'){
+    const cane = {
+      id: 4000,
+      name: "Cane Sword",
+      description: `This slender light blade lies within a wooden container that serves as both its scabbard and hiding place. An observer must make a DC 20 Perception check to realize an undrawn sword cane is a weapon rather than a walking stick; the DC decreases to 10 if the observer is able to handle the weapon. You can’t wield a sword cane in two hands in order to apply 1-1/2 times your Strength modifier to damage.`,
+      price: "45gp",
+      weight: 4,
+      activatable: false
+    }
+    weapons.push(cane)
+    const longbow = {
+      id: 4001,
+      name: "Longbow",
+      description: `At almost 5 feet in height, a longbow is made up of one solid piece of carefully curved wood. You need two hands to use a bow, regardless of its size. A longbow is too unwieldy to use while you are mounted. If you have a penalty for low Strength, apply it to damage rolls when you use a longbow. If you have a Strength bonus, you can apply it to damage rolls when you use a composite longbow (see below), but not when you use a regular longbow.`,
+      price: "75gp",
+      weight: 3,
+      activatable: false
+    }
+    weapons.push(longbow)
+    const harpoon = {
+      id: 4002,
+      name: "Harpoon",
+      description: `A harpoon is a barbed spear with an attached rope 50 feet or less in length. Most harpoons have metal points, but some use ivory or are made entirely of wood. If you are proficient in the harpoon, it is a grappling weapon. A harpoon’s weight includes 10 pounds for the weight of 50 feet of hemp rope. The weight can be reduced by using shorter or lighter rope. If you are not proficient with a harpoon, treat it like a spear.`,
+      price: "5gp",
+      weight: 16,
+      activatable: false
+    }
+    weapons.push(harpoon)
+    const net = {
+      id: 4003,
+      name: "Net",
+      description: <span><p>When you throw a net, you make a ranged touch attack against your target. A net’s maximum range is 10 feet. If you hit, the target is entangled.</p><p>If you control the trailing rope by succeeding on an opposed Strength check while holding it, the entangled creature can move only within the limits that the rope allows. If the entangled creature attempts to cast a spell, it must make a concentration check with a DC of 15 + the spell’s level or be unable to cast the spell.</p><p>An entangled creature can escape with a DC 20 Escape Artist check (a full-round action). The net has 5 hit points and can be burst with a DC 25 Strength check (also a full-round action). A net is useful only against creatures within one size category of you.</p><p>A net must be folded to be thrown effectively. The first time you throw your net in a fight, you make a normal ranged touch attack roll. After the net is unfolded, you take a –4 penalty on attack rolls with it. It takes 2 rounds for a proficient user to fold a net and twice that long for a non-proficient one to do so.</p></span>,
+      price: "20gp",
+      weight: 6,
+      activatable: false
+    }
+    weapons.push(net)
   }
 
 

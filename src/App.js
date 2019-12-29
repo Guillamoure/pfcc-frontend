@@ -7,6 +7,7 @@ import './css/container.css';
 
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { connect } from 'react-redux'
+import localhost from './localhost'
 
 
 import Home from './container/home'
@@ -32,7 +33,7 @@ import SkillForm from './components/skill_form'
 class App extends React.Component {
 
   componentDidMount(){
-    fetch('http://localhost:3000/api/v1/data')
+    fetch(`${localhost}/api/v1/data`)
     .then(r => r.json())
     .then(data => {
       this.props.dispatch({type: 'EVERYTHING', classes: data.klasses, races: data.races })
@@ -41,7 +42,6 @@ class App extends React.Component {
 
 
   render(){
-
     return (
         <Router>
           <React.Fragment>

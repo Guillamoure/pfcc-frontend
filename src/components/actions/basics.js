@@ -3,6 +3,8 @@ import { connect } from 'react-redux'
 
 const Basics = props => {
 
+  const hc = props.character_info.hardcode
+
   // const renderButtonCSS = action => {
   //   if (props.character_info.actions[action] && action !== 'free'){
   //     return `cast-${action}`
@@ -10,6 +12,9 @@ const Basics = props => {
   //     return action
   //   }
   // }
+
+  let speed = hc.speed
+  speed += hc.expeditious ? 30 : 0
 
   const renderDispatch = (action, details) => {
     let actions = props.character_info.actions
@@ -35,7 +40,7 @@ const Basics = props => {
           props.dispatch({type: 'CHARGE'})
           break
         case 'dimensionalSlide':
-          if (!props.character_info.hardcode.slide){
+          if (!hc.slide){
             props.dispatch({type: 'DIMENSIONAL SLIDE'})
             props.dispatch({type: 'POINTS CHANGE', amount: 'decrease'})
           }
@@ -54,7 +59,7 @@ const Basics = props => {
       return "cannot-cast"
     } else if (action === 'full' && (actions.standard || actions.move || actions.swift)){
       return "cannot-cast"
-    } else if (props.character_info.hardcode.ffs){
+    } else if (hc.ffs){
       return 'cannot-cast'
     } else if (!actions[action]){
       if (cannotRun(details)){
@@ -84,6 +89,8 @@ const Basics = props => {
     ab = Math.floor(ab)
     return ab >= 0 ? `+${ab}` : ab
   }
+
+  const swinging = props.character.name === 'Robby' ? ', Swinging Reposition' : null
 
   const renderBAB = (hd) => {
     switch (hd){
@@ -137,7 +144,7 @@ const Basics = props => {
           <tr>
             <td><button className={canCast('move')} onClick={() => renderDispatch('move')}><strong>Move</strong></button></td>
             <td>Move</td>
-            <td>{props.character_info.hardcode.speed} ft</td>
+            <td>{speed} ft</td>
           </tr>
           <tr>
             <td><button className={canCast('free')} onClick={() => props.dispatch({type: 'FIVE FOOT STEP'})}><strong>Move</strong></button></td>
@@ -145,16 +152,17 @@ const Basics = props => {
             <td>5 ft</td>
           </tr>
           {props.character.name === "Festus" && alternateMove('Fly', 50)}
-          {props.character_info.hardcode.major === "Condor - Major" && alternateMove('Fly', 80)}
-          {props.character_info.hardcode.major === "Frog - Major" && alternateMove('Swim', 30)}
+          {hc.major === "Condor - Major" && alternateMove('Fly', 80)}
+          {hc.major === "Frog - Major" && alternateMove('Swim', 30)}
           {props.character.name === "Cedrick" && alternateMove('Climb', 20)}
-          {props.character_info.hardcode.fly && alternateMove('Fly', 60)}
-          {props.character_info.hardcode.major === "Squid - Major" && alternateMove('Swim', 60)}
+          {hc.fly && alternateMove('Fly', 60)}
+          {hc.major === "Squid - Major" && alternateMove('Swim', 60)}
           {props.character.name === 'Maddox' && dimensionalSlide()}
+          {hc.swim && alternateMove('Swim', 30)}
           <tr>
             <td><button className={canCast('full', 'run')} onClick={() => renderDispatch('full', 'run')}><strong>Move</strong></button></td>
             <td>Run</td>
-            <td>{props.character_info.hardcode.speed * 4} ft</td>
+            <td>{speed * 4} ft</td>
           </tr>
         </tbody>
       </table>
@@ -180,7 +188,7 @@ const Basics = props => {
           <tr>
             <td><button className={canCast('full', 'charge')} onClick={() => renderDispatch('full', 'charge')}><strong>Attack</strong></button></td>
             <td>Charge</td>
-            <td>Move up to {props.character_info.hardcode.speed * 2} ft, make Attack. +2 to attack, -2 to AC</td>
+            <td>Move up to {speed * 2} ft, make Attack. +2 to attack, -2 to AC{swinging}</td>
           </tr>
         </tbody>
       </table>
@@ -203,7 +211,7 @@ const Basics = props => {
             <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
             <td>Bull Rush</td>
             <td>{calcCMB('bull rush')}</td>
-            <td>Move target 5 ft back, +5 ft for every 5 you beat their CMD</td>
+            <td>Move target 5 ft back, +5 ft for every 5 you beat their CMD{swinging}</td>
           </tr>
         </tbody>
       </table>
@@ -227,7 +235,7 @@ const Basics = props => {
         <td>{type}</td>
         <td>{speed} ft</td>
       </tr>
-      {!props.character_info.hardcode.fly && <tr>
+      {!hc.fly && <tr>
         <td><button className={canCast(fastAction)}><strong>Move</strong></button></td>
         <td onMouseOver={e => renderTooltip(e, type)} onMouseOut={props.mouseOut}>{type}{asterik}</td>
         <td>{fast} ft</td>
@@ -251,7 +259,7 @@ const Basics = props => {
   }
 
   const dimensionalSlide = () => {
-    let className = props.character_info.hardcode.slide ? 'cannot-cast' : 'free'
+    let className = hc.slide ? 'cannot-cast' : 'free'
     return (
       <React.Fragment>
         <tr>

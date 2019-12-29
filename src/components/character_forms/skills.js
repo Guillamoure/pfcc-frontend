@@ -1,5 +1,6 @@
 import React from 'react'
 import _ from 'lodash'
+import localhost from '../../localhost'
 
 class Skills extends React.Component {
 
@@ -8,7 +9,7 @@ class Skills extends React.Component {
   }
 
   componentDidMount() {
-    fetch("http://localhost:3000/api/v1/skillsets")
+    fetch(`${localhost}/api/v1/skillsets`)
     .then(r => r.json())
     .then(data => {
       this.setState({skillsets: data})

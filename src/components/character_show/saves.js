@@ -36,6 +36,7 @@ const Saves = props => {
       const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major'].includes(hc.major)
       const enlarger = hc.enlarge
       const reducer = hc.reduce
+      const charmedActive = hc.charmedActive
       if (save === 'reflex'){
         if (largeMorph){
           totalSavingThrow += -1
@@ -43,6 +44,7 @@ const Saves = props => {
         totalSavingThrow += enlarger ? -1 : 0
         totalSavingThrow += reducer ? 1 : 0
       }
+      totalSavingThrow += charmedActive ? 4 : 0
       if (!style){
         return totalSavingThrow < 0 ? totalSavingThrow : `+${totalSavingThrow}`
       } else {
@@ -75,16 +77,32 @@ const Saves = props => {
     return props.classes.find(ck => ck.id === klassId)
   }
 
+  const ast = props.character.name === 'Robby' ? '*' : null
+
+  const renderTooltip = (e, type) => {
+    let comment = ''
+    if (props.character.name === 'Robby'){
+      if (type === 'all'){
+        comment = '+1 to fear and mind-affecting effects'
+      } else if (type === 'reflex'){
+        comment = 'If you succeed on a saving throw to take half damage, take no damage instead'
+      }
+      props.renderTooltip(e, comment)
+    } else {
+      return null
+    }
+  }
+
 
     return(
-      <div id='saves' className='container-3 shadow shrink'>
-        <div id='saving-throw-title'>Saving Throws</div>
+      <div id='saves' className='container-3 shadow shrink' >
+        <div id='saving-throw-title' onMouseOver={e => renderTooltip(e, 'all')} onMouseOut={props.mouseOut}>Saving Throws{ast}</div>
         <span className='centered' >
           <div className='enhanced' style={renderCharacterSave('fortitude', 'constitution', true)}>{renderCharacterSave('fortitude', 'constitution')}</div>
           <div className='muted'><strong>Fortitude</strong></div>
         </span>
-        <span className='centered' >
-          <div className='enhanced' style={renderCharacterSave('reflex', 'dexterity', true)}>{renderCharacterSave('reflex', 'dexterity')}</div>
+        <span className='centered' onMouseOver={e => renderTooltip(e, 'reflex')} onMouseOut={props.mouseOut}>
+          <div className='enhanced' style={renderCharacterSave('reflex', 'dexterity', true)}>{renderCharacterSave('reflex', 'dexterity')}{ast}</div>
           <div className='muted'><strong>Reflex</strong></div>
         </span>
         <span className='centered' >

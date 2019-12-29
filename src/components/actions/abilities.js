@@ -22,8 +22,26 @@ class Abilities extends React.Component {
         return this.maddox()
       case 'Persephone':
         return this.pepper()
+      case 'Robby':
+        return this.robby()
+      case 'Festus':
+        return this.festus()
       default:
         return 0
+    }
+  }
+
+  dispatchManager = (action, pointsDirection, specific, points) => {
+    if (typeof points !== 'number' || points){
+      if (!this.props.character_info.actions[action]){
+        this.props.dispatch({type: 'TRIGGER ACTION', action})
+      }
+      if (pointsDirection){
+        this.props.dispatch({type: 'POINTS CHANGE', amount: pointsDirection})
+      }
+      if (specific){
+        this.props.dispatch({type: specific})
+      }
     }
   }
 
@@ -234,6 +252,65 @@ class Abilities extends React.Component {
           <td><button className={this.renderShifterFormClass('Squid - Major', 'major', 'class', 'standard', 1)} onClick={() => this.shift('Squid - Major', 'major', 2, 'standard', 'Large')}><strong>{this.renderShifterFormClass('Squid - Major', 'major', 'button', null, 1)}</strong></button></td>
           <td>Squid - Major Form (2 pts)</td>
           <td className='table-details'>Polymorph into Squid</td>
+        </tr>
+      </React.Fragment>
+    )
+  }
+
+  robby = () => {
+    let actions = this.props.character_info.actions
+    let hc = this.props.character_info.hardcode
+    let panache = hc.points
+    let charmedLife = this.props.character_info.hardcode.charmedLife
+    let charmedActive = this.props.character_info.hardcode.charmedActive
+    return(
+      <React.Fragment>
+        <tr>
+          <td><button className={actions.immediate || charmedLife >= 3 || charmedActive ? 'cannot-cast' : 'immediate'} onClick={() => this.dispatchManager('immediate', null, 'CHARMED', 3-charmedLife)}><strong>Lucky</strong></button></td>
+          <td>Charmed Life ({3-charmedLife}/3)</td>
+          <td className='table-details'>Add your Charisma bonus to your saving throw</td>
+        </tr>
+        <tr>
+          <td><button className={actions.immediate || panache <= 0 ? 'cannot-cast' : 'immediate'} onClick={() => this.dispatchManager('immediate', 'decrease', 'DODGING PANACHE', panache)}><strong>Dodge</strong></button></td>
+          <td>Dodging Panache</td>
+          <td className='table-details'>1 panache: Move 5 ft (AoO from anyone besides attacker), add Charisma mod to AC</td>
+        </tr>
+        {!hc.parry && <tr>
+          <td><button className={actions.free || panache <= 0 ? 'cannot-cast' : 'free'} onClick={() => this.dispatchManager('free', 'decrease', 'PARRY', panache)}><strong>Parry</strong></button></td>
+          <td>Opportune Parry</td>
+          <td className='table-details'>1 panache: Use your AoO to make a melee attack on an attacker making a melee attack (for each size larger attacker is, -2 penalty). If your attack roll is higher, the target misses.</td>
+        </tr>}
+        {hc.parry && <tr>
+          <td><button className={actions.immediate || panache <= 0 ? 'cannot-cast' : 'immediate'} onClick={() => this.dispatchManager('immediate', null, null, panache)}><strong>Riposte</strong></button></td>
+          <td>Opportune Riposte</td>
+          <td className='table-details'>If you parried, you may make a melee attack, as long as you have at least 1 panache point.</td>
+        </tr>}
+        <tr>
+          <td><button className={actions.move || panache <= 0 ? 'cannot-cast' : 'move'} onClick={() => this.dispatchManager('move', null, null, panache)}><strong>Stand</strong></button></td>
+          <td>Kip-Up</td>
+          <td className='table-details'>Stand up from prone without provoking an AoO</td>
+        </tr>
+        <tr>
+          <td><button className={actions.swift || panache <= 0 ? 'cannot-cast' : 'swift'} onClick={() => this.dispatchManager('swift', 'decrease', null, panache)}><strong>Stand</strong></button></td>
+          <td>Kip-Up</td>
+          <td className='table-details'>1 panache: Stand up from prone without provoking an AoO</td>
+        </tr>
+        <tr>
+          <td><button className={actions.swift || panache <= 0 ? 'cannot-cast' : 'swift'} onClick={() => this.dispatchManager('swift', 'decrease', 'PRECISE STRIKE', panache)}><strong>Damage</strong></button></td>
+          <td>Precise Strike</td>
+          <td className='table-details'>1 panache: Double Precise Strike damage bonus (+3 to +6)</td>
+        </tr>
+      </React.Fragment>
+    )
+  }
+
+  festus = () => {
+    return(
+      <React.Fragment>
+        <tr>
+          <td><button className='swift'><strong>Teleport</strong></button></td>
+          <td>Bardic Performance</td>
+          <td className='table-details'>Select a performance to start</td>
         </tr>
       </React.Fragment>
     )

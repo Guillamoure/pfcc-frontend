@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import localhost from '../localhost'
 
 import SpellsContainer from './spells_container'
 import SpellDescription from '../components/spell_description'
@@ -13,7 +14,7 @@ class Spells extends React.Component {
 
   componentDidMount(){
     if(!this.props.spells.length){
-      fetch('http://localhost:3000/api/v1/spells')
+      fetch(`${localhost}/api/v1/spells`)
       .then(r => r.json())
       .then(data => {
         this.props.dispatch({type: 'ALL SPELLS', spells: data })

@@ -1,6 +1,7 @@
 import React from 'react'
 import Portal from '../portal'
 import _ from 'lodash'
+import localhost from '../localhost'
 
 class CharacterForm extends React.Component{
 
@@ -26,7 +27,7 @@ class CharacterForm extends React.Component{
   }
 
   fetchClasses = () => {
-    fetch('http://localhost:3000/api/v1/klasses')
+    fetch(`${localhost}/api/v1/klasses`)
     .then(r => r.json())
     .then(data => {
       this.setState({allClasses: data})
@@ -34,7 +35,7 @@ class CharacterForm extends React.Component{
   }
 
   fetchRaces = () => {
-    fetch('http://localhost:3000/api/v1/races')
+    fetch(`${localhost}/api/v1/races`)
     .then(r => r.json())
     .then(data => {
       this.setState({allRaces: data})

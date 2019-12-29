@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import _ from 'lodash'
+import localhost from '../localhost'
 
 import SpellPreparationCard from '../components/spell_preparation_card'
 import PreparedCard from '../components/prepared_card'
@@ -19,7 +20,7 @@ class PrepareSpells extends React.Component {
   }
 
   componentDidMount() {
-    fetch(`http://localhost:3000/api/v1/known_spells?character=${this.props.character.id}`)
+    fetch(`${localhost}/api/v1/known_spells?character=${this.props.character.id}`)
     .then(r => r.json())
     .then(data => {
       this.setState({knownSpells: data}, this.availableClasses)
@@ -32,7 +33,7 @@ class PrepareSpells extends React.Component {
       spells: this.state.selectedSpells,
       character_id: this.props.character.id
     }
-    fetch('http://localhost:3000/api/v1/prepared_spells', {
+    fetch(`${localhost}/api/v1/prepared_spells`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

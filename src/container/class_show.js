@@ -2,6 +2,7 @@ import React from 'react'
 // import _ from 'lodash'
 // import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
+import localhost from '../localhost'
 
 
 import Introduction from '../components/class_show/introduction'
@@ -43,7 +44,7 @@ class Class extends React.Component {
       let selectedClass = this.props.classes.find(kl => kl.name === klass || kl.name === fw)
       this.setState({klass: selectedClass})
     } else {
-      fetch(`http://localhost:3000/api/v1/klasses/${klass}`)
+      fetch(`${localhost}/api/v1/klasses/${klass}`)
       .then(r => r.json())
       .then(data => this.setState({klass: data.klass}))
     }
@@ -66,7 +67,7 @@ class Class extends React.Component {
   renderSubmit = (e, feature) => {
     e.preventDefault()
 
-    fetch('http://localhost:3000/api/v1/klass_features', {
+    fetch(`${localhost}/api/v1/klass_features`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -90,7 +91,7 @@ class Class extends React.Component {
   renderClassEdit = (e, klass_updates) => {
     e.preventDefault()
 
-    fetch(`http://localhost:3000/api/v1/klasses/${this.state.klass.id}`, {
+    fetch(`${localhost}/api/v1/klasses/${this.state.klass.id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -113,7 +114,7 @@ class Class extends React.Component {
 
   renderClassSkillsFetch = (e, skills_data, method)=> {
     e.preventDefault()
-    fetch(`http://localhost:3000/api/v1/class_skillset_skills`, {
+    fetch(`${localhost}/api/v1/class_skillset_skills`, {
       method: method,
       headers: {
         'Content-Type': 'application/json',
@@ -136,7 +137,7 @@ class Class extends React.Component {
   }
 
   submitSpellsPerDay = (nestedSpells) => {
-    fetch(`http://localhost:3000/api/v1/spells_per_day`, {
+    fetch(`${localhost}/api/v1/spells_per_day`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -179,7 +180,7 @@ class Class extends React.Component {
 
   fetchClassFeatureEffect = (state, effect) => {
     debugger
-    fetch(`http://localhost:3000/api/v1/${effect}`, {
+    fetch(`${localhost}/api/v1/${effect}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

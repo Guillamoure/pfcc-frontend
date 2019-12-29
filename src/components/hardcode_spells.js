@@ -7,6 +7,7 @@ const HardcodeSpells = props => {
   const cedrick = props.character.name === "Cedrick"
   const pepper = props.character.name === "Persephone"
   const maddox = props.character.name === "Maddox"
+  const robby = props.character.name === "Robby"
 
   const spells = () => {
     let availableSpells = []
@@ -131,13 +132,28 @@ const HardcodeSpells = props => {
       // has a limit
       // if the last limit is used, expend it by its id not name
        // check fir expendibility, but keep track of limits throughout
+    } else if (robby){
+      let dancingLights = {id: 20, level: 0, action: "standard", name: "Dancing Lights", range: "170 ft", duration: "1 minute (D)", dc: "-", limit: 3}
+      availableSpells.push(dancingLights)
+      let disguiseSelf = {id: 55, level: 1, action: "standard", name: "Disguise Self", range: "you", duration: "70 minutes (D)", dc: "-", limit: 2}
+      availableSpells.push(disguiseSelf)
+      let charmPerson = {id: 1, level: 1, action: "standard", name: "Charm Person", range: "40 ft", duration: "7 hours", dc: "Will 16", limit: 2}
+      availableSpells.push(charmPerson)
+      let misdirection = {id: 47, level: 2, action: "standard", name: "Misdirection", range: "40 ft", duration: "7 hours", dc: "Will 17", limit: 2}
+      availableSpells.push(misdirection)
+      let touchSea = {id: 70, level: 1, action: "standard", name: "Touch of the Sea", range: "self", duration: "7 minutes", dc: "-", limit: 1, dependent: 'Expeditious Retreat'}
+      availableSpells.push(touchSea)
+      let expeditious = {id: 52, level: 1, action: "standard", name: "Expeditious Retreat", range: "self", duration: "7 minutes", dc: "-", limit: 1, dependent: 'Touch of the Sea'}
+      availableSpells.push(expeditious)
     }
+
+
     return availableSpells.map((sp, idx) => {
       const hc = props.character_info.hardcode
       let limits = hc.limits
       let amount
       if (limits && sp.limit){
-        let found = limits.find(l => l.name === sp.name)
+        let found = limits.find(l => (l.name === sp.name || l.name === sp.dependent))
         if (sp.starting){
           amount = found ? sp.starting - found.cast : sp.starting
         } else {
@@ -153,7 +169,13 @@ const HardcodeSpells = props => {
         return (
           <tr className={renderTableStyling(idx)} key={sp.id*3-1}>
             <td>{sp.level}</td>
-            <td ><button className={className(sp.action, sp.commandRing, sp.limit, sp.name)} onClick={() => dispatchCasting(className(sp.action, sp.commandRing, sp.limit, sp.name), sp.limit, sp.name, sp.starting)}><strong>Cast{sp.commandRing && ` (${sp.commandRing})`}{sp.limit ? `(${amount}/${sp.limit})` : null}</strong></button></td>
+            <td >
+              <button className={className(sp)} onClick={() => dispatchCasting(className(sp), sp)}>
+                <strong>
+                  Cast{sp.commandRing && ` (${sp.commandRing})`}{sp.limit ? `(${amount}/${sp.limit})` : null}
+                </strong>
+              </button>
+            </td>
             <td className='underline-hover' onClick={() => props.editModal('spell', null, sp.id)}>{sp.name}</td>
             <td>{sp.range}</td>
             <td>{sp.duration}</td>
@@ -165,8 +187,16 @@ const HardcodeSpells = props => {
     })
   }
 
-  const className = (action, commandRing, limit, name) => {
-    let availableAction = props.character_info.actions[action]
+  const className = (spell) => {
+    let action = spell.action
+    let commandRing = spell.commandRing
+    let limit = spell.limit
+    let name = spell.name
+    let dependent = spell.dependent
+
+    let actions = props.character_info.actions
+    let availableAction = actions[action]
+    availableAction = action === 'full' && (actions.standard || actions.move || actions.swift) ? true : availableAction
     // are the number of ring points left less than the number of points it costs to cast
     // is the limited number of times you can cast this spell greater or equal to the number of times you already cast it?
     if (commandRing || limit){
@@ -175,7 +205,7 @@ const HardcodeSpells = props => {
       if (unableToCast){
         // find that spell, and see if the max limit is less or equal to the number of times its been cast
         // if it is maxed out, you cannot-cast it
-        unableToCast = !!props.character_info.hardcode.limits.find(l => l.name === name && limit <= l.cast)
+        unableToCast = !!props.character_info.hardcode.limits.find(l => (l.name === name || l.name === dependent) && limit <= l.cast)
       }
       if (props.character_info.hardcode.ringPoints < commandRing || unableToCast){
         return 'cannot-cast'
@@ -184,7 +214,11 @@ const HardcodeSpells = props => {
     return availableAction ? 'cannot-cast' : action
   }
 
-  const dispatchCasting = (action, limit, name, starting) => {
+  const dispatchCasting = (action, spell) => {
+    let limit = spell.limit
+    let name = spell.name
+    let starting = spell.starting
+
     let enlargePerson = (name === 'Enlarge Person' && (!props.character_info.hardcode.sizeStaff || props.character_info.hardcode.sizeStaff <= 9))
     let reducePerson = (name === 'Reduce Person' && (!props.character_info.hardcode.sizeStaff || props.character_info.hardcode.sizeStaff <= 9))
     let shrinkItem = (name === 'Shrink Item' && (!props.character_info.hardcode.sizeStaff || props.character_info.hardcode.sizeStaff <= 8))
@@ -192,6 +226,8 @@ const HardcodeSpells = props => {
     let massReducePerson = (name === 'Mass Reduce Person' && (!props.character_info.hardcode.sizeStaff || props.character_info.hardcode.sizeStaff <= 7))
     if (action !== 'cannot-cast'){
       if (enlargePerson || reducePerson || shrinkItem || massEnlargePerson || massReducePerson){
+        props.dispatch({type: 'TRIGGER ACTION', action})
+      } else if (!enlargePerson && !reducePerson && !shrinkItem && !massEnlargePerson && !massReducePerson){
         props.dispatch({type: 'TRIGGER ACTION', action})
       }
     }

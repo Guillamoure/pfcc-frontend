@@ -17,6 +17,10 @@ const Initiative = props => {
       // improved initiative
       mod += 4
     }
+    if (name === 'Robby' && hc.points > 0){
+      // Swashbuckler initiative
+      mod += 2
+    }
     const ogMod = mod
     if (largeMorph){
       mod -= 1

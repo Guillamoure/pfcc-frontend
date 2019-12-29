@@ -1,6 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
 import { connect } from 'react-redux'
+import localhost from '../../localhost'
 
 class Skills extends React.Component {
 
@@ -9,7 +10,7 @@ class Skills extends React.Component {
   }
 
   componentDidMount() {
-    fetch(`http://localhost:3000/api/v1/skillsets/${this.props.character.skillset.id}`)
+    fetch(`${localhost}/api/v1/skillsets/${this.props.character.skillset.id}`)
     .then(r => r.json())
     .then(data => {
       this.setState({skillset: data.skillset})
@@ -55,6 +56,17 @@ class Skills extends React.Component {
     if (skill.ability_score === "Intelligence" && name === "Persephone"){
       mod += 1
     }
+    // agile trait
+    mod += skill.name === 'Acrobatics' && name === 'Robby' ? 2 : 0
+    // sea legs
+    mod += skill.name === 'Acrobatics' && name === 'Robby' ? 2 : 0
+    mod += skill.name === 'Climb' && name === 'Robby' ? 2 : 0
+    mod += skill.name === 'Swim' && name === 'Robby' ? 2 : 0
+    // pirate's eye patch
+    mod += skill.name === 'Climb' && name === 'Robby' ? 2 : 0
+    mod += skill.name === 'Swim' && name === 'Robby' ? 2 : 0
+
+
     // check to see if the starting mod is modified
     let ogMod = mod
     if (skill.ability_score === 'Strength'){
@@ -230,7 +242,7 @@ class Skills extends React.Component {
     let hc = this.props.character_info.hardcode
     switch(skill){
       case 'Acrobatics':
-        if (hc.minor === 'Frog - Minor' || hc.major === 'Frog - Major' || hc.major === 'Condor - Major' || name === 'Festus'){
+        if (hc.minor === 'Frog - Minor' || hc.major === 'Frog - Major' || hc.major === 'Condor - Major' || name === 'Festus' || name === 'Robby'){
           return asterik
         } else {
           return skill
@@ -248,7 +260,7 @@ class Skills extends React.Component {
           return skill
         }
       case 'Swim':
-        if (hc.major === 'Frog - Major'){
+        if (hc.major === 'Frog - Major' || name === 'Robby'){
           return asterik
         } else {
           return skill
@@ -260,7 +272,7 @@ class Skills extends React.Component {
           return skill
         }
       case 'Intimidate':
-        if (name === 'Cedrick'){
+        if (name === 'Cedrick' || name === 'Robby'){
           return asterik
         } else {
           return skill
@@ -273,6 +285,24 @@ class Skills extends React.Component {
         }
       case 'Disguise':
         if (name === 'Persephone'){
+          return asterik
+        } else {
+          return skill
+        }
+      case 'Finesse':
+        if (name === 'Robby'){
+          return asterik
+        } else {
+          return skill
+        }
+      case 'Handle Animal':
+        if (name === 'Robby'){
+          return asterik
+        } else {
+          return skill
+        }
+      case 'Climb':
+        if (name === 'Robby'){
           return asterik
         } else {
           return skill
@@ -304,11 +334,15 @@ class Skills extends React.Component {
         comment = 'Treat all jumps as if you had a running start'
       } else if (hc.major === 'Condor - Major' || name === 'Festus'){
         comment = '+8 to flying check from Fly Speed'
+      } else if (name === 'Robby'){
+        comment = 'Derring-Do: Spend 1 Panache to add +1d6, up to 4 times'
       }
     }
     if (skill === "Swim"){
       if (hc.major === 'Frog - Major'){
         comment = 'Swim Speed'
+      } else if (name === 'Robby'){
+        comment = 'Derring-Do: Spend 1 Panache to add +1d6, up to 4 times'
       }
     }
     if (skill === "Stealth"){
@@ -319,6 +353,8 @@ class Skills extends React.Component {
     if (skill === 'Intimidate'){
       if (name === 'Cedrick'){
         comment = <span>+1 enchancement bonus from <em>ominous</em> from Ta'al'mon Ancestral Handwraps</span>
+      } else if (name === 'Robby'){
+        comment = 'Meanacing Swordplay: If you have at least 1 Panache, after a melee attack, Demoralize as a swift action instead of standard action'
       }
     }
     if (skill === 'Religion'){
@@ -335,6 +371,21 @@ class Skills extends React.Component {
           alterEgo = 'Persephone'
         }
         comment = <span>+20 circumstance bonus to appear as {currently} if suspected to be {alterEgo}</span>
+      }
+    }
+    if (skill === 'Finesse'){
+      if (name === 'Robby'){
+        comment = 'Derring-Do: Spend 1 Panache to add +1d6, up to 4 times'
+      }
+    }
+    if (skill === 'Handle Animal'){
+      if (name === 'Robby'){
+        comment = 'Derring-Do: Spend 1 Panache to add +1d6 to ride checks, up to 4 times'
+      }
+    }
+    if (skill === 'Climb'){
+      if (name === 'Robby'){
+        comment = 'Derring-Do: Spend 1 Panache to add +1d6, up to 4 times'
       }
     }
     if (ability){

@@ -2,6 +2,7 @@ import React from 'react'
 import { withRouter } from 'react-router-dom'
 // import _ from 'lodash'
 import { connect } from 'react-redux'
+import localhost from '../localhost'
 
 class Classes extends React.Component {
 
@@ -10,7 +11,7 @@ class Classes extends React.Component {
   }
 
   componentDidMount() {
-    fetch('http://localhost:3000/api/v1/klasses')
+    fetch(`${localhost}/api/v1/klasses`)
     .then(r => r.json())
     .then(data => {
       this.setState({classes: data})

@@ -15,6 +15,8 @@ const Attacks = props => {
         return pepper()
       case 'Maddox':
         return maddox()
+      case 'Robby':
+        return robby()
       default:
         return null
     }
@@ -227,8 +229,72 @@ const Attacks = props => {
     )
   }
 
+  const robby = () => {
+    let precise = props.character_info.hardcode.precise ? 6 : 3
+    let panache = props.character_info.hardcode.points
+    precise = panache > 0|| precise === 6 ? precise : 0
+    return (
+      <React.Fragment>
+        <tr>
+          <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
+          <td>Trident (Tempest Trishula)</td>
+          <td style={renderNum('abD', null, true, true)}>{renderNum('abD', null, null, true) >= 0 ? '+' + renderNum('abD', null, null, true) : renderNum('abD', null, null, true)}, {renderNum('abD') >= 0 ? '+' + renderNum('abD') : renderNum('abD')}</td>
+          <td>10 ft</td>
+          <td>{renderDamageDice('1d8')}<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+4+precise >= 0 ? '+' + (renderNum('damageS')+4+precise) : renderNum('damageS')+4+precise /*Finesse Training, on melee only*/}</span> P, {renderDamageDice('1d8')}<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+precise >= 0 ? '+' + (renderNum('damageS')+precise) : renderNum('damageS')+precise}</span> P</td>
+          <td>x2</td>
+          <td>If thrown, use second attack bonus and damage, <span onMouseOver={e => renderTooltip(e, 'brace')} onMouseOut={props.mouseOut}>Brace</span>{panache > 0 ?', Precise Strike' : null}<span onMouseOver={e => renderTooltip(e, 'sneak attack')} onMouseOut={props.mouseOut}>, Sneak Attack +2d6</span><span className='underline-hover' onClick={() => props.editModal('debilitating')}>, Debilitating Injury</span></td>
+        </tr>
+        <tr>
+          <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
+          <td>Cane Sword</td>
+          <td style={renderNum('abD', null, true, true)}>{renderNum('abD', null, null, true) >= 0 ? '+' + renderNum('abD', null, null, true) : renderNum('abD', null, null, true)}</td>
+          <td>-</td>
+          <td>{renderDamageDice('1d6')}<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+precise >= 0 ? '+' + (renderNum('damageS')+precise) : renderNum('damageS')+precise}</span> P</td>
+          <td>x2</td>
+          <td>{panache > 0 ?'Precise Strike' : null}<span onMouseOver={e => renderTooltip(e, 'sneak attack')} onMouseOut={props.mouseOut}>, Sneak Attack +2d6</span><span className='underline-hover' onClick={() => props.editModal('debilitating')}>, Debilitating Injury</span></td>
+        </tr>
+        <tr>
+          <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
+          <td>Long Bow</td>
+          <td style={renderNum('abD', null, true)}>{renderNum('abD') >= 0 ? '+' + (renderNum('abD')) : (renderNum('abD'))}</td>
+          <td>100 ft</td>
+          <td>{renderDamageDice('1d8')}<span style={renderNum('damageD', null, true)}>{renderNum('damageD') >= 0 ? '+' + (renderNum('damageD')) : (renderNum('damageD'))}</span> P</td>
+          <td>x3</td>
+          <td><span onMouseOver={e => renderTooltip(e, 'sneak attack')} onMouseOut={props.mouseOut}>Sneak Attack +2d6</span><span className='underline-hover' onClick={() => props.editModal('debilitating')}>, Debilitating Injury</span></td>
+        </tr>
+        <tr>
+          <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
+          <td>Harpoon</td>
+          <td style={renderNum('abD', null, true)}>{renderNum('abS')-4 >= 0 ? '+' + (renderNum('abS')-4) : (renderNum('abS')-4) /*Not Proficient*/}, {renderNum('abD')-4 >= 0 ? '+' + (renderNum('abD')-4) : (renderNum('abD')-4) /*Not Proficient*/}</td>
+          <td>10 ft</td>
+          <td>{renderDamageDice('1d8')}<span style={renderNum('damageS', null, true)}>{renderNum('damageS') >= 0 ? '+' + (renderNum('damageS')) : (renderNum('damageS'))}</span> P</td>
+          <td>x3</td>
+          <td>If thrown, use the second attack bonus, not proficient<span onMouseOver={e => renderTooltip(e, 'sneak attack')} onMouseOut={props.mouseOut}>, Sneak Attack +2d6</span><span className='underline-hover' onClick={() => props.editModal('debilitating')}>, Debilitating Injury</span></td>
+        </tr>
+        <tr>
+          <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
+          <td>Net</td>
+          <td style={renderNum('abD', null, true)}>{renderNum('abD') >= 0 ? '+' + (renderNum('abD')) : (renderNum('abD'))}</td>
+          <td>Max 10 ft</td>
+          <td>entangled</td>
+          <td></td>
+          <td>Attack vs. Touch AC</td>
+        </tr>
+        <tr>
+          <td><button className={canCast('full')} onClick={() => renderDispatch('full')}><strong>Attack</strong></button></td>
+          <td>Any Two Attacks</td>
+          <td style={renderNum('abS', null, true)}>See Text</td>
+          <td>-</td>
+          <td>See Weapons</td>
+          <td>-</td>
+          <td>Quick Draw feat lets you use any two weapons. First attack is made at full attack bonus, second attack has a -5 penalty</td>
+        </tr>
+      </React.Fragment>
+    )
+  }
 
-  const renderNum = (type, strengthMultiplier, style, ability_score) => {
+
+  const renderNum = (type, strengthMultiplier, style, finesse) => {
     // type includes abS, abD, damageS, damageD
     let bab = 0
     let str = Math.floor((props.character_info.ability_scores.strength-10)/2)
@@ -257,10 +323,15 @@ const Attacks = props => {
     bab = n === "Cedrick" ? 7 : bab
     bab = n === "Persephone" ? 3 : bab
     bab = n === 'Maddox' ? 3 : bab
+    bab = n === 'Robby' ? 6 : bab
+    bab = n === 'Festus' ? 6 : bab
+    bab = n === 'Nettie' ? 5 : bab
+    size = size === "Huge" ? -2 : size
     size = size === "Large" ? -1 : size
     size = size === "Medium" ? 0 : size
     size = size === "Small" ? 1 : size
     size = size === "Tiny" ? 2 : size
+    size = size === "Diminutive" ? 4 : size
 
     // +2 to dex (+1 mod) from the wraps
     otherABD += !!taalmon ? 1 : 0
@@ -291,6 +362,7 @@ const Attacks = props => {
     damageSBonus += !!power ? 4 : 0
 
     abSBonus += !!charge ? 2 : 0
+    abDBonus += !!charge && finesse ? 2 : 0
 
     abSBonus += !!fd ? -4 : 0
     abDBonus += !!fd ? -4 : 0
@@ -430,6 +502,10 @@ const Attacks = props => {
       comment = 'A bane weapon excels against certain foes. Against a designated foe, the weapon’s enhancement bonus is +2 better than its actual bonus. It also deals an extra 2d6 points of damage against the foe.'
     } else if (name === 'unholy'){
       comment = 'An unholy weapon is imbued with unholy power. This power makes the weapon evil-aligned and thus bypasses the corresponding damage reduction. It deals an extra 2d6 points of damage against all creatures of good alignment. It bestows one permanent negative level on any good creature attempting to wield it. The negative level remains as long as the weapon is in hand and disappears when the weapon is no longer wielded. This negative level cannot be overcome in any way (including restoration spells) while the weapon is wielded.'
+    } else if (name === 'brace'){
+      comment = 'If you use a readied action to set a brace weapon against a charge, you deal double damage on a successful hit against a charging creature.'
+    } else if (name === 'sneak attack'){
+      comment = 'Target must be flanked or be denied their Dexterity bonus to AC. Ranged attacks must be within 30 ft. Target cannot have total concealment.'
     }
     if (comment){
       props.renderTooltip(e, comment)

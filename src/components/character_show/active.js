@@ -21,6 +21,8 @@ const Active = props => {
   const augment = hc.augment ? props.character.known_spells.find(ks => ks.spell.id === hc.augment.spellId).spell.name : null
   const enlarge = hc.enlarge
   const reduce = hc.reduce
+  const expeditious = hc.expeditious
+  const swim = hc.swim
 
   return (
     <div id='active' className='shadow shrink'>
@@ -40,6 +42,8 @@ const Active = props => {
         {augment && <li>Augmented {augment}: {hc.augment.augment === 'dc' ? '+1 DC' : '+1 Caster Level'}</li>}
         {enlarge && <li>Affected by <em className='underline-hover' onClick={() => props.editModal('spell', null, 64)}>enlarge person</em></li>}
         {reduce && <li>Affected by <em className='underline-hover' onClick={() => props.editModal('spell', null, 65)}>reduce person</em></li>}
+        {expeditious && <li>Expeditious Retreat</li>}
+        {swim && <li>Swim Speed 30 ft.</li>}
       </ul>
     </div>
   )

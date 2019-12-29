@@ -9,6 +9,7 @@ const ArmorClass = props => {
   const charging = hc.charge ? -2 : 0
   const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major'].includes(hc.major)
   const cleave = hc.cleave ? -2 : 0
+  const dodgingPanache = hc.dodgingPanache ? 4 : 0
   const name = props.character.name
   const armor = hc.armor
   const enlarger = hc.enlarge
@@ -79,6 +80,9 @@ const ArmorClass = props => {
     if (name === "Persephone"){
       bonus+=1
     }
+    if (name === "Robby"){
+      bonus+=1
+    }
     return bonus
   }
 
@@ -109,11 +113,11 @@ const ArmorClass = props => {
   const acCalc = (type) => {
     switch(type){
       case 'ac':
-        return (10 + dexMod() + renderSize() + armorBonus() + dodge() + natural() + raging + charging + cleave + cedrick + enlarge + reduce)
+        return (10 + dexMod() + renderSize() + armorBonus() + dodge() + natural() + raging + charging + cleave + cedrick + enlarge + reduce + dodgingPanache)
       case 't':
-        return (10 + dexMod() + renderSize() + dodge() + raging + charging + cleave + cedrick + enlarge + reduce)
+        return (10 + dexMod() + renderSize() + dodge() + raging + charging + cleave + cedrick + enlarge + reduce + dodgingPanache)
       case 'ff':
-        return (10 + renderSize() + armorBonus() + natural() + raging + charging + cleave + cedrick + enlarge + reduce)
+        return (10 + renderSize() + armorBonus() + natural() + raging + charging + cleave + cedrick + enlarge + reduce + dodgingPanache)
       default:
         return 10
     }
@@ -141,10 +145,12 @@ const ArmorClass = props => {
       dex = armor === '+1 chain shirt' && dex > 4 ? 4 : dex
     }
     let defaultAC = 10 + dex + size + armorBonus + natural + bonus
+    defaultAC += name === "Robby" ? 1 : 0 // nimble feature
     defaultAC += name === "Persephone" ? 1 : 0 // dodge feat
     defaultAC += name === "Persephone" ? 1 : 0 // natural armor
     if (type === 't'){
       defaultAC = 10 + dex + size + bonus
+      defaultAC += name === "Robby" ? 1 : 0 // nimble feature
       defaultAC += name === "Persephone" ? 1 : 0 // dodge feat
     } else if (type === 'ff'){
       defaultAC = 10 + size + armorBonus + natural + bonus

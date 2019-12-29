@@ -2,6 +2,7 @@ import React from 'react'
 // import _ from 'lodash'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
+import localhost from '../localhost'
 
 import AbilityForm from '../components/character_forms/ability_scores'
 import Race from '../components/character_forms/race'
@@ -103,7 +104,7 @@ class CharacterCreation extends React.Component{
   }
 
   createCharacter = () => {
-    fetch('http://localhost:3000/api/v1/characters', {
+    fetch(`${localhost}/api/v1/characters`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -122,7 +123,7 @@ class CharacterCreation extends React.Component{
   }
 
   createCharacterClass = (characterId) => {
-    fetch('http://localhost:3000/api/v1/character_klasses', {
+    fetch(`${localhost}/api/v1/character_klasses`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

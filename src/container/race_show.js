@@ -2,6 +2,7 @@ import React from 'react'
 // import _ from 'lodash'
 // import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
+import localhost from '../localhost'
 
 
 import Introduction from '../components/race_show/introduction'
@@ -25,7 +26,7 @@ class Race extends React.Component {
 
   componentDidMount() {
     const race = this.renderURL()
-    fetch(`http://localhost:3000/api/v1/races/${race}`)
+    fetch(`${localhost}/api/v1/races/${race}`)
     .then(r => r.json())
     .then(data => this.setState({race: data}))
   }
@@ -44,7 +45,7 @@ class Race extends React.Component {
   renderSubmit = (e, trait) => {
     e.preventDefault()
 
-    fetch('http://localhost:3000/api/v1/racial_traits', {
+    fetch(`${localhost}/api/v1/racial_traits`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -67,7 +68,7 @@ class Race extends React.Component {
 
   renderRaceEdit = (e, race_updates) => {
     e.preventDefault()
-    fetch(`http://localhost:3000/api/v1/races/${this.state.race.id}`, {
+    fetch(`${localhost}/api/v1/races/${this.state.race.id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',

@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-
+import localhost from '../localhost'
 
 class Skills extends React.Component {
 
@@ -9,7 +9,7 @@ class Skills extends React.Component {
   }
 
   componentDidMount() {
-    fetch('http://localhost:3000/api/v1/skills')
+    fetch(`${localhost}/api/v1/skills`)
     .then(r => r.json())
     .then(data => {
       this.setState({skills: data})

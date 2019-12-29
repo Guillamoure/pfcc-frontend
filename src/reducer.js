@@ -96,7 +96,7 @@ const reducer = (state = initialState, action) => {
       return {...state, character_info: {...state.character_info, actions: actionDupe}}
     case "NEW TURN":
       let actions = {full: false, standard: false, move: false, swift: false, immediate: false}
-      return {...state, character_info: {...state.character_info, actions: actions, hardcode: {...state.character_info.hardcode, power: false, eBloodActive: false, ffs: false, fd: false, charge: false, cleave: false, arcane_strike: false, taal_tele: false, augment: false, slide: false}}}
+      return {...state, character_info: {...state.character_info, actions: actions, hardcode: {...state.character_info.hardcode, power: false, eBloodActive: false, ffs: false, fd: false, charge: false, cleave: false, arcane_strike: false, taal_tele: false, augment: false, slide: false, dodgingPanache: false, parry: false, precise: false, charmedActive: false}}}
     case "POWER ATTACK":
       return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, power: true}}}
     case "RAGE":
@@ -249,7 +249,27 @@ const reducer = (state = initialState, action) => {
 
       newSize = state.character_info.size === staticSize ? newSize : staticSize
       // ^this^ code doesn't account for polymorph size changes
-      return {...state, character_info: {...state.character_info, size: newSize, hardcode: {...state.character_info.hardcode, reduce}}}
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, reduce}}}
+    case 'DODGING PANACHE':
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, dodgingPanache: true}}}
+    case 'PARRY':
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, parry: true}}}
+    case 'PRECISE STRIKE':
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, precise: true}}}
+    case 'CHARMED':
+      let charmedLife = state.character_info.hardcode.charmedLife
+      let charmedActive = false
+      if (charmedLife < 3){
+        charmedLife += 1
+        charmedActive = true
+      }
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, charmedLife, charmedActive}}}
+    case 'EXPEDITIOUS RETREAT':
+      let expeditious = !state.character_info.hardcode.expeditious
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, expeditious}}}
+    case 'SWIM SPEED':
+      let swim = !state.character_info.hardcode.swim
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, swim}}}
     default:
       return state
   }
@@ -304,6 +324,8 @@ const hardcoded = (state, action) => {
       return {points: 6, speed: 30, age: 'Venerable'}
     case 'Persephone':
       return {speed: 30}
+    case 'Robby':
+      return {speed: 30, points: 4, charmedLife: 0}
     default:
       return {}
   }

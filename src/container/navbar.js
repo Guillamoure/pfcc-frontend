@@ -2,6 +2,7 @@ import React from 'react'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Menu } from 'semantic-ui-react'
+import localhost from '../localhost'
 
 class NavBar extends React.Component {
 
@@ -12,7 +13,7 @@ class NavBar extends React.Component {
   componentDidMount(){
     const token = localStorage.getItem("token")
     if (!this.state.currentUser && token){
-      fetch("http://localhost:3000/api/v1/auth", {
+      fetch(`${localhost}/api/v1/auth`, {
         headers: {
           Authenticate: token
         }
