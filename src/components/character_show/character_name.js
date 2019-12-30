@@ -79,6 +79,9 @@ class CharacterName extends React.Component {
           break
       }
     }
+    if (this.props.character_info.hardcode.alterSelf){
+      name = 'Not Harry Styles'
+    }
     return name
   }
 

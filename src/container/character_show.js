@@ -36,6 +36,8 @@ import SpellAugmentModal from '../modals/augment'
 import MetamagicModal from '../modals/metamagic'
 import HandyModal from '../modals/handy'
 import DebilitatingModal from '../modals/debilitating'
+import AmmoModal from '../modals/ammo'
+import SaseaModal from '../modals/sasea'
 
 import BackgroundForm from '../modals/background_form'
 import CharacterForm from '../modals/character_form'
@@ -91,6 +93,11 @@ class Character extends React.Component {
         this.setState({character: data.character})
         if (data.character.name === 'Merg'){
           this.props.dispatch({type: 'ACTIVE ARMOR', name: '+1 chain shirt'})
+          this.props.dispatch({type: 'CREW'})
+        }
+        if (data.character.name === 'Robby'){
+          this.props.dispatch({type: 'ACTIVE ARMOR', name: 'Padded'})
+          this.props.dispatch({type: 'HELMSMAN'})
         }
       // } else {
       //   this.props.history.push('/')
@@ -206,9 +213,12 @@ class Character extends React.Component {
     })
   }
 
-  editModal = (section, className, id) => {
+  editModal = (section, className, id, detail) => {
     if (className && className !== "free"){
       this.props.dispatch({type: 'TRIGGER ACTION', action: className})
+    }
+    if (detail && detail.name === 'weapon'){
+      this.props.dispatch(detail)
     }
     if (section === 'spell' && !!id){
       this.setState({modal: section, spellId: id})
@@ -317,6 +327,8 @@ class Character extends React.Component {
         {this.state.modal === 'metamagic' && <MetamagicModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
         {this.state.modal === 'handy' && <HandyModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
         {this.state.modal === 'debilitating' && <DebilitatingModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
+        {this.state.modal === 'ammo' && <AmmoModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
+        {this.state.modal === 'sasea' && <SaseaModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
         {/* unfinished, hardcoded features */}
 
         <div id='right' onClick={() => this.setState({display: this.rightArrow()})}><FontAwesomeIcon icon={faCaretRight} size='9x'/><div>{this.rightArrow()}</div></div>

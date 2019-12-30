@@ -25,7 +25,7 @@ class Details extends React.Component {
       case 'Merg':
         return ['Common', 'Orc', 'Sylvan', 'Terran', 'Draconic', 'Giant', 'Undercommon']
       case 'Robby':
-        return ['Common', 'Aquan', 'Auran', 'Ignan']
+        return ['Common', 'Aquan', 'Auran', 'Ignan', 'Halfling (Jabberjaw Gem)', 'Abyssal (Jabberjaw Gem)', 'Dwarven (Jabberjaw Gem)', 'Sylvan (Jabberjaw Gem)', 'Undercommon (Jabberjaw Gem)']
       default:
         return []
     }
@@ -38,6 +38,7 @@ class Details extends React.Component {
         <span className='header'>Background</span>
         {this.props.character.user_id === this.props.currentUser.id && <span className='edit' onClick={() => this.props.editModal('background')}><FontAwesomeIcon icon={faPencilAlt} /></span>}
           <div className='nested'>
+            <div><strong>Full Name:</strong> {this.props.character.full_name}</div>
             <div><strong>Background:</strong> {this.props.character.background}</div>
             <div><strong>Age:</strong> {this.props.character.age}</div>
             <div><strong>Size:</strong> {this.props.character.race.size}</div>

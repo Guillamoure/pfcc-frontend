@@ -52,6 +52,8 @@ class Notice extends React.Component {
         <h3>Active Conditions</h3>
         {this.renderConditions()}
         <br/>
+        <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderDispatch('HELMSMAN')}>Sasea Bitch Helmsman</button>
+        <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderDispatch('CREW')}>Sasea Bitch crew</button>
         <h3>Bardic Performances</h3>
         <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderActiveEffects("Inspire Courage: +2 to Attack and Damage rolls, charm saves, and fear saves")}>Inspire Courage</button>
         <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderActiveEffects("Inspire Competence: +3 to One Specific Skill")}>Inspire Competence</button>
@@ -66,6 +68,10 @@ class Notice extends React.Component {
         <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderDispatch("REDUCE")}>Reduced</button>
         <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderDispatch("EXPEDITIOUS RETREAT")}>Expeditious Retreat</button>
         <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderDispatch("SWIM SPEED")}>Swim Speed 30 ft</button>
+        <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderDispatch("SWIM 20")}>Swim Speed 20 ft</button>
+        <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderDispatch("LAND 10")}>Land Speed +10 ft</button>
+        <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderDispatch("LAND 20")}>Land Speed +20 ft</button>
+        <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderDispatch("QUICK")}>Quick Reaction</button>
         {this.renderAdditionalButtons()}
       </span>
     )

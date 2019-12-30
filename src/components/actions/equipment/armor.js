@@ -20,8 +20,7 @@ const Armor = props => {
       speed: '30 ft/20 ft'
     }
     armors.push(wooden)
-  }
-  if (name === 'Maddox'){
+  } else if (name === 'Maddox'){
     const bolsteringFull = {
       id: 160,
       name: "+1 bolstering full-plate",
@@ -36,8 +35,7 @@ const Armor = props => {
       speed: '20 ft/15 ft'
     }
     armors.push(bolsteringFull)
-  }
-  if (name === 'Merg'){
+  } else if (name === 'Merg'){
     const chainShirt = {
       id: 171,
       name: "+1 chain shirt",
@@ -52,6 +50,21 @@ const Armor = props => {
       speed: '30 ft/20 ft'
     }
     armors.push(chainShirt)
+  } else if (name === 'Robby'){
+    const padded = {
+      id: 180,
+      name: "Padded",
+      description: `More than simple clothing, padded armor combines heavy, quilted cloth and layers of densely packed stuffing to create a cheap and basic protection. It is typically worn by those not intending to face lethal combat or those who wish their maneuverability to be impacted as little as possible.`,
+      type: "Light",
+      price: "5 gp",
+      weight: 10,
+      armorBonus: 1,
+      maxDex: 8,
+      acp: 0,
+      arcane: 5,
+      speed: '30 ft/20 ft'
+    }
+    armors.push(padded)
   }
 
   const renderClick = name => {

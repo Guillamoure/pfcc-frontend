@@ -15,6 +15,9 @@ const Basics = props => {
 
   let speed = hc.speed
   speed += hc.expeditious ? 30 : 0
+  speed += hc.land10 ? 10 : 0
+  speed += hc.land20 ? 20 : 0
+  speed += hc.quick ? 10 : 0
 
   const renderDispatch = (action, details) => {
     let actions = props.character_info.actions
@@ -159,6 +162,8 @@ const Basics = props => {
           {hc.major === "Squid - Major" && alternateMove('Swim', 60)}
           {props.character.name === 'Maddox' && dimensionalSlide()}
           {hc.swim && alternateMove('Swim', 30)}
+          {props.character.name === 'Robby' && alternateMove('Swim', 30)}
+          {hc.swim20 && alternateMove('Swim', 20)}
           <tr>
             <td><button className={canCast('full', 'run')} onClick={() => renderDispatch('full', 'run')}><strong>Move</strong></button></td>
             <td>Run</td>

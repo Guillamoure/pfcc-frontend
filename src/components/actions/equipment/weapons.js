@@ -117,6 +117,24 @@ const Weapons = props => {
       activatable: false
     }
     weapons.push(net)
+    const lasso = {
+      id: 4004,
+      name: "Lasso",
+      description: <span><p>This thrown weapon is a length of rope with a simple open knot on one end that allows you to entangle a foe like you would using a net.</p><p>On a successful hit, the lasso tightens; to use it again you must spend a standard action sliding the knot to enlarge the loop.</p><p>The DC to cast a spell while entangled with a lasso is 10 + the spell level being cast. An entangled creature can slip free with a successful DC 15 Escape Artist check as a full-round action. The lasso has 2 hit points and AC 10, and requires a DC 23 Strength check to break.</p></span>,
+      price: "1sp",
+      weight: 5,
+      activatable: false
+    }
+    weapons.push(lasso)
+    const revolver = {
+      id: 4005,
+      name: "Revolver",
+      description: 'A revolver is a pistol with a revolving cylinder containing six chambers. Each chamber can hold a metal cartridge, and when one cartridge is shot, the cylinder automatically rotates (no extra hand or action required), readying the next chamber for firing. A revolver uses metal cartridges as ammunition.',
+      price: "4000gp",
+      weight: 4,
+      activatable: false
+    }
+    weapons.push(revolver)
   }
 
 

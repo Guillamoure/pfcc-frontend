@@ -23,11 +23,19 @@ const Active = props => {
   const reduce = hc.reduce
   const expeditious = hc.expeditious
   const swim = hc.swim
+  const swim20 = hc.swim20
+  const land10 = hc.land10
+  const land20 = hc.land20
+  const quick = hc.quick
+  const helmsman = hc.helmsman
+  const crew = hc.crew
 
   return (
     <div id='active' className='shadow shrink'>
       <ul>
         {props.character_info.conditions.map(c => <li>{c}</li>)}
+        {helmsman && <li>Sasea Bitch Helmsman</li>}
+        {crew && <li>Sasea Bitch Crew</li>}
         {performance && <li>Bardic Performance: {performance}</li>}
         {effects}
         {rage && <li>Raging</li>}
@@ -44,6 +52,10 @@ const Active = props => {
         {reduce && <li>Affected by <em className='underline-hover' onClick={() => props.editModal('spell', null, 65)}>reduce person</em></li>}
         {expeditious && <li>Expeditious Retreat</li>}
         {swim && <li>Swim Speed 30 ft.</li>}
+        {swim20 && <li>Swim Speed 20 ft.</li>}
+        {land10 && <li>Base Speed +10 ft.</li>}
+        {land20 && <li>Base Speed +20 ft.</li>}
+        {quick && <li>Base Speed +10 ft., +2 AC, adv. on next attack, Reflex save, Dex or Charisma check</li>}
       </ul>
     </div>
   )

@@ -77,7 +77,23 @@ const Saves = props => {
     return props.classes.find(ck => ck.id === klassId)
   }
 
-  const ast = props.character.name === 'Robby' ? '*' : null
+  // let ast = props.character.name === 'Robby' ? '*' : null
+  // ast = props.character_info.hardcode.quick ? '*' : ast
+  const ast = (type) => {
+    let ast = false
+    if (type === 'all'){
+      if (props.character.name === 'Robby'){
+        ast = true
+      }
+    } else if (type === 'reflex'){
+      if (props.character_info.hardcode.quick){
+        ast = true
+      }
+    }
+    if (ast){
+      return '*'
+    }
+  }
 
   const renderTooltip = (e, type) => {
     let comment = ''
@@ -87,22 +103,24 @@ const Saves = props => {
       } else if (type === 'reflex'){
         comment = 'If you succeed on a saving throw to take half damage, take no damage instead'
       }
-      props.renderTooltip(e, comment)
+    } else if (props.character_info.hardcode.quick && type === 'reflex'){
+      comment = 'Advantage on Reflex saving throws'
     } else {
       return null
     }
+    props.renderTooltip(e, comment)
   }
 
 
     return(
       <div id='saves' className='container-3 shadow shrink' >
-        <div id='saving-throw-title' onMouseOver={e => renderTooltip(e, 'all')} onMouseOut={props.mouseOut}>Saving Throws{ast}</div>
+        <div id='saving-throw-title' onMouseOver={e => renderTooltip(e, 'all')} onMouseOut={props.mouseOut}>Saving Throws{ast('all')}</div>
         <span className='centered' >
           <div className='enhanced' style={renderCharacterSave('fortitude', 'constitution', true)}>{renderCharacterSave('fortitude', 'constitution')}</div>
           <div className='muted'><strong>Fortitude</strong></div>
         </span>
         <span className='centered' onMouseOver={e => renderTooltip(e, 'reflex')} onMouseOut={props.mouseOut}>
-          <div className='enhanced' style={renderCharacterSave('reflex', 'dexterity', true)}>{renderCharacterSave('reflex', 'dexterity')}{ast}</div>
+          <div className='enhanced' style={renderCharacterSave('reflex', 'dexterity', true)}>{renderCharacterSave('reflex', 'dexterity')}{ast('reflex')}</div>
           <div className='muted'><strong>Reflex</strong></div>
         </span>
         <span className='centered' >

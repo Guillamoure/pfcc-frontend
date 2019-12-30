@@ -6,6 +6,7 @@ import Abilities from '../components/actions/abilities'
 import Attacks from '../components/actions/attacks'
 import Basics from '../components/actions/basics'
 import Equipment from '../components/actions/equipment'
+import Misc from '../components/actions/misc'
 
 class Actions extends React.Component {
   state= {
@@ -26,6 +27,7 @@ class Actions extends React.Component {
         {this.state.activeTab === "Spells" && <Spells character={this.props.character} editModal={this.props.editModal} clickOut={this.props.clickOut}/>}
         {this.state.activeTab === "Abilities" && <Abilities editModal={this.props.editModal}/>}
         {this.state.activeTab === "Equipment" && <Equipment editModal={this.props.editModal} renderTooltip={this.props.renderTooltip} mouseOut={this.props.mouseOut}/>}
+        {this.state.activeTab === "Misc" && <Misc editModal={this.props.editModal} renderTooltip={this.props.renderTooltip} mouseOut={this.props.mouseOut}/>}
         </div>
       </div>
     )

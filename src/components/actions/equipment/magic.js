@@ -102,10 +102,18 @@ const MagicItems = props => {
   } else if (name === 'Robby'){
     const pirates = {id: 3000, name: "Pirate's Eye Patch", description: <span>This black silk eye patch is adorned by a skull and crossbones worked in silver thread. The wearer of this patch gains a +2 competence bonus on Swim and Climb checks. In addition, once per day, the wearer of this eye patch can gain the effects of either <em className='underline-hover' onClick={() => props.editModal('spell', null, 70)}>touch of the sea</em> or <em className='underline-hover' onClick={() => props.editModal('spell', null, 52)}>expeditious retreat</em> on command (wearer’s choice).</span>, aura: "faint transmutation", price: '2600 gp', weight: '-'}
     magicItems.push(pirates)
+    const quickShirt = {id: 3001, name: "Quick Runner's Shirt", description: `This shirt is made of light, gossamer-thin fabric embroidered with arrangements of winged feet. Once per day as a swift action, the wearer can take an additional move action to move (${props.character_info.hardcode.speed} ft) and then immediately end his turn, losing any unspent actions. A character must wear this shirt continuously for 24 hours before he can activate this ability.`, aura: "faint transmutation", price: "1000 gp", weight: '-', activatable: true, action: 'swift', limit: 1}
+    magicItems.push(quickShirt)
+    const jabberjaw = {id: 3002, name: "Jabberjaw Gems", description: `When a gem is held, your spokemon language (heard and mouthed) appear as if you were speaking the gem's associated language. Whoever is wielding the gem or touching the wielder can hear the actual langueg spoken. If you hold multiple gems, your language is an amalgam of all the gems. For listeners who know all of the languages spoken, they must make a DC 15 Linguistics check to comprehend the speaker. For each language a listener doesn't know, increase the DC by 5.`, aura: "moderate transmutation", price: "6000 gp", weight: '-'}
+    magicItems.push(jabberjaw)
+    const origami = {id: 3003, name: "Origami Boat", description: 'If this makes contact with water, it gradually (over the course of 5 minutes) increase its size until it becomes a row boat with a space of 20 ft by 10 ft in the same shape as the paper. After 2 hours, the boat gradually (over the course of 10 minutes) shrinks back to its smaller form. This transmation resets after 12 hours.', aura: "moderate transmutation", price: "6000 gp", weight: '-'}
+    magicItems.push(origami)
+    const brassCloak = {id: 3004, name: "Brass Griffin Cloak", description: <span>While wearing this cloak, if the wearer is damaged by fire damage, they are not affected by it; the cloak draws the energy towards it. Once the clock has absorbed 50 damage this way, the cloak bruns up and is destroyed, and any excess damage is dealt to the wearer. Once a day, as a move action, you may  be affected by the spell <em className='underline-hover' onClick={() => props.editModal('spell', null, 75)}>endure elements</em>. The duration of this effect is 1 hour.</span>, aura: "moderate transmutation", price: "6000 gp", weight: '-'}
+    magicItems.push(brassCloak)
   }
 
   const renderClick = (name, limit, startingValue, expendable, modal) => {
-    if (name === "Rod of Grasping Hexes" || name === 'Wand of Unseen Servant' || name === "Staff of Size Alteration"){
+    if (name === "Rod of Grasping Hexes" || name === 'Wand of Unseen Servant' || name === "Staff of Size Alteration" || name === "Quick Runner's Shirt"){
       if (limit){
         // if limits exist in redux
         let limits = props.character_info.hardcode.limits
@@ -120,18 +128,30 @@ const MagicItems = props => {
           if (found){
             if (startingValue && found.cast < startingValue){
               props.dispatch({type: 'LIMIT CASTING', name})
+              if (name === "Quick Runner's Shirt"){
+                props.dispatch({type: 'TRIGGER ACTION', action: 'full'})
+              }
             } else if (found.cast < limit){
               props.dispatch({type: 'LIMIT CASTING', name})
+              if (name === "Quick Runner's Shirt"){
+                props.dispatch({type: 'TRIGGER ACTION', action: 'full'})
+              }
             }
           } else {
             props.dispatch({type: 'LIMIT CASTING', name})
+            if (name === "Quick Runner's Shirt"){
+              props.dispatch({type: 'TRIGGER ACTION', action: 'full'})
+            }
           }
         } else {
           props.dispatch({type: 'LIMIT CASTING', name})
+          if (name === "Quick Runner's Shirt"){
+            props.dispatch({type: 'TRIGGER ACTION', action: 'full'})
+          }
         }
       }
     }
-    if (name === "Quick-Change Mask" ){
+    if (name === "Quick-Change Mask"){
       props.dispatch({type: 'TRIGGER ACTION', action: 'move'})
     }
     if (name === "Bag of Tricks (Grey)" || name === 'Wand of Unseen Servant'){
@@ -148,7 +168,7 @@ const MagicItems = props => {
   const renderMagicItems = () => {
     return magicItems.map((mi, idx) => {
       let limits = props.character_info.hardcode.limits
-      let amount
+      let amount = true
       if (limits && mi.limit){
         let found = limits.find(l => l.name === mi.name)
         if (mi.starting){
@@ -157,16 +177,17 @@ const MagicItems = props => {
           amount = found ? mi.limit - found.cast : mi.limit
         }
       } else {
-        amount = mi.starting ? mi.starting : mi.limit
+        if (mi.limit){
+          amount = mi.starting ? mi.starting : mi.limit
+        }
       }
       let used = props.character_info.hardcode.usedItems
       if (used && used.includes(mi.name)){
         return null
       } else {
-        console.log(props.character_info.hardcode.sizeStaff)
         return (
           <tr className={renderTableStyling(idx)} key={mi.id*3-1}>
-            <td>{mi.activatable ? <button className={mi.action && !props.character_info.actions[mi.action] ? mi.action : 'cannot-cast'} onClick={() => renderClick(mi.name, mi.limit, mi.starting, mi.expendable, mi.modal)}>Use</button> : null}</td>
+            <td>{mi.activatable ? <button className={mi.action && !props.character_info.actions[mi.action] && amount ? mi.action : 'cannot-cast'} onClick={() => renderClick(mi.name, mi.limit, mi.starting, mi.expendable, mi.modal)}>Use</button> : null}</td>
             <td><strong>{mi.name}</strong>{mi.limit && mi.activate ? `(${amount}/${mi.limit})` : null}{mi.redux ? `(${mi.limit - props.character_info.hardcode[mi.redux] || 10}/${mi.limit})` : null}</td>
             <td>{mi.weight} lb{(mi.weight > 1 || mi.weight === 0) ? "s" : null}</td>
             <td>{mi.price}</td>

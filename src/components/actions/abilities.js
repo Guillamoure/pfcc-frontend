@@ -35,12 +35,46 @@ class Abilities extends React.Component {
     if (typeof points !== 'number' || points){
       if (!this.props.character_info.actions[action]){
         this.props.dispatch({type: 'TRIGGER ACTION', action})
+        if (specific){
+          this.props.dispatch({type: specific})
+        }
       }
       if (pointsDirection){
         this.props.dispatch({type: 'POINTS CHANGE', amount: pointsDirection})
       }
-      if (specific){
-        this.props.dispatch({type: specific})
+    }
+  }
+
+  renderClick = (ability, amount) => {
+    let { modal, action, limit, starting, name } = ability
+    if (modal){
+      this.props.editModal(modal)
+    }
+    if (action !== 'free' && amount !== 0 && action !== 'long'){
+      this.props.dispatch({type: 'TRIGGER ACTION', action})
+    }
+    if (limit){
+      // if limits exist in redux
+      let limits = this.props.character_info.hardcode.limits
+      // if limits doesn't exist, dispatch
+      // if limits does exist, try to find the specifc one
+      // if that one isn't found, dispatch
+      // if that one is found, check to see if the number of casts is equal to the limit
+      // if casts is less than limit, dispatch
+      // if casts is equal to limit, don't
+      if (limits){
+        let found = this.props.character_info.hardcode.limits.find(l => l.name === name)
+        if (found){
+          if (starting && found.cast < starting){
+            this.props.dispatch({type: 'LIMIT CASTING', name})
+          } else if (found.cast < limit){
+            this.props.dispatch({type: 'LIMIT CASTING', name})
+          }
+        } else {
+          this.props.dispatch({type: 'LIMIT CASTING', name})
+        }
+      } else {
+        this.props.dispatch({type: 'LIMIT CASTING', name})
       }
     }
   }
@@ -104,18 +138,95 @@ class Abilities extends React.Component {
     // if (power){
     //   powerAction = 'Active'
     // }
+    let abilities = [
+      {
+        id: 4000,
+        name: 'Change Age',
+        description: 'Alter Age',
+        button: 'Alter',
+        modal: 'age',
+        action: 'free'
+      },
+      {
+        id: 4001,
+        name: 'Augment Spell',
+        description: 'When you cast a spell, expend a point from your reservoir to either incrase the caster level by 1, or increase the DC by +1. You can spend no more than 1 point from your reservoir on a given spell this way.',
+        button: 'Augment',
+        modal: 'reservoir',
+        action: 'free'
+      },
+      {
+        id: 4002,
+        name: 'Zamantash Delta Chronometer - Insight Bonus',
+        description: 'Thrice a day, the wielder can add a +2 insight bonus to any roll involving a d20. You can add this bonus after rolling, but before knowing the result of the check.',
+        button: 'Foresight',
+        action: 'free',
+        limit: 3
+      },
+      {
+        id: 4003,
+        name: 'Zamantash Delta Chronometer - Instant Rest',
+        description: 'Once every three days, as a move action, the wielder, and any companion, familiar, or mount within 5 ft of them, feels as though they received an 8-hour rest.',
+        button: 'Rest',
+        action: 'move',
+        limit: 1
+      },
+      {
+        id: 4004,
+        name: 'Zamantash Delta Chronometer - Time Ritual',
+        description: 'Once a month, the wielder and all others can participate in a ritual that takes 20 minutes. The moment the ritual ends becomes a fixed point in time.',
+        button: 'Lock',
+        action: 'long',
+        limit: 1
+      },
+      {
+        id: 4005,
+        name: 'Zamantash Delta Chronometer - Ritual Break',
+        description: 'Within 24 hours of completing this ritual, the wielder can trigger the Curio as a 3-round action that requires concentration, and provokes an attack of opportunity. Time is rewound back to the fixed point in time, which becomes no longer fixed, and all of the participants of the ritual are aware of the events that they experienced.',
+        button: 'Rewind',
+        action: 'long',
+        limit: 1,
+        dependent: 4004
+      },
+      {
+        id: 4006,
+        name: 'Zamantash Delta Chronometer - Quick Reaction',
+        description: 'You can select one creature within 30 ft of you. That target gains +10 to their speed, a +2 insight bonus to their AC, and on their next attack roll, Reflex saving throw, or Dexterity-based or Charisma-based skill check, they may roll twice and take the higher of the two results. This effect lasts until the beginning of your next turn.',
+        button: 'Enhance',
+        action: 'standard'
+      },
+    ]
     return(
       <React.Fragment>
-        <tr>
-          <td><button className='free' onClick={() => this.props.editModal('age')}><strong>Alter</strong></button></td>
-          <td>Change Age</td>
-          <td className='table-details'>Alter Age</td>
-        </tr>
-        <tr>
-          <td><button className='free' onClick={() => this.props.editModal('reservoir')}><strong>Augment</strong></button></td>
-          <td>Augment Spell</td>
-          <td className='table-details'>When you cast a spell, expend a point from your reservoir to either incrase the caster level by 1, or increase the DC by +1. You can spend no more than 1 point from your reservoir on a given spell this way.</td>
-        </tr>
+        {abilities.map((a, idx) => {
+          let limits = this.props.character_info.hardcode.limits
+          let amount = true
+          if (limits && a.limit){
+            let found = limits.find(l => l.name === a.name)
+            if (a.starting){
+              amount = found ? a.starting - found.cast : a.starting
+            } else {
+              amount = found ? a.limit - found.cast : a.limit
+            }
+          } else {
+            if (a.limit){
+              amount = a.starting ? a.starting : a.limit
+            }
+          }
+          let className = !this.props.character_info.actions[a.action] && amount ? a.action : 'cannot-cast'
+          if (a.dependent){
+            if (!limits || !limits.find(l => l.name === abilities.find(ability => ability.id === a.dependent).name)){
+              return null
+            }
+          }
+          return (
+            <tr key={idx*a.id*3-1}>
+            <td><button className={className} onClick={() => this.renderClick(a, amount)}>{a.button}</button></td>
+            <td>{a.name}{a.limit ? ` (${amount}/${a.limit})` : null}</td>
+            <td className='table-details'>{a.description}</td>
+            </tr>
+          )
+        })}
       </React.Fragment>
     )
   }
@@ -266,6 +377,11 @@ class Abilities extends React.Component {
     return(
       <React.Fragment>
         <tr>
+          <td><button className={actions.standard ? 'cannot-cast' : 'standard'} onClick={() => this.dispatchManager('standard', null, 'ALTER SELF')}><strong>Change</strong></button></td>
+          <td>Change Shape</td>
+          <td className='table-details'>You can assume the appearance of a specific single human form of the same sex. You always take this specific form when you use this ability. Functions as <em className='underline-hover' onClick={() => this.props.editModal('spell', null, 76)}>alter self</em>.</td>
+        </tr>
+        <tr>
           <td><button className={actions.immediate || charmedLife >= 3 || charmedActive ? 'cannot-cast' : 'immediate'} onClick={() => this.dispatchManager('immediate', null, 'CHARMED', 3-charmedLife)}><strong>Lucky</strong></button></td>
           <td>Charmed Life ({3-charmedLife}/3)</td>
           <td className='table-details'>Add your Charisma bonus to your saving throw</td>
@@ -300,6 +416,7 @@ class Abilities extends React.Component {
           <td>Precise Strike</td>
           <td className='table-details'>1 panache: Double Precise Strike damage bonus (+3 to +6)</td>
         </tr>
+        {this.props.character_info.hardcode.helmsman && this.besmara()}
       </React.Fragment>
     )
   }
@@ -341,6 +458,17 @@ class Abilities extends React.Component {
     })
     let features = _.flatten(featuresNested)
     return features
+  }
+
+  besmara = () => {
+    let actions = this.props.character_info.actions
+    return (
+      <tr>
+        <td><button className={actions.full ? 'cannot-cast' : 'full'} onClick={() => this.dispatchManager('full')}><strong>Toggle</strong></button></td>
+        <td>Store/Withdraw Siege Weapon</td>
+        <td className='table-details'>Must have a siege weapon installed on the ship to store or withdraw it.</td>
+      </tr>
+    )
   }
 
   sparks = () => {
@@ -417,6 +545,10 @@ class Abilities extends React.Component {
       this.props.dispatch({type: 'TRIGGER ACTION', action: 'swift'})
       this.props.dispatch({type: 'TAALMON TELEPORT'})
     }
+  }
+
+  chronometer = type => {
+
   }
 
   squidCombat = () => {

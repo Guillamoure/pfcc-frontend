@@ -36,6 +36,9 @@ const Attacks = props => {
       if (details === 'cleave'){
         props.dispatch({type: 'CLEAVE'})
       }
+      if (details === 'Long Bow' || details === 'Revolver'){
+        props.dispatch({type: 'SPEND AMMO', weapon: details})
+      }
     } else {
       return null
     }
@@ -136,7 +139,7 @@ const Attacks = props => {
       <React.Fragment>
         <tr>
           <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
-          <td>Light Crossbow</td>
+          <td onClick={() => props.editModal('ammo', null, null, {name: 'weapon', type: 'ACTIVE WEAPON', weapon: 'Light Crossbow'})}>Light Crossbow {renderAmmo('Light Crossbow')}</td>
           <td style={renderNum('abD', null, true)} onMouseOver={e => renderTooltip(e, 'PBS')} onMouseOut={props.mouseOut}>+{renderNum('abD')/*There was an extra +1 from here but, i removed it. Unsure what it came from*/}*</td>
           <td>80 ft</td>
           <td onMouseOver={e => renderTooltip(e, 'PBS')} onMouseOut={props.mouseOut}>{renderDamageDice('1d8')}+<span style={renderNum('damageD', null, true)}>{renderNum('damageD')}*</span> P</td>
@@ -238,11 +241,11 @@ const Attacks = props => {
         <tr>
           <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
           <td>Trident (Tempest Trishula)</td>
-          <td style={renderNum('abD', null, true, true)}>{renderNum('abD', null, null, true) >= 0 ? '+' + renderNum('abD', null, null, true) : renderNum('abD', null, null, true)}, {renderNum('abD') >= 0 ? '+' + renderNum('abD') : renderNum('abD')}</td>
+          <td style={renderNum('abD', null, true, true)}>{renderNum('abD', null, null, true)+1 >= 0 ? '+' + (renderNum('abD', null, null, true)+1) : renderNum('abD', null, null, true)+1 /*Magic Item*/}, {renderNum('abD')+1 >= 0 ? '+' + (renderNum('abD')+1) : renderNum('abD')+1 /*Magic Item*/}</td>
           <td>10 ft</td>
-          <td>{renderDamageDice('1d8')}<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+4+precise >= 0 ? '+' + (renderNum('damageS')+4+precise) : renderNum('damageS')+4+precise /*Finesse Training, on melee only*/}</span> P, {renderDamageDice('1d8')}<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+precise >= 0 ? '+' + (renderNum('damageS')+precise) : renderNum('damageS')+precise}</span> P</td>
+          <td>{renderDamageDice('1d8')}<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+4+precise+1 >= 0 ? '+' + (renderNum('damageS')+4+precise+1) : renderNum('damageS')+4+precise+1 /*Finesse Training, on melee only; magic item*/}</span> P +1d6 elec , {renderDamageDice('1d8')}<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+precise+1 >= 0 ? '+' + (renderNum('damageS')+precise+1) : renderNum('damageS')+precise+1 /*Magic Item*/}</span> P +1d6 elec</td>
           <td>x2</td>
-          <td>If thrown, use second attack bonus and damage, <span onMouseOver={e => renderTooltip(e, 'brace')} onMouseOut={props.mouseOut}>Brace</span>{panache > 0 ?', Precise Strike' : null}<span onMouseOver={e => renderTooltip(e, 'sneak attack')} onMouseOut={props.mouseOut}>, Sneak Attack +2d6</span><span className='underline-hover' onClick={() => props.editModal('debilitating')}>, Debilitating Injury</span></td>
+          <td>If thrown, use second attack bonus and damage, <span onMouseOver={e => renderTooltip(e, 'brace')} onMouseOut={props.mouseOut}>Brace</span>{panache > 0 ?', Precise Strike' : null}<span onMouseOver={e => renderTooltip(e, 'sneak attack')} onMouseOut={props.mouseOut}>, Sneak Attack +2d6</span><span className='underline-hover' onClick={() => props.editModal('debilitating')}>, Debilitating Injury</span><em onMouseOver={(e) => renderTooltip(e, 'shock')} onMouseOut={props.mouseOut}>, shock</em><em onMouseOver={(e) => renderTooltip(e, 'returning')} onMouseOut={props.mouseOut}>, returning</em></td>
         </tr>
         <tr>
           <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
@@ -254,13 +257,13 @@ const Attacks = props => {
           <td>{panache > 0 ?'Precise Strike' : null}<span onMouseOver={e => renderTooltip(e, 'sneak attack')} onMouseOut={props.mouseOut}>, Sneak Attack +2d6</span><span className='underline-hover' onClick={() => props.editModal('debilitating')}>, Debilitating Injury</span></td>
         </tr>
         <tr>
-          <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
-          <td>Long Bow</td>
+          <td><button className={canCast('standard')} onClick={() => renderDispatch('standard', 'Long Bow')}><strong>Attack</strong></button></td>
+          <td onClick={() => props.editModal('ammo', null, null, {name: 'weapon', type: 'ACTIVE WEAPON', weapon: 'Long Bow'})}>Long Bow {renderAmmo('Long Bow')}</td>
           <td style={renderNum('abD', null, true)}>{renderNum('abD') >= 0 ? '+' + (renderNum('abD')) : (renderNum('abD'))}</td>
           <td>100 ft</td>
           <td>{renderDamageDice('1d8')}<span style={renderNum('damageD', null, true)}>{renderNum('damageD') >= 0 ? '+' + (renderNum('damageD')) : (renderNum('damageD'))}</span> P</td>
           <td>x3</td>
-          <td><span onMouseOver={e => renderTooltip(e, 'sneak attack')} onMouseOut={props.mouseOut}>Sneak Attack +2d6</span><span className='underline-hover' onClick={() => props.editModal('debilitating')}>, Debilitating Injury</span></td>
+          <td><span onMouseOver={e => renderTooltip(e, 'sneak attack')} onMouseOut={props.mouseOut}>Sneak Attack +2d6</span><span className='underline-hover' onClick={() => props.editModal('debilitating')}>, Debilitating Injury</span>{renderAmmo('Long Bow', true) === '+1 cunning arrow' ? <em onMouseOver={e => renderTooltip(e, 'cunning')} onMouseOut={props.mouseOut}>, cunning</em> : null}</td>
         </tr>
         <tr>
           <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
@@ -279,6 +282,30 @@ const Attacks = props => {
           <td>entangled</td>
           <td></td>
           <td>Attack vs. Touch AC</td>
+        </tr>
+        <tr>
+          <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
+          <td>Lasso</td>
+          <td style={renderNum('abD', null, true)}>{renderNum('abD')-4 >= 0 ? '+' + (renderNum('abD')-4) : (renderNum('abD')-4) /*Not Proficient*/}</td>
+          <td>10 ft</td>
+          <td>entangled</td>
+          <td></td>
+          <td>Attack vs. Touch AC, not proficient</td>
+        </tr>
+        <tr>
+          <td><button className={canCast('standard')} onClick={() => renderDispatch('standard', 'Revolver')}><strong>Attack</strong></button></td>
+          <td onClick={() => props.editModal('ammo', null, null, {name: 'weapon', type: 'ACTIVE WEAPON', weapon: 'Revolver'})}>Revolver {renderAmmo('Revolver')}</td>
+          <td style={renderNum('abD', null, true)} onMouseOver={e => renderTooltip(e, 'touch')} onMouseOut={props.mouseOut}>{renderNum('abD')-4 >= 0 ? '+' + (renderNum('abD')-4) : (renderNum('abD')-4)}*</td>
+          <td>20 ft</td>
+          <td>{renderDamageDice('1d8')}<span style={renderNum('damageD', null, true)}>{renderNum('damageD') >= 0 ? '+' + (renderNum('damageD')) : (renderNum('damageD'))}</span> B/P</td>
+          <td>x4</td>
+          <td>
+            <span onMouseOver={e => renderTooltip(e, 'misfire')} onMouseOut={props.mouseOut}>Misfire 5, </span>
+            <span onMouseOver={e => renderTooltip(e, 'capacity')} onMouseOut={props.mouseOut}>Capacity 6, </span>
+            <span onMouseOver={e => renderTooltip(e, 'Load Light')} onMouseOut={props.mouseOut}>Reload, </span>
+            <span onMouseOver={e => renderTooltip(e, 'sneak attack')} onMouseOut={props.mouseOut}>Sneak Attack +2d6, </span>
+            <span className='underline-hover' onClick={() => props.editModal('debilitating')}>Debilitating Injury</span>
+          </td>
         </tr>
         <tr>
           <td><button className={canCast('full')} onClick={() => renderDispatch('full')}><strong>Attack</strong></button></td>
@@ -489,7 +516,7 @@ const Attacks = props => {
   const renderTooltip = (e, name) => {
     let comment = null
     if (name === "Load Light"){
-      comment = 'Loading a light crossbow is a move action that provokes attacks of opportunity.'
+      comment = 'Loading is a move action that provokes attacks of opportunity.'
     } else if (name === 'PBS'){
       comment = '+1 to Attack and Damage Rolls if target is within 30 ft'
     } else if (name === 'ominous'){
@@ -506,6 +533,18 @@ const Attacks = props => {
       comment = 'If you use a readied action to set a brace weapon against a charge, you deal double damage on a successful hit against a charging creature.'
     } else if (name === 'sneak attack'){
       comment = 'Target must be flanked or be denied their Dexterity bonus to AC. Ranged attacks must be within 30 ft. Target cannot have total concealment.'
+    } else if (name === 'misfire'){
+      comment = 'If the natural result of your attack roll falls within a firearm’s misfire value, that shot misses, even if you would have otherwise hit the target. When a firearm misfires, it gains the broken condition. Normal broken conditions, and misfire value increases by 4.'
+    } else if (name === 'capacity'){
+      comment = 'A firearm’s capacity is the number of shots it can hold at one time. When making a full-attack action, you may fire a firearm as many times in a round as you have attacks, up to this limit, unless you can reload the weapon as a swift or free action while making a full-attack action'
+    } else if (name === 'touch'){
+      comment = 'Resolves against touch AC'
+    } else if (name === 'shock'){
+      comment = 'Upon command, a shock weapon is sheathed in crackling electricity that deals an extra 1d6 points of electricity damage on a successful hit. The electricity does not harm the wielder. The effect remains until another command is given.'
+    } else if (name === 'returning'){
+      comment = 'This special ability can only be placed on a weapon that can be thrown. A returning weapon flies through the air back to the creature that threw it. It returns to the thrower just before the creature’s next turn (and is therefore ready to use again in that turn). Catching a returning weapon when it comes back is a free action. If the character can’t catch it, or if the character has moved since throwing it, the weapon drops to the ground in the square from which it was thrown.'
+    } else if (name === 'cunning'){
+      comment = 'This special ability allows a weapon to find chinks in a foe’s defenses using the wielder’s knowledge of the target. Whenever the weapon’s attack is a critical threat, the wielder gains a +4 bonus on the confirmation roll if she has 5 or more ranks in a Knowledge skill that would be used to identify the target’s creature type (such as Knowledge [planes] for an outsider opponent), or a +6 bonus instead if she has 15 or more ranks.'
     }
     if (comment){
       props.renderTooltip(e, comment)
@@ -635,7 +674,7 @@ const Attacks = props => {
             </tr>
             <tr>
               <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
-              <td><em>+1 Underwater Light Crossbow</em></td>
+              <td onClick={() => props.editModal('ammo', null, null, {name: 'weapon', type: 'ACTIVE WEAPON', weapon: '+1 Underwater Light Crossbow'})}><em>+1 Underwater Light Crossbow</em> {renderAmmo('+1 Underwater Light Crossbow')}</td>
               <td style={renderNum('abD', null, true)}>+{renderNum('abD')+1}</td>
               <td>80 ft/20 ft</td>
               <td>{renderDamageDice('1d8')}+<span style={renderNum('damageD', null, true)}>{renderNum('damageD')+1}</span> B</td>
@@ -682,6 +721,20 @@ const Attacks = props => {
       default:
         return null
     }
+  }
+
+  const renderAmmo = (weapon, justString) => {
+    let weaponAmmo = props.character_info.hardcode.weaponAmmo.find(wa => wa.weapon === weapon)
+    let ammo = props.character_info.hardcode.ammo.find(a => a.name === weaponAmmo.ammo)
+    if (justString){
+      return ammo.name
+    }
+    let color = 'black'
+    color = ammo.amount <= 15 ? 'dark brown' : color
+    color = ammo.amount <= 10 ? 'maroon' : color
+    color = ammo.amount <= 5 ? 'red' : color
+    color = ammo.amount <= 0 ? 'grey' : color
+    return <span style={{color}}>({ammo.name})</span>
   }
 
   return (

@@ -140,7 +140,10 @@ class Skills extends React.Component {
       skillRanks = {ranks: 100}
     }
     if (skill.name === 'Profession (sailor)' && name === "Robby"){
-      skillRanks = {ranks: 100}
+      skillRanks = {ranks: 2}
+    }
+    if (skill.name === 'Perform (acting)' && name === "Robby"){
+      skillRanks = {ranks: 1}
     }
     if (skill.name === 'Perform (percussion)' && name === "Nettie"){
       skillRanks = {ranks: 100}
@@ -187,6 +190,11 @@ class Skills extends React.Component {
         abbrev += armor === '+1 chain shirt' ? '*' : ''
       }
     }
+    if (this.props.character_info.hardcode.quick){
+      if (abbrev === 'Dex' || abbrev === 'Cha'){
+        abbrev += '*'
+      }
+    }
     return abbrev
   }
 
@@ -200,7 +208,9 @@ class Skills extends React.Component {
     }
     if (name === 'Robby'){
       skills.push({name: 'Profession (sailor)', ability_score: 'Wisdom'})
+      skills.push({name: 'Perform (acting)', ability_score: 'Charisma'})
       skills = skills.filter(sk => sk.name !== 'Profession')
+      skills = skills.filter(sk => sk.name !== 'Perform')
     }
     if (name === 'Nettie'){
       skills.push({name: 'Perform (percussion)', ability_score: 'Charisma'})
@@ -393,6 +403,9 @@ class Skills extends React.Component {
       if (armor && (ability === 'Strength' || ability === 'Dexterity')){
         comment = armor === 'Wooden' ? 'Armor Check Penalty: -1' : comment
         comment = armor === '+1 chain shirt' ? 'Armor Check Penalty: -1' : comment
+      }
+      if (hc.quick && (ability === 'Dexterity' || ability === 'Charisma')){
+        comment = `Advantage on ${ability}-based checks`
       }
     }
     if (comment){

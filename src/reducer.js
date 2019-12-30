@@ -270,6 +270,52 @@ const reducer = (state = initialState, action) => {
     case 'SWIM SPEED':
       let swim = !state.character_info.hardcode.swim
       return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, swim}}}
+    case 'TEMPEST':
+      let tempest = (state.character_info.hardcode.tempest || 0) + action.amount
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, tempest}}}
+    case 'SWIM 20':
+      let swim20 = !state.character_info.hardcode.swim20
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, swim20}}}
+    case 'LAND 10':
+      let land10 = !state.character_info.hardcode.land10
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, land10}}}
+    case 'LAND 20':
+      let land20 = !state.character_info.hardcode.land20
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, land20}}}
+    case 'QUICK':
+      let quick = !state.character_info.hardcode.quick
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, quick}}}
+    case 'ALTER SELF':
+      let alterSelf = !state.character_info.hardcode.alterSelf
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, alterSelf}}}
+    case 'AMMO CHANGE':
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, ammo: action.ammo}}}
+    case 'ACTIVE WEAPON':
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, activeWeapon: action.weapon}}}
+    case 'WEAPON AMMO':
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, weaponAmmo: action.weaponAmmo}}}
+    case 'SPEND AMMO':
+      let selectedWeapon = state.character_info.hardcode.weaponAmmo.find(wa => wa.weapon === action.weapon)
+      let selectedAmmo = state.character_info.hardcode.ammo.find(a => a.name === selectedWeapon.ammo)
+      let ammoDup = [...state.character_info.hardcode.ammo]
+      ammoDup = ammoDup.map(a => {
+        if (a.name === selectedAmmo.name){
+          let thisAmmo = {...a}
+          if (thisAmmo.amount > 0){
+            thisAmmo.amount = thisAmmo.amount-1
+          }
+          return thisAmmo
+        } else {
+          return a
+        }
+      })
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, ammo: ammoDup}}}
+    case 'HELMSMAN':
+      let helmsman = !state.character_info.hardcode.helmsman
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, helmsman}}}
+    case 'CREW':
+      let crew = !state.character_info.hardcode.crew
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, crew}}}  
     default:
       return state
   }
@@ -319,13 +365,13 @@ const hardcoded = (state, action) => {
     case 'Merg':
       return {points: 18, speed: 30}
     case 'Cedrick':
-      return {points: 7, speed: 30, ringPoints: 2}
+      return {points: 7, speed: 30, ringPoints: 2, ammo:[{name: 'bolt', amount: 10}], weaponAmmo: [{weapon: '+1 Underwater Light Crossbow', ammo: 'bolt'}]}
     case 'Maddox':
       return {points: 6, speed: 30, age: 'Venerable'}
     case 'Persephone':
-      return {speed: 30}
+      return {speed: 30, ammo:[{name: 'bolt', amount: 10}], weaponAmmo: [{weapon: 'Light Crossbow', ammo: 'bolt'}]}
     case 'Robby':
-      return {speed: 30, points: 4, charmedLife: 0}
+      return {speed: 30, points: 4, charmedLife: 0, ammo:[{name: 'arrow', amount: 95}, {name: 'cartridge', amount: 0}, {name: '+1 cunning arrow', amount: 1}], weaponAmmo: [{weapon: 'Long Bow', ammo: 'arrow'}, {weapon: 'Revolver', ammo: 'cartridge'}]}
     default:
       return {}
   }

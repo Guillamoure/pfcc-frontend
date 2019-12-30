@@ -13,6 +13,7 @@ class ActionTabs extends React.Component {
         <Tab label="Spells" renderTabClick={this.props.renderTabClick} activeTab={this.props.activeTab}/>
         <Tab label="Abilities" renderTabClick={this.props.renderTabClick} activeTab={this.props.activeTab}/>
         <Tab label="Equipment" renderTabClick={this.props.renderTabClick} activeTab={this.props.activeTab}/>
+        <Tab label="Misc" renderTabClick={this.props.renderTabClick} activeTab={this.props.activeTab}/>
       </span>
     )
   }

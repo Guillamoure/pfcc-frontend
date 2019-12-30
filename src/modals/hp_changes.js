@@ -103,6 +103,8 @@ class HPChanges extends React.Component {
       if (this.props.character_info.hardcode.rage){
         array.push('Resist electricity 10')
       }
+    } else if (name === 'Robby'){
+      array.push('Immune fire (50 damage total)')
     }
     return (
       <ul>

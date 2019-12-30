@@ -14,6 +14,7 @@ const ArmorClass = props => {
   const armor = hc.armor
   const enlarger = hc.enlarge
   const reducer = hc.reduce
+  const quick = hc.quick ? 2 : 0
   // for enlarge person, you automatically have a -1 penalty to AC
   const enlarge = enlarger ? -1 : 0
   const reduce = reducer ? 1 : 0
@@ -46,6 +47,9 @@ const ArmorClass = props => {
       if (armor === '+1 chain shirt' && dex > 19){
         dex = 19
       }
+      if (armor === 'Padded' && dex > 27){
+        dex = 27
+      }
     }
     return Math.floor((dex - 10) / 2)
   }
@@ -70,7 +74,6 @@ const ArmorClass = props => {
         return 0;
     }
   }
-
 
   const dodge = () => {
     let bonus = 0
@@ -106,6 +109,9 @@ const ArmorClass = props => {
       if (armor === "+1 chain shirt"){
         bonus += 5
       }
+      if (armor === 'Padded'){
+        bonus += 1
+      }
     }
     return bonus
   }
@@ -113,11 +119,11 @@ const ArmorClass = props => {
   const acCalc = (type) => {
     switch(type){
       case 'ac':
-        return (10 + dexMod() + renderSize() + armorBonus() + dodge() + natural() + raging + charging + cleave + cedrick + enlarge + reduce + dodgingPanache)
+        return (10 + dexMod() + renderSize() + armorBonus() + dodge() + natural() + raging + charging + cleave + cedrick + enlarge + reduce + dodgingPanache + quick)
       case 't':
-        return (10 + dexMod() + renderSize() + dodge() + raging + charging + cleave + cedrick + enlarge + reduce + dodgingPanache)
+        return (10 + dexMod() + renderSize() + dodge() + raging + charging + cleave + cedrick + enlarge + reduce + dodgingPanache + quick)
       case 'ff':
-        return (10 + renderSize() + armorBonus() + natural() + raging + charging + cleave + cedrick + enlarge + reduce + dodgingPanache)
+        return (10 + renderSize() + armorBonus() + natural() + raging + charging + cleave + cedrick + enlarge + reduce + dodgingPanache + quick)
       default:
         return 10
     }
@@ -143,6 +149,8 @@ const ArmorClass = props => {
       dex = armor === 'Wooden' && dex > 3 ? 3 : dex
       armorBonus += armor === '+1 chain shirt' ? 5 : 0
       dex = armor === '+1 chain shirt' && dex > 4 ? 4 : dex
+      armorBonus += armor === 'Padded' ? 1 : 0
+      dex = armor === 'Padded' && dex > 8 ? 8 : dex
     }
     let defaultAC = 10 + dex + size + armorBonus + natural + bonus
     defaultAC += name === "Robby" ? 1 : 0 // nimble feature
