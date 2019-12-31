@@ -29,6 +29,7 @@ const Active = props => {
   const quick = hc.quick
   const helmsman = hc.helmsman
   const crew = hc.crew
+  const stealTime = hc.stealTime
 
   return (
     <div id='active' className='shadow shrink'>
@@ -56,6 +57,7 @@ const Active = props => {
         {land10 && <li>Base Speed +10 ft.</li>}
         {land20 && <li>Base Speed +20 ft.</li>}
         {quick && <li>Base Speed +10 ft., +2 AC, adv. on next attack, Reflex save, Dex or Charisma check</li>}
+        {stealTime && <li>+1 to AC, Reflex, +5 base speed</li>}
       </ul>
     </div>
   )

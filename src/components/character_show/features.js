@@ -296,15 +296,45 @@ class Features extends React.Component {
           id: 4001,
           actions: [],
           description: 'The arcanist can expend 1 point from her arcane reservoir to create a dimensional crack that she can step through to reach another location. This ability is used as part of a move action or withdraw action, allowing her to move up to 10 feet per arcanist level to any location she can see. This counts as 5 feet of movement. She can only use this ability once per round. She does not provoke attacks of opportunity when moving in this way, but any other movement she attempts as part of her move action provokes as normal.',
-          feature_levels: [{level: 1}],
+          feature_levels: [{level: 5}],
           feature_options: [],
           klass_id: 8,
           name: 'Arcanist Exploit - Dimensional Slide',
           spellcasting: false
-        }
+        },
+        {
+          id: 4002,
+          actions: [],
+          description: 'The arcanist can expend 1 point from his arcane reservoir when he rolls initiative to allow himself or an ally within 30 feet to roll 1d4 and add it to that character’s initiative result. At 5th level, the chronomancer can expend 2 points from his arcane reservoir as an immediate action to apply this benefit to a saving throw he has just rolled (but before the result is revealed). At 10th level, the die size increases to 1d6.',
+          feature_levels: [{level: 1}],
+          feature_options: [],
+          klass_id: 8,
+          name: 'Arcanist Exploit - Forewarned',
+          spellcasting: false
+        },
+        {
+          id: 4003,
+          actions: [],
+          description: 'As an immediate action after losing a spell due to a failed concentration check or after casting a spell that had no effect (such as due to successful saving throws, a failed caster level check to overcome spell resistance, or other immunities), the arcanist can expend a number of points from his arcane reservoir equal to half the spell’s level (minimum 1) to immediately prepare the spell again, as if it had not been cast. Any material components expended in the original casting remain expended, as are actions used to cast the original spell.',
+          feature_levels: [{level: 3}],
+          feature_options: [],
+          klass_id: 8,
+          name: 'Arcanist Exploit - Rewind',
+          spellcasting: false
+        },
+        {
+          id: 4004,
+          actions: [],
+          description: "As an immediate action the arcanist can steal time from a target. The arcanist spends 1 point from his arcane reservoir and makes a melee touch attack. If successful, the target must make a Will save (DC 10 +  half of the arcanist's level + his Charisma modifier) or suffer a penalty to AC, Reflex saving throws, and base speed. Tis effect lasts for 1 round per arcanist level. The penalty suffered is equal to -1 to AC and Reflex saves as well as a 5-foot penalty to base speed, and increases to -2 and -10-foot at 8th level, and -3 and -15-foot at 16th level. The arcanist gains a bonus to AC and Reflex saving throws and an enhancement bonus to base speed equal to the penalty inflicted on the target for the duration of this effect.",
+          feature_levels: [{level: 7}],
+          feature_options: [],
+          klass_id: 8,
+          name: 'Arcanist Exploit - Steal Time',
+          spellcasting: false
+        },
       ]
     } else if (name === 'Merg'){
-      replacedFeatures = ['Fast Movement', 'Uncanny Dodge', 'Improved Uncanny Dodge', 'Damage Reduction', 'Trap Sense']
+      replacedFeatures = ['Fast Movement', 'Uncanny Dodge', 'Improved Uncanny Dodge', 'Damage Reduction', 'Danger Sense']
       addedFeatures = [
         {
           id: 4999,

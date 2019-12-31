@@ -46,12 +46,21 @@ class Abilities extends React.Component {
   }
 
   renderClick = (ability, amount) => {
-    let { modal, action, limit, starting, name } = ability
+    let { modal, action, limit, starting, name, points, redux } = ability
     if (modal){
       this.props.editModal(modal)
     }
     if (action !== 'free' && amount !== 0 && action !== 'long'){
       this.props.dispatch({type: 'TRIGGER ACTION', action})
+    }
+    if (points && this.props.character_info.hardcode.points >= points){
+      this.props.dispatch({type: 'POINTS CHANGE', amount: 'decrease'})
+      if (points > 1){
+        this.props.dispatch({type: 'POINTS CHANGE', amount: 'decrease'})
+      }
+    }
+    if (redux){
+      this.props.dispatch({type: redux})
     }
     if (limit){
       // if limits exist in redux
@@ -101,8 +110,13 @@ class Abilities extends React.Component {
   }
 
   merg = () => {
+    const actions = this.props.character_info.actions
     const power = this.props.character_info.hardcode.power
     const rage = this.props.character_info.hardcode.rage
+    const teleswap = this.props.character_info.hardcode.teleswap
+    const hats = this.props.character_info.hardcode.magicalHats
+    const manipulate = this.props.character_info.hardcode.manipulate || 0
+    const auraRead = this.props.character_info.hardcode.auraRead
     let powerClassName = 'free'
     if (power){
       powerClassName = 'cannot-cast'
@@ -124,6 +138,31 @@ class Abilities extends React.Component {
           <td className='table-details'>-2 to melee attacks, +4 to melee attack damage</td>
         </tr>
         {this.props.character_info.hardcode.rage && this.sparks()}
+        <tr>
+          <td><button className={actions.standard ? 'cannot-cast' : 'standard'} onClick={() => this.props.dispatch({type: 'TRIGGER ACTION', action: 'standard'})}><strong>Swipe</strong></button></td>
+          <td>Fabric of Reality - Swipe Fabric</td>
+          <td className='table-details'>Teleport to a point within line-of-sight up to 30 ft away. You can use this ability again after 1d10 rounds.</td>
+        </tr>
+        <tr>
+          <td><button className={actions.move || teleswap ? 'cannot-cast' : 'move'} onClick={() => this.dispatchManager('move', false, 'TELESWAP')}><strong>Swap</strong></button></td>
+          <td>Fabric of Reality - Spacial Entanglement</td>
+          <td className='table-details'>Select a willing ally within line-of-sight up to 30 ft away. Switch places. This ability counts as the Swipe Fabric ability, and therefore can only be used again after 1d10 rounds.</td>
+        </tr>
+        <tr>
+          <td><button className={actions.standard || hats ? 'cannot-cast' : 'standard'} onClick={() => this.dispatchManager('standard', false, 'MAGICAL HATS')}><strong>Wisp</strong></button></td>
+          <td>Fabric of Reality - Whipping Wisps</td>
+          <td className='table-details'>Summon 4 whipping cloths, and diguise yourself in one. Touch AC, DC 20 Will disbelieve. If a blank is struck, attacker takes 1d6 per remaining clothes + Cha mod psychic damage (Will 15 for half damage).</td>
+        </tr>
+        <tr>
+          <td><button className={actions.swift || manipulate >= 2 ? 'cannot-cast' : 'swift'} onClick={() => this.dispatchManager('swift', false, 'REALITY BEND')}><strong>Bend</strong></button></td>
+          <td>Fabric of Reality - Reality Bending ({2-manipulate}/2)</td>
+          <td className='table-details'>Make a Combat Maneuver check (bonus equal to your class level + highest mental bonus) against creature to manipulate them or their immediate area.</td>
+        </tr>
+        <tr>
+          <td><button className={auraRead ? 'cannot-cast' : 'long'} onClick={() => this.props.dispatch({type: 'AURA READ'})}><strong>Read</strong></button></td>
+          <td>Fabric of Reality - No Illusion</td>
+          <td className='table-details'>If draped over your head, +4 to sense motive checks, affected by <em className='underline-hover' onClick={() => this.props.editModal('spell', null, 46)}>see invisibility</em>, and activate to <span className='underline-hover' onClick={() => this.props.editModal('aura')}>Read Auras</span></td>
+        </tr>
       </React.Fragment>
     )
   }
@@ -195,10 +234,43 @@ class Abilities extends React.Component {
         button: 'Enhance',
         action: 'standard'
       },
+      {
+        id: 4007,
+        name: 'Arcanist Exploit - Forewarned',
+        description: 'Expend 1 point when you or ally within 30 ft rolls initiative, add 1d4 to that roll.',
+        button: 'Warn',
+        action: 'free',
+        points: 1
+      },
+      {
+        id: 4008,
+        name: 'Arcanist Exploit - Forewarned',
+        description: 'Expend 2 points when you or ally within 30 ft rolls a saving throw, add 1d4 to that roll.',
+        button: 'Save',
+        action: 'immediate',
+        points: 2
+      },
+      {
+        id: 4009,
+        name: 'Arcanist Exploit - Rewind',
+        description: 'After a spell fizzles or breaks, spend points equal to half the spell level to immediately prepare that spell again. (NOTE: feature not built, change points manually, and spell should still be available.)',
+        button: 'Rewind',
+        action: 'immediate'
+      },
+      {
+        id: 4010,
+        name: 'Arcanist Exploit - Steal Time',
+        description: 'Make a melee touch attack, then target needs to make a DC 16 Will save. If they fail, they take a -1 penalty to AC and Reflex saves, and a -5-foot penalty to base speed. You gain a +1 bonus to AC and Reflex saves, and a +5-foot bonus to base speed. This effect lasts for 7 rounds.',
+        button: 'Sap',
+        action: 'immediate',
+        points: 1,
+        redux: 'STEAL TIME'
+      }
     ]
     return(
       <React.Fragment>
         {abilities.map((a, idx) => {
+          let points = this.props.character_info.hardcode.points
           let limits = this.props.character_info.hardcode.limits
           let amount = true
           if (limits && a.limit){
@@ -213,7 +285,7 @@ class Abilities extends React.Component {
               amount = a.starting ? a.starting : a.limit
             }
           }
-          let className = !this.props.character_info.actions[a.action] && amount ? a.action : 'cannot-cast'
+          let className = !this.props.character_info.actions[a.action] && amount && (a.points ? points >= a.points : true) ? a.action : 'cannot-cast'
           if (a.dependent){
             if (!limits || !limits.find(l => l.name === abilities.find(ability => ability.id === a.dependent).name)){
               return null
@@ -222,7 +294,7 @@ class Abilities extends React.Component {
           return (
             <tr key={idx*a.id*3-1}>
             <td><button className={className} onClick={() => this.renderClick(a, amount)}>{a.button}</button></td>
-            <td>{a.name}{a.limit ? ` (${amount}/${a.limit})` : null}</td>
+            <td>{a.name}{a.limit ? ` (${amount}/${a.limit})` : null}{a.points ? ` ${a.points}${a.points === 1 ? 'pt' : 'pts'}` : null}</td>
             <td className='table-details'>{a.description}</td>
             </tr>
           )
@@ -318,6 +390,21 @@ class Abilities extends React.Component {
           <td><button className={this.renderShifterFormClass('Bull - Major', 'major', 'class', 'standard', 1)} onClick={() => this.shift('Bull - Major', 'major', 2, 'standard', 'Large')}><strong>{this.renderShifterFormClass('Bull - Major', 'major', 'button', null, 1)}</strong></button></td>
           <td>Bull - Major Form (2 pts)</td>
           <td className='table-details'>Polymorph into Bull</td>
+        </tr>
+        <tr>
+          <td><button className={this.renderShifterFormClass('Chameleon - Combat', 'combat', 'class', 'swift', 1)} onClick={() => this.shift('Chameleon - Combat', 'combat', 1, 'swift')}><strong>{this.renderShifterFormClass('Chameleon - Combat', 'combat', 'button', null, 1)}</strong></button></td>
+          <td>Chameleon - Combat Form (1 pt)</td>
+          <td className='table-details'>If you make an attack against an enemy who was not aware of your presence, add a competence bonus equal to your Wisdom modifier to your attack roll. </td>
+        </tr>
+        <tr>
+          <td><button className={this.renderShifterFormClass('Chameleon - Minor', 'minor', 'class', 'swift', 1)} onClick={() => this.shift('Chameleon - Minor', 'minor', 1, 'swift')}><strong>{this.renderShifterFormClass('Chameleon - Minor', 'minor', 'button', null, 1)}</strong></button></td>
+          <td>Chameleon - Minor Form (1 pt)</td>
+          <td className='table-details'>Can change the color of hair, eyes, or skin, and can cast <em className='underline-hover' onClick={() => this.props.editModal('spell', null, 13)}>prestidigitation</em> on your equipment</td>
+        </tr>
+        <tr>
+          <td><button className={this.renderShifterFormClass('Chameleon - Major', 'major', 'class', 'standard', 1)} onClick={() => this.shift('Chameleon - Major', 'major', 2, 'standard', 'Large')}><strong>{this.renderShifterFormClass('Chameleon - Major', 'major', 'button', null, 1)}</strong></button></td>
+          <td>Chameleon - Major Form (2 pts)</td>
+          <td className='table-details'>Polymorph into Chameleon</td>
         </tr>
         <tr>
           <td><button className={this.renderShifterFormClass('Condor - Combat', 'combat', 'class', 'swift', 1)} onClick={() => this.shift('Condor - Combat', 'combat', 1, 'swift')}><strong>{this.renderShifterFormClass('Condor - Combat', 'combat', 'button', null, 1)}</strong></button></td>
@@ -515,6 +602,9 @@ class Abilities extends React.Component {
       }
       if (detail === 'Condor - Major'){
         this.props.dispatch({type: 'SPEED SHIFT', speed: 20})
+      }
+      if (detail === 'Chameleon - Major'){
+        this.props.dispatch({type: 'SPEED SHIFT', speed: 40})
       }
       if (detail === 'Frog - Combat'){
         if (this.props.character_info.hardcode.frogCombat){

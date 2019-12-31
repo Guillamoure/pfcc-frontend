@@ -23,7 +23,7 @@ class AttackBonus extends React.Component {
     let minor = this.props.character_info.hardcode.minor
     let major = this.props.character_info.hardcode.major
     let name = this.props.character.name
-    const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major'].includes(major)
+    const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major', 'Chameleon - Major'].includes(major)
     const enlarger = this.props.character_info.hardcode.enlarge
     const reducer = this.props.character_info.hardcode.reduce
     switch(ability){

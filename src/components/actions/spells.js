@@ -281,7 +281,10 @@ class Spells extends React.Component {
     let pepper = this.props.character.name === 'Persephone'
     let maddox = this.props.character.name === 'Maddox'
     let robby = this.props.character.name === 'Robby'
-    if (condor || cedrick || pepper || maddox || robby){
+    let merg = this.props.character.name === 'Merg'
+    let nettie = this.props.character.name === 'Nettie'
+    let festus = this.props.character.name === 'Festus'
+    if (condor || cedrick || pepper || maddox || robby || merg || nettie || festus){
       return <HardcodeSpells editModal={this.props.editModal}/>
     }
   }

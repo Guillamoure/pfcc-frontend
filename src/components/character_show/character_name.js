@@ -24,7 +24,7 @@ class CharacterName extends React.Component {
       let name = this.props.classes.find(k => k.id === cl.id).name
       switch(name){
         case 'Barbarian':
-          name = 'Drunken Brute Invulnerable Rager' + name
+          name = 'Drunken Brute Invulnerable Rager ' + name
           break
         case 'Rogue':
           name = 'Pirate ' + name
@@ -71,6 +71,9 @@ class CharacterName extends React.Component {
           break
         case 'Squid - Major':
           name += ', but a Squid'
+          break
+        case 'Chameleon - Major':
+          name += ', but a Chameleon'
           break
         case 'Tiger':
           name += ', but a Tiger'

@@ -33,16 +33,18 @@ const Saves = props => {
       if (save === 'will' && hc.rage){
         totalSavingThrow += 2
       }
-      const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major'].includes(hc.major)
+      const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major', 'Chameleon - Major'].includes(hc.major)
       const enlarger = hc.enlarge
       const reducer = hc.reduce
       const charmedActive = hc.charmedActive
+      const stealTime = hc.stealTime
       if (save === 'reflex'){
         if (largeMorph){
           totalSavingThrow += -1
         }
         totalSavingThrow += enlarger ? -1 : 0
         totalSavingThrow += reducer ? 1 : 0
+        totalSavingThrow += stealTime ? 1 : 0
       }
       totalSavingThrow += charmedActive ? 4 : 0
       if (!style){

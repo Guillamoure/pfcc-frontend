@@ -55,6 +55,25 @@ const Curio = props => {
           <span>When it breaks, the wielder can cast <em>hold person</em> - standard action (Caster Level is equal to the wielder’s class level)</span>
         ]
       })
+      break
+    case 'Merg':
+      curios.push({
+        name: 'Fabric of Reality',
+        description: 'A glossy and sturdy cloth. It is only 2.5 ft by 3 ft wide, but it has a smooth silky side, and a rougher, course side. The course side is jet black, while the smooth side appears black, but is a shiny metallic silver, that up close, has rainbow reflections.',
+        hp: 'Hardness 12, Hit Points 20',
+        effects: [
+          'Once every 1d10 rounds, as a swift action, the wielder swipe their curio can teleport to point within line of sight up to 30 ft away.',
+          'This curio provides the wielder with a +2 deflection bonus to AC and CMD.',
+          'Once a day, as a move action, the wielder select a willing ally within line of sight up to 30 ft away. The wielder and the target switch places. This effect counts as the teleport feature above, so the player must reroll the 1d10 to determine when they can next use that feature.',
+          'Once a day, as a standard action, the wielder can wrap the cloak around their whole body, changing their visage to a cloth whipping around in the air. 3 additional glamers appear in a line, in adjacent square, beside the wielder. If there is no space, the amount of glamer’s created reduce to fill the number of adjacent empty squares. Theses glamers have an AC of the wielder’s touch AC. A glamer can be disbelieved if a creature makes contact with it, then succeeds on a DC 20 Will saving throw. The DM rolls 1d4, which determines which of the cloths actually houses the wielder. If a creature successfully attacks a glamer, the glamer dissipates, and deals psychic damage equal to 1d6 per number of remaining existing whipping cloth + the wielder’s Charisma bonus to the attacker (DC 15 Will save for half damage). While as a glamer, the wielder can only move (all glamers will follow the wielder at the same speed) and cast spell-like abilities (activating a spell-like ability will cause the wielder’s glamer to flash and glow gold while casting). The wielder can dispel this effect and all active glamers as a free action.',
+          <span>Twice a day, a wielder that has their arm covered by the curio gains a faint reading of a creature’s connection to its plane. As a swift action, the wielder can make a Combat Maneuver check (bonus equal to highest mental ability score bonus + class level) against a creature to do one of the following:<ul>
+          <li>One of the following combat maneuvers: trip, bull rush, disarm, dirty trick.</li>
+          <li>Stand a creature up from being prone</li>
+          <li>Increase/decrease the elevation of the terrain the creature is standing on (5 ft square) by 5 ft, + 5ft for every 5 beyond their CMD.</li>
+          <li>Reduce their speed by 10 ft</li>
+          <li>Impose a -4 penalty to the next attack roll/Dexterity check they make on their next round</li></ul></span>,
+        ]
+      })
     default:
       break
   }

@@ -29,6 +29,28 @@ const Legendary = props => {
       max: 3
     }
     legendaries.push(taalmon)
+  } else if (name === 'Maddox'){
+    const taalmon = {
+      id: 301,
+      name: "Zamantash Delta Chronometer",
+      description: ``,
+      aura: "moderate transmuation",
+      price: "priceless",
+      weight: 1,
+      activatable: true
+    }
+    legendaries.push(taalmon)
+  } else if (name === 'Merg'){
+    const taalmon = {
+      id: 401,
+      name: "Fabric of Reality",
+      description: ``,
+      aura: "moderate transmuation",
+      price: "priceless",
+      weight: 1,
+      activatable: true
+    }
+    legendaries.push(taalmon)
   }
   if (props.character_info.hardcode.helmsman){
     const besmara = {

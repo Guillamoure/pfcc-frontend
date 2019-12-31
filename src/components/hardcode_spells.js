@@ -92,6 +92,10 @@ const HardcodeSpells = props => {
         source: "Ta'al'mon Ancestral Handwraps"
       }
       availableSpells.push(punch)
+      if (props.character_info.hardcode.minor === 'Chameleon - Minor'){
+        let presti = {id: 13, level: 0, action: "standard", name: "Prestidigitation", range: "10 ft.", duration: "1 hour", dc: "-", source: "Chameleon Aspect Minor Form"}
+        availableSpells.push(presti)
+      }
     }
     if (pepper){
       let levitate = {
@@ -131,11 +135,11 @@ const HardcodeSpells = props => {
       availableSpells.push(massEnlargePerson)
       let massReducePerson = {id: 68, level: 4, action: "full", name: "Mass Reduce Person", range: "40 ft", duration: "7 minutes", dc: "Fort 19", sr: true, source: 'Staff of Size Alteration'}
       availableSpells.push(massReducePerson)
-      let fireball3 = {id: 69, level: 3, action: "standard", name: "Fireball 3d6", range: "70 ft", duration: "instantaneous", dc: "Ref 14", sr: true, limit: 4, expendable: true, soruce: 'Necklace of Fireballs III'}
+      let fireball3 = {id: 69, level: 3, action: "standard", name: "Fireball 3d6", range: "70 ft", duration: "instantaneous", dc: "Ref 14", sr: true, limit: 4, expendable: true, source: 'Necklace of Fireballs III'}
       availableSpells.push(fireball3)
-      let fireball5 = {id: 69, level: 3, action: "standard", name: "Fireball 5d6", range: "70 ft", duration: "instantaneous", dc: "Ref 14", sr: true, limit: 2, expendable: true, soruce: 'Necklace of Fireballs III'}
+      let fireball5 = {id: 69, level: 3, action: "standard", name: "Fireball 5d6", range: "70 ft", duration: "instantaneous", dc: "Ref 14", sr: true, limit: 2, expendable: true, source: 'Necklace of Fireballs III'}
       availableSpells.push(fireball5)
-      let fireball7 = {id: 69, level: 3, action: "standard", name: "Fireball 7d6", range: "70 ft", duration: "instantaneous", dc: "Ref 14", sr: true, limit: 1, expendable: true, soruce: 'Necklace of Fireballs III'}
+      let fireball7 = {id: 69, level: 3, action: "standard", name: "Fireball 7d6", range: "70 ft", duration: "instantaneous", dc: "Ref 14", sr: true, limit: 1, expendable: true, source: 'Necklace of Fireballs III'}
       availableSpells.push(fireball7)
       // has a limit
       // if the last limit is used, expend it by its id not name

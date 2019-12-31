@@ -7,13 +7,15 @@ const ArmorClass = props => {
   const raging = hc.rage ? -2 : 0
   const fd = hc.fd
   const charging = hc.charge ? -2 : 0
-  const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major'].includes(hc.major)
+  const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major', 'Chameleon - Major'].includes(hc.major)
   const cleave = hc.cleave ? -2 : 0
   const dodgingPanache = hc.dodgingPanache ? 4 : 0
   const name = props.character.name
   const armor = hc.armor
   const enlarger = hc.enlarge
   const reducer = hc.reduce
+  const stealTime = hc.stealTime ? 1 : 0
+
   const quick = hc.quick ? 2 : 0
   // for enlarge person, you automatically have a -1 penalty to AC
   const enlarge = enlarger ? -1 : 0
@@ -116,14 +118,23 @@ const ArmorClass = props => {
     return bonus
   }
 
+  const deflection = () => {
+    let bonus = 0
+
+    // fabric of reality
+    bonus += name === 'Merg' ? 2 : 0
+
+    return bonus
+  }
+
   const acCalc = (type) => {
     switch(type){
       case 'ac':
-        return (10 + dexMod() + renderSize() + armorBonus() + dodge() + natural() + raging + charging + cleave + cedrick + enlarge + reduce + dodgingPanache + quick)
+        return (10 + dexMod() + renderSize() + armorBonus() + dodge() + natural() + deflection() + raging + charging + cleave + cedrick + enlarge + reduce + dodgingPanache + quick + stealTime)
       case 't':
-        return (10 + dexMod() + renderSize() + dodge() + raging + charging + cleave + cedrick + enlarge + reduce + dodgingPanache + quick)
+        return (10 + dexMod() + renderSize() + dodge() + deflection() + raging + charging + cleave + cedrick + enlarge + reduce + dodgingPanache + quick + stealTime)
       case 'ff':
-        return (10 + renderSize() + armorBonus() + natural() + raging + charging + cleave + cedrick + enlarge + reduce + dodgingPanache + quick)
+        return (10 + renderSize() + armorBonus() + natural() + deflection() + raging + charging + cleave + cedrick + enlarge + reduce + dodgingPanache + quick + stealTime)
       default:
         return 10
     }
@@ -156,13 +167,16 @@ const ArmorClass = props => {
     defaultAC += name === "Robby" ? 1 : 0 // nimble feature
     defaultAC += name === "Persephone" ? 1 : 0 // dodge feat
     defaultAC += name === "Persephone" ? 1 : 0 // natural armor
+    defaultAC += name === "Merg" ? 2 : 0 // fabric of reality
     if (type === 't'){
       defaultAC = 10 + dex + size + bonus
       defaultAC += name === "Robby" ? 1 : 0 // nimble feature
       defaultAC += name === "Persephone" ? 1 : 0 // dodge feat
+      defaultAC += name === "Merg" ? 2 : 0 // fabric of reality
     } else if (type === 'ff'){
       defaultAC = 10 + size + armorBonus + natural + bonus
       defaultAC += name === "Persephone" ? 1 : 0 // natural armor
+      defaultAC += name === "Merg" ? 2 : 0 // fabric of reality
     }
     if (defaultAC > acCalc(type)){
       return {color: 'maroon'}

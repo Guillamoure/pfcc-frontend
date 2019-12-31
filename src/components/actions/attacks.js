@@ -171,7 +171,7 @@ const Attacks = props => {
             <td>-</td>
             <td>{renderDamageDice('1d8')}+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> P</td>
             <td>x2</td>
-            <td>If you hit the first target, you may make a second attack on a target adjacent to the first and within reach</td>
+            <td>If you hit the first target, you may make a second attack on a target adjacent to the first and within reach{props.character_info.hardcode.combat === 'Chameleon - Combat' && ', if hidden from attacker, +4 to attack roll'}</td>
           </tr>
         }
         {props.character_info.hardcode.combat === 'Squid - Combat' &&
@@ -182,7 +182,7 @@ const Attacks = props => {
             <td>-</td>
             <td>{renderDamageDice('1d3')}+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')}</span> B</td>
             <td>x2</td>
-            <td>Secondary natural attack</td>
+            <td>Secondary natural attack{props.character_info.hardcode.combat === 'Chameleon - Combat' && ', if hidden from attacker, +4 to attack roll'}</td>
           </tr>
         }
       </React.Fragment>
@@ -340,7 +340,7 @@ const Attacks = props => {
     let fd = hc.fd
     let charge = hc.charge
     let bullMinor = hc.minor === 'Bull - Minor'
-    let largeMorph = hc.major === 'Bull - Major' || hc.major === 'Condor - Major' || hc.major === 'Frog - Major' || hc.major === 'Squid - Major'
+    let largeMorph = hc.major === 'Bull - Major' || hc.major === 'Condor - Major' || hc.major === 'Frog - Major' || hc.major === 'Squid - Major' || hc.major === 'Chameleon - Major'
     let taalmon = n === "Cedrick"
     let arcaneStrike = hc.arcane_strike
     let enlarger = hc.enlarge
@@ -564,7 +564,7 @@ const Attacks = props => {
               <td>-</td>
               <td>1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS', 1.5)}</span> P</td>
               <td>x2</td>
-              <td></td>
+              <td>{props.character_info.hardcode.combat === 'Chameleon - Combat' && 'if hidden from attacker, +4 to attack roll'}</td>
             </tr>
             <tr>
               <td><button className={canCast('full')} onClick={() => renderDispatch('full', 'charge')}><strong>Attack</strong></button></td>
@@ -573,7 +573,7 @@ const Attacks = props => {
               <td>-</td>
               <td>2d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> P</td>
               <td>x2</td>
-              <td>Move up to {props.character.race.speed * 2} ft, make Attack. +2 to attack, -2 to AC</td>
+              <td>Move up to {props.character.race.speed * 2} ft, make Attack. +2 to attack, -2 to AC{props.character_info.hardcode.combat === 'Chameleon - Combat' && ', if hidden from attacker, +4 to attack roll'}</td>
             </tr>
             <tr>
               <td><button className={canCast('full')} onClick={() => renderDispatch('full', 'charge')}><strong>Attack</strong></button></td>
@@ -582,7 +582,7 @@ const Attacks = props => {
               <td>-</td>
               <td>1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS', 1.5)+1 /*Ta'al'mon wraps*/}</span> B</td>
               <td>-</td>
-              <td>Overrun target(s) Medium or smaller. Targets get AoO (-4 penalty), or can forgo to make a DC {10 + 3 + renderNum('damage')} Reflex save for half damage</td>
+              <td>Overrun target(s) Medium or smaller. Targets get AoO (-4 penalty), or can forgo to make a DC {10 + 3 + renderNum('damage')} Reflex save for half damage{props.character_info.hardcode.combat === 'Chameleon - Combat' && ', if hidden from attacker, +4 to attack roll'}</td>
             </tr>
           </React.Fragment>
         )
@@ -596,7 +596,7 @@ const Attacks = props => {
               <td>-</td>
               <td>1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> S</td>
               <td>x2</td>
-              <td></td>
+              <td>{props.character_info.hardcode.combat === 'Chameleon - Combat' && 'if hidden from attacker, +4 to attack roll'}</td>
             </tr>
             <tr>
               <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
@@ -605,7 +605,7 @@ const Attacks = props => {
               <td>-</td>
               <td>1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')}</span> P</td>
               <td>x2</td>
-              <td></td>
+              <td>{props.character_info.hardcode.combat === 'Chameleon - Combat' && 'if hidden from attacker, +4 to attack roll'}</td>
             </tr>
             <tr>
               <td><button className={canCast('full')} onClick={() => renderDispatch('full')}><strong>Attack</strong></button></td>
@@ -614,7 +614,7 @@ const Attacks = props => {
               <td>-</td>
               <td>1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> S, 1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> S, 1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')}</span> P</td>
               <td>x2</td>
-              <td></td>
+              <td>{props.character_info.hardcode.combat === 'Chameleon - Combat' && 'if hidden from attacker, +4 to attack roll'}</td>
             </tr>
           </React.Fragment>
         )
@@ -628,7 +628,7 @@ const Attacks = props => {
               <td>-</td>
               <td>1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')}</span> P</td>
               <td>x2</td>
-              <td></td>
+              <td>{props.character_info.hardcode.combat === 'Chameleon - Combat' && 'if hidden from attacker, +4 to attack roll'}</td>
             </tr>
             <tr>
               <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
@@ -637,7 +637,7 @@ const Attacks = props => {
               <td>-</td>
               <td>1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> B</td>
               <td>x2</td>
-              <td>Secondary Natural Attack, <em onMouseOver={e => renderTooltip(e, 'grab')} onMouseOut={props.mouseOut}>grab</em>, constrict (2d6+5)</td>
+              <td>Secondary Natural Attack, <em onMouseOver={e => renderTooltip(e, 'grab')} onMouseOut={props.mouseOut}>grab</em>, constrict (2d6+5){props.character_info.hardcode.combat === 'Chameleon - Combat' && ', if hidden from attacker, +4 to attack roll'}</td>
             </tr>
             <tr>
               <td><button className={canCast('full')} onClick={() => renderDispatch('full')}><strong>Attack</strong></button></td>
@@ -646,7 +646,39 @@ const Attacks = props => {
               <td>-</td>
               <td>1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')}</span> P, 1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> S, 1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> S</td>
               <td>x2</td>
-              <td>Tentacles: Secondary Natural Attacks, <em onMouseOver={e => renderTooltip(e, 'grab')} onMouseOut={props.mouseOut}>grab</em>, constrict (2d6+5)</td>
+              <td>Tentacles: Secondary Natural Attacks, <em onMouseOver={e => renderTooltip(e, 'grab')} onMouseOut={props.mouseOut}>grab</em>, constrict (2d6+5){props.character_info.hardcode.combat === 'Chameleon - Combat' && ', if hidden from attacker, +4 to attack roll'}</td>
+            </tr>
+          </React.Fragment>
+        )
+      case 'Chameleon - Major':
+        return (
+          <React.Fragment>
+            <tr>
+              <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
+              <td>Bite</td>
+              <td style={renderNum('abS', null, true)}>+{renderNum('abS')}</td>
+              <td>-</td>
+              <td>1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')}</span> P</td>
+              <td>x2</td>
+              <td>{props.character_info.hardcode.combat === 'Chameleon - Combat' && 'if hidden from attacker, +4 to attack roll'}</td>
+            </tr>
+            <tr>
+              <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
+              <td>Tongue</td>
+              <td style={renderNum('abS', null, true)}>+{renderNum('abS')-5 /*Secondary attack*/}/+{renderNum('abD')}</td>
+              <td>15 ft.</td>
+              <td>1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> B/ grab</td>
+              <td>x2</td>
+              <td>First: Secondary Natural Attack, Second: resolves against touch AC, <em onMouseOver={e => renderTooltip(e, 'grab')} onMouseOut={props.mouseOut}>grab</em>{props.character_info.hardcode.combat === 'Chameleon - Combat' && ', if hidden from attacker, +4 to attack roll'}</td>
+            </tr>
+            <tr>
+              <td><button className={canCast('full')} onClick={() => renderDispatch('full')}><strong>Attack</strong></button></td>
+              <td>Bite, Tongue</td>
+              <td style={renderNum('abS', null, true)}>+{renderNum('abS')}/+{renderNum('abS')-5 /*secondary attack*/}</td>
+              <td>-</td>
+              <td>1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')}</span> P, 1d8+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')}</span> B</td>
+              <td>x2</td>
+              <td>Tongue: Secondary Natural Attack{props.character_info.hardcode.combat === 'Chameleon - Combat' && ', if hidden from attacker, +4 to attack roll'}</td>
             </tr>
           </React.Fragment>
         )
@@ -661,7 +693,7 @@ const Attacks = props => {
               <td>-</td>
               <td>{renderDamageDice('1d10')}+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> S {renderFrogCombat()}</td>
               <td>x2</td>
-              <td>Ignore DR/silver & DR/cold iron, <em onMouseOver={e => renderTooltip(e, 'ominous')} onMouseOut={props.mouseOut}>ominous</em></td>
+              <td>Ignore DR/silver & DR/cold iron, <em onMouseOver={e => renderTooltip(e, 'ominous')} onMouseOut={props.mouseOut}>ominous</em>{props.character_info.hardcode.combat === 'Chameleon - Combat' && ', if hidden from attacker, +4 to attack roll'}</td>
             </tr>
             <tr>
               <td><button className={canCast('full')} onClick={() => renderDispatch('full')}><strong>Attack</strong></button></td>
@@ -670,7 +702,7 @@ const Attacks = props => {
               <td>-</td>
               <td>{renderDamageDice('1d10')}+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/} S{sc ? `/${renderDamageDice('1d4')}+${renderNum('damageS')} B`/*tentacle attacks attack at full attack bonus*/ : null} </span> {renderFrogCombat()}</td>
               <td>x2</td>
-              <td>Ignore DR/silver & DR/cold iron, <em onMouseOver={e => renderTooltip(e, 'ominous')} onMouseOut={props.mouseOut}>ominous</em>{sc ? ', 2 Tentacle attacks': null }</td>
+              <td>Ignore DR/silver & DR/cold iron, <em onMouseOver={e => renderTooltip(e, 'ominous')} onMouseOut={props.mouseOut}>ominous</em>{sc ? ', 2 Tentacle attacks': null }{props.character_info.hardcode.combat === 'Chameleon - Combat' && ', if hidden from attacker, +4 to attack roll'}</td>
             </tr>
             <tr>
               <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
@@ -679,7 +711,7 @@ const Attacks = props => {
               <td>80 ft/20 ft</td>
               <td>{renderDamageDice('1d8')}+<span style={renderNum('damageD', null, true)}>{renderNum('damageD')+1}</span> B</td>
               <td>x2</td>
-              <td>Use second range number if underwater.<span onMouseOver={e => renderTooltip(e, 'Load Light')} onMouseOut={props.mouseOut}> Load*</span></td>
+              <td>Use second range number if underwater.<span onMouseOver={e => renderTooltip(e, 'Load Light')} onMouseOut={props.mouseOut}> Load*</span>{props.character_info.hardcode.combat === 'Chameleon - Combat' && ', if hidden from attacker, +4 to attack roll'}</td>
             </tr>
             <tr>
               <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
@@ -688,7 +720,7 @@ const Attacks = props => {
               <td>30 ft</td>
               <td>{renderDamageDice('1d8')}+<span style={renderNum('damageS', null, true)}>{renderNum('damageS')}</span> S</td>
               <td>x2</td>
-              <td>not proficient, if used as a melee weapon (second numbers), make a DC 15 Reflex save or cut yourself (1d6 slashing)</td>
+              <td>not proficient, if used as a melee weapon (second numbers), make a DC 15 Reflex save or cut yourself (1d6 slashing){props.character_info.hardcode.combat === 'Chameleon - Combat' && ', if hidden from attacker, +4 to attack roll'}</td>
             </tr>
             <tr>
               <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
@@ -697,7 +729,7 @@ const Attacks = props => {
               <td>-</td>
               <td><span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 /*Ta'al'mon wraps*/}</span> B</td>
               <td>x2</td>
-              <td>Non-lethal, <em onMouseOver={e => renderTooltip(e, 'ominous')} onMouseOut={props.mouseOut}>ominous</em></td>
+              <td>Non-lethal, <em onMouseOver={e => renderTooltip(e, 'ominous')} onMouseOut={props.mouseOut}>ominous</em>{props.character_info.hardcode.combat === 'Chameleon - Combat' && ', if hidden from attacker, +4 to attack roll'}</td>
             </tr>
           </React.Fragment>
         )

@@ -5,7 +5,7 @@ const Initiative = props => {
 
   const dexMod = (style) => {
     const hc = props.character_info.hardcode
-    const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major'].includes(hc.major)
+    const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major', 'Chameleon - Major'].includes(hc.major)
     const name = props.character.name
     const enlarger = hc.enlarge
     const reducer = hc.reduce

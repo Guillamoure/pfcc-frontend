@@ -206,7 +206,7 @@ class Feats extends React.Component {
         name: 'Quick Draw'
       },
       {
-        id: 6003,
+        id: 6004,
         description: 'You gain a +2 bonus on Acrobatics, Climb, and Swim checks.',
         name: 'Sea Legs'
       },

@@ -315,7 +315,22 @@ const reducer = (state = initialState, action) => {
       return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, helmsman}}}
     case 'CREW':
       let crew = !state.character_info.hardcode.crew
-      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, crew}}}  
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, crew}}}
+    case 'TELESWAP':
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, teleswap: true}}}
+    case 'MAGICAL HATS':
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, magicalHats: true}}}
+    case 'REALITY BEND':
+      let manipulate = state.character_info.hardcode.manipulate || 0
+      if (manipulate <= 2){
+        manipulate = manipulate + 1
+      }
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, manipulate}}}
+    case 'AURA READ':
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, auraRead: true}}}
+    case 'STEAL TIME':
+      let stealTime = !state.character_info.hardcode.stealTime
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, stealTime}}}
     default:
       return state
   }

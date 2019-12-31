@@ -1,6 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
+import CombatManeuver from './basics/combat_maneuver'
+
 const Basics = props => {
 
   const hc = props.character_info.hardcode
@@ -18,6 +20,7 @@ const Basics = props => {
   speed += hc.land10 ? 10 : 0
   speed += hc.land20 ? 20 : 0
   speed += hc.quick ? 10 : 0
+  speed += hc.stealTime ? 5 : 0
 
   const renderDispatch = (action, details) => {
     let actions = props.character_info.actions
@@ -157,7 +160,8 @@ const Basics = props => {
           {props.character.name === "Festus" && alternateMove('Fly', 50)}
           {hc.major === "Condor - Major" && alternateMove('Fly', 80)}
           {hc.major === "Frog - Major" && alternateMove('Swim', 30)}
-          {props.character.name === "Cedrick" && alternateMove('Climb', 20)}
+          {props.character.name === "Cedrick" && hc.major !== 'Chameleon - Major' && alternateMove('Climb', 20)}
+          {props.character.name === "Cedrick" && hc.major === 'Chameleon - Major' && alternateMove('Climb', 40)}
           {hc.fly && alternateMove('Fly', 60)}
           {hc.major === "Squid - Major" && alternateMove('Swim', 60)}
           {props.character.name === 'Maddox' && dimensionalSlide()}
@@ -280,7 +284,7 @@ const Basics = props => {
     <section>
       {mvmt()}
       {fight()}
-      {cm()}
+      <CombatManeuver renderTooltip={props.renderTooltip} mouseOut={props.mouseOut}/>
     </section>
   )
 }

@@ -38,6 +38,7 @@ import HandyModal from '../modals/handy'
 import DebilitatingModal from '../modals/debilitating'
 import AmmoModal from '../modals/ammo'
 import SaseaModal from '../modals/sasea'
+import AuraModal from '../modals/aura'
 
 import BackgroundForm from '../modals/background_form'
 import CharacterForm from '../modals/character_form'
@@ -93,6 +94,12 @@ class Character extends React.Component {
         this.setState({character: data.character})
         if (data.character.name === 'Merg'){
           this.props.dispatch({type: 'ACTIVE ARMOR', name: '+1 chain shirt'})
+          this.props.dispatch({type: 'CREW'})
+        }
+        if (data.character.name === 'Cedrick'){
+          this.props.dispatch({type: 'CREW'})
+        }
+        if (data.character.name === 'Maddox'){
           this.props.dispatch({type: 'CREW'})
         }
         if (data.character.name === 'Robby'){
@@ -329,6 +336,7 @@ class Character extends React.Component {
         {this.state.modal === 'debilitating' && <DebilitatingModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
         {this.state.modal === 'ammo' && <AmmoModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
         {this.state.modal === 'sasea' && <SaseaModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
+        {this.state.modal === 'aura' && <AuraModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
         {/* unfinished, hardcoded features */}
 
         <div id='right' onClick={() => this.setState({display: this.rightArrow()})}><FontAwesomeIcon icon={faCaretRight} size='9x'/><div>{this.rightArrow()}</div></div>

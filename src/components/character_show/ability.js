@@ -3,15 +3,18 @@ import { connect } from 'react-redux'
 import _ from 'lodash'
 
 function AbilityScore (props) {
+
   const mod = Math.floor((props.ability_score - 10) / 2)
   const truncate = _.upperCase(props.name.substring(0,3))
   const name = props.character.name
+
   const additionalMods = () => {
     let bonus = 0
     const hc = props.character_info.hardcode
-    const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major'].includes(hc.major)
+    const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major', 'Chameleon - Major'].includes(hc.major)
     const enlarger = hc.enlarge
     const reducer = hc.reduce
+
     if (props.name === "Strength"){
       if (largeMorph){
         bonus += 4
@@ -36,8 +39,8 @@ function AbilityScore (props) {
     }
     return bonus
   }
-  const newMod = mod + (Math.floor(additionalMods() / 2))
 
+  const newMod = mod + (Math.floor(additionalMods() / 2))
   return (
     <span className='centered egg shadow shrink' >
       <div className='enhanced'>{newMod < 0 ? newMod : `+${newMod}`}</div>

@@ -29,7 +29,7 @@ class Skills extends React.Component {
     const hc = this.props.character_info.hardcode
     const name = this.props.character.name
     const size = this.props.character_info.size
-    const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major'].includes(hc.major)
+    const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major', 'Chameleon - Major'].includes(hc.major)
     const armor = hc.armor
     const enlarger = hc.enlarge
     const reducer = hc.reduce
@@ -151,6 +151,9 @@ class Skills extends React.Component {
     if (skill.name === 'Perform (strings)' && name === "Nettie"){
       skillRanks = {ranks: 100}
     }
+    if (skill.name === 'Craft (gears/clockwork)' && name === "Maddox"){
+      skillRanks = {ranks: 100}
+    }
     return skillRanks !== undefined ? skillRanks.ranks : 0
   }
 
@@ -168,7 +171,7 @@ class Skills extends React.Component {
         }
       })
     })
-    if (skill.name.includes('Profession') || skill.name.includes('Perform')){
+    if (skill.name.includes('Profession') || skill.name.includes('Perform') || skill.name.includes('Craft')){
       isThisAClassSkill = true
     }
     return isThisAClassSkill
@@ -216,6 +219,10 @@ class Skills extends React.Component {
       skills.push({name: 'Perform (percussion)', ability_score: 'Charisma'})
       skills.push({name: 'Perform (strings)', ability_score: 'Charisma'})
       skills = skills.filter(sk => sk.name !== 'Perform')
+    }
+    if (name === 'Maddox'){
+      skills.push({name: 'Craft (gears/clockwork)', ability_score: 'Intelligence'})
+      skills = skills.filter(sk => sk.name !== 'Craft')
     }
     return skills.sort((a,b) => a.name > b.name ? 1 : -1)
   }
@@ -278,6 +285,8 @@ class Skills extends React.Component {
       case 'Stealth':
         if (name === 'Cedrick'){
           return asterik
+        } else if (hc.major === 'Chameleon - Major') {
+          return asterik
         } else {
           return skill
         }
@@ -313,6 +322,12 @@ class Skills extends React.Component {
         }
       case 'Climb':
         if (name === 'Robby'){
+          return asterik
+        } else {
+          return skill
+        }
+      case 'Sense Motive':
+        if (name === 'Merg'){
           return asterik
         } else {
           return skill
@@ -359,6 +374,9 @@ class Skills extends React.Component {
       if (name === 'Cedrick'){
         comment = '+4 bonus in Marshes and Forests'
       }
+      if (hc.major === 'Chameleon - Major'){
+        comment = comment + ', +10 bonus if you are standing still'
+      }
     }
     if (skill === 'Intimidate'){
       if (name === 'Cedrick'){
@@ -396,6 +414,11 @@ class Skills extends React.Component {
     if (skill === 'Climb'){
       if (name === 'Robby'){
         comment = 'Derring-Do: Spend 1 Panache to add +1d6, up to 4 times'
+      }
+    }
+    if (skill === 'Sense Motive'){
+      if (name === 'Merg'){
+        comment = 'If the Fabric of Reality is draped over your eyes, +4 bonus.'
       }
     }
     if (ability){

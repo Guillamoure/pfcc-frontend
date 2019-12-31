@@ -51,6 +51,7 @@ class Notice extends React.Component {
       <span style={{padding: '1em'}}>
         <h3>Active Conditions</h3>
         {this.renderConditions()}
+        {this.props.character_info.hardcode.stealTime && <button onClick={() => this.props.dispatch({type: 'STEAL TIME'})}>Return Time</button>}
         <br/>
         <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderDispatch('HELMSMAN')}>Sasea Bitch Helmsman</button>
         <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderDispatch('CREW')}>Sasea Bitch crew</button>
