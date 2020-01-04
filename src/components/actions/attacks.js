@@ -17,6 +17,8 @@ const Attacks = props => {
         return maddox()
       case 'Robby':
         return robby()
+      case 'Festus':
+        return festus()
       default:
         return null
     }
@@ -78,6 +80,32 @@ const Attacks = props => {
           <td>x2</td>
           <td>Non-lethal</td>
         </tr>
+      </React.Fragment>
+    )
+  }
+
+  const festus = () => {
+    return (
+      <React.Fragment>
+        <tr>
+          <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
+          <td>Unarmed Strike</td>
+          <td style={renderNum('abS', null, true)}>{renderNum('abS') >= 0 ? '+' + renderNum('abS') : renderNum('abS')}</td>
+          <td>-</td>
+          <td>{renderDamageDice('1d8')}<span style={renderNum('damageS', null, true)}>{renderNum('damageS') >= 0 ? '+' + (renderNum('damageS')) : (renderNum('damageS'))}</span> B</td>
+          <td>x2</td>
+          <td>Ignore DR/magic</td>
+        </tr>
+        <tr>
+          <td><button className={canCast('full')} onClick={() => renderDispatch('full')}><strong>Attack</strong></button></td>
+          <td>Unarmed Strikes</td>
+          <td style={renderNum('abS', null, true)}>{renderNum('abS')-2 >= 0 ? '+' + (renderNum('abS')-2) : (renderNum('abS')-2)}/{renderNum('abS')-2 >= 0 ? '+' + (renderNum('abS')-2) : (renderNum('abS')-2)}/{renderNum('abS')-2 >= 0 ? '+' + (renderNum('abS')-2) : (renderNum('abS')-2)}</td>
+          <td>-</td>
+          <td>{renderDamageDice('1d8')}<span style={renderNum('damageS', null, true)}>{renderNum('damageS') >= 0 ? '+' + (renderNum('damageS')) : (renderNum('damageS'))}</span> B</td>
+          <td>x2</td>
+          <td>Ignore DR/magic</td>
+        </tr>
+
       </React.Fragment>
     )
   }
@@ -220,6 +248,15 @@ const Attacks = props => {
           <td>If wielded, -2 penalty to precision-based tasks with that hand, <em onMouseOver={e => renderTooltip(e, 'flaming')} onMouseOut={props.mouseOut}>flaming</em></td>
         </tr>
         <tr>
+          <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
+          <td>Augmented Shortsword AN-7f</td>
+          <td style={renderNum('abS', null, true)}>{renderNum('abS')+1 >= 0 ? '+' + (renderNum('abS')+1) : (renderNum('abS')+1)}</td>
+          <td>-</td>
+          <td>{renderDamageDice('1d6')}<span style={renderNum('damageS', null, true)}>{renderNum('damageS')+1 >= 0 ? '+' + (renderNum('damageS')+1) : (renderNum('damageS')+1)}</span> B/P +1d4 cold</td>
+          <td>19-20/x3</td>
+          <td>+2 to Trip and Disarm Combat Maneuvers, <span onMouseOver={e => renderTooltip(e, 'crazed')} onMouseOut={props.mouseOut}>crazed energy</span></td>
+        </tr>
+        <tr>
           <td><button className={canCast('full')} onClick={() => renderDispatch('full')}><strong>Attack</strong></button></td>
           <td>Quarterstaff</td>
           <td style={renderNum('abS', null, true)}>{renderNum('abS')-4 >= 0 ? '+' + renderNum('abS')-4 : renderNum('abS')-4}/{renderNum('abS')-8 >= 0 ? '+' + renderNum('abS')-8 : renderNum('abS')-8}</td>
@@ -324,8 +361,24 @@ const Attacks = props => {
   const renderNum = (type, strengthMultiplier, style, finesse) => {
     // type includes abS, abD, damageS, damageD
     let bab = 0
-    let str = Math.floor((props.character_info.ability_scores.strength-10)/2)
-    let dex = Math.floor((props.character_info.ability_scores.dexterity-10)/2)
+    const hc = props.character_info.hardcode
+    const n = props.character.name
+    const age = n === 'Maddox' && hc.age
+
+    let strength = props.character_info.ability_scores.strength
+      strength += age === 'Young' ? -2 : 0
+      strength += age === 'Middle' ? -1 : 0
+      strength += age === 'Old' ? -2 : 0
+      strength += age === 'Venerable' ? -3 : 0
+    let str = Math.floor((strength-10)/2)
+
+    let dexterity = props.character_info.ability_scores.dexterity
+      dexterity += age === 'Young' ? 2 : 0
+      dexterity += age === 'Middle' ? -1 : 0
+      dexterity += age === 'Old' ? -2 : 0
+      dexterity += age === 'Venerable' ? -3 : 0
+    let dex = Math.floor((dexterity-10)/2)
+
     let size = props.character_info.size
     let abSBonus = 0
     let abDBonus = 0
@@ -333,8 +386,6 @@ const Attacks = props => {
     let damageDBonus = 0
     let otherABS = 0
     let otherABD = 0
-    const hc = props.character_info.hardcode
-    const n = props.character.name
     let rage = hc.rage
     let power = hc.power
     let fd = hc.fd
@@ -545,6 +596,8 @@ const Attacks = props => {
       comment = 'This special ability can only be placed on a weapon that can be thrown. A returning weapon flies through the air back to the creature that threw it. It returns to the thrower just before the creature’s next turn (and is therefore ready to use again in that turn). Catching a returning weapon when it comes back is a free action. If the character can’t catch it, or if the character has moved since throwing it, the weapon drops to the ground in the square from which it was thrown.'
     } else if (name === 'cunning'){
       comment = 'This special ability allows a weapon to find chinks in a foe’s defenses using the wielder’s knowledge of the target. Whenever the weapon’s attack is a critical threat, the wielder gains a +4 bonus on the confirmation roll if she has 5 or more ranks in a Knowledge skill that would be used to identify the target’s creature type (such as Knowledge [planes] for an outsider opponent), or a +6 bonus instead if she has 15 or more ranks.'
+    } else if (name === 'crazed'){
+      comment = 'On a critical hit, deal an additional +3d8 cold damage instead of +1d4. On a critical failure, the weapon overloads, dealing 4d10+4 damage to you and the weapon is destroyed. DC 20 Reflex save for half damage. If you fail the saving throw, you hand is locked up by ice and cold for 1 hour. -4 to Dexterity checks and attacks with that hand.'
     }
     if (comment){
       props.renderTooltip(e, comment)

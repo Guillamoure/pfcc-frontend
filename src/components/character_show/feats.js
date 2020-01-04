@@ -217,8 +217,13 @@ class Feats extends React.Component {
     return [
       {
         id: 7000,
-        description: '',
-        name: ''
+        description: 'While you are wearing light or no armor, your base speed increases by 5 feet. You lose the benefits of this feat if you carry a medium or heavy load.',
+        name: 'Fleet'
+      },
+      {
+        id: 7001,
+        description: "You gain a +1 dodge bonus to your AC. A condition that makes you lose your Dex bonus to AC also makes you lose the benefits of this feat.",
+        name: 'Dodge'
       },
     ]
   }

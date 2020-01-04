@@ -5,6 +5,7 @@ import localhost from '../localhost'
 
 import Characters from '../components/characters'
 import Settings from './settings'
+import Campaigns from '../components/campaigns'
 
 
 class Home extends React.Component {
@@ -43,6 +44,7 @@ class Home extends React.Component {
         <br/><br/>
         <div className='container-4' style={{margin: '0 2em'}} >
           <Settings />
+          <Campaigns />
           <Characters characters={this.state.characters}/>
         </div>
       </span>

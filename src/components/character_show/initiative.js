@@ -9,6 +9,8 @@ const Initiative = props => {
     const name = props.character.name
     const enlarger = hc.enlarge
     const reducer = hc.reduce
+    const age = name === 'Maddox' && hc.age
+
     let mod = Math.floor((props.character_info.ability_scores.dexterity - 10) / 2)
     if (name === "Cedrick"){
       mod += 1
@@ -21,6 +23,12 @@ const Initiative = props => {
       // Swashbuckler initiative
       mod += 2
     }
+
+    mod += age === 'Young' ? 2 : 0
+    mod += age === 'Middle' ? -1 : 0
+    mod += age === 'Old' ? -2 : 0
+    mod += age === 'Venerable' ? -3 : 0
+
     const ogMod = mod
     if (largeMorph){
       mod -= 1

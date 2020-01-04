@@ -380,13 +380,15 @@ const hardcoded = (state, action) => {
     case 'Merg':
       return {points: 18, speed: 30}
     case 'Cedrick':
-      return {points: 7, speed: 30, ringPoints: 2, ammo:[{name: 'bolt', amount: 10}], weaponAmmo: [{weapon: '+1 Underwater Light Crossbow', ammo: 'bolt'}]}
+      return {points: 7, speed: 30, ringPoints: 2, ammo:[{name: 'bolt', amount: 6}], weaponAmmo: [{weapon: '+1 Underwater Light Crossbow', ammo: 'bolt'}]}
     case 'Maddox':
       return {points: 6, speed: 30, age: 'Venerable'}
     case 'Persephone':
       return {speed: 30, ammo:[{name: 'bolt', amount: 10}], weaponAmmo: [{weapon: 'Light Crossbow', ammo: 'bolt'}]}
     case 'Robby':
-      return {speed: 30, points: 4, charmedLife: 0, ammo:[{name: 'arrow', amount: 95}, {name: 'cartridge', amount: 0}, {name: '+1 cunning arrow', amount: 1}], weaponAmmo: [{weapon: 'Long Bow', ammo: 'arrow'}, {weapon: 'Revolver', ammo: 'cartridge'}]}
+      return {speed: 30, points: 4, charmedLife: 0, ammo:[{name: 'arrow', amount: 11}, {name: 'cartridge', amount: 0}, {name: '+1 cunning arrow', amount: 1}], weaponAmmo: [{weapon: 'Long Bow', ammo: 'arrow'}, {weapon: 'Revolver', ammo: 'cartridge'}]}
+    case 'Festus':
+      return {speed: 35}
     default:
       return {}
   }

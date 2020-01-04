@@ -38,6 +38,13 @@ const SpellSummary = props => {
         newLevel+= 1
       }
     }
+    if (props.character.name === 'Maddox'){
+      let age = props.character_info.hardcode.age
+      newLevel += age === 'Young' ? -1 : 0
+      newLevel += age === 'Middle' ? 1 : 0
+      newLevel += age === 'Old' ? 2 : 0
+      newLevel += age === 'Venerable' ? 3 : 0
+    }
     newLevel += augment.spellId === klassSpell.spell.id && augment.augment === 'caster' ? 1 : 0
     if (newLevel%2 === 1){
       newLevel -= 1
@@ -58,9 +65,17 @@ const SpellSummary = props => {
           additionalTime+=spell.increase_per_level
         }
       }
+      if (props.character.name === 'Maddox'){
+        let age = props.character_info.hardcode.age
+        let increase = spell.increase_per_level
+        additionalTime += age === 'Young' ? -1*(increase) : 0
+        additionalTime += age === 'Middle' ? 1*(increase) : 0
+        additionalTime += age === 'Old' ? 2*(increase) : 0
+        additionalTime += age === 'Venerable' ? 3*(increase) : 0
+      }
       additionalTime += augment.spellId === klassSpell.spell.id && augment.augmnet === 'caster' ? spell.increase_per_level : 0
       let totalTime = startingDuration + additionalTime
-      return totalTime + " " + spell.unit_of_time + (totalTime > 1 ? "s" : null)
+      return totalTime + " " + spell.unit_of_time + (totalTime > 1 ? "s" : "")
     }
   }
 
@@ -121,7 +136,13 @@ const SpellSummary = props => {
       switch(action){
         case "Standard Action":
           return "standard"
-        case "Ten Minutes" || "One Hour" || "Eight Hours" || "One Minute":
+        case "Ten Minutes":
+          return "long"
+        case "One Minute":
+          return "long"
+        case "One Hour":
+          return "long"
+        case "Eight Hours":
           return "long"
         case "Immediate Action":
           return "immediate"

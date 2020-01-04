@@ -22,6 +22,7 @@ class NavBar extends React.Component {
       .then((data) => {
         if (!data.error) {
           this.props.dispatch({type: 'SIGNIN', user: data.current_user, admin: data.current_user.admin })
+          console.log(data)
           this.setState({currentUser: data.current_user})
           if(this.props.location.pathname === "/login" || this.props.location.pathname === "/signup"){this.props.history.push("/")}
         }

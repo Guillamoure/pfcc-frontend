@@ -146,6 +146,12 @@ const HardcodeSpells = props => {
        // check fir expendibility, but keep track of limits throughout
        let augury = {id: 74, level: 2, action: "long", name: "Augury", range: "personal", duration: "instantaneous", dc: "-", source: 'Zamantash Delta Chronometer'}
        availableSpells.push(augury)
+       let comprehend = {id: 106, level: 1, action: "standard", name: "Comprehend Languages", range: "self", duration: "70 minutes", dc: "-", source: 'Samsaran Magic', limit: 1}
+       availableSpells.push(comprehend)
+       let deathwatch = {id: 107, level: 1, action: "standard", name: "Deathwatch", range: "self", duration: "70 minutes", dc: "-", source: 'Samsaran Magic', limit: 1}
+       availableSpells.push(deathwatch)
+       let stabilize = {id: 99, level: 0, action: "standard", name: "Stabilize", range: "40 ft", duration: "instantaneous", dc: "Will 14", sr: true, source: 'Samsaran Magic', limit: 1}
+       availableSpells.push(stabilize)
     } else if (robby){
       let dancingLights = {id: 20, level: 0, action: "standard", name: "Dancing Lights", range: "170 ft", duration: "1 minute (D)", dc: "-", limit: 3, source: 'Magical Tail'}
       availableSpells.push(dancingLights)

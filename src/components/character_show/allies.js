@@ -438,9 +438,9 @@ class Allies extends React.Component {
         details: "+2 Dex, +1 dodge, +2 size, +4 natural"
       },
       hp: 'HALF OF MADDOX HP',
-      fort: 'MADDOX SAVES OR FAMILIARS, WHICHEVER IS GREATER',
-      ref: 'MADDOX SAVES OR FAMILIARS, WHICHEVER IS GREATER',
-      will: 'MADDOX SAVES OR FAMILIARS, WHICHEVER IS GREATER',
+      fort: 'MADDOX FORTITUDE',
+      ref: 'MADDOX REFLEX',
+      will: 'MADDOX WILL',
       def: [],
       dr: [],
       immune: [
@@ -489,7 +489,15 @@ class Allies extends React.Component {
       ],
       skills: [
         "Fly +10",
-        "MADDOX SKILL RANKS"
+        "Acrobatics +8",
+        "Heal +7",
+        "Investigation +5",
+        "Linguistics +5",
+        "Nature +5",
+        "Perception +10",
+        "Religion +5",
+        "Spellcraft +5",
+        "Survival +5"
       ],
       languages: [
         "Common (can't speak)"

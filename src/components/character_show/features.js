@@ -524,16 +524,16 @@ class Features extends React.Component {
     } else if (name === 'Festus'){
       replacedFeatures = []
       addedFeatures = [
-        {
-          id: 7000,
-          actions: [],
-          description: '',
-          feature_levels: [{level: 1}],
-          feature_options: [],
-          klass_id: 9,
-          name: '',
-          spellcasting: false
-        }
+        // {
+        //   id: 7000,
+        //   actions: [],
+        //   description: '',
+        //   feature_levels: [{level: 1}],
+        //   feature_options: [],
+        //   klass_id: 9,
+        //   name: '',
+        //   spellcasting: false
+        // }
       ]
     }
 

@@ -21,7 +21,7 @@ class Details extends React.Component {
       case "Cedrick":
         return ["Common", "Grippli", "Druidic", "Infernal", "Draconic", "Sylvan"]
       case 'Maddox':
-        return ["Common", "Samsaran"]
+        return ["Common", "Samsaran", 'Celestrial, Infernal', 'Protean', 'Aklo', 'Draconic', 'Sphinx', 'Elven', 'Gnome', 'Abyssal', 'Sylvan', 'Drow']
       case 'Merg':
         return ['Common', 'Orc', 'Sylvan', 'Terran', 'Draconic', 'Giant', 'Undercommon']
       case 'Robby':

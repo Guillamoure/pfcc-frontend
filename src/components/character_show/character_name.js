@@ -85,6 +85,13 @@ class CharacterName extends React.Component {
     if (this.props.character_info.hardcode.alterSelf){
       name = 'Not Harry Styles'
     }
+    if (name === 'Maddox'){
+      let age = this.props.character_info.hardcode.age
+      name = age + ' '+ name
+      if (age === 'Middle'){
+        name = 'Middle Age Maddox'
+      }
+    }
     return name
   }
 

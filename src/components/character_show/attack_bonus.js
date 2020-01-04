@@ -15,6 +15,21 @@ class AttackBonus extends React.Component {
     if (this.props.character.any_bonus === _.capitalize(scoreName)){
       score +=2
     }
+    const age = this.props.character.name === 'Maddox' && this.props.character_info.hardcode.age
+
+    if (scoreName === 'strength'){
+      score += age === 'Young' ? -2 : 0
+      score += age === 'Middle' ? -1 : 0
+      score += age === 'Old' ? -2 : 0
+      score += age === 'Venerable' ? -3 : 0
+    }
+    if (scoreName === 'dexterity'){
+      score += age === 'Young' ? 2 : 0
+      score += age === 'Middle' ? -1 : 0
+      score += age === 'Old' ? -2 : 0
+      score += age === 'Venerable' ? -3 : 0
+    }
+
     return Math.floor( ( score - 10 ) / 2)
   }
 
@@ -26,6 +41,7 @@ class AttackBonus extends React.Component {
     const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major', 'Chameleon - Major'].includes(major)
     const enlarger = this.props.character_info.hardcode.enlarge
     const reducer = this.props.character_info.hardcode.reduce
+
     switch(ability){
       case "strength":
         if (minor === "Bull - Minor"){
@@ -39,6 +55,8 @@ class AttackBonus extends React.Component {
 
         bonus += reducer ? 1 : 0
         bonus += reducer ? -1 : 0
+
+
         break
       case "dexterity":
         if (largeMorph){
@@ -49,6 +67,8 @@ class AttackBonus extends React.Component {
 
         bonus += reducer ? 1 : 0
         bonus += reducer ? 1 : 0
+
+
         break
       default:
         break

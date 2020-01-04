@@ -15,6 +15,7 @@ const ArmorClass = props => {
   const enlarger = hc.enlarge
   const reducer = hc.reduce
   const stealTime = hc.stealTime ? 1 : 0
+  const age = name === 'Maddox' && hc.age
 
   const quick = hc.quick ? 2 : 0
   // for enlarge person, you automatically have a -1 penalty to AC
@@ -41,6 +42,11 @@ const ArmorClass = props => {
     }
     dex += enlarger ? -2 : 0
     dex += reducer ? 2 : 0
+
+    dex += age === 'Young' ? 2 : 0
+    dex += age === 'Middle' ? -1 : 0
+    dex += age === 'Old' ? -2 : 0
+    dex += age === 'Venerable' ? -3 : 0
     if (armor){
       // Mex Dex Bonus from Armor
       if (armor === 'Wooden' && dex > 17){

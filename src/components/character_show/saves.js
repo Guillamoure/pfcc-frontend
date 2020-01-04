@@ -22,14 +22,33 @@ const Saves = props => {
         let currentClass = findCurrentClass(klass.id)
         totalSavingThrow += renderSave(klass.level, currentClass[save])
       })
-      const mod = Math.floor((props.character_info.ability_scores[score] - 10) / 2)
+      const hc = props.character_info.hardcode
+      const age = props.character.name === 'Maddox' && hc.age
+
+      let abilityScore = props.character_info.ability_scores[score]
+      if (score === 'dexterity'){
+        abilityScore += age === 'Young' ? 2 : 0
+        abilityScore += age === 'Middle' ? -1 : 0
+        abilityScore += age === 'Old' ? -2 : 0
+        abilityScore += age === 'Venerable' ? -3 : 0
+      } else if (score === 'constitution'){
+        abilityScore += age === 'Young' ? -2 : 0
+        abilityScore += age === 'Middle' ? -1 : 0
+        abilityScore += age === 'Old' ? -2 : 0
+        abilityScore += age === 'Venerable' ? -3 : 0
+      } else if (score === 'wisdom'){
+        abilityScore += age === 'Young' ? -2 : 0
+        abilityScore += age === 'Middle' ? 1 : 0
+        abilityScore += age === 'Old' ? 1 : 0
+        abilityScore += age === 'Venerable' ? 1 : 0
+      }
+      const mod = Math.floor((abilityScore - 10) / 2)
       totalSavingThrow += mod
       if (save === 'reflex' && props.character.name === "Cedrick"){
         totalSavingThrow += 1
       }
       const ogST = totalSavingThrow
       // hardcoding
-      const hc = props.character_info.hardcode
       if (save === 'will' && hc.rage){
         totalSavingThrow += 2
       }

@@ -509,12 +509,13 @@ class Abilities extends React.Component {
   }
 
   festus = () => {
+    let actions = this.props.character_info.actions
     return(
       <React.Fragment>
         <tr>
-          <td><button className='swift'><strong>Teleport</strong></button></td>
-          <td>Bardic Performance</td>
-          <td className='table-details'>Select a performance to start</td>
+          <td><button className={actions.move ? 'cannot-cast': 'move'} onClick={() => this.dispatchManager('move')}><strong>Teleport</strong></button></td>
+          <td>Long Step</td>
+          <td className='table-details'>Teleport 60 ft. You can use this feature again after 1d4 rounds.</td>
         </tr>
       </React.Fragment>
     )

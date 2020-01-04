@@ -18,7 +18,42 @@ class Skills extends React.Component {
   }
 
   renderSkillBonus = (skill, style) => {
-    const score = this.props.character_info.ability_scores[_.lowerCase(skill.ability_score)]
+    let score = this.props.character_info.ability_scores[_.lowerCase(skill.ability_score)]
+    const age = this.props.character.name === 'Maddox' && this.props.character_info.hardcode.age
+    if (skill.ability_score === "Strength"){
+      score += age === 'Young' ? -2 : 0
+      score += age === 'Middle' ? -1 : 0
+      score += age === 'Old' ? -2 : 0
+      score += age === 'Venerable' ? -3 : 0
+    }
+    if (skill.ability_score === "Dexterity"){
+      score += age === 'Young' ? 2 : 0
+      score += age === 'Middle' ? -1 : 0
+      score += age === 'Old' ? -2 : 0
+      score += age === 'Venerable' ? -3 : 0
+    }
+    if (skill.ability_score === 'Constitution'){
+      score += age === 'Young' ? -2 : 0
+      score += age === 'Middle' ? -1 : 0
+      score += age === 'Old' ? -2 : 0
+      score += age === 'Venerable' ? -3 : 0
+    }
+    if (skill.ability_score === "Intelligence"){
+      score += age === 'Middle' ? 1 : 0
+      score += age === 'Old' ? 1 : 0
+      score += age === 'Venerable' ? 1 : 0
+    }
+    if (skill.ability_score === 'Wisdom'){
+      score += age === 'Young' ? -2 : 0
+      score += age === 'Middle' ? 1 : 0
+      score += age === 'Old' ? 1 : 0
+      score += age === 'Venerable' ? 1 : 0
+    }
+    if (skill.ability_score === 'Charisma'){
+      score += age === 'Middle' ? 1 : 0
+      score += age === 'Old' ? 1 : 0
+      score += age === 'Venerable' ? 1 : 0
+    }
     let mod = Math.floor((score - 10) / 2)
     let skillRanks = this.renderNumOfRanks(skill)
       mod += skillRanks
@@ -134,10 +169,10 @@ class Skills extends React.Component {
       skillRanks = skillRanks || {ranks: this.props.character.character_klasses.length}
     }
     if (skill.name === 'Profession (fence)' && name === "Merg"){
-      skillRanks = {ranks: 100}
+      skillRanks = {ranks: 0}
     }
     if (skill.name === 'Profession (sailor)' && name === "Merg"){
-      skillRanks = {ranks: 100}
+      skillRanks = {ranks: 2}
     }
     if (skill.name === 'Profession (sailor)' && name === "Robby"){
       skillRanks = {ranks: 2}
@@ -152,7 +187,7 @@ class Skills extends React.Component {
       skillRanks = {ranks: 100}
     }
     if (skill.name === 'Craft (gears/clockwork)' && name === "Maddox"){
-      skillRanks = {ranks: 100}
+      skillRanks = {ranks: 3}
     }
     return skillRanks !== undefined ? skillRanks.ranks : 0
   }

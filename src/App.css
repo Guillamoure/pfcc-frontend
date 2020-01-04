@@ -635,3 +635,19 @@
 }
 
 /* End of tooltips */
+
+
+#loading-dice {
+  margin: 2%;
+  animation: spinning 4s infinite linear;
+  -webkit-animation: spinning 4s infinite linear;
+}
+
+@keyframes spinning {
+    from {transform:rotate(0deg);}
+    to {transform:rotate(360deg);}
+}
+@-webkit-keyframes spinning {
+    from { -webkit-transform: rotate(0deg); }
+    to { -webkit-transform: rotate(360deg); }
+}

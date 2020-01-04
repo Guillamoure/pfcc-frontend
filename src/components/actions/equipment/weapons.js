@@ -48,6 +48,16 @@ const Weapons = props => {
       activatable: false
     }
     weapons.push(flamingCestus)
+    const augmented = {
+      id: 2005,
+      name: "Augmented Shortsword AN-7f",
+      description: `Polished shortsword that is made of individual inch-long blades. In between seeps out cold mist. Gives off a white-blue glow when the segments are slack.`,
+      aura: "faint necromancy",
+      price: "2010gp",
+      weight: 2,
+      activatable: false
+    }
+    weapons.push(augmented)
   }
   if (name === 'Merg'){
     const orcDouble = {
