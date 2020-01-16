@@ -1,9 +1,11 @@
 import React from 'react'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
+import localhost from '../localhost'
 
 import Characters from '../components/characters'
 import Settings from './settings'
+import Campaigns from '../components/campaigns'
 
 
 class Home extends React.Component {
@@ -16,7 +18,7 @@ class Home extends React.Component {
   componentDidMount() {
     if (this.props.currentUser){
 
-        fetch('http://localhost:3000/api/v1/characters', {
+        fetch(`${localhost}/api/v1/characters`, {
           headers: {
             User: this.props.currentUser.id
           }
@@ -42,6 +44,7 @@ class Home extends React.Component {
         <br/><br/>
         <div className='container-4' style={{margin: '0 2em'}} >
           <Settings />
+          <Campaigns />
           <Characters characters={this.state.characters}/>
         </div>
       </span>

@@ -33,6 +33,18 @@ class Feats extends React.Component {
       case("Persephone"):
         feats = this.pepper()
         break
+      case("Maddox"):
+        feats = this.maddox()
+        break
+      case("Merg"):
+        feats = this.merg()
+        break
+      case 'Robby':
+        feats = this.robby()
+        break
+      case 'Festus':
+        feats = this.festus()
+        break
       default:
         break
     }
@@ -40,7 +52,7 @@ class Feats extends React.Component {
       return (
         <li onClick={() => this.changeActiveFeature(f.id)} className='highlight'>
           <strong data-id={f.id}>{f.name}</strong>
-          {this.state.activeFeat === f.id && <div style={{color: '#000'}}>{this.renderDescription(f.description)}</div>}
+          {this.state.activeFeat === f.id && <div style={{color: '#000'}}>{typeof f.description === 'string' ? this.renderDescription(f.description) : f.description}</div>}
         </li>
       )
     })
@@ -118,6 +130,101 @@ class Feats extends React.Component {
         description: "You get a +1 bonus on attack and damage rolls with ranged weapons at ranges of up to 30 feet.",
         name: "Point-Blank Shot"
       }
+    ]
+  }
+
+  maddox = () => {
+    return [
+      {
+        id: 4000,
+        description: 'You get a +4 bonus on initiative checks.',
+        name: 'Improved Initiative'
+      },
+      {
+        id: 4001,
+        description: 'You get a +2 bonus on caster level checks (1d20 + caster level) made to overcome a creature’s spell resistance.',
+        name: 'Spell Penetration'
+      },
+      {
+        id: 4002,
+        description: 'You get a +2 bonus on caster level checks (1d20 + caster level) made to overcome a creature’s spell resistance. This bonus stacks with the one from Spell Penetration.',
+        name: 'Greater Spell Penetration'
+      },
+      {
+        id: 4003,
+        description: 'You can react to danger before your senses would normally allow you to do so. You cannot be caught flat-footed, nor do you lose your Dex bonus to AC if the attacker is invisible. You still loses your Dexterity bonus to AC if immobilized. You can still lose her Dexterity bonus to AC if an opponent successfully uses the feint action against you.',
+        name: 'Uncanny Timing'
+      },
+    ]
+  }
+
+  merg = () => {
+    return [
+      {
+        id: 5000,
+        description: "You can choose to take a –1 penalty on all melee attack rolls and combat maneuver checks to gain a +2 bonus on all melee damage rolls. This bonus to damage is increased by half (+50%) if you are making an attack with a two-handed weapon, a one handed weapon using two hands, or a primary natural weapon that adds 1-1/2 times your Strength modifier on damage rolls. This bonus to damage is halved (–50%) if you are making an attack with an off-hand weapon or secondary natural weapon. When your base attack bonus reaches +4, and every 4 points thereafter, the penalty increases by –1 and the bonus to damage increases by +2. You must choose to use this feat before making an attack roll, and its effects last until your next turn. The bonus damage does not apply to touch attacks or effects that do not deal hit point damage.",
+        name: "Power Attack"
+      },
+      {
+        id: 5001,
+        description: 'Your penalties on attack rolls for fighting with two weapons are reduced. The penalty for your primary hand lessens by 2 and the one for your off hand lessens by 6.',
+        name: 'Two-Weapon Fighting'
+      },
+      {
+        id: 5002,
+        description: 'If you are dying and a creature gives you at least a sip of alcohol (a standard action for an adjacent creature), you immediately stabilize.',
+        name: "Drunkard's Recovery"
+      },
+      {
+        id: 5003,
+        description: "You gain a +1 bonus on all attack rolls you make using the selected weapon.",
+        name: 'Weapon Focus (Orc Double-Axe)'
+      }
+    ]
+  }
+
+  robby = () => {
+    return [
+      {
+        id: 6000,
+        description: 'With a light weapon, elven curve blade, rapier, whip, or spiked chain made for a creature of your size category, you may use your Dexterity modifier instead of your Strength modifier on attack rolls. If you carry a shield, its armor check penalty applies to your attack rolls.',
+        name: 'Weapon Finesse'
+      },
+      {
+        id: 6001,
+        description: <span>You gain a new spell-like ability, each usable twice per day, from the following list, in order: <em className='underline-hover' onClick={() => this.props.editModal('spell', null, 55)}>disguise self</em>, <em className='underline-hover' onClick={() => this.props.editModal('spell', null, 1)}>charm person</em>, <em className='underline-hover' onClick={() => this.props.editModal('spell', null, 47)}>misdirection</em>, <em className='underline-hover' onClick={() => this.props.editModal('spell', null, 16)}>invisibility</em>, <em className='underline-hover' onClick={() => this.props.editModal('spell', null, 1)}>suggestion</em>, displacement, confusion, <em className='underline-hover' onClick={() => this.props.editModal('spell', null, 29)}>dominate person</em>. Your caster level for these spells is equal to your Hit Dice. The DCs for these abilities are Charisma-based.</span>,
+        name: 'Magical Tails'
+      },
+      {
+        id: 6002,
+        description: 'You make attack rolls with the weapon normally.',
+        name: 'Exotic Weapon Proficiency - Net'
+      },
+      {
+        id: 6003,
+        description: 'You can draw a weapon as a free action instead of as a move action. You can draw a hidden weapon (see the Sleight of Hand skill) as a move action. A character who has selected this feat may throw weapons at his full normal rate of attacks (much like a character with a bow). Alchemical items, potions, scrolls, and wands cannot be drawn quickly using this feat.',
+        name: 'Quick Draw'
+      },
+      {
+        id: 6004,
+        description: 'You gain a +2 bonus on Acrobatics, Climb, and Swim checks.',
+        name: 'Sea Legs'
+      },
+    ]
+  }
+
+  festus = () => {
+    return [
+      {
+        id: 7000,
+        description: 'While you are wearing light or no armor, your base speed increases by 5 feet. You lose the benefits of this feat if you carry a medium or heavy load.',
+        name: 'Fleet'
+      },
+      {
+        id: 7001,
+        description: "You gain a +1 dodge bonus to your AC. A condition that makes you lose your Dex bonus to AC also makes you lose the benefits of this feat.",
+        name: 'Dodge'
+      },
     ]
   }
 

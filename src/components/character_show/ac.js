@@ -7,10 +7,20 @@ const ArmorClass = props => {
   const raging = hc.rage ? -2 : 0
   const fd = hc.fd
   const charging = hc.charge ? -2 : 0
-  const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major'].includes(hc.major)
+  const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major', 'Chameleon - Major'].includes(hc.major)
   const cleave = hc.cleave ? -2 : 0
+  const dodgingPanache = hc.dodgingPanache ? 4 : 0
   const name = props.character.name
   const armor = hc.armor
+  const enlarger = hc.enlarge
+  const reducer = hc.reduce
+  const stealTime = hc.stealTime ? 1 : 0
+  const age = name === 'Maddox' && hc.age
+
+  const quick = hc.quick ? 2 : 0
+  // for enlarge person, you automatically have a -1 penalty to AC
+  const enlarge = enlarger ? -1 : 0
+  const reduce = reducer ? 1 : 0
 
   const cedrick = name === "Cedrick" ? 5 : 0
 
@@ -30,10 +40,23 @@ const ArmorClass = props => {
     if (name === "Cedrick"){
       dex+=2
     }
+    dex += enlarger ? -2 : 0
+    dex += reducer ? 2 : 0
+
+    dex += age === 'Young' ? 2 : 0
+    dex += age === 'Middle' ? -1 : 0
+    dex += age === 'Old' ? -2 : 0
+    dex += age === 'Venerable' ? -3 : 0
     if (armor){
       // Mex Dex Bonus from Armor
       if (armor === 'Wooden' && dex > 17){
         dex = 17
+      }
+      if (armor === '+1 chain shirt' && dex > 19){
+        dex = 19
+      }
+      if (armor === 'Padded' && dex > 27){
+        dex = 27
       }
     }
     return Math.floor((dex - 10) / 2)
@@ -60,13 +83,15 @@ const ArmorClass = props => {
     }
   }
 
-
   const dodge = () => {
     let bonus = 0
     if (fd){
       bonus += 2
     }
     if (name === "Persephone"){
+      bonus+=1
+    }
+    if (name === "Robby"){
       bonus+=1
     }
     return bonus
@@ -89,18 +114,33 @@ const ArmorClass = props => {
       if (armor === "Wooden"){
         bonus += 3
       }
+      if (armor === "+1 chain shirt"){
+        bonus += 5
+      }
+      if (armor === 'Padded'){
+        bonus += 1
+      }
     }
+    return bonus
+  }
+
+  const deflection = () => {
+    let bonus = 0
+
+    // fabric of reality
+    bonus += name === 'Merg' ? 2 : 0
+
     return bonus
   }
 
   const acCalc = (type) => {
     switch(type){
       case 'ac':
-        return (10 + dexMod() + renderSize() + armorBonus() + dodge() + natural() + raging + charging + cleave + cedrick)
+        return (10 + dexMod() + renderSize() + armorBonus() + dodge() + natural() + deflection() + raging + charging + cleave + cedrick + enlarge + reduce + dodgingPanache + quick + stealTime)
       case 't':
-        return (10 + dexMod() + renderSize() + dodge() + raging + charging + cleave + cedrick)
+        return (10 + dexMod() + renderSize() + dodge() + deflection() + raging + charging + cleave + cedrick + enlarge + reduce + dodgingPanache + quick + stealTime)
       case 'ff':
-        return (10 + renderSize() + armorBonus() + natural() + raging + charging + cleave + cedrick)
+        return (10 + renderSize() + armorBonus() + natural() + deflection() + raging + charging + cleave + cedrick + enlarge + reduce + dodgingPanache + quick + stealTime)
       default:
         return 10
     }
@@ -124,16 +164,25 @@ const ArmorClass = props => {
     if (armor){
       armorBonus += armor === 'Wooden' ? 3 : 0
       dex = armor === 'Wooden' && dex > 3 ? 3 : dex
+      armorBonus += armor === '+1 chain shirt' ? 5 : 0
+      dex = armor === '+1 chain shirt' && dex > 4 ? 4 : dex
+      armorBonus += armor === 'Padded' ? 1 : 0
+      dex = armor === 'Padded' && dex > 8 ? 8 : dex
     }
     let defaultAC = 10 + dex + size + armorBonus + natural + bonus
+    defaultAC += name === "Robby" ? 1 : 0 // nimble feature
     defaultAC += name === "Persephone" ? 1 : 0 // dodge feat
     defaultAC += name === "Persephone" ? 1 : 0 // natural armor
+    defaultAC += name === "Merg" ? 2 : 0 // fabric of reality
     if (type === 't'){
       defaultAC = 10 + dex + size + bonus
+      defaultAC += name === "Robby" ? 1 : 0 // nimble feature
       defaultAC += name === "Persephone" ? 1 : 0 // dodge feat
+      defaultAC += name === "Merg" ? 2 : 0 // fabric of reality
     } else if (type === 'ff'){
       defaultAC = 10 + size + armorBonus + natural + bonus
       defaultAC += name === "Persephone" ? 1 : 0 // natural armor
+      defaultAC += name === "Merg" ? 2 : 0 // fabric of reality
     }
     if (defaultAC > acCalc(type)){
       return {color: 'maroon'}

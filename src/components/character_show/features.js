@@ -224,9 +224,7 @@ class Features extends React.Component {
           name: "Vigilante Talent - None",
           spellcasting: false
         },
-
       ]
-
     } else if (name === 'Cedrick'){
       replacedFeatures = []
       addedFeatures = [
@@ -281,7 +279,265 @@ class Features extends React.Component {
           spellcasting: false
         },
       ]
+    } else if (name === 'Maddox'){
+      replacedFeatures = []
+      addedFeatures = [
+        {
+          id: 4000,
+          actions: [],
+          description: 'An arcanist with this exploit can acquire a familiar as the arcane bond wizard class feature, using her arcanist level as her wizard level to determine any of the statistics and abilities of the familiar. If the arcanist receives a familiar from another class, her levels of arcanist stack with the levels from that class when determining the familiar’s statistics and abilities (this ability does not stack with a familiar gained through the bloodline development exploit; she must choose one or the other).',
+          feature_levels: [{level: 6}],
+          feature_options: [],
+          klass_id: 8,
+          name: 'Arcanist Exploit - Familiar',
+          spellcasting: false
+        },
+        {
+          id: 4001,
+          actions: [],
+          description: 'The arcanist can expend 1 point from her arcane reservoir to create a dimensional crack that she can step through to reach another location. This ability is used as part of a move action or withdraw action, allowing her to move up to 10 feet per arcanist level to any location she can see. This counts as 5 feet of movement. She can only use this ability once per round. She does not provoke attacks of opportunity when moving in this way, but any other movement she attempts as part of her move action provokes as normal.',
+          feature_levels: [{level: 5}],
+          feature_options: [],
+          klass_id: 8,
+          name: 'Arcanist Exploit - Dimensional Slide',
+          spellcasting: false
+        },
+        {
+          id: 4002,
+          actions: [],
+          description: 'The arcanist can expend 1 point from his arcane reservoir when he rolls initiative to allow himself or an ally within 30 feet to roll 1d4 and add it to that character’s initiative result. At 5th level, the chronomancer can expend 2 points from his arcane reservoir as an immediate action to apply this benefit to a saving throw he has just rolled (but before the result is revealed). At 10th level, the die size increases to 1d6.',
+          feature_levels: [{level: 1}],
+          feature_options: [],
+          klass_id: 8,
+          name: 'Arcanist Exploit - Forewarned',
+          spellcasting: false
+        },
+        {
+          id: 4003,
+          actions: [],
+          description: 'As an immediate action after losing a spell due to a failed concentration check or after casting a spell that had no effect (such as due to successful saving throws, a failed caster level check to overcome spell resistance, or other immunities), the arcanist can expend a number of points from his arcane reservoir equal to half the spell’s level (minimum 1) to immediately prepare the spell again, as if it had not been cast. Any material components expended in the original casting remain expended, as are actions used to cast the original spell.',
+          feature_levels: [{level: 3}],
+          feature_options: [],
+          klass_id: 8,
+          name: 'Arcanist Exploit - Rewind',
+          spellcasting: false
+        },
+        {
+          id: 4004,
+          actions: [],
+          description: "As an immediate action the arcanist can steal time from a target. The arcanist spends 1 point from his arcane reservoir and makes a melee touch attack. If successful, the target must make a Will save (DC 10 +  half of the arcanist's level + his Charisma modifier) or suffer a penalty to AC, Reflex saving throws, and base speed. Tis effect lasts for 1 round per arcanist level. The penalty suffered is equal to -1 to AC and Reflex saves as well as a 5-foot penalty to base speed, and increases to -2 and -10-foot at 8th level, and -3 and -15-foot at 16th level. The arcanist gains a bonus to AC and Reflex saving throws and an enhancement bonus to base speed equal to the penalty inflicted on the target for the duration of this effect.",
+          feature_levels: [{level: 7}],
+          feature_options: [],
+          klass_id: 8,
+          name: 'Arcanist Exploit - Steal Time',
+          spellcasting: false
+        },
+      ]
+    } else if (name === 'Merg'){
+      replacedFeatures = ['Fast Movement', 'Uncanny Dodge', 'Improved Uncanny Dodge', 'Damage Reduction', 'Danger Sense']
+      addedFeatures = [
+        {
+          id: 4999,
+          actions: [],
+          description: 'While raging, the drunken brute can drink a potion, or a tankard of ale or similar quantity of alcohol, as a move action that does not provoke attacks of opportunity. A potion has its normal effect, while an alcoholic drink allows the barbarian to maintain her rage that round without expending a round of rage for the day (instead of the alcohol’s normal effects). For each alcoholic drink consumed while raging, the barbarian is nauseated for 1 round when her rage expires, in addition to the normal fatigue that follows a rage. Tireless rage does not negate this nauseated condition but the internal fortitude rage power does. ',
+          feature_levels: [{level: 1}],
+          feature_options: [],
+          klass_id: 5,
+          name: 'Drunken Brute - Raging Drunk',
+          spellcasting: false
+        },
+        {
+          id: 5000,
+          actions: [],
+          description: 'Choose an energy type: acid, cold, fire, or electricity. While raging, as a swift action up to three times a day, the barbarian can imbue her melee attacks with elemental energy, dealing an additional 1d6 points of damage of the chosen energy type for 1 round.',
+          feature_levels: [{level: 2}],
+          feature_options: [],
+          klass_id: 5,
+          name: 'Rage Power - Lesser Elemental Blood',
+          spellcasting: false
+        },
+        {
+          id: 5001,
+          actions: [],
+          description: 'While raging, you gain a +1 morale bonus on Intimidate checks and to the save DC of any fear effects you create for each alcoholic drink you have consumed during your rage, to a maximum of +1 per four barbarian levels.',
+          feature_levels: [{level: 4}],
+          feature_options: [],
+          klass_id: 5,
+          name: 'Rage Power - Roaring Drunk',
+          spellcasting: false
+        },
+        {
+          id: 5002,
+          actions: [],
+          description: 'While raging, the barbarian gains energy resistance 10 against the energy type chosen when she took lesser elemental blood.',
+          feature_levels: [{level: 6}],
+          feature_options: [],
+          klass_id: 5,
+          name: 'Rage Power - Elemental Blood',
+          spellcasting: false
+        },
+        {
+          id: 5003,
+          actions: [],
+          description: 'At 2nd level, the invulnerable rager gains DR/— equal to half her barbarian level. This damage reduction is doubled against nonlethal damage.',
+          feature_levels: [{level: 2}],
+          feature_options: [],
+          klass_id: 5,
+          name: 'Invulnerable Rager - Invulnerability',
+          spellcasting: false
+        },
+        {
+          id: 5004,
+          actions: [],
+          description: 'At 3rd level, the invulnerable rager is inured to either hot or cold climate effects (choose one) as if using endure elements. In addition, the barbarian gains 1 point of fire or cold resistance for every three levels beyond 3rd.',
+          feature_levels: [{level: 3}],
+          feature_options: [],
+          klass_id: 5,
+          name: 'Invulnerable Rager - Extreme Endurance',
+          spellcasting: false
+        },
+      ]
+    } else if (name === 'Robby'){
+      replacedFeatures = ['Trapfinding', 'Danger Sense']
+      addedFeatures = [
+        {
+          id: 6000,
+          actions: [],
+          description: 'At 1st level, a swashbuckler can spend 1 panache point when she makes an Acrobatics, Climb, Finesse, Animal Handling (Ride), or Swim check to roll 1d6 and add the result to the check. She can do this after she makes the check but before the result is revealed. If the result of the d6 roll is a natural 6, she rolls another 1d6 and adds it to the check. She can continue to do this as long as she rolls natural 6s, up to a number of times equal to her Dexterity modifier (minimum 1).',
+          feature_levels: [{level: 1}],
+          feature_options: [],
+          klass_id: 2,
+          name: 'Deed - Derring-Do',
+          spellcasting: false
+        },
+        {
+          id: 6001,
+          actions: [],
+          description: 'At 1st level, when an opponent attempts a melee attack against the swashbuckler, the swashbuckler can as an immediate action spend 1 panache point to move 5 feet; doing so grants the swashbuckler a dodge bonus to AC equal to her Charisma modifier (minimum 0) against the triggering attack. This movement doesn’t negate the attack, which is still resolved as if the swashbuckler had not moved from the original square. This movement is not a 5-foot step; it provokes attacks of opportunity from creatures other than the one who triggered this deed. The swashbuckler can only perform this deed while wearing light or no armor, and while carrying no heavier than a light load.',
+          feature_levels: [{level: 1}],
+          feature_options: [],
+          klass_id: 2,
+          name: 'Deed - Dodging Panache',
+          spellcasting: false
+        },
+        {
+          id: 6002,
+          actions: [],
+          description: 'At 1st level, when an opponent makes a melee attack against the swashbuckler, she can spend 1 panache point and expend a use of an attack of opportunity to attempt to parry that attack. The swashbuckler makes an attack roll as if she were making an attack of opportunity; for each size category the attacking creature is larger than the swashbuckler, the swashbuckler takes a –2 penalty on this roll. If her result is greater than the attacking creature’s result, the creature’s attack automatically misses. The swashbuckler must declare the use of this ability after the creature’s attack is announced, but before its attack roll is made. Upon performing a successful parry and if she has at least 1 panache point, the swashbuckler can as an immediate action make an attack against the creature whose attack she parried, provided that creature is within her reach. This deed’s cost cannot be reduced by any ability or effect that reduces the number of panache points a deed costs.',
+          feature_levels: [{level: 1}],
+          feature_options: [],
+          klass_id: 2,
+          name: 'Deed - Opportune Parry and Riposte',
+          spellcasting: false
+        },
+        {
+          id: 6003,
+          actions: [],
+          description: 'At 3rd level, while the swashbuckler has at least 1 panache point, she can kip-up from prone as a move action without provoking an attack of opportunity. She can kip-up as a swift action instead by spending 1 panache point.',
+          feature_levels: [{level: 3}],
+          feature_options: [],
+          klass_id: 2,
+          name: 'Deed - Kip-Up',
+          spellcasting: false
+        },
+        {
+          id: 6004,
+          actions: [],
+          description: 'At 3rd level, while she has at least 1 panache point, when a swashbuckler hits an opponent with a light or one-handed piercing melee weapon, she can choose to use Intimidate to demoralize that opponent as a swift action instead of a standard action.',
+          feature_levels: [{level: 3}],
+          feature_options: [],
+          klass_id: 2,
+          name: 'Deed - Meanacing Swordplay',
+          spellcasting: false
+        },
+        {
+          id: 6005,
+          actions: [],
+          description: 'At 3rd level, while she has at least 1 panache point, a swashbuckler gains the ability to strike precisely with a light or one-handed piercing melee weapon (though not natural weapon attacks), adding her swashbuckler level to the damage dealt. To use this deed, a swashbuckler cannot attack with a weapon in her other hand or use a shield other than a buckler. She can even use this ability with thrown light or one-handed piercing melee weapons, so long as the target is within 30 feet of her. Any creature that is immune to sneak attacks is immune to the additional damage granted by precise strike, and any item or ability that protects a creature from critical hits also protects a creature from the additional damage of a precise strike. This additional damage is precision damage, and isn’t multiplied on a critical hit. As a swift action, a swashbuckler can spend 1 panache point to double her precise strike’s damage bonus on the next attack. This benefit must be used before the end of her turn, or it is lost. This deed’s cost cannot be reduced by any ability or effect that reduces the amount of panache points a deed costs (such as the Signature Deed feat).',
+          feature_levels: [{level: 3}],
+          feature_options: [],
+          klass_id: 2,
+          name: 'Deed - Precise Strike',
+          spellcasting: false
+        },
+        {
+          id: 6006,
+          actions: [],
+          description: 'At 3rd level, while the swashbuckler has at least 1 panache point, she gains a +2 bonus on initiative checks. In addition, if she has the Quick Draw feat, her hands are free and unrestrained, and she has any single light or one-handed piercing melee weapon that isn’t hidden, she can draw that weapon as part of the initiative check.',
+          feature_levels: [{level: 3}],
+          feature_options: [],
+          klass_id: 2,
+          name: 'Deed - Swashbuckler Initiative',
+          spellcasting: false
+        },
+        {
+          id: 6007,
+          actions: [],
+          description: 'Whenever she makes a successful melee attack with the selected weapon, she adds her Dexterity modifier instead of her Strength modifier to the damage roll. If any effect would prevent the rogue from adding her Strength modifier to the damage roll, she does not add her Dexterity modifier.',
+          feature_levels: [{level: 3}],
+          feature_options: [],
+          klass_id: 3,
+          name: 'Finesse Training - Trident',
+          spellcasting: false
+        },
+        {
+          id: 6008,
+          actions: [],
+          description: 'At 1st level, a pirate becomes adept at moving on ships, boats, and similar vessels. She gains the Sea Legs feat as a bonus feat, even if she does not meet the prerequisites.',
+          feature_levels: [{level: 1}],
+          feature_options: [],
+          klass_id: 3,
+          name: 'Sea Legs',
+          spellcasting: false
+        },
+        {
+          id: 6009,
+          actions: [],
+          description: 'At 2nd level, a pirate incorporates a ship’s masts, rigging, ropes, sails, and other such structures into her combat style. Provided she is wearing light armor or no armor, when fighting in an environment where such structures exist, the rogue incorporates them into her movement, and does not have to move in a straight line when making either a charge attack or bull rush combat maneuver. Once she completes her attack or maneuver, she can reposition herself. Immediately after making the charge or bull rush, she can move 5 feet as a free action, even if the charge ends her turn. This movement does not provoke attacks of opportunity.',
+          feature_levels: [{level: 2}],
+          feature_options: [],
+          klass_id: 3,
+          name: 'Swinging Reposition',
+          spellcasting: false
+        },
+        {
+          id: 6010,
+          actions: [],
+          description: 'Pirates are a salty and steadfast lot. At 3rd level, a pirate gains a +1 bonus on saving throws against fear and mind-affecting effects. This bonus increases by +1 for every three levels, to a maximum of +6 at 18th level.',
+          feature_levels: [{level: 3}],
+          feature_options: [],
+          klass_id: 3,
+          name: 'Unflinching',
+          spellcasting: false
+        },
+        {
+          id: 6011,
+          actions: [],
+          description: 'Needs to be picked',
+          feature_levels: [{level: 4}],
+          feature_options: [],
+          klass_id: 3,
+          name: 'Rogue Talent - None',
+          spellcasting: false
+        },
+      ]
+    } else if (name === 'Festus'){
+      replacedFeatures = []
+      addedFeatures = [
+        // {
+        //   id: 7000,
+        //   actions: [],
+        //   description: '',
+        //   feature_levels: [{level: 1}],
+        //   feature_options: [],
+        //   klass_id: 9,
+        //   name: '',
+        //   spellcasting: false
+        // }
+      ]
     }
+
+
     newFeatures = features.filter(f => {
       let klass = this.props.classes.find(cl => cl.id === f.klass_id)
       let name = f.name

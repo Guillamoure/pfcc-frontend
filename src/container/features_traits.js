@@ -3,6 +3,7 @@ import React from 'react'
 import Features from '../components/character_show/features'
 import Traits from '../components/character_show/racial_traits'
 import Feats from '../components/character_show/feats'
+import Equipment from '../components/character_show/equipment'
 import FeatureTabs from './feature_tabs'
 
 class FeaturesTraits extends React.Component {
@@ -21,7 +22,8 @@ class FeaturesTraits extends React.Component {
         <div style={{height: '100%'}}>
           {this.state.activeTab === "Features" && <Features character={this.props.character} editModal={this.props.editModal}/>}
           {this.state.activeTab === "Traits" && <Traits character={this.props.character}/>}
-          {this.state.activeTab === "Feats" && <Feats/>}
+          {this.state.activeTab === "Feats" && <Feats editModal={this.props.editModal}/>}
+          {this.state.activeTab === "Equipment" && <Equipment editModal={this.props.editModal} exitModal={this.props.exitModal} cmiId={this.props.cmiId}/>}
         </div>
       </div>
     )

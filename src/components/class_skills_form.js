@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import localhost from '../localhost'
 
 class ClassSkillsForm extends React.Component {
 
@@ -22,13 +23,13 @@ class ClassSkillsForm extends React.Component {
   }
 
   fetchSkillsets = () => {
-    fetch("http://localhost:3000/api/v1/skillsets")
+    fetch(`${localhost}/api/v1/skillsets`)
     .then(r => r.json())
     .then(data => this.setState({skillsets: data}))
   }
 
   fetchSkills = () => {
-    fetch("http://localhost:3000/api/v1/skills")
+    fetch(`${localhost}/api/v1/skills`)
     .then(r => r.json())
     .then(data => this.setState({skills: data}))
   }

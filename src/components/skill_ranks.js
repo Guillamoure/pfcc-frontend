@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import localhost from '../localhost'
 
 class SkillRanks extends React.Component {
 
@@ -11,7 +12,7 @@ class SkillRanks extends React.Component {
   }
 
   componentDidMount() {
-    fetch(`http://localhost:3000/api/v1/skillsets/${this.props.character.skillset.id}`)
+    fetch(`${localhost}/api/v1/skillsets/${this.props.character.skillset.id}`)
     .then(r => r.json())
     .then(data => {
       const skillsAndRanks = {}
@@ -29,7 +30,7 @@ class SkillRanks extends React.Component {
   }
 
   renderSubmit = () => {
-    fetch('http://localhost:3000/api/v1/character_skillset_skills', {
+    fetch(`${localhost}/api/v1/character_skillset_skills`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -11,7 +11,13 @@ const SpellCard = props => {
     switch(action){
       case "Standard Action":
         return "standard"
-      case "Ten Minutes" || "One Hour" || "Eight Hours" || "One Minute":
+      case "Ten Minutes":
+        return "long"
+      case "One Hour":
+        return "long"
+      case "Eight Hours":
+        return "long"
+      case "One Minute":
         return "long"
       case "Immediate Action":
         return "immediate"
@@ -22,7 +28,6 @@ const SpellCard = props => {
     }
   }
 
-  console.log(spell)
   return (
     <div className='spell-card' onClick={() => props.renderEdit(spell.id)}>
       <span><strong>{spell.name}</strong></span>

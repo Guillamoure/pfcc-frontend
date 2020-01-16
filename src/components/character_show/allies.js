@@ -22,6 +22,12 @@ class Allies extends React.Component {
       case("Persephone"):
         monsters = this.pepper()
         break
+      case("Cedrick"):
+        monsters = this.cedrick()
+        break
+      case("Maddox"):
+        monsters = this.maddox()
+        break
       default:
         break
     }
@@ -38,7 +44,7 @@ class Allies extends React.Component {
 
   renderAlly = () => {
     let monster = this.collectMonsters()[this.state.activeAlly]
-    if (monster || this.props.character.name === "Persephone"){
+    if (monster || this.props.character.name === "Persephone" || this.props.character.name === 'Cedrick' || this.props.character.name === 'Maddox'){
       if (!monster){
         monster = this.collectMonsters()[0]
       }
@@ -53,7 +59,7 @@ class Allies extends React.Component {
             <div><strong>AC</strong> {monster.ac.base}, touch {monster.ac.touch}, flat-footed {monster.ac.ff} ({monster.ac.details})</div>
             <div><strong>hp</strong> {monster.hp}</div>
             <div><strong>Fort</strong> {monster.fort}, <strong>Ref</strong> {monster.ref}, <strong>Will</strong> {monster.will}</div>
-            <div>{!!monster.def.length && <span><u>Defensive Abilities</u> {monster.def.join(", ")} </span>}{!!monster.dr.length && <span><u>DR</u> {monster.dr.join(", ")} </span>}{!!monster.immune.length && <span><u>Immune</u> {monster.immune.join(", ")} </span>}{!!monster.resist.length && <span><u>Resist</u> {monster.resist.join(", ")} </span>}</div>
+            <div>{!!monster.def.length && <span><u>Defensive Abilities</u> {monster.def.join(", ")} </span>}{!!monster.dr.length && <span><u>DR</u> {monster.dr.join(", ")} </span>}{!!monster.immune.length && <span><u>Immune</u> {monster.immune.join(", ")} </span>}{!!monster.resist.length && <span><u>Resist</u> {monster.resist.join(", ")} </span>}{!!monster.weaknesses.length && <span><u>Weaknesses</u> {monster.weaknesses.join(", ")} </span>}</div>
           </div>
           <div style={{marginBottom: '1%', paddingBottom: '.8%', borderBottom: 'double'}}>
             <div><strong>Speed</strong> {monster.speed.join(", ")}</div>
@@ -121,6 +127,7 @@ class Allies extends React.Component {
           "precision damage"
         ],
         resist: [],
+        weaknesses: [],
         speed: [
           "fly 100 ft (perfect)"
         ],
@@ -201,6 +208,7 @@ class Allies extends React.Component {
             "acid 10",
             "cold 10"
           ],
+          weaknesses: [],
           speed: [
             "20 ft"
           ],
@@ -278,6 +286,7 @@ class Allies extends React.Component {
       dr: ['In Vigilante Form, DR 2/magic'],
       immune: [],
       resist: [],
+      weaknesses: [],
       speed: [
         "20 ft",
         "climb 20 ft."
@@ -318,6 +327,193 @@ class Allies extends React.Component {
       ]
     }
     monsters.push(chubbs)
+    return monsters
+  }
+
+  cedrick = () => {
+    let monsters = []
+    let hoo = {
+      name: "Hoo",
+      alignment: "N",
+      size: "Medium",
+      type: "outsider (air, cold, elemental, extraplanar, water)",
+      init: "+0",
+      senses: [
+        "darkvision 60 ft.",
+        "snow vision",
+        "Perception +7"
+      ],
+      ac: {
+        base: 16,
+        touch: 10,
+        ff: 16,
+        details: "+6 natural"
+      },
+      hp: 30,
+      fort: '+6',
+      ref: '+4',
+      will: '+1',
+      def: [],
+      dr: [],
+      immune: [
+        'cold',
+        "bleed",
+        "paralysis",
+        "poison",
+        "sleep",
+        "stun",
+        "critical hits",
+        "flanking",
+        "precision damage"
+      ],
+      weaknesses: [
+        'vulnerable to fire'
+      ],
+      resist: [],
+      speed: [
+        "20 ft",
+        "burrow (snow and ice only) 20 ft.",
+        'swim 60 ft.'
+      ],
+      melee: [
+        "slam +7 (1d6+4 plus 1d4 cold)"
+      ],
+      range: [],
+      space: null,
+      reach: null,
+      spAtt: [
+        'numbing cold (DC 14)'
+      ],
+      stats: {
+        str: 16,
+        dex: 10,
+        con: 15,
+        int: 4,
+        wis: 11,
+        cha: 11
+      },
+      bab: "+4",
+      cmb: '+7',
+      cmd: "17 (can't be tripped)",
+      feats: [
+        "Power Attack",
+        "Cleave"
+      ],
+      skills: [
+        "Religion +4",
+        "Perception +7",
+        "Stealth +7",
+        "Swim +11"
+      ],
+      languages: [
+        'Aquan'
+      ],
+      special: [
+        {name: "Snow Vision", description: "Hoo can see perfectly well in snowy conditions and does not take any penalties on Perception checks while in snow.", type: "Ex"},
+        {name: "Numbing Cold", description: "When Hoo deals cold damage to a creature, that creature must succeed on a Fortitude save or be staggered for 1 round. The save DC is listed in the elemental’s stat block and is Constitution-based.", type: "Su"},
+        {name: "Ice Gliding", description: "A burrowing Hoo can pass through nonmagical ice and snow as easily as a fish swims through water. Its burrowing leaves behind no tunnel or hole, nor does it create any ripple or other sign of its presence. A control water spell cast on an area containing a burrowing Hoo flings the elemental back 30 feet, stunning Hoo for 1 round unless it succeeds on a DC 15 Fortitude save.", type: "Su"},
+        {name: "Ice Walking", description: "This ability works like the spider climb spell, but the surfaces the elemental climbs must be icy. The elemental can move across icy surfaces without penalty and does not need to make Acrobatics checks to run or charge on ice.", type: "Ex"}
+      ]
+    }
+    monsters.push(hoo)
+    return monsters
+  }
+
+  maddox = () => {
+    let monsters = []
+    let b8 = {
+      name: "B8-triX",
+      alignment: "N",
+      size: "Tiny",
+      type: "construct",
+      init: "+2",
+      senses: [
+        "blindsight 30 ft.",
+        "Perception +2"
+      ],
+      ac: {
+        base: 19,
+        touch: 15,
+        ff: 16,
+        details: "+2 Dex, +1 dodge, +2 size, +4 natural"
+      },
+      hp: 'HALF OF MADDOX HP',
+      fort: 'MADDOX FORTITUDE',
+      ref: 'MADDOX REFLEX',
+      will: 'MADDOX WILL',
+      def: [],
+      dr: [],
+      immune: [
+        'mind-affecting effects',
+        'disease',
+        'death effects',
+        'necromancy effects',
+        'paralysis',
+        'poison',
+        'sleep',
+        'stunning',
+        'ability damage',
+        'ability drain',
+        'fatigue',
+        'exhaustion',
+        'energy drain',
+        'nonlethal damage',
+        'any effect that requires a Fortitude save (unless the effect also works on objects, or is harmless)'
+      ],
+      weaknesses: [],
+      resist: [],
+      speed: [
+        "0 ft",
+        'fly 30 ft.'
+      ],
+      melee: [
+        "slam +0 (1d4-3)"
+      ],
+      range: [],
+      space: '2 1/2 ft',
+      reach: '0 ft',
+      spAtt: [],
+      stats: {
+        str: 4,
+        dex: 15,
+        con: '-',
+        int: 9,
+        wis: 14,
+        cha: 5
+      },
+      bab: "MADDOX BAB",
+      cmb: '+1',
+      cmd: "9",
+      feats: [
+        "Dodge"
+      ],
+      skills: [
+        "Fly +10",
+        "Acrobatics +8",
+        "Heal +7",
+        "Investigation +5",
+        "Linguistics +5",
+        "Nature +5",
+        "Perception +10",
+        "Religion +5",
+        "Spellcraft +5",
+        "Survival +5"
+      ],
+      languages: [
+        "Common (can't speak)"
+      ],
+      special: [
+        {name: "Ioun Affinity", description: "An ioun wyrd can integrate a number of ioun stones into its body equal to 1 + half its Hit Dice. Because an ioun wyrd sees all ioun stones as equal and gains no bene ts from them, the wyrd’s ioun stones can be swapped out by any creature the wyrd trusts.", type: "Su"},
+        {name: "Share Iouns", description: "A character with an ioun wyrd familiar gains the bene t of the wyrd’s ioun stones as long as the character is within 30 feet of the ioun wyrd.", type: "Su"},
+        {name: "Echo", description: <span>Once per day when delivering a touch spell, an arcane amplifier can apply the <span className='underline-hover' onClick={() => this.props.editModal('metamagic')}>Extend Spell metamagic feat</span> to the spell.</span>, type: "Su"},
+        {name: "Share Spells", description: "You may cast a spell with a target of “You” on his familiar (as a touch spell) instead of on yourself. You may cast spells on your familiar even if the spells do not normally affect creatures of the familiar’s type.", type: "Su"},
+        {name: "Empathic Link", description: "You have an empathic link with your familiar to a 1 mile distance. You can communicate empathically with the familiar, but cannot see through its eyes. Because of the link’s limited nature, only general emotions can be shared. You have the same connection to an item or place that his familiar does.", type: "Su"},
+        {name: "Deliver Touch Spells", description: "Your familiar can deliver touch spells for you. If you and the familiar are in contact at the time you cast a touch spell, you can designate your familiar as the “toucher.” The familiar can then deliver the touch spell just as you would. As usual, if you cast another spell before the touch is delivered, the touch spell dissipates.", type: "Su"},
+        {name: "Speak with Master", description: "You and your familiar can communicate verbally as if you were using a common language. Other creatures do not understand the communication without magical help.", type: "Ex"},
+        {name: "Reverberate", description: <span>Once per day when delivering a touch spell, an arcane amplifier can apply either the <span className='underline-hover' onClick={() => this.props.editModal('metamagic')}>Empower Spell metamagic feat</span> to the spell or use the <span className='underline-hover' onClick={() => this.props.editModal('metamagic')}>Heighten Spell metamagic feat</span> to increase its spell level by 2.</span>, type: "Su"}
+      ]
+    }
+    monsters.push(b8)
     return monsters
   }
 

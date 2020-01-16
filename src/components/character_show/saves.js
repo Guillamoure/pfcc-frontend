@@ -22,23 +22,50 @@ const Saves = props => {
         let currentClass = findCurrentClass(klass.id)
         totalSavingThrow += renderSave(klass.level, currentClass[save])
       })
-      const mod = Math.floor((props.character_info.ability_scores[score] - 10) / 2)
+      const hc = props.character_info.hardcode
+      const age = props.character.name === 'Maddox' && hc.age
+
+      let abilityScore = props.character_info.ability_scores[score]
+      if (score === 'dexterity'){
+        abilityScore += age === 'Young' ? 2 : 0
+        abilityScore += age === 'Middle' ? -1 : 0
+        abilityScore += age === 'Old' ? -2 : 0
+        abilityScore += age === 'Venerable' ? -3 : 0
+      } else if (score === 'constitution'){
+        abilityScore += age === 'Young' ? -2 : 0
+        abilityScore += age === 'Middle' ? -1 : 0
+        abilityScore += age === 'Old' ? -2 : 0
+        abilityScore += age === 'Venerable' ? -3 : 0
+      } else if (score === 'wisdom'){
+        abilityScore += age === 'Young' ? -2 : 0
+        abilityScore += age === 'Middle' ? 1 : 0
+        abilityScore += age === 'Old' ? 1 : 0
+        abilityScore += age === 'Venerable' ? 1 : 0
+      }
+      const mod = Math.floor((abilityScore - 10) / 2)
       totalSavingThrow += mod
       if (save === 'reflex' && props.character.name === "Cedrick"){
         totalSavingThrow += 1
       }
       const ogST = totalSavingThrow
       // hardcoding
-      const hc = props.character_info.hardcode
       if (save === 'will' && hc.rage){
         totalSavingThrow += 2
       }
-      const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major'].includes(hc.major)
+      const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major', 'Chameleon - Major'].includes(hc.major)
+      const enlarger = hc.enlarge
+      const reducer = hc.reduce
+      const charmedActive = hc.charmedActive
+      const stealTime = hc.stealTime
       if (save === 'reflex'){
         if (largeMorph){
-          totalSavingThrow -= 1
+          totalSavingThrow += -1
         }
+        totalSavingThrow += enlarger ? -1 : 0
+        totalSavingThrow += reducer ? 1 : 0
+        totalSavingThrow += stealTime ? 1 : 0
       }
+      totalSavingThrow += charmedActive ? 4 : 0
       if (!style){
         return totalSavingThrow < 0 ? totalSavingThrow : `+${totalSavingThrow}`
       } else {
@@ -71,16 +98,50 @@ const Saves = props => {
     return props.classes.find(ck => ck.id === klassId)
   }
 
+  // let ast = props.character.name === 'Robby' ? '*' : null
+  // ast = props.character_info.hardcode.quick ? '*' : ast
+  const ast = (type) => {
+    let ast = false
+    if (type === 'all'){
+      if (props.character.name === 'Robby'){
+        ast = true
+      }
+    } else if (type === 'reflex'){
+      if (props.character_info.hardcode.quick){
+        ast = true
+      }
+    }
+    if (ast){
+      return '*'
+    }
+  }
+
+  const renderTooltip = (e, type) => {
+    let comment = ''
+    if (props.character.name === 'Robby'){
+      if (type === 'all'){
+        comment = '+1 to fear and mind-affecting effects'
+      } else if (type === 'reflex'){
+        comment = 'If you succeed on a saving throw to take half damage, take no damage instead'
+      }
+    } else if (props.character_info.hardcode.quick && type === 'reflex'){
+      comment = 'Advantage on Reflex saving throws'
+    } else {
+      return null
+    }
+    props.renderTooltip(e, comment)
+  }
+
 
     return(
-      <div id='saves' className='container-3 shadow shrink'>
-        <div id='saving-throw-title'>Saving Throws</div>
+      <div id='saves' className='container-3 shadow shrink' >
+        <div id='saving-throw-title' onMouseOver={e => renderTooltip(e, 'all')} onMouseOut={props.mouseOut}>Saving Throws{ast('all')}</div>
         <span className='centered' >
           <div className='enhanced' style={renderCharacterSave('fortitude', 'constitution', true)}>{renderCharacterSave('fortitude', 'constitution')}</div>
           <div className='muted'><strong>Fortitude</strong></div>
         </span>
-        <span className='centered' >
-          <div className='enhanced' style={renderCharacterSave('reflex', 'dexterity', true)}>{renderCharacterSave('reflex', 'dexterity')}</div>
+        <span className='centered' onMouseOver={e => renderTooltip(e, 'reflex')} onMouseOut={props.mouseOut}>
+          <div className='enhanced' style={renderCharacterSave('reflex', 'dexterity', true)}>{renderCharacterSave('reflex', 'dexterity')}{ast('reflex')}</div>
           <div className='muted'><strong>Reflex</strong></div>
         </span>
         <span className='centered' >

@@ -4,9 +4,11 @@ import './css/character.css';
 import './css/combat.css';
 import './css/card.css';
 import './css/container.css';
+import './css/animations.css';
 
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { connect } from 'react-redux'
+import localhost from './localhost'
 
 
 import Home from './container/home'
@@ -20,6 +22,7 @@ import Race from './container/race_show'
 import Skill from './container/skill_show'
 import CharacterCreation from './container/character_creation'
 import Character from './container/character_show'
+import Campaign from './container/campaign_show'
 
 import Login from './components/login'
 import SignUp from './components/signup'
@@ -32,7 +35,7 @@ import SkillForm from './components/skill_form'
 class App extends React.Component {
 
   componentDidMount(){
-    fetch('http://localhost:3000/api/v1/data')
+    fetch(`${localhost}/api/v1/data`)
     .then(r => r.json())
     .then(data => {
       this.props.dispatch({type: 'EVERYTHING', classes: data.klasses, races: data.races })
@@ -41,7 +44,6 @@ class App extends React.Component {
 
 
   render(){
-
     return (
         <Router>
           <React.Fragment>
@@ -61,6 +63,7 @@ class App extends React.Component {
             <Route exact path="/spells" component={Spells} />
             <Route exact path="/creation" component={CharacterCreation} />
             <Route exact path="/characters/:slug" component={Character} />
+            <Route exact path="/campaigns/:slug" component={Campaign} />
           </React.Fragment>
         </Router>
     );

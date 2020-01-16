@@ -1,12 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
-
+import localhost from '../../localhost'
 
 class Rest extends React.Component {
 
   newDay = () => {
     const char = this.props.character
-    fetch('http://localhost:3000/api/v1/rest', {
+    fetch(`${localhost}/api/v1/rest`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

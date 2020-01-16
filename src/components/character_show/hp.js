@@ -20,7 +20,15 @@ class HP extends React.Component {
   }
 
   conMod = () => {
-    return Math.floor((this.props.character_info.ability_scores.constitution - 10) / 2)
+    let con = this.props.character_info.ability_scores.constitution
+    const age = this.props.character.name === 'Maddox' && this.props.character_info.hardcode.age
+
+    con += age === 'Young' ? -2 : 0
+    con += age === 'Middle' ? -1 : 0
+    con += age === 'Old' ? -2 : 0
+    con += age === 'Venerable' ? -3 : 0
+
+    return Math.floor((con  - 10) / 2)
   }
 
   renderDamaged = () => {

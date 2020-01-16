@@ -2,6 +2,7 @@ import React from 'react'
 import _ from 'lodash'
 import TraitForm from './trait_form'
 import { connect } from 'react-redux'
+import localhost from '../../localhost'
 
 class Trait extends React.Component {
 
@@ -16,7 +17,7 @@ class Trait extends React.Component {
 
   renderSubmit = (e, trait) => {
     e.preventDefault();
-    fetch(`http://localhost:3000/api/v1/racial_traits/${this.props.trait.id}`, {
+    fetch(`${localhost}/api/v1/racial_traits/${this.props.trait.id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -49,7 +50,7 @@ class Trait extends React.Component {
     e.preventDefault();
     if (answer === "yes") {
 
-      fetch(`http://localhost:3000/api/v1/racial_traits/${this.props.trait.id}`, {
+      fetch(`${localhost}/api/v1/racial_traits/${this.props.trait.id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

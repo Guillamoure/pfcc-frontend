@@ -1,6 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
 import { connect } from 'react-redux'
+import localhost from '../../localhost'
 
 class Skills extends React.Component {
 
@@ -9,7 +10,7 @@ class Skills extends React.Component {
   }
 
   componentDidMount() {
-    fetch(`http://localhost:3000/api/v1/skillsets/${this.props.character.skillset.id}`)
+    fetch(`${localhost}/api/v1/skillsets/${this.props.character.skillset.id}`)
     .then(r => r.json())
     .then(data => {
       this.setState({skillset: data.skillset})
@@ -17,7 +18,42 @@ class Skills extends React.Component {
   }
 
   renderSkillBonus = (skill, style) => {
-    const score = this.props.character_info.ability_scores[_.lowerCase(skill.ability_score)]
+    let score = this.props.character_info.ability_scores[_.lowerCase(skill.ability_score)]
+    const age = this.props.character.name === 'Maddox' && this.props.character_info.hardcode.age
+    if (skill.ability_score === "Strength"){
+      score += age === 'Young' ? -2 : 0
+      score += age === 'Middle' ? -1 : 0
+      score += age === 'Old' ? -2 : 0
+      score += age === 'Venerable' ? -3 : 0
+    }
+    if (skill.ability_score === "Dexterity"){
+      score += age === 'Young' ? 2 : 0
+      score += age === 'Middle' ? -1 : 0
+      score += age === 'Old' ? -2 : 0
+      score += age === 'Venerable' ? -3 : 0
+    }
+    if (skill.ability_score === 'Constitution'){
+      score += age === 'Young' ? -2 : 0
+      score += age === 'Middle' ? -1 : 0
+      score += age === 'Old' ? -2 : 0
+      score += age === 'Venerable' ? -3 : 0
+    }
+    if (skill.ability_score === "Intelligence"){
+      score += age === 'Middle' ? 1 : 0
+      score += age === 'Old' ? 1 : 0
+      score += age === 'Venerable' ? 1 : 0
+    }
+    if (skill.ability_score === 'Wisdom'){
+      score += age === 'Young' ? -2 : 0
+      score += age === 'Middle' ? 1 : 0
+      score += age === 'Old' ? 1 : 0
+      score += age === 'Venerable' ? 1 : 0
+    }
+    if (skill.ability_score === 'Charisma'){
+      score += age === 'Middle' ? 1 : 0
+      score += age === 'Old' ? 1 : 0
+      score += age === 'Venerable' ? 1 : 0
+    }
     let mod = Math.floor((score - 10) / 2)
     let skillRanks = this.renderNumOfRanks(skill)
       mod += skillRanks
@@ -28,8 +64,10 @@ class Skills extends React.Component {
     const hc = this.props.character_info.hardcode
     const name = this.props.character.name
     const size = this.props.character_info.size
-    const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major'].includes(hc.major)
+    const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major', 'Chameleon - Major'].includes(hc.major)
     const armor = hc.armor
+    const enlarger = hc.enlarge
+    const reducer = hc.reduce
     if (skill.name === "Stealth"){
       const size = this.props.character_info.size
       if (size === "Small"){
@@ -47,11 +85,27 @@ class Skills extends React.Component {
       // ARMOR CHECK PENALTY FROM ARMOR
       if (skill.ability_score === 'Dexterity' || skill.ability_score === 'Strength'){
         mod += armor === 'Wooden' ? -1 : 0
+        mod += armor === '+1 chain shirt' ? -1 : 0
       }
     }
     if (skill.ability_score === "Intelligence" && name === "Persephone"){
       mod += 1
     }
+    // agile trait
+    mod += skill.name === 'Acrobatics' && name === 'Robby' ? 2 : 0
+    // sea legs
+    mod += skill.name === 'Acrobatics' && name === 'Robby' ? 2 : 0
+    mod += skill.name === 'Climb' && name === 'Robby' ? 2 : 0
+    mod += skill.name === 'Swim' && name === 'Robby' ? 2 : 0
+
+
+    let bonus = 0
+    this.props.character_info.bonuses.forEach(b => {
+      if (b.type === 'skill' && b.skill_id === skill.id && b.duration === 'permanent'){
+        bonus += b.bonus
+      }
+    })
+    mod += bonus
     // check to see if the starting mod is modified
     let ogMod = mod
     if (skill.ability_score === 'Strength'){
@@ -61,11 +115,15 @@ class Skills extends React.Component {
       if (hc.minor === 'Bull - Minor'){
         mod +=1
       }
+      mod += enlarger ? 1 : 0
+      mod += reducer ? -1 : 0
     }
     if (skill.ability_score === 'Dexterity'){
       if (largeMorph){
         mod -= 1
       }
+      mod += enlarger ? -1 : 0
+      mod += reducer ? 1 : 0
     }
     if (skill.name === 'Swim'){
       if (hc.minor === 'Frog - Minor'){
@@ -109,9 +167,31 @@ class Skills extends React.Component {
   }
 
   renderNumOfRanks = (skill) => {
+    let name = this.props.character.name
     let skillRanks = this.props.character.character_skillset_skills.find(chsss => chsss.skill_id === skill.id)
-    if (skill.name === 'Religion' && this.props.character.name === "Persephone"){
+    if (skill.name === 'Religion' && name === "Persephone"){
       skillRanks = skillRanks || {ranks: this.props.character.character_klasses.length}
+    }
+    if (skill.name === 'Profession (fence)' && name === "Merg"){
+      skillRanks = {ranks: 0}
+    }
+    if (skill.name === 'Profession (sailor)' && name === "Merg"){
+      skillRanks = {ranks: 2}
+    }
+    if (skill.name === 'Profession (sailor)' && name === "Robby"){
+      skillRanks = {ranks: 2}
+    }
+    if (skill.name === 'Perform (acting)' && name === "Robby"){
+      skillRanks = {ranks: 1}
+    }
+    if (skill.name === 'Perform (percussion)' && name === "Nettie"){
+      skillRanks = {ranks: 100}
+    }
+    if (skill.name === 'Perform (strings)' && name === "Nettie"){
+      skillRanks = {ranks: 100}
+    }
+    if (skill.name === 'Craft (gears/clockwork)' && name === "Maddox"){
+      skillRanks = {ranks: 3}
     }
     return skillRanks !== undefined ? skillRanks.ranks : 0
   }
@@ -130,6 +210,9 @@ class Skills extends React.Component {
         }
       })
     })
+    if (skill.name.includes('Profession') || skill.name.includes('Perform') || skill.name.includes('Craft')){
+      isThisAClassSkill = true
+    }
     return isThisAClassSkill
   }
 
@@ -145,20 +228,52 @@ class Skills extends React.Component {
     }
     if (armor){
       if (abbrev === 'Dex' || abbrev === 'Str'){
-        abbrev += armor === 'Wooden' ? '*' : null
+        abbrev += armor === 'Wooden' ? '*' : ''
+        abbrev += armor === '+1 chain shirt' ? '*' : ''
+      }
+    }
+    if (this.props.character_info.hardcode.quick){
+      if (abbrev === 'Dex' || abbrev === 'Cha'){
+        abbrev += '*'
       }
     }
     return abbrev
   }
 
+  modifiedSkills = () => {
+    let skills = [...this.state.skillset.skills]
+    let name = this.props.character.name
+    if (name === 'Merg'){
+      skills.push({name: 'Profession (fence)', ability_score: 'Wisdom'})
+      skills.push({name: 'Profession (sailor)', ability_score: 'Wisdom'})
+      skills = skills.filter(sk => sk.name !== 'Profession')
+    }
+    if (name === 'Robby'){
+      skills.push({name: 'Profession (sailor)', ability_score: 'Wisdom'})
+      skills.push({name: 'Perform (acting)', ability_score: 'Charisma'})
+      skills = skills.filter(sk => sk.name !== 'Profession')
+      skills = skills.filter(sk => sk.name !== 'Perform')
+    }
+    if (name === 'Nettie'){
+      skills.push({name: 'Perform (percussion)', ability_score: 'Charisma'})
+      skills.push({name: 'Perform (strings)', ability_score: 'Charisma'})
+      skills = skills.filter(sk => sk.name !== 'Perform')
+    }
+    if (name === 'Maddox'){
+      skills.push({name: 'Craft (gears/clockwork)', ability_score: 'Intelligence'})
+      skills = skills.filter(sk => sk.name !== 'Craft')
+    }
+    return skills.sort((a,b) => a.name > b.name ? 1 : -1)
+  }
+
   renderSkillTableRow = () => {
-    const sortedSkills = this.state.skillset.skills.sort((a,b) => a.name > b.name ? 1 : -1)
+    const sortedSkills = this.modifiedSkills()
     return sortedSkills.map(skill => {
       return (
         <tr key={_.random(1, 2000000)}>
           <td>{this.renderClassSkill(skill) ? "X" : null}</td>
           <td onMouseOver={(e) => this.renderTooltip(e, null, skill.ability_score)} onMouseOut={this.props.mouseOut}><strong>{this.renderAbilityScoreAbbreviation(skill)}</strong></td>
-          <td className={this.raging(skill.name)} style={this.renderSkillBonus(skill, true)} onMouseOver={(e) => this.renderTooltip(e, skill.name)} onMouseOut={this.props.mouseOut}>{this.asteriks(skill.name)}</td>
+          <td className={this.raging(skill.name)} style={this.renderSkillBonus(skill, true)} onMouseOver={(e) => this.renderTooltip(e, skill.name)} onMouseOut={this.props.mouseOut}>{this.asterisk(skill.name)}</td>
           <td style={this.renderSkillBonus(skill, true)}>{this.renderSkillBonus(skill)}</td>
           <td>{this.renderNumOfRanks(skill)}</td>
         </tr>
@@ -177,56 +292,83 @@ class Skills extends React.Component {
   //   }
   // }
 
-  asteriks = (skill) => {
-    let asterik = skill + "*"
+  asterisk = (skill) => {
+
+    let asterisk = skill + "*"
     let name = this.props.character.name
     let hc = this.props.character_info.hardcode
     switch(skill){
       case 'Acrobatics':
-        if (hc.minor === 'Frog - Minor' || hc.major === 'Frog - Major' || hc.major === 'Condor - Major' || name === 'Festus'){
-          return asterik
+        if (hc.minor === 'Frog - Minor' || hc.major === 'Frog - Major' || hc.major === 'Condor - Major' || name === 'Festus' || name === 'Robby'){
+          return asterisk
         } else {
           return skill
         }
       case 'Heal':
         if (name === 'Nettie'){
-          return asterik
+          return asterisk
         } else {
           return skill
         }
       case 'Survival':
         if (name === 'Nettie'){
-          return asterik
+          return asterisk
         } else {
           return skill
         }
       case 'Swim':
-        if (hc.major === 'Frog - Major'){
-          return asterik
+        if (hc.major === 'Frog - Major' || name === 'Robby'){
+          return asterisk
         } else {
           return skill
         }
       case 'Stealth':
         if (name === 'Cedrick'){
-          return asterik
+          return asterisk
+        } else if (hc.major === 'Chameleon - Major') {
+          return asterisk
         } else {
           return skill
         }
       case 'Intimidate':
-        if (name === 'Cedrick'){
-          return asterik
+        if (name === 'Cedrick' || name === 'Robby'){
+          return asterisk
         } else {
           return skill
         }
       case 'Religion':
         if (name === 'Persephone'){
-          return asterik
+          return asterisk
         } else {
           return skill
         }
       case 'Disguise':
         if (name === 'Persephone'){
-          return asterik
+          return asterisk
+        } else {
+          return skill
+        }
+      case 'Finesse':
+        if (name === 'Robby'){
+          return asterisk
+        } else {
+          return skill
+        }
+      case 'Handle Animal':
+        if (name === 'Robby'){
+          return asterisk
+        } else {
+          return skill
+        }
+      case 'Climb':
+        if (name === 'Robby'){
+          return asterisk
+        } else {
+          return skill
+        }
+      case 'Sense Motive':
+        if (name === 'Merg'){
+          return asterisk
         } else {
           return skill
         }
@@ -257,21 +399,30 @@ class Skills extends React.Component {
         comment = 'Treat all jumps as if you had a running start'
       } else if (hc.major === 'Condor - Major' || name === 'Festus'){
         comment = '+8 to flying check from Fly Speed'
+      } else if (name === 'Robby'){
+        comment = 'Derring-Do: Spend 1 Panache to add +1d6, up to 4 times'
       }
     }
     if (skill === "Swim"){
       if (hc.major === 'Frog - Major'){
         comment = 'Swim Speed'
+      } else if (name === 'Robby'){
+        comment = 'Derring-Do: Spend 1 Panache to add +1d6, up to 4 times'
       }
     }
     if (skill === "Stealth"){
       if (name === 'Cedrick'){
         comment = '+4 bonus in Marshes and Forests'
       }
+      if (hc.major === 'Chameleon - Major'){
+        comment = comment + ', +10 bonus if you are standing still'
+      }
     }
     if (skill === 'Intimidate'){
       if (name === 'Cedrick'){
         comment = <span>+1 enchancement bonus from <em>ominous</em> from Ta'al'mon Ancestral Handwraps</span>
+      } else if (name === 'Robby'){
+        comment = 'Meanacing Swordplay: If you have at least 1 Panache, after a melee attack, Demoralize as a swift action instead of standard action'
       }
     }
     if (skill === 'Religion'){
@@ -290,10 +441,34 @@ class Skills extends React.Component {
         comment = <span>+20 circumstance bonus to appear as {currently} if suspected to be {alterEgo}</span>
       }
     }
+    if (skill === 'Finesse'){
+      if (name === 'Robby'){
+        comment = 'Derring-Do: Spend 1 Panache to add +1d6, up to 4 times'
+      }
+    }
+    if (skill === 'Handle Animal'){
+      if (name === 'Robby'){
+        comment = 'Derring-Do: Spend 1 Panache to add +1d6 to ride checks, up to 4 times'
+      }
+    }
+    if (skill === 'Climb'){
+      if (name === 'Robby'){
+        comment = 'Derring-Do: Spend 1 Panache to add +1d6, up to 4 times'
+      }
+    }
+    if (skill === 'Sense Motive'){
+      if (name === 'Merg'){
+        comment = 'If the Fabric of Reality is draped over your eyes, +4 bonus.'
+      }
+    }
     if (ability){
       let armor = hc.armor
       if (armor && (ability === 'Strength' || ability === 'Dexterity')){
         comment = armor === 'Wooden' ? 'Armor Check Penalty: -1' : comment
+        comment = armor === '+1 chain shirt' ? 'Armor Check Penalty: -1' : comment
+      }
+      if (hc.quick && (ability === 'Dexterity' || ability === 'Charisma')){
+        comment = `Advantage on ${ability}-based checks`
       }
     }
     if (comment){
@@ -325,6 +500,7 @@ class Skills extends React.Component {
 
 
   render(){
+    console.log(this.props.character_info.hardcode)
     return(
       <div id='skills' className='shadow'>
         <div name="skill list">

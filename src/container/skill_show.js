@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import localhost from '../localhost'
 
 import Introduction from '../components/skill_show/introduction'
 
@@ -18,7 +19,7 @@ class Skill extends React.Component {
 
   componentDidMount() {
     const skill = this.renderURL()
-    fetch(`http://localhost:3000/api/v1/skills/${skill}`)
+    fetch(`${localhost}/api/v1/skills/${skill}`)
     .then(r => r.json())
     .then(data => this.setState({skill: data.skill}))
   }

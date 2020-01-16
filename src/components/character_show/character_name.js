@@ -22,6 +22,31 @@ class CharacterName extends React.Component {
     }
     let remapped = this.props.character_info.classes.map(cl => {
       let name = this.props.classes.find(k => k.id === cl.id).name
+      switch(name){
+        case 'Barbarian':
+          name = 'Drunken Brute Invulnerable Rager ' + name
+          break
+        case 'Rogue':
+          name = 'Pirate ' + name
+          break
+        case 'Shifter':
+          name = 'Chimera Weapon ' + name
+          break
+        case 'Witch':
+          name = 'Autumn Season ' + name
+          break
+        case 'Vigilante':
+          name = 'Magical Child ' + name
+          break
+        case 'Arcanist':
+          name = 'Chronomancer ' + name
+          break
+        case 'Bard':
+          name = 'Chronicler of Worlds ' + name
+          break
+        default:
+          break
+      }
       return `${name} ${cl.level}`
     })
     return remapped.join(", ")
@@ -47,6 +72,9 @@ class CharacterName extends React.Component {
         case 'Squid - Major':
           name += ', but a Squid'
           break
+        case 'Chameleon - Major':
+          name += ', but a Chameleon'
+          break
         case 'Tiger':
           name += ', but a Tiger'
           break
@@ -54,7 +82,37 @@ class CharacterName extends React.Component {
           break
       }
     }
+    if (this.props.character_info.hardcode.alterSelf){
+      name = 'Not Harry Styles'
+    }
+    if (name === 'Maddox'){
+      let age = this.props.character_info.hardcode.age
+      name = age + ' '+ name
+      if (age === 'Middle'){
+        name = 'Middle Age Maddox'
+      }
+    }
     return name
+  }
+
+  greenBadge = () => {
+    let badge = false
+    this.props.character.character_magic_items.forEach(cmi => {
+      if (!cmi.discovered){
+        badge = true
+      }
+    })
+    return badge
+  }
+
+  yellowBadge = () => {
+    let badge = false
+    return badge
+  }
+
+  redBadge = () => {
+    let badge = false
+    return badge
   }
 
   render(){
@@ -64,9 +122,14 @@ class CharacterName extends React.Component {
         <div className='first-row' style={{padding: '.25em'}} id='title'>{this.name()}</div>
         <span className='second-row' style={{padding: '.5em'}}>{this.props.character.race.name} {this.renderClasses()}</span>
         {this.props.character.user_id === this.props.currentUser.id && <span className='edit' onClick={() => this.props.editModal('character')}><FontAwesomeIcon icon={faPencilAlt} /></span>}
-        <span className="notif" data-badge-1="3" data-badge-2="12" data-badge-3="1">
-          <FontAwesomeIcon id='spin' icon={faDiceD20} size='3x' onClick={() => this.props.editModal('notifications')} />
-        </span>
+        <span className='notif'>
+          <div className='notification'>
+            {this.greenBadge() && <span className='badge green-badge'></span>}
+            {this.yellowBadge() && <span className='badge yellow-badge'></span>}
+            {this.redBadge() && <span className='badge red-badge'></span>}
+            <FontAwesomeIcon id='spin' icon={faDiceD20} size='3x' onClick={() => this.props.editModal('notifications')} />
+          </div>
+        </span >
       </div>
     )
   }
@@ -76,6 +139,7 @@ const mapStatetoProps = (state) => {
   return {
     currentUser: state.currentUser,
     admin: state.admin,
+    character: state.character,
     character_info: state.character_info,
     classes: state.classes
   }

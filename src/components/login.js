@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Form, Button } from 'semantic-ui-react'
+import localhost from '../localhost'
 
 class Login extends React.Component {
 
@@ -27,7 +28,7 @@ class Login extends React.Component {
 
   renderSubmit = (e) => {
     e.preventDefault()
-    fetch('http://localhost:3000/api/v1/login', {
+    fetch(`${localhost}/api/v1/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

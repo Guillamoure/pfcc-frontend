@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-
+import localhost from '../localhost'
 
 class NewRace extends React.Component {
 
@@ -29,7 +29,7 @@ class NewRace extends React.Component {
 
   renderSubmit = (e) => {
     e.preventDefault()
-    fetch('http://localhost:3000/api/v1/races', {
+    fetch(`${localhost}/api/v1/races`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -165,7 +165,7 @@ class NewRace extends React.Component {
   deleteRaceConfirm = (e, answer) => {
     e.preventDefault();
     if (answer === "yes") {
-      fetch(`http://localhost:3000/api/v1/races/${this.props.race.id}`, {
+      fetch(`${localhost}/api/v1/races/${this.props.race.id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

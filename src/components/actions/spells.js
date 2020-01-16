@@ -1,7 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import _ from 'lodash'
+import localhost from '../../localhost'
 
+import NonClassSpellSummary from '../nc_spell_summary'
 import SpellSummary from '../spell_summary'
 import HardcodeSpells from '../hardcode_spells'
 
@@ -42,7 +44,7 @@ class Spells extends React.Component {
       spell_level: spell.spell_level,
       klass_id: spell.klass.id
     }
-    fetch('http://localhost:3000/api/v1/cast_spells', {
+    fetch(`${localhost}/api/v1/cast_spells`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -131,6 +133,7 @@ class Spells extends React.Component {
         <div key={spd.id*3-2}>
           <span>{spd.name}</span>
           {spd.spd.map(this.extrapolateSPD)}
+          {this.additionalSpellStats(spd.name)}
           {this.availableSpellsToCastTable(spd.id)}
         </div>
       )
@@ -277,15 +280,103 @@ class Spells extends React.Component {
     let condor = this.props.character_info.hardcode.minor === 'Condor - Minor'
     let cedrick = this.props.character.name === 'Cedrick'
     let pepper = this.props.character.name === 'Persephone'
-    if (condor || cedrick || pepper){
+    let maddox = this.props.character.name === 'Maddox'
+    let robby = this.props.character.name === 'Robby'
+    let merg = this.props.character.name === 'Merg'
+    let nettie = this.props.character.name === 'Nettie'
+    let festus = this.props.character.name === 'Festus'
+    if (condor || cedrick || pepper || maddox || robby || merg || nettie || festus){
       return <HardcodeSpells editModal={this.props.editModal}/>
     }
+  }
+
+  additionalSpellStats = (name) => {
+    // caster level
+    // concentration
+    let cl = 0
+    let concentration = 0
+    let klass = this.props.classes.find(cl => cl.name === name)
+    let level
+    if (name === 'Magical Child'){
+      level = 2
+    } else {
+      level = this.props.character_info.classes.find(cl => cl.id === klass.id).level
+    }
+    cl += level
+    concentration += level
+    if (this.props.character.name === 'Maddox'){
+      cl +=4
+      // spell penetration
+      // greater spell penetration
+      concentration += 5
+      // intelligence
+    }
+    concentration += this.props.character.name === 'Persephone' && name === 'Witch' ? 5 : 0
+    concentration += this.props.character.name === 'Persephone' && name === 'Magical Child' ? 3 : 0
+    concentration += this.props.character.name === 'Nettie' && name === 'Bard' ? 3 : 0
+    return <span> | <strong>SR check</strong>: +{cl} | <strong>Concentration</strong>: +{concentration}</span>
+  }
+
+  renderMISpells = () => {
+    let mi = this.props.character.character_magic_items
+    // let allSpells = _.flatten(mi.map(i => i.magic_item.magic_item_spell_references))
+    let magicItemObject = []
+    mi.forEach(i => {
+      i.character_magic_item_feature_usages.forEach(fu => {
+
+        let cmifuFeature = i.magic_item.features.find(f => f.usage.id === fu.feature_usage_id)
+
+        cmifuFeature.feature_usage_spell_options.forEach(fuso => {
+
+          let obj = {cmifu: fu, magicItem: i.magic_item, spell_id: fuso.spell_id, castable: fuso.castable}
+
+          magicItemObject.push(obj)
+        })
+        // cmifuFeature.magic_item_feature_usage_spell_options.forEach(spO => {
+        //
+        // })
+      })
+
+        // let obj = {cmifu: i.character_magic_item_feature_usages, magicItem: i.magic_item, spell: sp}
+
+        // WTF
+
+        // go through all cmifus, see if there is a spell option associated with it,
+        // match that spell option with magic item spell reference
+        // see if that spell is castable
+        // obj.cmifu.forEach(fu => {
+        // })
+
+        // v nested
+
+        // magicItemObject.push(obj)
+    })
+    let castableMagicItemObject = magicItemObject.filter(mio => mio.castable)
+    return (
+      <table>
+        <thead>
+          <tr >
+            <th>Action</th>
+            <th>Name</th>
+            <th>Range</th>
+            <th>Duration</th>
+            <th>Hit / DC</th>
+            <th>SR</th>
+          </tr>
+        </thead>
+        <tbody>
+          {castableMagicItemObject.map((cmio, idx) => <tr className={this.renderTableStyling(idx)} key={cmio.id*idx*3-1}><NonClassSpellSummary spellId={cmio.spell_id} magicItem={cmio.magicItem} cmifu={cmio.cmifu} renderCast={this.renderCast} editModal={this.props.editModal} clickOut={this.props.clickOut}/></tr>)}
+        </tbody>
+      </table>
+    )
+
   }
 
   render(){
     return(
       <div style={{padding: '1em'}}>
         {this.hardcodedSpells()}
+        {this.renderMISpells()}
         {!!this.state.spellsPerDay.length && this.renderSpellsPerDay()}
       </div>
     )

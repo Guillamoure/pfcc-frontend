@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-
+import localhost from '../localhost'
 
 class NewSkill extends React.Component {
 
@@ -13,7 +13,7 @@ class NewSkill extends React.Component {
 
   renderSubmit = (e) => {
     e.preventDefault()
-    fetch('http://localhost:3000/api/v1/skills', {
+    fetch(`${localhost}/api/v1/skills`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -91,7 +91,7 @@ class NewSkill extends React.Component {
   deleteSkillConfirm = (e, answer) => {
     e.preventDefault();
     if (answer === "yes") {
-      fetch(`http://localhost:3000/api/v1/skills/${this.props.skill.id}`, {
+      fetch(`${localhost}/api/v1/skills/${this.props.skill.id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

@@ -15,6 +15,21 @@ class AttackBonus extends React.Component {
     if (this.props.character.any_bonus === _.capitalize(scoreName)){
       score +=2
     }
+    const age = this.props.character.name === 'Maddox' && this.props.character_info.hardcode.age
+
+    if (scoreName === 'strength'){
+      score += age === 'Young' ? -2 : 0
+      score += age === 'Middle' ? -1 : 0
+      score += age === 'Old' ? -2 : 0
+      score += age === 'Venerable' ? -3 : 0
+    }
+    if (scoreName === 'dexterity'){
+      score += age === 'Young' ? 2 : 0
+      score += age === 'Middle' ? -1 : 0
+      score += age === 'Old' ? -2 : 0
+      score += age === 'Venerable' ? -3 : 0
+    }
+
     return Math.floor( ( score - 10 ) / 2)
   }
 
@@ -23,7 +38,10 @@ class AttackBonus extends React.Component {
     let minor = this.props.character_info.hardcode.minor
     let major = this.props.character_info.hardcode.major
     let name = this.props.character.name
-    const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major'].includes(major)
+    const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major', 'Chameleon - Major'].includes(major)
+    const enlarger = this.props.character_info.hardcode.enlarge
+    const reducer = this.props.character_info.hardcode.reduce
+
     switch(ability){
       case "strength":
         if (minor === "Bull - Minor"){
@@ -32,11 +50,25 @@ class AttackBonus extends React.Component {
         if (largeMorph){
           bonus +=2
         }
+        bonus += enlarger ? 1 : 0
+        bonus += enlarger ? -1 : 0
+
+        bonus += reducer ? 1 : 0
+        bonus += reducer ? -1 : 0
+
+
         break
       case "dexterity":
         if (largeMorph){
           bonus--
         }
+        bonus += enlarger ? -1 : 0
+        bonus += enlarger ? -1 : 0
+
+        bonus += reducer ? 1 : 0
+        bonus += reducer ? 1 : 0
+
+
         break
       default:
         break
@@ -82,7 +114,7 @@ class AttackBonus extends React.Component {
     }
   }
 
-  renderAB = (ability) => {
+  renderAB = (ability, style) => {
     if(this.props.character_info.classes && this.props.classes){
 
       let ab = 0
@@ -97,10 +129,21 @@ class AttackBonus extends React.Component {
       //   // send the character's level in that class, and the relevant saving throw value
       //   ab += Math.floor(this.renderBAB(currentClass.hit_die) * this.props.character_info.classes[klass_id])
       // }
-      ab += this.renderSize(this.props.character_info.size)
       ab += this.renderAbilityScoreModifiers(ability)
+      ab += this.renderSize(this.props.character_info.size)
+      let ogAB = ab
       ab += this.renderPolymorph(ability)
-      return ab < 0 ? ab : `+${ab}`
+      if (style){
+        if (ogAB > ab){
+          return {color: 'maroon'}
+        } else if (ogAB < ab){
+          return {color: 'green'}
+        } else {
+          return {color: 'black'}
+        }
+      } else {
+        return ab < 0 ? ab : `+${ab}`
+      }
     }
   }
 
@@ -110,8 +153,8 @@ class AttackBonus extends React.Component {
         <span className='centered'>
           <div className='duller'><strong>Attack Bonus</strong></div>
           <div className='container-2'>
-            <span className='enhanced'>{this.renderAB('strength')}</span>
-            <span className='enhanced'>{this.renderAB('dexterity')}</span>
+            <span className='enhanced' style={this.renderAB('strength', true)}>{this.renderAB('strength')}</span>
+            <span className='enhanced' style={this.renderAB('dexterity', true)}>{this.renderAB('dexterity')}</span>
             <span>Melee</span>
             <span>Ranged</span>
           </div>

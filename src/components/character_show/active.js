@@ -18,11 +18,25 @@ const Active = props => {
     combat += ` (${hc.frogCombat})`
   }
   const age = hc.age
+  const augment = hc.augment ? props.character.known_spells.find(ks => ks.spell.id === hc.augment.spellId).spell.name : null
+  const enlarge = hc.enlarge
+  const reduce = hc.reduce
+  const expeditious = hc.expeditious
+  const swim = hc.swim
+  const swim20 = hc.swim20
+  const land10 = hc.land10
+  const land20 = hc.land20
+  const quick = hc.quick
+  const helmsman = hc.helmsman
+  const crew = hc.crew
+  const stealTime = hc.stealTime
 
   return (
     <div id='active' className='shadow shrink'>
       <ul>
         {props.character_info.conditions.map(c => <li>{c}</li>)}
+        {helmsman && <li>Sasea Bitch Helmsman</li>}
+        {crew && <li>Sasea Bitch Crew</li>}
         {performance && <li>Bardic Performance: {performance}</li>}
         {effects}
         {rage && <li>Raging</li>}
@@ -34,6 +48,16 @@ const Active = props => {
         {minor && <li>{minor}</li>}
         {major && <li>{major}</li>}
         {age && <li>Age Catergory: {age}</li>}
+        {augment && <li>Augmented {augment}: {hc.augment.augment === 'dc' ? '+1 DC' : '+1 Caster Level'}</li>}
+        {enlarge && <li>Affected by <em className='underline-hover' onClick={() => props.editModal('spell', null, 64)}>enlarge person</em></li>}
+        {reduce && <li>Affected by <em className='underline-hover' onClick={() => props.editModal('spell', null, 65)}>reduce person</em></li>}
+        {expeditious && <li>Expeditious Retreat</li>}
+        {swim && <li>Swim Speed 30 ft.</li>}
+        {swim20 && <li>Swim Speed 20 ft.</li>}
+        {land10 && <li>Base Speed +10 ft.</li>}
+        {land20 && <li>Base Speed +20 ft.</li>}
+        {quick && <li>Base Speed +10 ft., +2 AC, adv. on next attack, Reflex save, Dex or Charisma check</li>}
+        {stealTime && <li>+1 to AC, Reflex, +5 base speed</li>}
       </ul>
     </div>
   )

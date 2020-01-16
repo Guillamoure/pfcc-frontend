@@ -1,6 +1,7 @@
 import React from 'react'
 // import _ from 'lodash'
 import { connect } from 'react-redux'
+import localhost from '../localhost'
 
 class Races extends React.Component {
 
@@ -9,7 +10,7 @@ class Races extends React.Component {
   }
 
   componentDidMount() {
-    fetch('http://localhost:3000/api/v1/races')
+    fetch(`${localhost}/api/v1/races`)
     .then(r => r.json())
     .then(data => {
       this.setState({races: data})

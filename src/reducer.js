@@ -6,6 +6,7 @@ const initialState = {
     ability_scores: {},
     classes: [],
     hardcode: {},
+    bonuses: [],
     size: 'Medium',
     actions: {
       full: false,
@@ -45,6 +46,10 @@ const reducer = (state = initialState, action) => {
         return copiedClassInfo
       })
       let staticStats = hardcoded(state, {name: action.character.name})
+      // hardcoded new data
+        staticStats.armor = state.character_info.hardcode.armor
+        staticStats.crew = state.character_info.hardcode.crew
+      // hardcoded new data end
       return {...state, character: action.character, character_info: {...state.character_info, classes: clearedCopy, size: size, hardcode: staticStats}};
     case "ABILITY SCORE":
       return {...state, character_info: {...state.character_info, ability_scores: {...state.character_info.ability_scores, [action.ability]: action.score, }, hardcode: {} }};
@@ -96,7 +101,7 @@ const reducer = (state = initialState, action) => {
       return {...state, character_info: {...state.character_info, actions: actionDupe}}
     case "NEW TURN":
       let actions = {full: false, standard: false, move: false, swift: false, immediate: false}
-      return {...state, character_info: {...state.character_info, actions: actions, hardcode: {...state.character_info.hardcode, power: false, eBloodActive: false, ffs: false, fd: false, charge: false, cleave: false, arcane_strike: false, taal_tele: false}}}
+      return {...state, character_info: {...state.character_info, actions: actions, hardcode: {...state.character_info.hardcode, power: false, eBloodActive: false, ffs: false, fd: false, charge: false, cleave: false, arcane_strike: false, taal_tele: false, augment: false, slide: false, dodgingPanache: false, parry: false, precise: false, charmedActive: false}}}
     case "POWER ATTACK":
       return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, power: true}}}
     case "RAGE":
@@ -214,6 +219,131 @@ const reducer = (state = initialState, action) => {
       let armor = state.character_info.hardcode.armor
       armor = armor === action.name ? null : action.name
       return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, armor}}}
+    case 'AUGMENT SPELL':
+      let augment = {spellId: action.spellId, augment: action.augment}
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, augment}}}
+    case 'DIMENSIONAL SLIDE':
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, slide: true}}}
+    case 'SIZE STAFF':
+      let sizeStaff = (state.character_info.hardcode.sizeStaff || 0) + action.amount
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, sizeStaff}}}
+    case 'ENLARGE':
+      let enlarge = !state.character_info.hardcode.enlarge
+      var staticSize = 'Medium'
+      staticSize = state.character.name === 'Nettie' ? 'Tiny' : staticSize
+      staticSize = state.character.name === 'Cedrick' ? 'Small' : staticSize
+      staticSize = state.character_info.hardcode.age === 'Young' ? 'Small' : staticSize
+      var newSize = 'Large'
+      newSize = state.character.name === 'Nettie' ? 'Small' : newSize
+      newSize = state.character.name === 'Cedrick' ? 'Medium' : newSize
+      newSize = state.character_info.hardcode.age === 'Young' ? 'Medium' : newSize
+
+      newSize = state.character_info.size === staticSize ? newSize : staticSize
+      // ^this^ code doesn't account for polymorph size changes
+      return {...state, character_info: {...state.character_info, size: newSize, hardcode: {...state.character_info.hardcode, enlarge}}}
+    case 'REDUCE':
+      let reduce = !state.character_info.hardcode.reduce
+      var staticSize = 'Medium'
+      staticSize = state.character.name === 'Nettie' ? 'Tiny' : staticSize
+      staticSize = state.character.name === 'Cedrick' ? 'Small' : staticSize
+      staticSize = state.character_info.hardcode.age === 'Young' ? 'Small' : staticSize
+      var newSize = 'Small'
+      newSize = state.character.name === 'Nettie' ? 'Diminutive' : newSize
+      newSize = state.character.name === 'Cedrick' ? 'Tiny' : newSize
+      newSize = state.character_info.hardcode.age === 'Young' ? 'Tiny' : newSize
+
+      newSize = state.character_info.size === staticSize ? newSize : staticSize
+      // ^this^ code doesn't account for polymorph size changes
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, reduce}}}
+    case 'DODGING PANACHE':
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, dodgingPanache: true}}}
+    case 'PARRY':
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, parry: true}}}
+    case 'PRECISE STRIKE':
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, precise: true}}}
+    case 'CHARMED':
+      let charmedLife = state.character_info.hardcode.charmedLife
+      let charmedActive = false
+      if (charmedLife < 3){
+        charmedLife += 1
+        charmedActive = true
+      }
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, charmedLife, charmedActive}}}
+    case 'EXPEDITIOUS RETREAT':
+      let expeditious = !state.character_info.hardcode.expeditious
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, expeditious}}}
+    case 'SWIM SPEED':
+      let swim = !state.character_info.hardcode.swim
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, swim}}}
+    case 'TEMPEST':
+      let tempest = (state.character_info.hardcode.tempest || 0) + action.amount
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, tempest}}}
+    case 'SWIM 20':
+      let swim20 = !state.character_info.hardcode.swim20
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, swim20}}}
+    case 'LAND 10':
+      let land10 = !state.character_info.hardcode.land10
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, land10}}}
+    case 'LAND 20':
+      let land20 = !state.character_info.hardcode.land20
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, land20}}}
+    case 'QUICK':
+      let quick = !state.character_info.hardcode.quick
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, quick}}}
+    case 'ALTER SELF':
+      let alterSelf = !state.character_info.hardcode.alterSelf
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, alterSelf}}}
+    case 'AMMO CHANGE':
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, ammo: action.ammo}}}
+    case 'ACTIVE WEAPON':
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, activeWeapon: action.weapon}}}
+    case 'WEAPON AMMO':
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, weaponAmmo: action.weaponAmmo}}}
+    case 'SPEND AMMO':
+      let selectedWeapon = state.character_info.hardcode.weaponAmmo.find(wa => wa.weapon === action.weapon)
+      let selectedAmmo = state.character_info.hardcode.ammo.find(a => a.name === selectedWeapon.ammo)
+      let ammoDup = [...state.character_info.hardcode.ammo]
+      ammoDup = ammoDup.map(a => {
+        if (a.name === selectedAmmo.name){
+          let thisAmmo = {...a}
+          if (thisAmmo.amount > 0){
+            thisAmmo.amount = thisAmmo.amount-1
+          }
+          return thisAmmo
+        } else {
+          return a
+        }
+      })
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, ammo: ammoDup}}}
+    case 'HELMSMAN':
+      let helmsman = !state.character_info.hardcode.helmsman
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, helmsman}}}
+    case 'CREW':
+      let crew = !state.character_info.hardcode.crew
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, crew}}}
+    case 'TELESWAP':
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, teleswap: true}}}
+    case 'MAGICAL HATS':
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, magicalHats: true}}}
+    case 'REALITY BEND':
+      let manipulate = state.character_info.hardcode.manipulate || 0
+      if (manipulate <= 2){
+        manipulate = manipulate + 1
+      }
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, manipulate}}}
+    case 'AURA READ':
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, auraRead: true}}}
+    case 'STEAL TIME':
+      let stealTime = !state.character_info.hardcode.stealTime
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, stealTime}}}
+    case 'BONUS':
+      let bonuses
+      if (action.alreadyEquipped){
+        bonuses = state.character_info.bonuses.filter(b => b.bonus.source === action.bonus.source)
+      } else {
+        bonuses = [...state.character_info.bonuses, action.bonus]
+      }
+      return { ...state, character_info: { ...state.character_info, bonuses } }
     default:
       return state
   }
@@ -263,11 +393,15 @@ const hardcoded = (state, action) => {
     case 'Merg':
       return {points: 18, speed: 30}
     case 'Cedrick':
-      return {points: 7, speed: 30, ringPoints: 2}
+      return {points: 7, speed: 30, ringPoints: 2, ammo:[{name: 'bolt', amount: 6}], weaponAmmo: [{weapon: '+1 Underwater Light Crossbow', ammo: 'bolt'}]}
     case 'Maddox':
-      return {speed: 30, age: 'Venerable'}
+      return {points: 6, speed: 30, age: 'Venerable'}
     case 'Persephone':
-      return {speed: 30}
+      return {speed: 30, ammo:[{name: 'bolt', amount: 10}], weaponAmmo: [{weapon: 'Light Crossbow', ammo: 'bolt'}]}
+    case 'Robby':
+      return {speed: 30, points: 4, charmedLife: 0, ammo:[{name: 'arrow', amount: 11}, {name: 'cartridge', amount: 0}, {name: '+1 cunning arrow', amount: 1}], weaponAmmo: [{weapon: 'Long Bow', ammo: 'arrow'}, {weapon: 'Revolver', ammo: 'cartridge'}]}
+    case 'Festus':
+      return {speed: 35}
     default:
       return {}
   }

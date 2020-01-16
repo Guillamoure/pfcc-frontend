@@ -55,6 +55,16 @@ class Traits extends React.Component {
         }
       ]
     }
+    if (name === "Maddox"){
+      replacedTraits = ['Shards of the Past']
+      addedTraits = [
+        {
+          id: 3000,
+          name: 'Mystic Past Life',
+          description: <span>You can add spells from another spellcasting class to the spell list of your current spellcasting class. You add a number of spells equal to 1 + your spellcasting class’s key ability score bonus (Wisdom for clerics, and so on). The spells must be the same type (arcane or divine) as the spellcasting class you’re adding them to. These spells do not have to be spells you can cast as a 1st-level character. The number of spells granted by this ability is set at 1st level. Changes to your ability score do not change the number of spells gained.<p><ul><li><em>Lay of the Land</em></li><li><em>Kiss of the First World</em></li><li><em>Mass Cure Light Wounds</em></li><li><em>Music of the Spheres</em></li><li><em>Mass Cure Moderate Wounds</em></li></ul></p></span>
+        }
+      ]
+    }
     newTraits = traits.filter(f => !replacedTraits.includes(f.name))
     addedTraits.forEach(af => newTraits.push(af))
     return newTraits

@@ -29,14 +29,14 @@ class Points extends React.Component {
       case "Robby":
         return (
           <span className='centered' onClick={() => this.props.editModal('points')}>
-            <div className='enhanced'>{this.props.character_info.hardcode.points}</div>
+            <div className='enhanced'>{this.props.character_info.hardcode.points}/4</div>
             <div className='muted'>Panache Points</div>
           </span>
         )
       case "Maddox":
         return (
           <span className='centered' onClick={() => this.props.editModal('points')}>
-            <div className='enhanced'>{this.props.character_info.hardcode.points}</div>
+            <div className='enhanced'>{this.props.character_info.hardcode.points} / 10</div>
             <div className='muted'>Arcane Reservoir</div>
           </span>
         )

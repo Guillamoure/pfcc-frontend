@@ -17,9 +17,6 @@ const Equipment = props => {
           <tr>
             <th>Action</th>
             <th>Name</th>
-            <th>Weight</th>
-            <th>Price</th>
-            <th>Description</th>
           </tr>
         </thead>
         <tbody>

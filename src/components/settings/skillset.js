@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import localhost from '../../localhost'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
@@ -19,7 +20,7 @@ class Skillset extends React.Component {
 
   componentDidMount() {
     (this.state.activeSkillset !== this.props.currentUser.skillset_id) && this.setState({activeSkillset: this.props.currentUser.skillset_id})
-    fetch("http://localhost:3000/api/v1/skillsets")
+    fetch(`${localhost}/api/v1/skillsets`)
     .then(r => r.json())
     .then(data => this.setState({skillsets: data}), this.fetchSkills())
   }
@@ -31,7 +32,7 @@ class Skillset extends React.Component {
   renderSkillsetSubmit = (e) => {
     e.preventDefault()
     if (!this.state.editSkillset){
-      fetch('http://localhost:3000/api/v1/skillsets', {
+      fetch(`${localhost}/api/v1/skillsets`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -51,7 +52,7 @@ class Skillset extends React.Component {
         }
       })
     } else {
-      fetch(`http://localhost:3000/api/v1/skillsets/${this.state.activeSkillset}`, {
+      fetch(`${localhost}/api/v1/skillsets/${this.state.activeSkillset}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -83,13 +84,13 @@ class Skillset extends React.Component {
   }
 
   fetchSkills = () => {
-    fetch("http://localhost:3000/api/v1/skills")
+    fetch(`${localhost}/api/v1/skills`)
     .then(r => r.json())
     .then(data => this.setState({skills: data}))
   }
 
   fetchSkillsets = () => {
-    fetch("http://localhost:3000/api/v1/skillsets")
+    fetch(`${localhost}/api/v1/skillsets`)
     .then(r => r.json())
     .then(data => this.setState({skillsets: data}))
   }
@@ -134,7 +135,7 @@ class Skillset extends React.Component {
   }
 
   renderDelete = () => {
-    fetch(`http://localhost:3000/api/v1/skillsets/${this.state.activeSkillset}`, {
+    fetch(`${localhost}/api/v1/skillsets/${this.state.activeSkillset}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -178,7 +179,7 @@ class Skillset extends React.Component {
 
   renderActiveSkillsetChange = (e) =>{
     const choice = e.target.value
-    fetch('http://localhost:3000/api/v1/users/active_skillset', {
+    fetch(`${localhost}/api/v1/users/active_skillset`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',

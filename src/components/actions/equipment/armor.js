@@ -7,7 +7,7 @@ const Armor = props => {
 
   if (name === 'Cedrick'){
     const wooden = {
-      id: 151,
+      id: 150,
       name: "Wooden",
       description: `No ACP for swim checks`,
       type: "Light",
@@ -20,6 +20,51 @@ const Armor = props => {
       speed: '30 ft/20 ft'
     }
     armors.push(wooden)
+  } else if (name === 'Maddox'){
+    const bolsteringFull = {
+      id: 160,
+      name: "+1 bolstering full-plate",
+      description: `This metal suit comprises multiple pieces of interconnected and overlaying metal plates, incorporating the benefits of numerous types of lesser armor. A complete suit of full plate (or platemail, as it is often called) includes gauntlets, heavy leather boots, a visored helmet, and a thick layer of padding that is worn underneath the armor. Bolstering: Anytime the wearer of bolstering armor damages a creature with a melee or ranged attack, he gains a +2 competence bonus on saving throws against that creature’s abilities until the start of his next turn.`,
+      type: "Heavy",
+      price: "5500 gp",
+      weight: 50,
+      armorBonus: 9,
+      maxDex: 1,
+      acp: 5,
+      arcane: 35,
+      speed: '20 ft/15 ft'
+    }
+    armors.push(bolsteringFull)
+  } else if (name === 'Merg'){
+    const chainShirt = {
+      id: 171,
+      name: "+1 chain shirt",
+      description: `Covering the torso, this shirt is made up of thousands of interlocking metal rings.`,
+      type: "Light",
+      price: "1250 gp",
+      weight: 25,
+      armorBonus: 5,
+      maxDex: 4,
+      acp: 1,
+      arcane: 20,
+      speed: '30 ft/20 ft'
+    }
+    armors.push(chainShirt)
+  } else if (name === 'Robby'){
+    const padded = {
+      id: 180,
+      name: "Padded",
+      description: `More than simple clothing, padded armor combines heavy, quilted cloth and layers of densely packed stuffing to create a cheap and basic protection. It is typically worn by those not intending to face lethal combat or those who wish their maneuverability to be impacted as little as possible.`,
+      type: "Light",
+      price: "5 gp",
+      weight: 10,
+      armorBonus: 1,
+      maxDex: 8,
+      acp: 0,
+      arcane: 5,
+      speed: '30 ft/20 ft'
+    }
+    armors.push(padded)
   }
 
   const renderClick = name => {
