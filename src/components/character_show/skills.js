@@ -97,11 +97,15 @@ class Skills extends React.Component {
     mod += skill.name === 'Acrobatics' && name === 'Robby' ? 2 : 0
     mod += skill.name === 'Climb' && name === 'Robby' ? 2 : 0
     mod += skill.name === 'Swim' && name === 'Robby' ? 2 : 0
-    // pirate's eye patch
-    mod += skill.name === 'Climb' && name === 'Robby' ? 2 : 0
-    mod += skill.name === 'Swim' && name === 'Robby' ? 2 : 0
 
 
+    let bonus = 0
+    this.props.character_info.bonuses.forEach(b => {
+      if (b.type === 'skill' && b.skill_id === skill.id && b.duration === 'permanent'){
+        bonus += b.bonus
+      }
+    })
+    mod += bonus
     // check to see if the starting mod is modified
     let ogMod = mod
     if (skill.ability_score === 'Strength'){
@@ -269,7 +273,7 @@ class Skills extends React.Component {
         <tr key={_.random(1, 2000000)}>
           <td>{this.renderClassSkill(skill) ? "X" : null}</td>
           <td onMouseOver={(e) => this.renderTooltip(e, null, skill.ability_score)} onMouseOut={this.props.mouseOut}><strong>{this.renderAbilityScoreAbbreviation(skill)}</strong></td>
-          <td className={this.raging(skill.name)} style={this.renderSkillBonus(skill, true)} onMouseOver={(e) => this.renderTooltip(e, skill.name)} onMouseOut={this.props.mouseOut}>{this.asteriks(skill.name)}</td>
+          <td className={this.raging(skill.name)} style={this.renderSkillBonus(skill, true)} onMouseOver={(e) => this.renderTooltip(e, skill.name)} onMouseOut={this.props.mouseOut}>{this.asterisk(skill.name)}</td>
           <td style={this.renderSkillBonus(skill, true)}>{this.renderSkillBonus(skill)}</td>
           <td>{this.renderNumOfRanks(skill)}</td>
         </tr>
@@ -288,82 +292,83 @@ class Skills extends React.Component {
   //   }
   // }
 
-  asteriks = (skill) => {
-    let asterik = skill + "*"
+  asterisk = (skill) => {
+
+    let asterisk = skill + "*"
     let name = this.props.character.name
     let hc = this.props.character_info.hardcode
     switch(skill){
       case 'Acrobatics':
         if (hc.minor === 'Frog - Minor' || hc.major === 'Frog - Major' || hc.major === 'Condor - Major' || name === 'Festus' || name === 'Robby'){
-          return asterik
+          return asterisk
         } else {
           return skill
         }
       case 'Heal':
         if (name === 'Nettie'){
-          return asterik
+          return asterisk
         } else {
           return skill
         }
       case 'Survival':
         if (name === 'Nettie'){
-          return asterik
+          return asterisk
         } else {
           return skill
         }
       case 'Swim':
         if (hc.major === 'Frog - Major' || name === 'Robby'){
-          return asterik
+          return asterisk
         } else {
           return skill
         }
       case 'Stealth':
         if (name === 'Cedrick'){
-          return asterik
+          return asterisk
         } else if (hc.major === 'Chameleon - Major') {
-          return asterik
+          return asterisk
         } else {
           return skill
         }
       case 'Intimidate':
         if (name === 'Cedrick' || name === 'Robby'){
-          return asterik
+          return asterisk
         } else {
           return skill
         }
       case 'Religion':
         if (name === 'Persephone'){
-          return asterik
+          return asterisk
         } else {
           return skill
         }
       case 'Disguise':
         if (name === 'Persephone'){
-          return asterik
+          return asterisk
         } else {
           return skill
         }
       case 'Finesse':
         if (name === 'Robby'){
-          return asterik
+          return asterisk
         } else {
           return skill
         }
       case 'Handle Animal':
         if (name === 'Robby'){
-          return asterik
+          return asterisk
         } else {
           return skill
         }
       case 'Climb':
         if (name === 'Robby'){
-          return asterik
+          return asterisk
         } else {
           return skill
         }
       case 'Sense Motive':
         if (name === 'Merg'){
-          return asterik
+          return asterisk
         } else {
           return skill
         }
@@ -495,6 +500,7 @@ class Skills extends React.Component {
 
 
   render(){
+    console.log(this.props.character_info.hardcode)
     return(
       <div id='skills' className='shadow'>
         <div name="skill list">

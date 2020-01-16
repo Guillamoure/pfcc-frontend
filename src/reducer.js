@@ -6,6 +6,7 @@ const initialState = {
     ability_scores: {},
     classes: [],
     hardcode: {},
+    bonuses: [],
     size: 'Medium',
     actions: {
       full: false,
@@ -45,6 +46,10 @@ const reducer = (state = initialState, action) => {
         return copiedClassInfo
       })
       let staticStats = hardcoded(state, {name: action.character.name})
+      // hardcoded new data
+        staticStats.armor = state.character_info.hardcode.armor
+        staticStats.crew = state.character_info.hardcode.crew
+      // hardcoded new data end
       return {...state, character: action.character, character_info: {...state.character_info, classes: clearedCopy, size: size, hardcode: staticStats}};
     case "ABILITY SCORE":
       return {...state, character_info: {...state.character_info, ability_scores: {...state.character_info.ability_scores, [action.ability]: action.score, }, hardcode: {} }};
@@ -331,6 +336,14 @@ const reducer = (state = initialState, action) => {
     case 'STEAL TIME':
       let stealTime = !state.character_info.hardcode.stealTime
       return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, stealTime}}}
+    case 'BONUS':
+      let bonuses
+      if (action.alreadyEquipped){
+        bonuses = state.character_info.bonuses.filter(b => b.bonus.source === action.bonus.source)
+      } else {
+        bonuses = [...state.character_info.bonuses, action.bonus]
+      }
+      return { ...state, character_info: { ...state.character_info, bonuses } }
     default:
       return state
   }

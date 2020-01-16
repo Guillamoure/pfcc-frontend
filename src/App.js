@@ -4,6 +4,7 @@ import './css/character.css';
 import './css/combat.css';
 import './css/card.css';
 import './css/container.css';
+import './css/animations.css';
 
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { connect } from 'react-redux'

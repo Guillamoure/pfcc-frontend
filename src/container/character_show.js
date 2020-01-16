@@ -16,6 +16,8 @@ import FeaturesTraits from './features_traits'
 import Actions from './actions'
 import Initiative from '../components/character_show/initiative'
 import TurnActions from '../components/character_show/turn_actions'
+import SpellDescriptionModal from '../modals/spell'
+import MagicItemModal from '../modals/magic_item'
 
 // unfinished hardcoded features
 import Points from '../components/character_show/points'
@@ -24,7 +26,7 @@ import PerformanceModal from '../modals/performance'
 import RageModal from '../modals/rage'
 import Active from '../components/character_show/active'
 import Allies from '../components/character_show/allies'
-import SpellDescriptionModal from '../modals/spell'
+// import SpellDescriptionModal from '../modals/spell'
 import FrogCombat from '../modals/frog'
 import Tooltip from '../modals/tooltip'
 import CommandRingModal from '../modals/command'
@@ -75,6 +77,7 @@ class Character extends React.Component {
     display: "Adventure",
     activeEffects: [],
     spellId: 0,
+    cmiId: 0,
     toolTip: false,
     toolTipX: 0,
     toolTipY: 0
@@ -106,6 +109,18 @@ class Character extends React.Component {
           this.props.dispatch({type: 'ACTIVE ARMOR', name: 'Padded'})
           this.props.dispatch({type: 'HELMSMAN'})
         }
+
+        data.character.character_magic_items.forEach(cmi => {
+          if (cmi.equipped){
+            cmi.magic_item.features.forEach(f => {
+              if (f.skill_bonus){
+                const { skill_id, bonus, bonus_type, duration } = f.skill_bonus
+                this.props.dispatch({type: 'BONUS', bonus: {type: 'skill', skill_id, bonus, bonus_type, duration, source: cmi.magic_item.name}})
+              }
+
+            })
+          }
+        })
       // } else {
       //   this.props.history.push('/')
       // }
@@ -229,6 +244,8 @@ class Character extends React.Component {
     }
     if (section === 'spell' && !!id){
       this.setState({modal: section, spellId: id})
+    } else if (section === 'magic item' && !!id){
+      this.setState({modal: section, cmiId: id})
     } else {
       this.setState({modal: section})
     }
@@ -236,11 +253,11 @@ class Character extends React.Component {
 
   clickOut = (e) => {
     if(e.target.classList[0] === "page-dimmer"){
-      this.setState({modal: false, spellId: 0})
+      this.setState({modal: false, spellId: 0, cmiId: 0})
     }
   }
   exitModal = () => {
-    this.setState({modal: false})
+    this.setState({modal: false, spellId: 0, cmiId: 0})
   }
 
   renderTooltip = (e, comment) => {
@@ -294,7 +311,7 @@ class Character extends React.Component {
       <span className="container-8 character">
         {this.state.character.race && <CharacterName character={this.state.character} editModal={this.editModal}/>}
         {this.state.character.race && this.state.display === "Adventure" && <AbilityScores character={this.state.character} editModal={this.editModal}/>}
-        {this.state.character.race && this.state.display === "Adventure" && <FeaturesTraits character={this.state.character} editModal={this.editModal}/>}
+        {this.state.character.race && this.state.display === "Adventure" && <FeaturesTraits character={this.state.character} editModal={this.editModal} exitModal={this.exitModal} cmiId={this.state.cmiId}/>}
         {this.state.character.race && this.state.display === "Character" && <Details character={this.state.character} editModal={this.editModal}/>}
         {this.state.character.race && (this.state.display === "Adventure" || this.state.display === "Combat") && <Saves character={this.state.character} display={this.state.display} renderTooltip={this.renderTooltip} mouseOut={this.mouseOut}/>}
         {this.state.character.race && (this.state.display === "Adventure" || this.state.display === "Combat") && <HP character={this.state.character} editModal={this.editModal} display={this.state.display}/>}
@@ -318,13 +335,14 @@ class Character extends React.Component {
         {this.state.modal === 'ability' && <AbilityForm character={this.state.character} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
         {this.state.modal === 'notifications' && <Notifications exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit} changeActiveEffects={this.changeActiveEffects}/>}
         {this.state.modal === 'hitPoints' && <HPChanges exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
+        {(this.state.modal === 'spell' && this.state.spellId !== 0) && <SpellDescriptionModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} spellId={this.state.spellId}/>}
+        {(this.state.modal === 'magic item' && this.state.cmiId !== 0) && <MagicItemModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} cmiId={this.state.cmiId}/>}
 
         {/* unfinished, hardcoded features */}
         {this.state.modal === 'points' && <PointModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
         {this.state.modal === 'performance' && <PerformanceModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
         {this.state.modal === 'frogCombat' && <FrogCombat exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
         {this.state.modal === 'rage' && <RageModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
-        {(this.state.modal === 'spell' && this.state.spellId !== 0) && <SpellDescriptionModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} spellId={this.state.spellId}/>}
         {this.state.toolTip && <Tooltip x={this.state.toolTipX} y={this.state.toolTipY} comment={this.state.toolTipComment}/>}
         {this.state.modal === 'command ring' && <CommandRingModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
         {this.state.modal === 'age' && <AgeModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}

@@ -11,6 +11,7 @@ class FeatureTabs extends React.Component {
         <Tab label="Features" renderTabClick={this.props.renderTabClick} activeTab={this.props.activeTab}/>
         <Tab label="Traits" renderTabClick={this.props.renderTabClick} activeTab={this.props.activeTab}/>
         <Tab label="Feats" renderTabClick={this.props.renderTabClick} activeTab={this.props.activeTab}/>
+        <Tab label="Equipment" renderTabClick={this.props.renderTabClick} activeTab={this.props.activeTab}/>
       </span>
     )
   }

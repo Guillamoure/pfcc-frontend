@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import ItemSearch from '../components/campaign/item_search'
+import CharacterContainer from '../components/campaign/characters'
 
 
 const CampaignShow = props => {
@@ -9,19 +10,13 @@ const CampaignShow = props => {
   const campaignId = parseInt(url.substring(url.lastIndexOf('/') + 1))
   const campaign = !!props.currentUser && props.currentUser.campaigns.find(c => c.id === campaignId)
 
-  const renderCharacters = () => {
-    // console.log(props.currentUser)
-    return campaign.characters.map((ch, idx) => {
-      return <span key={ch.id*idx*3-1}><strong className='underline-hover'>{ch.name}</strong></span>
-    })
-  }
 
   if (!props.currentUser){
     return null
   }
   return (
     <section>
-      <div>{renderCharacters()}</div>
+      <CharacterContainer campaign={campaign}/>
       <ItemSearch />
     </section>
   )

@@ -95,6 +95,26 @@ class CharacterName extends React.Component {
     return name
   }
 
+  greenBadge = () => {
+    let badge = false
+    this.props.character.character_magic_items.forEach(cmi => {
+      if (!cmi.discovered){
+        badge = true
+      }
+    })
+    return badge
+  }
+
+  yellowBadge = () => {
+    let badge = false
+    return badge
+  }
+
+  redBadge = () => {
+    let badge = false
+    return badge
+  }
+
   render(){
     console.log('REDUX', this.props)
     return(
@@ -102,9 +122,14 @@ class CharacterName extends React.Component {
         <div className='first-row' style={{padding: '.25em'}} id='title'>{this.name()}</div>
         <span className='second-row' style={{padding: '.5em'}}>{this.props.character.race.name} {this.renderClasses()}</span>
         {this.props.character.user_id === this.props.currentUser.id && <span className='edit' onClick={() => this.props.editModal('character')}><FontAwesomeIcon icon={faPencilAlt} /></span>}
-        <span className="notif" data-badge-1="3" data-badge-2="12" data-badge-3="1">
-          <FontAwesomeIcon id='spin' icon={faDiceD20} size='3x' onClick={() => this.props.editModal('notifications')} />
-        </span>
+        <span className='notif'>
+          <div className='notification'>
+            {this.greenBadge() && <span className='badge green-badge'></span>}
+            {this.yellowBadge() && <span className='badge yellow-badge'></span>}
+            {this.redBadge() && <span className='badge red-badge'></span>}
+            <FontAwesomeIcon id='spin' icon={faDiceD20} size='3x' onClick={() => this.props.editModal('notifications')} />
+          </div>
+        </span >
       </div>
     )
   }
@@ -114,6 +139,7 @@ const mapStatetoProps = (state) => {
   return {
     currentUser: state.currentUser,
     admin: state.admin,
+    character: state.character,
     character_info: state.character_info,
     classes: state.classes
   }

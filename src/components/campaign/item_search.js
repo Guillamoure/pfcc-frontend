@@ -18,7 +18,9 @@ class ItemSearch extends React.Component {
     items: [],
     loading: false,
     didSearch: false,
-    selectedItem: null
+    selectedItem: null,
+    successfulAddition: false,
+    message: ''
   }
 
   renderChange = (e) => {
@@ -28,8 +30,11 @@ class ItemSearch extends React.Component {
   fetchItem = (character_id) => {
     let info = {
       character_id,
-      item: this.state.selectedItem
+      item: this.state.selectedItem,
+      desc: this.state.message,
+      current_user: this.props.currentUser.id
     }
+    this.setState({successfulAddition: false})
     fetch(`${localhost}/api/v1/character_items`, {
       method: 'POST',
       headers: {
@@ -40,7 +45,12 @@ class ItemSearch extends React.Component {
     })
     .then(r => r.json())
     .then(data => {
-      debugger
+      if (data.status === 404 || data.status ===  500){
+        console.log(data)
+      } else {
+        this.setState({successfulAddition: true, message: ''})
+        this.props.dispatch({type: 'SIGNIN', user: data.current_user, admin: data.current_user.admin })
+      }
     })
   }
 
@@ -85,8 +95,10 @@ class ItemSearch extends React.Component {
         return (
           <li key={i.id*3-1}>
             <span>{i.name}</span>
-            <span>{<button onClick={() => this.deployItem(i)}>Add Item</button>}</span>
-            <div>{this.state.selectedItem && this.state.selectedItem.name === i.name && this.renderPlayers()}</div>
+            <span>{<button onClick={() => this.deployItem(i)}>Add Item</button>}</span>{this.state.successfulAddition && this.state.selectedItem === i && <span className='plus-one'>+1</span>}
+            {this.state.selectedItem && this.state.selectedItem.name === i.name && <br/>}
+            <span>{this.state.selectedItem && this.state.selectedItem.name === i.name && this.renderFalseDescription()}</span>
+            <span>{this.state.selectedItem && this.state.selectedItem.name === i.name && !!this.state.message.length && this.renderPlayers()}</span>
           </li>
         )
       })
@@ -94,7 +106,7 @@ class ItemSearch extends React.Component {
   }
 
   deployItem = (i) => {
-    this.setState({selectedItem: i})
+    this.setState({selectedItem: i, successfulAddition: false})
   }
 
   renderPlayers = () => {
@@ -103,6 +115,15 @@ class ItemSearch extends React.Component {
         <button onClick={() => this.fetchItem(ch.id)}>{ch.name}</button>
       )
     })
+  }
+
+  renderFalseDescription = () => {
+    return (
+      <label>
+        Desc:
+        <input type="text" name="message" value={this.state.message} onChange={this.renderChange}/>
+      </label>
+    )
   }
 
   handle = _.debounce(this.fetchItems, 800)

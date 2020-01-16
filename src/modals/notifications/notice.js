@@ -1,7 +1,28 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import localhost from '../../localhost'
 
 class Notice extends React.Component {
+
+  fetchDiscovered = (id) => {
+    fetch(`${localhost}/api/v1/character_magic_items_discovered/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    })
+      .then(r => r.json())
+      .then(data => {
+        if (data.status === 404 || data.status === 500){
+          console.log(data)
+        } else {
+          this.props.dispatch({type: 'CHARACTER', character: data.character })
+        }
+      })
+    // patch fetch, make cmi discovered
+    // get character, dispatch character info
+  }
 
   renderAdditionalButtons = () => {
     switch(this.props.character.name){
@@ -45,10 +66,25 @@ class Notice extends React.Component {
     this.props.exitModal()
   }
 
+  newItems = () => {
+    let newItems = this.props.character.character_magic_items.filter(cmi => !cmi.discovered)
+    if (!!newItems.length){
+      return (
+        <div>
+          <h3>New Items</h3>
+          <ul>
+            {newItems.map((cmi, idx) => <li key={(idx+10)*3-1}>{cmi.known ? cmi.magic_item.name : cmi.false_desc} <button onClick={() => this.fetchDiscovered(cmi.id)}>Collect</button></li>)}
+          </ul>
+        </div>
+      )
+    }
+  }
+
 
   render(){
     return(
       <span style={{padding: '1em'}}>
+        {this.newItems()}
         <h3>Active Conditions</h3>
         {this.renderConditions()}
         {this.props.character_info.hardcode.stealTime && <button onClick={() => this.props.dispatch({type: 'STEAL TIME'})}>Return Time</button>}

@@ -1,5 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import localhost from '../../../localhost'
+
 
 const MagicItems = props => {
   const magicItems = []
@@ -119,6 +121,57 @@ const MagicItems = props => {
     magicItems.push(brassCloak)
   }
 
+  const renderUse = (magicItem, miFeature, action) => {
+    if (action === 'cannot-cast'){
+      return null
+    }
+    if (!props.character_info.actions[action]){
+      props.dispatch({type: 'TRIGGER ACTION', action})
+      let usage = miFeature.usage
+      if (usage){
+        let cmifu = magicItem.character_magic_item_feature_usages.find(fu => fu.feature_usage_id === miFeature.usage.id)
+
+        let remainingUsage = usage.limit - cmifu.current_usage
+        if (remainingUsage <= 1 && usage.destroy_after_use){
+          console.log('delete')
+          // delete fetch
+          fetch(`${localhost}/api/v1/character_magic_items/${magicItem.id}`, {
+            method: 'DELETE'
+          })
+          .then(r => r.json())
+          .then(data => {
+            if (data.status === 404 || data.status === 500){
+              console.log(data)
+            } else {
+              props.dispatch({type: 'CHARACTER', character: data.character })
+            }
+          })
+        } else {
+          console.log('patch')
+          // patch fetch
+          let count = usage.limit
+          fetch(`${localhost}/api/v1/character_magic_items/${cmifu.id}`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify({count})
+          })
+          .then(r => r.json())
+          .then(data => {
+            if (data.status === 404 || data.status === 500){
+              console.log(data)
+            } else {
+              props.dispatch({type: 'CHARACTER', character: data.character })
+            }
+          })
+        }
+
+      }
+    }
+  }
+
   const renderClick = (name, limit, startingValue, expendable, modal) => {
     if (name === "Rod of Grasping Hexes" || name === 'Wand of Unseen Servant' || name === "Staff of Size Alteration" || name === "Quick Runner's Shirt"){
       if (limit){
@@ -172,42 +225,86 @@ const MagicItems = props => {
     }
   }
 
+  const remappedActions = a => {
+    switch(a){
+      case 'Standard Action':
+        return 'standard'
+      case 'Swift Action':
+        return 'swift'
+      case 'Move Action':
+        return 'move'
+      case 'Full-Round Action':
+        return 'full'
+      case 'Immediate Action':
+        return 'immediate'
+      case 'Free Action':
+        return 'free'
+      default:
+        return a
+    }
+  }
+
   const renderMagicItems = () => {
-    let ownedMagicItems = props.character.magic_items
-    return ownedMagicItems.map((mi, idx) => {
-      let limits = props.character_info.hardcode.limits
-      let amount = true
-      if (limits && mi.limit){
-        let found = limits.find(l => l.name === mi.name)
-        if (mi.starting){
-          amount = found ? mi.starting - found.cast : mi.starting
-        } else {
-          amount = found ? mi.limit - found.cast : mi.limit
-        }
-      } else {
-        if (mi.limit){
-          amount = mi.starting ? mi.starting : mi.limit
-        }
-      }
-      let used = props.character_info.hardcode.usedItems
-      if (used && used.includes(mi.name)){
-        return null
-      } else {
-        return (
-          <tr className={renderTableStyling(idx)} key={mi.id*3-1}>
-            <td>{mi.activatable ? <button className={mi.action && !props.character_info.actions[mi.action] && amount ? mi.action : 'cannot-cast'} onClick={() => renderClick(mi.name, mi.limit, mi.starting, mi.expendable, mi.modal)}>Use</button> : null}</td>
-            <td><strong>{mi.name}</strong>{mi.limit && mi.activate ? `(${amount}/${mi.limit})` : null}{mi.redux ? `(${mi.limit - props.character_info.hardcode[mi.redux] || 10}/${mi.limit})` : null}</td>
-            <td>{mi.weight} lb{(mi.weight > 1 || mi.weight === 0) ? "s" : null}</td>
-            <td>{mi.price}</td>
-            <td>{mi.description}</td>
-          </tr>
-        )
-      }
+    // not hardcoding
+    let ownedMagicItems = props.character.character_magic_items
+    // only works on owned magic items!
+    return ownedMagicItems.map((cmi, idx) => {
+      // let limits = props.character_info.hardcode.limits
+      // let amount = true
+      // if (limits && mi.limit){
+      //   let found = limits.find(l => l.name === mi.name)
+      //   if (mi.starting){
+      //     amount = found ? mi.starting - found.cast : mi.starting
+      //   } else {
+      //     amount = found ? mi.limit - found.cast : mi.limit
+      //   }
+      // } else {
+      //   if (mi.limit){
+      //     amount = mi.starting ? mi.starting : mi.limit
+      //   }
+      // }
+      // let used = props.character_info.hardcode.usedItems
+      // if (used && used.includes(mi.name)){
+      //   return null
+      // } else {
+        let actionableItems = cmi.magic_item.features.filter(f => f.action ? f.action.name : false)
+        return actionableItems.map(i => {
+          let action = remappedActions(i.action.name)
+          let className = renderClassName(action, i, cmi)
+          return (
+            <tr className={renderTableStyling(idx)} key={cmi.id*3-1}>
+            {/* <td>{mi.activatable ? <button className={mi.action && !props.character_info.actions[mi.action] && amount ? mi.action : 'cannot-cast'} onClick={() => renderClick(mi.name, mi.limit, mi.starting, mi.expendable, mi.modal)}>Use</button> : null}</td>*/}
+            <td><button className={className} onClick={() => renderUse(cmi, i, className)}>Use</button></td>
+            <td className='underline-hover' onClick={() => props.editModal('magic item', null, cmi.id)}><strong>{cmi.magic_item.name}</strong>{/* cmi.magic_itemlimit && cmi.magic_item.activate ? `(${amount}/${cmi.magic_item.limit})` : null*/}{cmi.magic_item.redux ? `(${cmi.magic_item.limit - props.character_info.hardcode[cmi.magic_item.redux] || 10}/${cmi.magic_item.limit})` : null}</td>
+            </tr>
+          )
+        })
+      // }
     })
   }
 
   const renderTableStyling = (index) => {
     return index%2 === 0 ? "even-row-magic" : "odd-row"
+  }
+
+  const renderClassName = (action, magicItem, cmi) => {
+    let isTheActionAvailable = !props.character_info.actions[action]
+    let magicItemUsage = magicItem.usage
+    if (magicItemUsage){
+      let featureUsage = cmi.character_magic_item_feature_usages.find(cmifu => cmifu.feature_usage_id === magicItemUsage.id)
+
+      let limit = magicItemUsage.limit
+      let current = featureUsage.current_usage || 0
+
+      if (current >= limit){
+        return 'cannot-cast'
+      }
+    }
+    if (isTheActionAvailable){
+      return action
+    } else {
+      return 'cannot-cast'
+    }
   }
 
   return (

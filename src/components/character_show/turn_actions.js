@@ -11,6 +11,12 @@ const TurnActions = props => {
     props.dispatch({type: 'TRIGGER ACTION', action})
   }
 
+  const newTurn = () => {
+    // patch fetch
+    // reset all features, items, abilities, etc, that have a limit of a round
+    // if successful, dispatch new turn
+  }
+
   return(
     <section id='actions' className='character-show shadow action-container'>
       <section style={{padding: '.15em'}}>
