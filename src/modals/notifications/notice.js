@@ -80,11 +80,18 @@ class Notice extends React.Component {
     }
   }
 
+  tempFeatures = () => {
+    let temp = this.props.character_info.features.filter(f => f.duration === 'temporary')
+    return temp.map(t => <button style={{display: 'block', margin: 'auto'}} onClick={() => this.props.dispatch({type: 'ACTIVATED FEATURE', feature:{source: t.source, remove: true}})}>Cancel {t.source}'s Effect</button>
+)
+  }
+
 
   render(){
     return(
       <span style={{padding: '1em'}}>
         {this.newItems()}
+        {this.tempFeatures()}
         <h3>Active Conditions</h3>
         {this.renderConditions()}
         {this.props.character_info.hardcode.stealTime && <button onClick={() => this.props.dispatch({type: 'STEAL TIME'})}>Return Time</button>}

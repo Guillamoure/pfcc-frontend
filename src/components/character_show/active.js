@@ -31,6 +31,16 @@ const Active = props => {
   const crew = hc.crew
   const stealTime = hc.stealTime
 
+  const renderFeatures = () => {
+    let temp = props.character_info.features.filter(f => f.duration === 'temporary')
+    return temp.map(t => {
+      let detail = ''
+      detail = t.type === 'movement' ? `${t.movement} Speed: ${t.feet} ft` : detail
+
+      return <li>{t.source}: {detail}</li>
+    })
+  }
+
   return (
     <div id='active' className='shadow shrink'>
       <ul>
@@ -58,10 +68,12 @@ const Active = props => {
         {land20 && <li>Base Speed +20 ft.</li>}
         {quick && <li>Base Speed +10 ft., +2 AC, adv. on next attack, Reflex save, Dex or Charisma check</li>}
         {stealTime && <li>+1 to AC, Reflex, +5 base speed</li>}
+        {renderFeatures()}
       </ul>
     </div>
   )
 }
+
 
 const mapStatetoProps = (state) => {
   return {

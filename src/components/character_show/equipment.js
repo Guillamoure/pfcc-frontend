@@ -55,6 +55,7 @@ class Equipment extends React.Component {
 
   renderEquipment = () => {
     let cmis = this.props.character.character_magic_items.filter(cmi => cmi.discovered)
+    let cmifus = this.props.character.character_magic_item_feature_usages
     let unknowns = cmis.filter(cmi => !cmi.known)
     let knowns = cmis.filter(cmi => cmi.known)
     let magicalItems = knowns.map(cmi => cmi.magic_item)
@@ -72,17 +73,21 @@ class Equipment extends React.Component {
           <div key={idx*3-1} onClick={() => this.changeActiveFeature(group)}><strong>{_.capitalize(group) + 's'} ({groupedItems.length})</strong></div>
           {chosen && <ul style={{margin: '0', padding: '0'}}>
             {groupedItems.map((i, idx) => {
+
               let known = group === 'unknown' ? false : true
               let actions = known ? i.features.map(f => f.action ? f.action.name : null) : []
               let name = known ? i.name : i.false_desc
+              let percentages = known ? this.renderPercentage(i) : null
+              // find feature usage, find limit, and find relevant cmifu, and have a fraction of current usage
               let remappedActions = this.remappedActions(actions)
               let equipped = known ? cmis.find(cmi => cmi.magic_item === i).equipped : i.equipped
               let stored = known ? cmis.find(cmi => cmi.magic_item === i).stored_character_magic_item : i.stored_character_magic_item
               let id = known ? cmis.find(cmi => cmi.magic_item === i).id : i.id
+              
               return (
                 <>
                   <li className='noStyleLi' style={{fontSize: 'smaller'}} key={idx*i.id*3-1} onClick={() => this.changeSelectedItem(id)}>
-                    {name}{equipped ? <span className='equipped'>E</span> : null}{stored ? <span className='equipped'>S</span> : null}
+                    {name}{percentages}{equipped ? <span className='equipped'>E</span> : null}{stored ? <span className='equipped'>S</span> : null}
                     {!!actions.length && remappedActions.map((a, idx) => <span key={idx*3+1} className={a} style={{borderRadius: '100%', paddingLeft: '8%', margin: '1.5%'}}>{'  '}</span>)}
                   </li>
                 </>
@@ -106,6 +111,21 @@ class Equipment extends React.Component {
     //     )
     //
     // })
+  }
+
+  renderPercentage = (magicItem) => {
+    let mi = magicItem.features.find(f => f.usage)
+    if (mi){
+      let usage = mi.usage
+      let limit = usage.limit
+      let cmifus = this.props.character.character_magic_item_feature_usages
+      let fu = cmifus.find(fu => fu.feature_usage_id === usage.id)
+      let currentUsage = fu.current_usage || 0
+      let remaining = limit - currentUsage
+      return ` (${remaining}/${limit})`
+    } else {
+      return null
+    }
   }
 
   renderItem = () => {

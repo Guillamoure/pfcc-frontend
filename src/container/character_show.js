@@ -3,6 +3,7 @@ import _ from 'lodash'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import localhost from '../localhost'
+import { mod } from '../fuf'
 
 import AbilityScores from '../components/character_show/ability_scores'
 import CharacterName from '../components/character_show/character_name'
@@ -18,6 +19,7 @@ import Initiative from '../components/character_show/initiative'
 import TurnActions from '../components/character_show/turn_actions'
 import SpellDescriptionModal from '../modals/spell'
 import MagicItemModal from '../modals/magic_item'
+import CharacterFeatureModal from '../modals/character_feature_modal'
 
 // unfinished hardcoded features
 import Points from '../components/character_show/points'
@@ -78,9 +80,11 @@ class Character extends React.Component {
     activeEffects: [],
     spellId: 0,
     cmiId: 0,
+    cfId: 0,
     toolTip: false,
     toolTipX: 0,
-    toolTipY: 0
+    toolTipY: 0,
+    detail: ''
   }
 
   componentDidMount() {
@@ -115,9 +119,18 @@ class Character extends React.Component {
             cmi.magic_item.features.forEach(f => {
               if (f.skill_bonus){
                 const { skill_id, bonus, bonus_type, duration } = f.skill_bonus
-                this.props.dispatch({type: 'BONUS', bonus: {type: 'skill', skill_id, bonus, bonus_type, duration, source: cmi.magic_item.name}})
+                const conditions = f.skill_bonus.feature_skill_bonus_conditions.map(c => {return {condition: c.condition}})
+                this.props.dispatch({type: 'BONUS', bonus: {type: 'skill', skill_id, bonus, bonus_type, duration, source: cmi.magic_item.name, conditions}})
               }
-
+              if (f.stat_bonus){
+                const { statistic, bonus, bonus_type, duration } = f.stat_bonus
+                const conditions = f.stat_bonus.feature_stat_bonus_conditions.map(c => {return {condition: c.condition}})
+                this.props.dispatch({type: 'BONUS', bonus: {type: 'stat', statistic, bonus, bonus_type, duration, source: cmi.magic_item.name, conditions}})
+              }
+              if (f.skill_note){
+                const { skill_id, note} = f.skill_note
+                this.props.dispatch({type: 'BONUS', bonus: {type: 'note', skill_id, note, source: cmi.magic_item.name}})
+              }
             })
           }
         })
@@ -171,7 +184,12 @@ class Character extends React.Component {
     this.props.character.character_klasses.forEach(cK => {
       const id = cK.klass_id
       if (!completedClasses.includes(id)){
-        const level = this.props.character.character_klasses.filter(ck => ck.klass_id === id).length
+        let characterKlass = this.props.character.character_klasses.filter(ck => ck.klass_id === id)
+        const level = characterKlass.length
+        let klass = this.props.character.uniq_klasses.find(k => k.id === id)
+        let spellsFeature = klass.klass_features.find(f => f.name === 'Spells')
+        let spellcasting = spellsFeature ? spellsFeature.spellcasting : null
+
         completedClasses.push(id)
         const classInfo = {id, level}
         // look to see if there are any cast spells for the given class
@@ -183,7 +201,7 @@ class Character extends React.Component {
           castSpells[lvl] ? castSpells[lvl] = castSpells[lvl] + 1 : castSpells[lvl] = 1
         })
         classInfo.castSpells = castSpells
-
+        classInfo.spellcasting = spellcasting
         // hardcoded start
         let name = this.props.character.name
           if (name === "Nettie" || name === "Persephone" || name === "Maddox"){
@@ -246,6 +264,8 @@ class Character extends React.Component {
       this.setState({modal: section, spellId: id})
     } else if (section === 'magic item' && !!id){
       this.setState({modal: section, cmiId: id})
+    } else if (section === 'cFeature' && !!id){
+      this.setState({modal: section, cfId: id, detail})
     } else {
       this.setState({modal: section})
     }
@@ -257,7 +277,7 @@ class Character extends React.Component {
     }
   }
   exitModal = () => {
-    this.setState({modal: false, spellId: 0, cmiId: 0})
+    this.setState({modal: false, spellId: 0, cmiId: 0, cfId: 0, detail: ''})
   }
 
   renderTooltip = (e, comment) => {
@@ -306,7 +326,6 @@ class Character extends React.Component {
 
 
   render() {
-
     return (
       <span className="container-8 character">
         {this.state.character.race && <CharacterName character={this.state.character} editModal={this.editModal}/>}
@@ -337,6 +356,7 @@ class Character extends React.Component {
         {this.state.modal === 'hitPoints' && <HPChanges exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
         {(this.state.modal === 'spell' && this.state.spellId !== 0) && <SpellDescriptionModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} spellId={this.state.spellId}/>}
         {(this.state.modal === 'magic item' && this.state.cmiId !== 0) && <MagicItemModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} cmiId={this.state.cmiId}/>}
+        {(this.state.modal === 'cFeature' && this.state.cfId !== 0) && <CharacterFeatureModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} cfId={this.state.cfId} detail={this.state.detail}/>}
 
         {/* unfinished, hardcoded features */}
         {this.state.modal === 'points' && <PointModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}

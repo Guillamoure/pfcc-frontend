@@ -273,7 +273,7 @@ class Skills extends React.Component {
         <tr key={_.random(1, 2000000)}>
           <td>{this.renderClassSkill(skill) ? "X" : null}</td>
           <td onMouseOver={(e) => this.renderTooltip(e, null, skill.ability_score)} onMouseOut={this.props.mouseOut}><strong>{this.renderAbilityScoreAbbreviation(skill)}</strong></td>
-          <td className={this.raging(skill.name)} style={this.renderSkillBonus(skill, true)} onMouseOver={(e) => this.renderTooltip(e, skill.name)} onMouseOut={this.props.mouseOut}>{this.asterisk(skill.name)}</td>
+          <td className={this.raging(skill.name)} style={this.renderSkillBonus(skill, true)} onMouseOver={(e) => this.renderTooltip(e, skill)} onMouseOut={this.props.mouseOut}>{this.asterisk(skill)}</td>
           <td style={this.renderSkillBonus(skill, true)}>{this.renderSkillBonus(skill)}</td>
           <td>{this.renderNumOfRanks(skill)}</td>
         </tr>
@@ -292,11 +292,22 @@ class Skills extends React.Component {
   //   }
   // }
 
-  asterisk = (skill) => {
-
+  asterisk = (skillObj) => {
+    let skill = skillObj.name
     let asterisk = skill + "*"
     let name = this.props.character.name
     let hc = this.props.character_info.hardcode
+
+    let isThereAnAsterisk = false
+    this.props.character_info.bonuses.forEach(b => {
+      if (skill && b.skill_id && b.skill_id === skillObj.id){
+        isThereAnAsterisk = true
+      }
+    })
+    if (isThereAnAsterisk){
+      return asterisk
+    }
+
     switch(skill){
       case 'Acrobatics':
         if (hc.minor === 'Frog - Minor' || hc.major === 'Frog - Major' || hc.major === 'Condor - Major' || name === 'Festus' || name === 'Robby'){
@@ -384,50 +395,60 @@ class Skills extends React.Component {
     }
   }
 
-  renderTooltip = (e, skill, ability) => {
-    let comment = null
+  renderTooltip = (e, skillObj, ability) => {
+    let comment = []
     let name = this.props.character.name
     let hc = this.props.character_info.hardcode
     let armor = hc.armor
+    let skill = skillObj ? skillObj.name : skillObj
+
+    this.props.character_info.bonuses.forEach(b => {
+      if (skill && b.skill_id === skillObj.id && b.note){
+        comment.push(_.capitalize(b.note))
+      }
+    })
+
+
+
     if ((skill === "Survival" || skill === "Heal") && name === "Nettie"){
-      comment = "Scrivener's Versatility"
+      comment.push("Scrivener's Versatility")
     }
     if (skill === "Acrobatics"){
       if (hc.minor === 'Frog - Minor'){
-        comment = '+4 when jumping'
+        comment.push('+4 when jumping')
       } else if (hc.major === 'Frog - Major'){
-        comment = 'Treat all jumps as if you had a running start'
+        comment.push('Treat all jumps as if you had a running start')
       } else if (hc.major === 'Condor - Major' || name === 'Festus'){
-        comment = '+8 to flying check from Fly Speed'
+        comment.push('+8 to flying check from Fly Speed')
       } else if (name === 'Robby'){
-        comment = 'Derring-Do: Spend 1 Panache to add +1d6, up to 4 times'
+        comment.push('Derring-Do: Spend 1 Panache to add +1d6, up to 4 times')
       }
     }
     if (skill === "Swim"){
       if (hc.major === 'Frog - Major'){
-        comment = 'Swim Speed'
+        comment.push('Swim Speed')
       } else if (name === 'Robby'){
-        comment = 'Derring-Do: Spend 1 Panache to add +1d6, up to 4 times'
+        comment.push('Derring-Do: Spend 1 Panache to add +1d6, up to 4 times')
       }
     }
     if (skill === "Stealth"){
       if (name === 'Cedrick'){
-        comment = '+4 bonus in Marshes and Forests'
+        comment.push('+4 bonus in Marshes and Forests')
       }
       if (hc.major === 'Chameleon - Major'){
-        comment = comment + ', +10 bonus if you are standing still'
+        comment.push(comment + ', +10 bonus if you are standing still')
       }
     }
     if (skill === 'Intimidate'){
       if (name === 'Cedrick'){
-        comment = <span>+1 enchancement bonus from <em>ominous</em> from Ta'al'mon Ancestral Handwraps</span>
+        comment.push(<span>+1 enchancement bonus from <em>ominous</em> from Ta'al'mon Ancestral Handwraps</span>)
       } else if (name === 'Robby'){
-        comment = 'Meanacing Swordplay: If you have at least 1 Panache, after a melee attack, Demoralize as a swift action instead of standard action'
+        comment.push('Meanacing Swordplay: If you have at least 1 Panache, after a melee attack, Demoralize as a swift action instead of standard action')
       }
     }
     if (skill === 'Religion'){
       if (name === 'Persephone'){
-        comment = <span>{this.props.character.character_klasses.length} skill ranks from <em>Headband of Vast Intelligence +2</em></span>
+        comment.push(<span>{this.props.character.character_klasses.length} skill ranks from <em>Headband of Vast Intelligence +2</em></span>)
       }
     }
     if (skill === 'Disguise'){
@@ -438,41 +459,41 @@ class Skills extends React.Component {
           currently = 'the Autumn Equinox'
           alterEgo = 'Persephone'
         }
-        comment = <span>+20 circumstance bonus to appear as {currently} if suspected to be {alterEgo}</span>
+        comment.push(<span>+20 circumstance bonus to appear as {currently} if suspected to be {alterEgo}</span>)
       }
     }
     if (skill === 'Finesse'){
       if (name === 'Robby'){
-        comment = 'Derring-Do: Spend 1 Panache to add +1d6, up to 4 times'
+        comment.push('Derring-Do: Spend 1 Panache to add +1d6, up to 4 times')
       }
     }
     if (skill === 'Handle Animal'){
       if (name === 'Robby'){
-        comment = 'Derring-Do: Spend 1 Panache to add +1d6 to ride checks, up to 4 times'
+        comment.push('Derring-Do: Spend 1 Panache to add +1d6 to ride checks, up to 4 times')
       }
     }
     if (skill === 'Climb'){
       if (name === 'Robby'){
-        comment = 'Derring-Do: Spend 1 Panache to add +1d6, up to 4 times'
+        comment.push('Derring-Do: Spend 1 Panache to add +1d6, up to 4 times')
       }
     }
     if (skill === 'Sense Motive'){
       if (name === 'Merg'){
-        comment = 'If the Fabric of Reality is draped over your eyes, +4 bonus.'
+        comment.push('If the Fabric of Reality is draped over your eyes, +4 bonus.')
       }
     }
     if (ability){
       let armor = hc.armor
       if (armor && (ability === 'Strength' || ability === 'Dexterity')){
-        comment = armor === 'Wooden' ? 'Armor Check Penalty: -1' : comment
-        comment = armor === '+1 chain shirt' ? 'Armor Check Penalty: -1' : comment
+        comment.push(armor === 'Wooden' ? 'Armor Check Penalty: -1' : comment)
+        comment.push(armor === '+1 chain shirt' ? 'Armor Check Penalty: -1' : comment)
       }
       if (hc.quick && (ability === 'Dexterity' || ability === 'Charisma')){
-        comment = `Advantage on ${ability}-based checks`
+        comment.push(`Advantage on ${ability}-based checks`)
       }
     }
-    if (comment){
-      this.props.renderTooltip(e, comment)
+    if (!!comment.length){
+      this.props.renderTooltip(e, comment.join(', '))
     }
   }
 

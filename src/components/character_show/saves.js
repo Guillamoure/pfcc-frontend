@@ -102,11 +102,15 @@ const Saves = props => {
   // ast = props.character_info.hardcode.quick ? '*' : ast
   const ast = (type) => {
     let ast = false
-    if (type === 'all'){
+
+    let validBonuses = props.character_info.bonuses.filter(b => b.statistic === type)
+    ast = !!validBonuses.length ? true : ast
+
+    if (type === 'Save'){
       if (props.character.name === 'Robby'){
         ast = true
       }
-    } else if (type === 'reflex'){
+    } else if (type === 'Reflex'){
       if (props.character_info.hardcode.quick){
         ast = true
       }
@@ -118,30 +122,50 @@ const Saves = props => {
 
   const renderTooltip = (e, type) => {
     let comment = ''
+
+    let validBonuses = props.character_info.bonuses.filter(b => b.statistic === type)
+    validBonuses.forEach(b => {
+      if (b.conditions.length){
+        comment = `${b.bonus < 0 ? b.bonus : `+${b.bonus}`} ${b.bonus_type} for ${b.conditions.map(c => c.condition).join(', ')}`
+      }
+    })
+
     if (props.character.name === 'Robby'){
       if (type === 'all'){
         comment = '+1 to fear and mind-affecting effects'
-      } else if (type === 'reflex'){
+      } else if (type === 'Reflex'){
         comment = 'If you succeed on a saving throw to take half damage, take no damage instead'
       }
-    } else if (props.character_info.hardcode.quick && type === 'reflex'){
+    } else if (props.character_info.hardcode.quick && type === 'Reflex'){
       comment = 'Advantage on Reflex saving throws'
-    } else {
-      return null
     }
-    props.renderTooltip(e, comment)
+    if (!!comment){
+      props.renderTooltip(e, comment)
+    }
+  }
+
+  const modifiers = () => {
+    let modifiers = props.character_info.bonuses.reduce((agg, b) => {
+      if (b.statistic === 'Save'){
+        if (!b.conditions.length){
+          agg += b.bonus
+        }
+      }
+      return agg
+    }, 0)
+    return modifiers
   }
 
 
     return(
       <div id='saves' className='container-3 shadow shrink' >
-        <div id='saving-throw-title' onMouseOver={e => renderTooltip(e, 'all')} onMouseOut={props.mouseOut}>Saving Throws{ast('all')}</div>
+        <div id='saving-throw-title' onMouseOver={e => renderTooltip(e, 'Save')} onMouseOut={props.mouseOut}>Saving Throws{ast('Save')}</div>
         <span className='centered' >
           <div className='enhanced' style={renderCharacterSave('fortitude', 'constitution', true)}>{renderCharacterSave('fortitude', 'constitution')}</div>
           <div className='muted'><strong>Fortitude</strong></div>
         </span>
-        <span className='centered' onMouseOver={e => renderTooltip(e, 'reflex')} onMouseOut={props.mouseOut}>
-          <div className='enhanced' style={renderCharacterSave('reflex', 'dexterity', true)}>{renderCharacterSave('reflex', 'dexterity')}{ast('reflex')}</div>
+        <span className='centered' onMouseOver={e => renderTooltip(e, 'Reflex')} onMouseOut={props.mouseOut}>
+          <div className='enhanced' style={renderCharacterSave('reflex', 'dexterity', true)}>{renderCharacterSave('reflex', 'dexterity')}{ast('Reflex')}</div>
           <div className='muted'><strong>Reflex</strong></div>
         </span>
         <span className='centered' >

@@ -2,11 +2,13 @@ import React from 'react'
 import _ from 'lodash'
 import { connect } from 'react-redux'
 import localhost from '../localhost'
+import { actionClass, mod } from '../fuf'
 
 class NonClassSpellSummary extends React.Component {
 
   state = {
-    spell: null
+    spell: null,
+    abilityScoreMod: 0
   }
 
   componentDidMount(){
@@ -24,37 +26,20 @@ class NonClassSpellSummary extends React.Component {
     }
   }
 
-  remappedActions = a => {
-    switch(a){
-      case 'Standard Action':
-        return 'standard'
-      case 'Swift Action':
-        return 'swift'
-      case 'Move Action':
-        return 'move'
-      case 'Full-Round Action':
-        return 'full'
-      case 'Immediate Action':
-        return 'immediate'
-      case 'Free Action':
-        return 'free'
-      default:
-        return a
-    }
-  }
-
   renderClassName = () => {
-    let action = this.remappedActions(this.state.spell.action.name)
+    let action = actionClass(this.state.spell.action.name)
     let { cmifu, magicItem } = this.props
 
     let isTheActionAvailable = !this.props.character_info.actions[action]
     let feature = magicItem.features.find(f => f.usage.id === cmifu.feature_usage_id)
     if (feature){
       let featureUsage = feature.usage
-
+      let so = feature.feature_usage_spell_options.find(so => so.spell_id === this.state.spell.id)
+      let spellOptionCost = so.cost
       let limit = featureUsage.limit
       let current = cmifu.current_usage || 0
-      if (current >= limit){
+      let remaining = limit - current
+      if (remaining < spellOptionCost){
         return 'cannot-cast'
       }
     }
@@ -82,7 +67,6 @@ class NonClassSpellSummary extends React.Component {
         let fuso = feature.feature_usage_spell_options.find(so => so.spell_id === spellId)
         let count = fuso.cost
         if (remainingUsage <= 1 && feature.usage.destroy_after_use){
-          console.log('delete')
           // delete fetch
           fetch(`${localhost}/api/v1/character_magic_items/${cmifu.character_magic_item_id}`, {
             method: 'DELETE'
@@ -96,7 +80,6 @@ class NonClassSpellSummary extends React.Component {
             }
           })
         } else {
-          console.log('patch')
           // patch fetch
           fetch(`${localhost}/api/v1/character_magic_items/${cmifu.id}`, {
             method: 'PATCH',
@@ -120,12 +103,40 @@ class NonClassSpellSummary extends React.Component {
     }
   }
 
+  renderPercentage = () => {
+    let { cmifu, magicItem } = this.props
+    let feature = magicItem.features.find(f => f.usage.id === cmifu.feature_usage_id)
+    if (feature){
+      let featureUsage = feature.usage
+
+      let limit = featureUsage.limit
+      let current = cmifu.current_usage || 0
+        return ` (${limit-current}/${limit})`
+    } else {
+      return null
+    }
+  }
+
+  renderCost = () => {
+    let { cmifu, magicItem } = this.props
+
+    let feature = magicItem.features.find(f => f.usage.id === cmifu.feature_usage_id)
+    if (feature){
+      let so = feature.feature_usage_spell_options.find(so => so.spell_id === this.state.spell.id)
+      let spellOptionCost = so.cost
+      return ` (${spellOptionCost})`
+    } else {
+      return null
+    }
+  }
+
   renderRange = (cl) => {
     let range = this.state.spell.spell_range
     if (range.feet === 0){
       return range.name
     } else {
-      let feet = range.feet + ((cl-1)*range.increase_per_level)
+      let caster_level = range.increase_per_level === 2.5 && cl%2 ? cl-1 : cl
+      let feet = range.feet + (caster_level*range.increase_per_level)
       return feet + ' ft'
     }
   }
@@ -153,15 +164,45 @@ class NonClassSpellSummary extends React.Component {
     } else {
       level = wizard.spell_level
     }
+
     let abilityScoreMod = Math.floor((level)/2)
+    if (this.props.magicItem.group === 'Staff'){
+      abilityScoreMod = this.state.abilityScoreMod
+    }
     return 10 + level + abilityScoreMod
+  }
+
+  calcStaffCL = (cl) => {
+    let castsSpells = false
+    let abilityScore = 'Charisma'
+    let casterLevel = cl
+    this.props.character_info.classes.forEach(c => {
+      if (!c.spellcasting){
+        // if your caster level is greater than the base staff level
+        // replace the caster level, and change the abilityScore
+        // otherwise, keep the higher level
+        abilityScore = c.level > casterLevel ? c.spellcasting.ability_score : abilityScore
+        casterLevel = c.level > casterLevel ? c.level : casterLevel
+        castsSpells = true
+      }
+    })
+
+    let score = this.props.character_info.ability_scores[_.lowerCase(abilityScore)]
+    if (this.state.abilityScoreMod !== mod(score)){
+      this.setState({abilityScoreMod: mod(score)})
+    }
+    return casterLevel
   }
 
 
   render(){
     const { magicItem } = this.props
-    const { caster_level } = magicItem
+    let { caster_level } = magicItem
     const cmiId = this.props.cmifu.character_magic_item_id
+
+    if (magicItem.group === 'Staff'){
+      caster_level = this.calcStaffCL(caster_level)
+    }
 
     let className = this.state.spell ? this.renderClassName() : null
 
@@ -176,12 +217,12 @@ class NonClassSpellSummary extends React.Component {
               </strong>
             </button>
           </td>
-          <td className='underline-hover' onClick={() => this.props.editModal('spell', null, this.state.spell.id)}>{this.state.spell.name}</td>
+          <td className='underline-hover' onClick={() => this.props.editModal('spell', null, this.state.spell.id)}>{this.state.spell.name}{this.renderCost()}</td>
           <td>{this.renderRange(caster_level)}</td>
           <td>{this.renderDuration(caster_level)}</td>
           <td>{this.renderDC()}</td>
           <td>{this.state.spell.sr ? "Y" : "N"}</td>
-          <td className='underline-hover' onClick={() => this.props.editModal('magic item', null, cmiId)}>{magicItem.name}</td>
+          <td className='underline-hover' onClick={() => this.props.editModal('magic item', null, cmiId)}>{magicItem.name}{this.renderPercentage()}</td>
         </React.Fragment>
       }
       </React.Fragment>
