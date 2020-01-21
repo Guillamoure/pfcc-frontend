@@ -300,7 +300,7 @@ class Skills extends React.Component {
 
     let isThereAnAsterisk = false
     this.props.character_info.bonuses.forEach(b => {
-      if (skill && b.skill_id && b.skill_id === skillObj.id){
+      if (skill && b.skill_id && b.skill_id === skillObj.id && b.note){
         isThereAnAsterisk = true
       }
     })

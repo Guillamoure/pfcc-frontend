@@ -69,20 +69,26 @@ const UserItemAdjustment = props => {
           console.log(data)
         } else {
           item.features.forEach(f => {
-            if (f.skill_bonus){
-              const { skill_id, bonus, bonus_type, duration } = f.skill_bonus
-              const conditions = f.skill_bonus.feature_skill_bonus_conditions.map(c => {return {condition: c.condition}})
-              props.dispatch({type: 'BONUS', bonus: {type: 'skill', skill_id, bonus, bonus_type, duration, source: item.name, conditions}, alreadyEquipped: equipped})
+            if (!!f.skill_bonuses.length){
+              f.skill_bonuses.forEach(sk => {
+                const { skill_id, bonus, bonus_type, duration } = sk
+                // const conditions = sk.feature_skill_bonus_conditions.map(c => {return {condition: c.condition}})
+                this.props.dispatch({type: 'BONUS', bonus: {type: 'skill', skill_id, bonus, bonus_type, duration, source: item.name}})
+              })
             }
-          if (f.stat_bonus){
-            const { statistic, bonus, bonus_type, duration } = f.stat_bonus
-            const conditions = f.stat_bonus.feature_stat_bonus_conditions.map(c => {return {condition: c.condition}})
-            props.dispatch({type: 'BONUS', bonus: {type: 'stat', statistic, bonus, bonus_type, duration, source: item.name, conditions}, alreadyEquipped: equipped})
-          }
-          if (f.skill_note){
-            const { skill_id, note } = f.skill_note
-            props.dispatch({type: 'BONUS', bonus: {type: 'note', skill_id, note, source: item.name}, alreadyEquipped: equipped})
-          }
+            if (!!f.stat_bonuses.length){
+              f.stat_bonuses.forEach(st => {
+                const { statistic, bonus, bonus_type, duration } = st
+                const conditions = st.feature_stat_bonus_conditions.map(c => {return {condition: c.condition}})
+                this.props.dispatch({type: 'BONUS', bonus: {type: 'stat', statistic, bonus, bonus_type, duration, source: item.name, conditions}})
+              })
+            }
+            if (!!f.skill_notes.length){
+              f.skill_notes.forEach(sk => {
+                const { skill_id, note} = sk
+                this.props.dispatch({type: 'BONUS', bonus: {type: 'note', skill_id, note, source: item.name}})
+              })
+            }
           })
           props.dispatch({type: 'CHARACTER', character: data.character })
         }

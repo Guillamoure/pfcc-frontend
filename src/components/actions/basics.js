@@ -29,13 +29,14 @@ const Basics = props => {
     } else if (action === 'full' && (actions.standard || actions.move || actions.swift)){
       return null
     } else if (!actions[action]){
-      switch(details){
-        case 'run':
-          return null
-        default:
-          break
-      }
-      if (!action === 'free'){
+      // I have no idea what this below code is trying to do
+      // switch(details){
+      //   case 'run':
+      //     return null
+      //   default:
+      //     break
+      // }
+      if (action !== 'free'){
         props.dispatch({type: 'TRIGGER ACTION', action})
       }
       switch(details){
@@ -247,12 +248,12 @@ const Basics = props => {
     return (
       <React.Fragment>
       <tr>
-        <td><button className={canCast(action)}><strong>Move</strong></button></td>
+        <td><button className={canCast(action)} onClick={() => renderDispatch('move')}><strong>Move</strong></button></td>
         <td>{type}</td>
         <td>{speed} ft</td>
       </tr>
       {!hc.fly && <tr>
-        <td><button className={canCast(fastAction)}><strong>Move</strong></button></td>
+        <td><button className={canCast(fastAction)} onClick={() => renderDispatch('full', 'run')}><strong>Move</strong></button></td>
         <td onMouseOver={e => renderTooltip(e, type)} onMouseOut={props.mouseOut}>{type}{asterik}</td>
         <td>{fast} ft</td>
       </tr>}

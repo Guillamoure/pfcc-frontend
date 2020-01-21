@@ -11,15 +11,13 @@ import Saves from '../components/character_show/saves'
 import HP from '../components/character_show/hp'
 import ArmorClass from '../components/character_show/ac'
 import AttackBonus from '../components/character_show/attack_bonus'
-import Details from '../components/character_show/details'
+// import Details from '../components/character_show/details'
 import Skills from '../components/character_show/skills'
 import FeaturesTraits from './features_traits'
 import Actions from './actions'
 import Initiative from '../components/character_show/initiative'
 import TurnActions from '../components/character_show/turn_actions'
-import SpellDescriptionModal from '../modals/spell'
-import MagicItemModal from '../modals/magic_item'
-import CharacterFeatureModal from '../modals/character_feature_modal'
+import Details from './details'
 
 // unfinished hardcoded features
 import Points from '../components/character_show/points'
@@ -49,6 +47,9 @@ import CharacterForm from '../modals/character_form'
 import AbilityForm from '../modals/ability_form'
 import Notifications from '../modals/notifications'
 import HPChanges from '../modals/hp_changes'
+import SpellDescriptionModal from '../modals/spell'
+import MagicItemModal from '../modals/magic_item'
+import CharacterFeatureModal from '../modals/character_feature_modal'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCaretRight } from '@fortawesome/free-solid-svg-icons'
@@ -117,19 +118,25 @@ class Character extends React.Component {
         data.character.character_magic_items.forEach(cmi => {
           if (cmi.equipped){
             cmi.magic_item.features.forEach(f => {
-              if (f.skill_bonus){
-                const { skill_id, bonus, bonus_type, duration } = f.skill_bonus
-                const conditions = f.skill_bonus.feature_skill_bonus_conditions.map(c => {return {condition: c.condition}})
-                this.props.dispatch({type: 'BONUS', bonus: {type: 'skill', skill_id, bonus, bonus_type, duration, source: cmi.magic_item.name, conditions}})
+              if (!!f.skill_bonuses.length){
+                f.skill_bonuses.forEach(sk => {
+                  const { skill_id, bonus, bonus_type, duration } = sk
+                  // const conditions = sk.feature_skill_bonus_conditions.map(c => {return {condition: c.condition}})
+                  this.props.dispatch({type: 'BONUS', bonus: {type: 'skill', skill_id, bonus, bonus_type, duration, source: cmi.magic_item.name}})
+                })
               }
-              if (f.stat_bonus){
-                const { statistic, bonus, bonus_type, duration } = f.stat_bonus
-                const conditions = f.stat_bonus.feature_stat_bonus_conditions.map(c => {return {condition: c.condition}})
-                this.props.dispatch({type: 'BONUS', bonus: {type: 'stat', statistic, bonus, bonus_type, duration, source: cmi.magic_item.name, conditions}})
+              if (!!f.stat_bonuses.length){
+                f.stat_bonuses.forEach(st => {
+                  const { statistic, bonus, bonus_type, duration } = st
+                  const conditions = st.feature_stat_bonus_conditions.map(c => {return {condition: c.condition}})
+                  this.props.dispatch({type: 'BONUS', bonus: {type: 'stat', statistic, bonus, bonus_type, duration, source: cmi.magic_item.name, conditions}})
+                })
               }
-              if (f.skill_note){
-                const { skill_id, note} = f.skill_note
-                this.props.dispatch({type: 'BONUS', bonus: {type: 'note', skill_id, note, source: cmi.magic_item.name}})
+              if (!!f.skill_notes.length){
+                f.skill_notes.forEach(sk => {
+                  const { skill_id, note} = sk
+                  this.props.dispatch({type: 'BONUS', bonus: {type: 'note', skill_id, note, source: cmi.magic_item.name}})
+                })
               }
             })
           }
