@@ -353,6 +353,14 @@ const reducer = (state = initialState, action) => {
         features = [...state.character_info.features, action.feature]
       }
       return { ...state, character_info: { ...state.character_info, features } }
+    case 'NEW NOTE':
+      let notes
+      if (state.character.notes.find(n => n.id === action.note.id)){
+        notes = [...state.character.notes].map(n => n.id !== action.note.id ? n : action.note)
+      } else {
+        notes = [...state.character.notes, action.note]
+      }
+      return {...state, character: {...state.character, notes}}
     default:
       return state
   }
