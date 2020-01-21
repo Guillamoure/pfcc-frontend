@@ -6,13 +6,6 @@ import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 
 
 class Details extends React.Component {
-  state= {
-    activeTab: "Features"
-  }
-
-  renderTabClick = (choice) => {
-    this.setState({activeTab: choice})
-  }
 
   languages = (name) => {
     switch(name){
@@ -32,9 +25,8 @@ class Details extends React.Component {
   }
 
   render(){
-    console.log(this.props.character)
     return(
-      <div id="details" className='shadow character-show'>
+      <React.Fragment>
         <span className='header'>Background</span>
         {this.props.character.user_id === this.props.currentUser.id && <span className='edit' onClick={() => this.props.editModal('background')}><FontAwesomeIcon icon={faPencilAlt} /></span>}
           <div className='nested'>
@@ -59,7 +51,7 @@ class Details extends React.Component {
           <div className='nested'>
           {this.languages(this.props.character.name).join(", ")}
           </div>
-      </div>
+      </React.Fragment>
     )
   }
 }
@@ -67,7 +59,8 @@ class Details extends React.Component {
 const mapStatetoProps = (state) => {
   return {
     currentUser: state.currentUser,
-    admin: state.admin
+    admin: state.admin,
+    character: state.character
   }
 }
 

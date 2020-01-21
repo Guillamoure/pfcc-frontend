@@ -7,6 +7,7 @@ const initialState = {
     classes: [],
     hardcode: {},
     bonuses: [],
+    features: [],
     size: 'Medium',
     actions: {
       full: false,
@@ -339,11 +340,19 @@ const reducer = (state = initialState, action) => {
     case 'BONUS':
       let bonuses
       if (action.alreadyEquipped){
-        bonuses = state.character_info.bonuses.filter(b => b.bonus.source === action.bonus.source)
+        bonuses = state.character_info.bonuses.filter(b => b.source !== action.bonus.source)
       } else {
         bonuses = [...state.character_info.bonuses, action.bonus]
       }
       return { ...state, character_info: { ...state.character_info, bonuses } }
+    case 'ACTIVATED FEATURE':
+      let features
+      if (action.feature.remove){
+        features = state.character_info.features.filter(f => f.source !== action.feature.source)
+      } else {
+        features = [...state.character_info.features, action.feature]
+      }
+      return { ...state, character_info: { ...state.character_info, features } }
     default:
       return state
   }

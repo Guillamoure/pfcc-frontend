@@ -113,24 +113,25 @@ const MagicItems = props => {
     magicItems.push(pirates)
     const quickShirt = {id: 3001, name: "Quick Runner's Shirt", description: `This shirt is made of light, gossamer-thin fabric embroidered with arrangements of winged feet. Once per day as a swift action, the wearer can take an additional move action to move (${props.character_info.hardcode.speed} ft) and then immediately end his turn, losing any unspent actions. A character must wear this shirt continuously for 24 hours before he can activate this ability.`, aura: "faint transmutation", price: "1000 gp", weight: '-', activatable: true, action: 'swift', limit: 1}
     magicItems.push(quickShirt)
-    const jabberjaw = {id: 3002, name: "Jabberjaw Gems", description: `When a gem is held, your spokemon language (heard and mouthed) appear as if you were speaking the gem's associated language. Whoever is wielding the gem or touching the wielder can hear the actual langueg spoken. If you hold multiple gems, your language is an amalgam of all the gems. For listeners who know all of the languages spoken, they must make a DC 15 Linguistics check to comprehend the speaker. For each language a listener doesn't know, increase the DC by 5.`, aura: "moderate transmutation", price: "6000 gp", weight: '-'}
+    const jabberjaw = {id: 3002, name: "Jabberjaw Gems", description: `When a gem is held, your spokemon language (heard and mouthed) appear as if you were speaking the gem's associated language. Whoever is wielding the gem or touching the wielder can hear the actual language spoken. If you hold multiple gems, your language is an amalgam of all the gems. For listeners who know all of the languages spoken, they must make a DC 15 Linguistics check to comprehend the speaker. For each language a listener doesn't know, increase the DC by 5.`, aura: "moderate transmutation", price: "6000 gp", weight: '-'}
     magicItems.push(jabberjaw)
     const origami = {id: 3003, name: "Origami Boat", description: 'If this makes contact with water, it gradually (over the course of 5 minutes) increase its size until it becomes a row boat with a space of 20 ft by 10 ft in the same shape as the paper. After 2 hours, the boat gradually (over the course of 10 minutes) shrinks back to its smaller form. This transmation resets after 12 hours.', aura: "moderate transmutation", price: "6000 gp", weight: '-'}
     magicItems.push(origami)
-    const brassCloak = {id: 3004, name: "Brass Griffin Cloak", description: <span>While wearing this cloak, if the wearer is damaged by fire damage, they are not affected by it; the cloak draws the energy towards it. Once the clock has absorbed 50 damage this way, the cloak bruns up and is destroyed, and any excess damage is dealt to the wearer. Once a day, as a move action, you may  be affected by the spell <em className='underline-hover' onClick={() => props.editModal('spell', null, 75)}>endure elements</em>. The duration of this effect is 1 hour.</span>, aura: "moderate transmutation", price: "6000 gp", weight: '-'}
+    const brassCloak = {id: 3004, name: "Brass Griffin Cloak", description: <span>While wearing this cloak, if the wearer is damaged by fire damage, they are not affected by it; the cloak draws the energy towards it. Once the clock has absorbed 50 damage this way, the cloak bruns up and is destroyed, and any excess damage is dealt to the wearer. Once a day, as a move action, you may be affected by the spell <em className='underline-hover' onClick={() => props.editModal('spell', null, 75)}>endure elements</em>. The duration of this effect is 1 hour.</span>, aura: "moderate transmutation", price: "6000 gp", weight: '-'}
     magicItems.push(brassCloak)
   }
 
-  const renderUse = (magicItem, miFeature, action) => {
+  const renderUse = (magicItem, miFeature, action, toggleable) => {
     if (action === 'cannot-cast'){
       return null
     }
-    if (!props.character_info.actions[action]){
-      props.dispatch({type: 'TRIGGER ACTION', action})
+    if ( !props.character_info.actions[action] || action === 'use' ){
+      if (action !== 'use'){
+        props.dispatch({type: 'TRIGGER ACTION', action})
+      }
       let usage = miFeature.usage
       if (usage){
         let cmifu = magicItem.character_magic_item_feature_usages.find(fu => fu.feature_usage_id === miFeature.usage.id)
-
         let remainingUsage = usage.limit - cmifu.current_usage
         if (remainingUsage <= 1 && usage.destroy_after_use){
           console.log('delete')
@@ -146,10 +147,14 @@ const MagicItems = props => {
               props.dispatch({type: 'CHARACTER', character: data.character })
             }
           })
+        } else if (toggleable){
+          console.log(toggleable)
+          props.editModal('cFeature', null, magicItem.id, 'character_magic_items')
         } else {
           console.log('patch')
           // patch fetch
-          let count = usage.limit
+          let count = 1
+          // this count is a mistake, it does not accurate grab the value of whatever feature is being used
           fetch(`${localhost}/api/v1/character_magic_items/${cmifu.id}`, {
             method: 'PATCH',
             headers: {
@@ -249,6 +254,7 @@ const MagicItems = props => {
     let ownedMagicItems = props.character.character_magic_items
     // only works on owned magic items!
     return ownedMagicItems.map((cmi, idx) => {
+
       // let limits = props.character_info.hardcode.limits
       // let amount = true
       // if (limits && mi.limit){
@@ -267,14 +273,22 @@ const MagicItems = props => {
       // if (used && used.includes(mi.name)){
       //   return null
       // } else {
-        let actionableItems = cmi.magic_item.features.filter(f => f.action ? f.action.name : false)
+        let actionableItems = cmi.magic_item.features.filter(f => {
+          let actionable = false
+          actionable = f.action ? true : actionable
+          actionable = f.usage ? f.usage.toggleable ? true : actionable : actionable
+          return actionable
+        })
         return actionableItems.map(i => {
-          let action = remappedActions(i.action.name)
-          let className = renderClassName(action, i, cmi)
+          // NOTE: i is representing one feature of the cmi.magicItem
+          let action = i.action ? remappedActions(i.action.name) : 'use'
+          let className = action === 'use' ? 'use' : renderClassName(action, i, cmi)
+          let usage = i.usage
+          let toggleable = usage ? usage.toggleable : false
           return (
             <tr className={renderTableStyling(idx)} key={cmi.id*3-1}>
             {/* <td>{mi.activatable ? <button className={mi.action && !props.character_info.actions[mi.action] && amount ? mi.action : 'cannot-cast'} onClick={() => renderClick(mi.name, mi.limit, mi.starting, mi.expendable, mi.modal)}>Use</button> : null}</td>*/}
-            <td><button className={className} onClick={() => renderUse(cmi, i, className)}>Use</button></td>
+            <td><button className={className} onClick={() => renderUse(cmi, i, className, toggleable)}>Use</button></td>
             <td className='underline-hover' onClick={() => props.editModal('magic item', null, cmi.id)}><strong>{cmi.magic_item.name}</strong>{/* cmi.magic_itemlimit && cmi.magic_item.activate ? `(${amount}/${cmi.magic_item.limit})` : null*/}{cmi.magic_item.redux ? `(${cmi.magic_item.limit - props.character_info.hardcode[cmi.magic_item.redux] || 10}/${cmi.magic_item.limit})` : null}</td>
             </tr>
           )

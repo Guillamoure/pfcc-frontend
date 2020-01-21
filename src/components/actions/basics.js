@@ -29,13 +29,14 @@ const Basics = props => {
     } else if (action === 'full' && (actions.standard || actions.move || actions.swift)){
       return null
     } else if (!actions[action]){
-      switch(details){
-        case 'run':
-          return null
-        default:
-          break
-      }
-      if (!action === 'free'){
+      // I have no idea what this below code is trying to do
+      // switch(details){
+      //   case 'run':
+      //     return null
+      //   default:
+      //     break
+      // }
+      if (action !== 'free'){
         props.dispatch({type: 'TRIGGER ACTION', action})
       }
       switch(details){
@@ -157,17 +158,18 @@ const Basics = props => {
             <td>Move</td>
             <td>5 ft</td>
           </tr>
-          {props.character.name === "Festus" && alternateMove('Fly', 50)}
-          {hc.major === "Condor - Major" && alternateMove('Fly', 80)}
-          {hc.major === "Frog - Major" && alternateMove('Swim', 30)}
-          {props.character.name === "Cedrick" && hc.major !== 'Chameleon - Major' && alternateMove('Climb', 20)}
-          {props.character.name === "Cedrick" && hc.major === 'Chameleon - Major' && alternateMove('Climb', 40)}
-          {hc.fly && alternateMove('Fly', 60)}
-          {hc.major === "Squid - Major" && alternateMove('Swim', 60)}
-          {props.character.name === 'Maddox' && dimensionalSlide()}
-          {hc.swim && alternateMove('Swim', 30)}
-          {props.character.name === 'Robby' && alternateMove('Swim', 30)}
-          {hc.swim20 && alternateMove('Swim', 20)}
+            {props.character.name === "Festus" && alternateMove('Fly', 50)}
+            {hc.major === "Condor - Major" && alternateMove('Fly', 80)}
+            {hc.major === "Frog - Major" && alternateMove('Swim', 30)}
+            {props.character.name === "Cedrick" && hc.major !== 'Chameleon - Major' && alternateMove('Climb', 20)}
+            {props.character.name === "Cedrick" && hc.major === 'Chameleon - Major' && alternateMove('Climb', 40)}
+            {hc.fly && alternateMove('Fly', 60)}
+            {hc.major === "Squid - Major" && alternateMove('Swim', 60)}
+            {props.character.name === 'Maddox' && dimensionalSlide()}
+            {hc.swim && alternateMove('Swim', 30)}
+            {props.character.name === 'Robby' && alternateMove('Swim', 30)}
+            {hc.swim20 && alternateMove('Swim', 20)}
+            {renderMovements()}
           <tr>
             <td><button className={canCast('full', 'run')} onClick={() => renderDispatch('full', 'run')}><strong>Move</strong></button></td>
             <td>Run</td>
@@ -176,6 +178,12 @@ const Basics = props => {
         </tbody>
       </table>
     )
+  }
+
+  const renderMovements = () => {
+    console.log(props.character_info.features)
+    let mvmt = props.character_info.features.filter(f => f.type === 'movement')
+    return mvmt.map(m => alternateMove(m.movement, m.feet))
   }
 
   const fight = () => {
@@ -240,12 +248,12 @@ const Basics = props => {
     return (
       <React.Fragment>
       <tr>
-        <td><button className={canCast(action)}><strong>Move</strong></button></td>
+        <td><button className={canCast(action)} onClick={() => renderDispatch('move')}><strong>Move</strong></button></td>
         <td>{type}</td>
         <td>{speed} ft</td>
       </tr>
       {!hc.fly && <tr>
-        <td><button className={canCast(fastAction)}><strong>Move</strong></button></td>
+        <td><button className={canCast(fastAction)} onClick={() => renderDispatch('full', 'run')}><strong>Move</strong></button></td>
         <td onMouseOver={e => renderTooltip(e, type)} onMouseOut={props.mouseOut}>{type}{asterik}</td>
         <td>{fast} ft</td>
       </tr>}

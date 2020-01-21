@@ -29,6 +29,9 @@ const Initiative = props => {
     mod += age === 'Old' ? -2 : 0
     mod += age === 'Venerable' ? -3 : 0
 
+    mod += modifiers()
+
+
     const ogMod = mod
     if (largeMorph){
       mod -= 1
@@ -47,6 +50,18 @@ const Initiative = props => {
       }
     }
   }
+
+  const modifiers = () => {
+    let modifiers = props.character_info.bonuses.reduce((agg, b) => {
+      if (b.statistic === 'Initiative'){
+        agg += b.bonus
+      }
+      return agg
+    }, 0)
+    return modifiers
+  }
+
+
 
   return (
     <div id='init' className='shadow shrink'>
