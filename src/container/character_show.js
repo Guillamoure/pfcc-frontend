@@ -18,6 +18,7 @@ import Actions from './actions'
 import Initiative from '../components/character_show/initiative'
 import TurnActions from '../components/character_show/turn_actions'
 import Details from './details'
+import Campaign from './campaign'
 
 // unfinished hardcoded features
 import Points from '../components/character_show/points'
@@ -25,7 +26,7 @@ import PointModal from '../modals/points'
 import PerformanceModal from '../modals/performance'
 import RageModal from '../modals/rage'
 import Active from '../components/character_show/active'
-import Allies from '../components/character_show/allies'
+// import Allies from '../components/character_show/allies'
 // import SpellDescriptionModal from '../modals/spell'
 import FrogCombat from '../modals/frog'
 import Tooltip from '../modals/tooltip'
@@ -351,7 +352,7 @@ class Character extends React.Component {
         {/* unfinished, hardcoded features */}
         {!!this.state.character && this.state.display === "Combat" && <Points editModal={this.editModal}/>}
         {!!this.state.character && this.state.display === "Combat" && <Active activeEffects={this.state.activeEffects} editModal={this.editModal}/>}
-        {!!this.state.character && this.state.display === "Character" && <Allies editModal={this.editModal}/>}
+        {!!this.state.character && this.state.display === "Character" && <Campaign editModal={this.editModal}/>}
         {!!this.state.character && this.state.display === "Combat" && <Size/>}
         {/* unfinished, hardcoded features */}
 

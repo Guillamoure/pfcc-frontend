@@ -1,75 +1,44 @@
 import React from 'react'
-import localhost from '../../localhost'
+import _ from 'lodash'
 import { connect } from 'react-redux'
+import localhost from '../../localhost'
+import NoteForm from './note_form'
 
 const Note = props => {
 
-  const { title, date, id, details } = props.note
+  const { title, id, details } = props.note
 
   const [edit, setEdit] = React.useState(false);
-  const [newDetails, setNewDetails] = React.useState(details);
-  const [newTitle, setNewTitle] = React.useState(title);
-  const [newDate, setNewDate] = React.useState(date);
 
-  const renderDetails = (e) => {
-    setNewDetails(e.target.value)
-  }
-  const renderTitle = (e) => {
-    setNewTitle(e.target.value)
-  }
-  const renderDate = (e) => {
-    setNewDate(e.target.value)
-  }
-
-  const saveDetails = (e) => {
-    if (newDetails.length){
-      e.preventDefault()
-      console.log('how many fetches did i make?')
-      fetch(`${localhost}/api/v1/notes/${id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-          newTitle, newDate, newDetails
-        })
-      })
-      .then(r => r.json())
-      .then(data => {
-        if (!data.errors){
-          props.dispatch({type: 'NEW NOTE', note: data})
-          setEdit(false)
-        } else {
-          console.log(data)
-        }
-      })
-    }
-  }
-
-  const renderForm = () => {
-    return (
-      <section>
-        <form>
-          <label for='newnote'>
-              <input className='new-note-input' type='text' name='new note title' value={newTitle} onChange={renderTitle}/>
-              <input className='new-note-header' type='text' name='new note date' value={newDate} onChange={renderDate}/>
-              <button onClick={saveDetails}>Save</button>
-              <textarea className='new-note-input' type='text' name='new note' value={newDetails} onChange={renderDetails} rows='14'/>
-          </label>
-        </form>
-      </section>
-    )
+  const deleteNote = (e) => {
+    fetch(`${localhost}/api/v1/notes/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (!data.error){
+        props.dispatch({type: 'REMOVE NOTE', note: data})
+        setEdit(false)
+      } else {
+        console.log(data)
+      }
+    })
   }
 
   const renderNote = () => {
     return (
       <div className='note-list-item' onClick={() => props.makeActive(id)}>
-        <p><strong>{title}</strong> - <small>{date}</small></p>
+        <p><strong>{title}</strong> {props.activeNote !== id ? <small>{props.truncatedDate}</small> : <div><small>{props.date}</small></div>}</p>
         {props.activeNote === id &&
           <React.Fragment>
-            <div>{details}</div>
+            <div id='white-space'>{details}</div>
+            <br/>
             <button onClick={() => setEdit(true)}>Edit</button>
+            <button onClick={deleteNote}>Delete</button>
           </React.Fragment>
         }
       </div>
@@ -78,7 +47,7 @@ const Note = props => {
 
   return (
     <React.Fragment>
-      {edit ? renderForm() : renderNote()}
+      {!edit ? renderNote() : <NoteForm note={props.note} method={'PATCH'} finishFetch={() => setEdit(false)}/>}
     </React.Fragment>
   )
 }

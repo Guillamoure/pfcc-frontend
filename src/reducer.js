@@ -354,12 +354,15 @@ const reducer = (state = initialState, action) => {
       }
       return { ...state, character_info: { ...state.character_info, features } }
     case 'NEW NOTE':
-      let notes
+      var notes
       if (state.character.notes.find(n => n.id === action.note.id)){
         notes = [...state.character.notes].map(n => n.id !== action.note.id ? n : action.note)
       } else {
         notes = [...state.character.notes, action.note]
       }
+      return {...state, character: {...state.character, notes}}
+    case 'REMOVE NOTE':
+      var notes = [...state.character.notes].filter(n => n.id !== action.note.id)
       return {...state, character: {...state.character, notes}}
     default:
       return state

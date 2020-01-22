@@ -83,11 +83,11 @@
   position: relative;
 }
 
-#allies{
+#campaign{
   grid-column-start: 1;
   grid-column-end: 5;
-  grid-row-start: 3;
-  grid-row-end: 8;
+  grid-row-start: 2;
+  grid-row-end: 9;
   overflow: auto;
   max-height: 29em;
   position: relative;
@@ -212,6 +212,7 @@
 
 .note-list-item {
   padding: 2%;
+  margin-bottom: 1%;
   list-style-type: none;
   /* background-color: grey; */
   border: solid 1px #000;
@@ -230,8 +231,24 @@
   width: 100%;
 }
 .new-note-header {
-  width: 87%;
+  width: 85%;
   margin-top: 1%;
   margin-bottom: 1%;
   display: inline-block;
+}
+
+.note-form-edit {
+  margin: 1%;
+  width: 8%;
+  padding: .2%;
+}
+.note-form-cancel {
+  margin: 1%;
+  margin-left: 0%;
+  width: 4%;
+  padding: .2%;
+}
+
+#white-space {
+  white-space: pre;
 }
