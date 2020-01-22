@@ -520,7 +520,7 @@ class Allies extends React.Component {
   render(){
     console.log(this.state.activeAlly)
     return(
-      <div id="allies" className='shadow character-show'>
+      <div>
         <AlliesTab renderTabClick={this.renderTabClick} allies={this.props.character_info.hardcode.monsters} activeAlly={this.state.activeAlly} character={this.props.character.name} removeAlly={this.removeAlly}/>
         {this.renderAlly()}
       </div>

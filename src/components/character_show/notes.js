@@ -1,21 +1,23 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import NewNote from '../notes/new_note'
+import NoteForm from '../notes/note_form'
 import Note from '../notes/note'
+
+import { consolidateDate, truncatedDate } from '../../fuf'
 
 const Notes = props => {
 
-  const [newNote, setNewNote] = React.useState(false);
+  const [newNote, setNoteForm] = React.useState(false);
   const [activeNote, setActiveNote] = React.useState(0);
 
   const renderNew = () => {
     return <li className='note-list-item'>
-      <p><button onClick={() => setNewNote(true)}><strong>+</strong></button> Create New Note</p>
+      <p onClick={() => setNoteForm(true)}>Create New Note</p>
     </li>
   }
 
   const noteCreated = () => {
-    setNewNote(false)
+    setNoteForm(false)
   }
   const makeActive = (id) => {
     if (activeNote === id){
@@ -27,14 +29,14 @@ const Notes = props => {
 
   const renderNotes = () => {
     let sorted = [...props.character.notes].sort((a,b) => b.updated_at > a.updated_at ? 1 : -1)
-    return sorted.map(n => <Note note={n} makeActive={makeActive} activeNote={activeNote}/>)
+    return sorted.map(n => <Note note={n} makeActive={makeActive} activeNote={activeNote} date={consolidateDate(n)} truncatedDate={truncatedDate(n)}/>)
   }
 
   return (
     <div>
       <ul className='note-list'>
         {!newNote && renderNew()}
-        {newNote && <NewNote noteCreated={noteCreated}/>}
+        {newNote && <NoteForm finishFetch={noteCreated} method={'POST'} create={true}/>}
         {renderNotes()}
       </ul>
     </div>

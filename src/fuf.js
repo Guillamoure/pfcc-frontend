@@ -1,3 +1,5 @@
+// FREQUENTLY USED FUNCTIONS
+
 export const mod = (score) => {
   return Math.floor( (score - 10) / 2 )
 }
@@ -65,4 +67,58 @@ export const th = (num) => {
       break
   }
   return num + suffix
+}
+
+export const consolidateDate = (date) => {
+  const { weekday, month, day, age, year } = date
+  return `${weekday}, ${month} ${th(day)}, ${th(age)} Age, ${year}`
+}
+
+export const truncatedDate = (date) => {
+  const { month, day, year } = date
+  let monthNum = 0
+  switch(month){
+    case 'Floreau Budding':
+      monthNum = 1
+      break
+    case 'Floreau Equinox':
+      monthNum = 2
+      break
+    case 'Floreau Blossom':
+      monthNum = 3
+      break
+    case 'Harvest Flourish':
+      monthNum = 4
+      break
+    case 'Harvest Solstice':
+      monthNum = 5
+      break
+    case 'Harvest Scorch':
+      monthNum = 6
+      break
+    case 'Autumn Cornucopia':
+      monthNum = 7
+      break
+    case 'Autumn Equinox':
+      monthNum = 8
+      break
+    case 'Autumn Festival':
+      monthNum = 9
+      break
+    case 'Borealis Snowfall':
+      monthNum = 10
+      break
+    case 'Borealis Solstice':
+      monthNum = 11
+      break
+    case 'Borealis Renewal':
+      monthNum = 12
+      break
+    case 'Lunalis':
+      monthNum = 13
+      break
+    default:
+      break
+  }
+  return `${monthNum}/${day}/${year}`
 }
