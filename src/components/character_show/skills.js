@@ -521,7 +521,6 @@ class Skills extends React.Component {
 
 
   render(){
-    console.log(this.props.character_info.hardcode)
     return(
       <div id='skills' className='shadow'>
         <div name="skill list">

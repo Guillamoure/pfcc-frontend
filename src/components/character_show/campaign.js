@@ -5,8 +5,7 @@ import { consolidateDate } from '../../fuf'
 const CampaignShow = props => {
 
   const renderAllies = () => {
-    let characters = props.character.campaign.characters
-    let charFilter = characters.filter(c => c.id !== props.character.id)
+    let charFilter = props.character.campaign.characters.filter(c => c.id !== props.character.id)
     return charFilter.map(c => <li>{c.name}</li>)
   }
 

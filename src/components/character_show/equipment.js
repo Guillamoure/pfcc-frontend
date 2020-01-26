@@ -83,7 +83,7 @@ class Equipment extends React.Component {
               let equipped = known ? cmis.find(cmi => cmi.magic_item === i).equipped : i.equipped
               let stored = known ? cmis.find(cmi => cmi.magic_item === i).stored_character_magic_item : i.stored_character_magic_item
               let id = known ? cmis.find(cmi => cmi.magic_item === i).id : i.id
-              
+
               return (
                 <>
                   <li className='noStyleLi' style={{fontSize: 'smaller'}} key={idx*i.id*3-1} onClick={() => this.changeSelectedItem(id)}>
@@ -118,6 +118,9 @@ class Equipment extends React.Component {
     if (mi){
       let usage = mi.usage
       let limit = usage.limit
+      if ((limit === 1 && usage.destroy_after_use) || limit === 1000){
+        return null
+      }
       let cmifus = this.props.character.character_magic_item_feature_usages
       let fu = cmifus.find(fu => fu.feature_usage_id === usage.id)
       let currentUsage = fu.current_usage || 0

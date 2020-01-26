@@ -8,6 +8,7 @@ const initialState = {
     hardcode: {},
     bonuses: [],
     features: [],
+    effects: [],
     size: 'Medium',
     actions: {
       full: false,
@@ -345,6 +346,14 @@ const reducer = (state = initialState, action) => {
         bonuses = [...state.character_info.bonuses, action.bonus]
       }
       return { ...state, character_info: { ...state.character_info, bonuses } }
+    case 'EFFECT':
+      let effects
+      if (action.alreadyEquipped){
+        effects = state.character_info.effects.filter(b => b.source !== action.effect.source)
+      } else {
+        effects = [...state.character_info.effects, action.effect]
+      }
+      return { ...state, character_info: { ...state.character_info, effects } }
     case 'ACTIVATED FEATURE':
       let features
       if (action.feature.remove){
@@ -364,6 +373,20 @@ const reducer = (state = initialState, action) => {
     case 'REMOVE NOTE':
       var notes = [...state.character.notes].filter(n => n.id !== action.note.id)
       return {...state, character: {...state.character, notes}}
+    case 'DONE PREPARING':
+      return {...state, character: {...state.character, is_done_preparing_spells: true}}
+    case 'EQUIP CMI':
+      let cmis = [...state.character.character_magic_items]
+      let filteredCMIs = cmis.map(mi => {
+        if (mi.id === action.id){
+          let altered = {...mi}
+          altered.equipped = !mi.equipped
+          return altered
+        } else {
+          return mi
+        }
+      })
+      return {...state, character: {...state.character, character_magic_items: filteredCMIs}}
     default:
       return state
   }

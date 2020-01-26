@@ -29,11 +29,11 @@ const UserItemAdjustment = props => {
   const { item } = props
   const { equipped, known } = props.cmi
 
-  const canEquip = item.slot === 'potion' || item.slot === 'none' ? false : true
-  let canBeStored = !props.cmi.stored_character_magic_item && !!containers
-  let hasContents = !!item.features.find(f => f.feature_container)
   let featureWithUsage = item.features.find(f => f.usage)
   let usage = featureWithUsage ? featureWithUsage.usage : false
+  const canEquip = ((item.slot !== 'potion' && item.slot !== 'none') || usage.wieldable) ? true : false
+  let canBeStored = !props.cmi.stored_character_magic_item && !!containers
+  let hasContents = !!item.features.find(f => f.feature_container)
   let adjustable = usage ? usage.adjustable : false
 
   const destroyItem = () => {
@@ -73,24 +73,31 @@ const UserItemAdjustment = props => {
               f.skill_bonuses.forEach(sk => {
                 const { skill_id, bonus, bonus_type, duration } = sk
                 // const conditions = sk.feature_skill_bonus_conditions.map(c => {return {condition: c.condition}})
-                this.props.dispatch({type: 'BONUS', bonus: {type: 'skill', skill_id, bonus, bonus_type, duration, source: item.name}})
+                props.dispatch({type: 'BONUS', bonus: {type: 'skill', skill_id, bonus, bonus_type, duration, source: item.name}, alreadyEquipped: equipped})
               })
             }
             if (!!f.stat_bonuses.length){
               f.stat_bonuses.forEach(st => {
                 const { statistic, bonus, bonus_type, duration } = st
                 const conditions = st.feature_stat_bonus_conditions.map(c => {return {condition: c.condition}})
-                this.props.dispatch({type: 'BONUS', bonus: {type: 'stat', statistic, bonus, bonus_type, duration, source: item.name, conditions}})
+                props.dispatch({type: 'BONUS', bonus: {type: 'stat', statistic, bonus, bonus_type, duration, source: item.name, conditions}, alreadyEquipped: equipped})
               })
             }
             if (!!f.skill_notes.length){
               f.skill_notes.forEach(sk => {
                 const { skill_id, note} = sk
-                this.props.dispatch({type: 'BONUS', bonus: {type: 'note', skill_id, note, source: item.name}})
+                props.dispatch({type: 'BONUS', bonus: {type: 'note', skill_id, note, source: item.name}, alreadyEquipped: equipped})
+              })
+            }
+            if (!!f.languages.length){
+              f.languages.forEach(l => {
+                const { language, note } = l
+                props.dispatch({type: 'EFFECT', effect: {type: 'language', language, note, source: item.name}, alreadyEquipped: equipped})
               })
             }
           })
-          props.dispatch({type: 'CHARACTER', character: data.character })
+          // props.dispatch({type: 'CHARACTER', character: data.character })
+          props.dispatch({type: 'EQUIP CMI', id: props.cmi.id})
         }
       })
   }

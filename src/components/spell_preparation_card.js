@@ -1,5 +1,8 @@
 import React from 'react'
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCheck } from '@fortawesome/free-solid-svg-icons'
+
 const SpellPreparationCard = props => {
 
   const properSpellLevelRange = () => {
@@ -13,24 +16,17 @@ const SpellPreparationCard = props => {
   }
 
   const isThisTargeted = () => {
-    if (props.activeSpell === props.knownSpell.spell.id){
-      return (
-        <div>
-          <span>
-            <button onClick={props.renderSelectedSpell}>Prepare</button>
-          </span>
-          <span>
-            <label>
-              Spell Level:
-              <select name="level" value={props.spellLevel} onChange={props.renderSpellLevelEdit}>
-                <option value="-"> - </option>
-                {properSpellLevelRange().map(asl => <option value={asl}>{asl}</option>)}
-              </select>
-            </label>
-          </span>
-        </div>
-      )
-    }
+    return (
+      <div>
+          <label>
+            Spell Level:
+            <select name="level" value={props.spellLevel} onChange={props.renderSpellLevelEdit}>
+              <option value="-"> - </option>
+              {properSpellLevelRange().map(asl => <option value={asl}>{asl}</option>)}
+            </select>
+          </label>
+      </div>
+    )
   }
 
   const toggleClick = () => {
@@ -41,11 +37,31 @@ const SpellPreparationCard = props => {
     }
   }
 
+  const chosen = () => {
+    let prepared = false
+    props.preparedSpells.forEach(psp => {
+      if (props.knownSpell.spell.id === psp.spell.id){
+        prepared = true
+      }
+    })
+    props.goingToBePreparedSpells.forEach(gtbps => {
+      if (props.knownSpell.spell.id === gtbps.spell_id){
+        prepared = true
+      }
+    })
+
+    return prepared ? <FontAwesomeIcon icon={faCheck} size='1x'/> : ''
+  }
+
+
   return (
-    <div>
-      <span onClick={toggleClick}>{props.knownSpell.spell.name}</span>
-      {isThisTargeted()}
-    </div>
+    <tr>
+      <td className='bordered-table'>{props.knownSpell.klass_spell.spell_level}</td>
+      <td className='bordered-table'>{chosen()}</td>
+      <td className='bordered-table' onClick={toggleClick}>{props.knownSpell.spell.name}</td>
+      <td className='bordered-table'>{props.activeSpell === props.knownSpell.spell.id && isThisTargeted()}</td>
+      {(props.spellLevel >= 0 && props.spellLevel <= 9) && props.activeSpell === props.knownSpell.spell.id && <td><button onClick={props.renderSelectedSpell}>Prepare</button></td>}
+    </tr>
   )
 }
 
