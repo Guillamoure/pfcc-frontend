@@ -37,6 +37,11 @@
   grid-template-columns: 3fr 3fr 3fr 3fr 3fr 3fr .1fr;
 }
 
+.container-65-35 {
+  display: grid;
+  grid-template-columns: 65% 35%;
+}
+
 .character-show {
   margin: .5em;
   padding: .2em;
@@ -496,7 +501,7 @@
 }
 
 .spacing {
-  margin: .5em;
+  margin: .1em;
 }
 
 .odd {
@@ -701,4 +706,9 @@
   display: inline-block;
   position: absolute;
   right: 3%;
+}
+
+.bordered-table {
+  border: 1px solid black;
+  border-collapse: collapse;
 }

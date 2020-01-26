@@ -13,7 +13,7 @@ class HP extends React.Component {
     const sortedClasses = this.props.character.character_klasses.sort((a,b) => a.level - b.level)
     let currentHP = []
     sortedClasses.forEach(cl => {
-      let hit_die = this.props.character.klasses.find(kl => kl.id === cl.klass_id).hit_die
+      let hit_die = this.props.character.uniq_klasses.find(kl => kl.id === cl.klass_id).hit_die
       if ((cl.level === 1) && (hit_die !== cl.hp)) {
         return currentHP.push(hit_die)
       }
@@ -42,7 +42,7 @@ class HP extends React.Component {
   renderClasses = () => {
     const sortedClasses = this.props.character.character_klasses.sort((a,b) => a.level - b.level)
     return sortedClasses.map((char_klass, idx) => {
-      const info = this.props.character.klasses.find(kl => kl.id === char_klass.klass_id)
+      const info = this.props.character.uniq_klasses.find(kl => kl.id === char_klass.klass_id)
       return (
         <div>
           <label>Level {char_klass.level}: {info.name}</label>

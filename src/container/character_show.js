@@ -139,6 +139,12 @@ class Character extends React.Component {
                   this.props.dispatch({type: 'BONUS', bonus: {type: 'note', skill_id, note, source: cmi.magic_item.name}})
                 })
               }
+              if (!!f.languages.length){
+                f.languages.forEach(l => {
+                  const { language, note } = l
+                  this.props.dispatch({type: 'EFFECT', effect: {type: 'language', language, note, source: cmi.magic_item.name}})
+                })
+              }
             })
           }
         })

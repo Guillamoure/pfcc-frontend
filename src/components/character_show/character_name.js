@@ -107,6 +107,15 @@ class CharacterName extends React.Component {
 
   yellowBadge = () => {
     let badge = false
+
+    let prepared = false
+    this.props.character_info.classes.forEach(cl => {
+      if (cl.spellcasting && cl.spellcasting.prepared){
+        prepared = true
+      }
+    })
+    badge = prepared ? (this.props.character.is_done_preparing_spells ? true : badge) : badge
+
     return badge
   }
 

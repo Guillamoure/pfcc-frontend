@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 import localhost from '../localhost'
+import { th } from '../fuf'
 
 import SpellPreparationCard from '../components/spell_preparation_card'
 import PreparedCard from '../components/prepared_card'
@@ -26,36 +27,9 @@ class PrepareSpells extends React.Component {
       this.setState({knownSpells: data}, this.availableClasses)
     })
   }
-
-  renderSubmit = (e) => {
-    e.preventDefault()
-    let info = {
-      spells: this.state.selectedSpells,
-      character_id: this.props.character.id
-    }
-    fetch(`${localhost}/api/v1/prepared_spells`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify(info)
-    })
-    .then(r => r.json())
-    .then(data => {
-      this.props.dispatch({type: 'PREPARE SPELLS', spells: data })
-      this.props.exitModal()
-    })
-  }
-
-  renderKnownSpells = () => {
-    let ksSortedSpellLevel = this.state.knownSpells.sort((ks1, ks2) => {
-      return ks1.klass_spell.spell_level - ks2.klass_spell.spell_level
-    })
-    let ksSortedFilteredSpellLevel = ksSortedSpellLevel.filter(ksssl => ksssl.klass.id === this.state.activeClass)
-    return ksSortedFilteredSpellLevel.map(kssfsl => <SpellPreparationCard knownSpell={kssfsl} renderClick={this.renderClick} activeSpell={this.state.activeSpell} spellLevel={this.state.spellLevel} renderSpellLevelEdit={this.renderSpellLevelEdit} renderSelectedSpell={this.renderSelectedSpell} availableSpellLevels={this.state.availableSpellLevels}/>)
-  }
-
+  // CREATES AN ARRAY OF KLASS IDS
+  // THESE IDS REPRESENT ALL THE AVAILABLE KLASSES
+  // IF THERE IS ONLY ONE OF THESE KLASSES, MAKE IT THE ACTIVE ONE
   availableClasses = () => {
     let classes = []
     this.state.knownSpells.forEach(ks => {
@@ -68,6 +42,43 @@ class PrepareSpells extends React.Component {
     } else {
       this.setState({activeClass: classes[0], allAvailableClasses: classes})
     }
+  }
+
+  renderSubmit = (e) => {
+    e.preventDefault()
+    console.log(this.state.availableSpellLevels)
+    let info = {
+      spells: this.state.selectedSpells,
+      character_id: this.props.character.id,
+      is_done_preparing_spells: !!this.state.availableSpellLevels.length ? false : true
+    }
+    fetch(`${localhost}/api/v1/prepared_spells`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(info)
+    })
+    .then(r => r.json())
+    .then(data => {
+      this.props.dispatch({type: 'PREPARE SPELLS', spells: data })
+      if (!this.state.availableSpellLevels.length){
+        this.props.dispatch({type: 'DONE PREPARING'})
+      }
+      this.props.exitModal()
+    })
+  }
+
+  // SORT THE SPELLS BY THEIR LEVEL AND ALPHABETICAL
+  // THEN, MAKE CARDS FOR EACH OF THEM
+  renderKnownSpells = () => {
+    let ksSortedSpellLevel = this.state.knownSpells.sort((ks1, ks2) => {
+      return ks1.klass_spell.spell_level - ks2.klass_spell.spell_level
+    })
+    let ksSortedFilteredSpellLevel = ksSortedSpellLevel.filter(ksssl => ksssl.klass.id === this.state.activeClass)
+
+    return ksSortedFilteredSpellLevel.map(kssfsl => <SpellPreparationCard knownSpell={kssfsl} renderClick={this.renderClick} activeSpell={this.state.activeSpell} spellLevel={this.state.spellLevel} renderSpellLevelEdit={this.renderSpellLevelEdit} renderSelectedSpell={this.renderSelectedSpell} availableSpellLevels={this.state.availableSpellLevels} preparedSpells={this.props.character.prepared_spells} goingToBePreparedSpells={this.state.selectedSpells}/>)
   }
 
   displayClassOptions = () => {
@@ -110,6 +121,9 @@ class PrepareSpells extends React.Component {
   }
 
   displaySelectedSpells = () => {
+    let activeKlass = this.props.character_info.classes.find(cl => cl.id === this.state.activeClass)
+
+
     return this.state.spellsPerDay.map(spd => {
       let totalSpellsPerDay = spd.spells
       // can't get bonus spells per day for cantrips
@@ -129,21 +143,28 @@ class PrepareSpells extends React.Component {
       if (remainingSpells === 0 && this.state.availableSpellLevels.includes(spd.spell_level)){
         this.checkAvailableSpellLevel(spd.spell_level)
       }
-      return <span> <strong>|</strong> <i>{this.renderTH(spd.spell_level)}</i>: <strong>{(remainingSpells || remainingSpells === 0) ? remainingSpells : totalSpellsPerDay}</strong></span>
+      return <span> <strong>|</strong> <i>{th(spd.spell_level)}</i>: <strong>{(remainingSpells || remainingSpells === 0) ? remainingSpells : totalSpellsPerDay}</strong></span>
     })
   }
 
   remainingSpells = () => {
     let spells = []
+    let preparingSpells = 'spells_per_days'
     // for each class that a character has levels in
     this.props.character_info.classes.forEach(klass => {
       //find that class
       const c = this.props.classes.find(k => k.id === klass.id)
+      // does this class use spells_per_day for how many spells they can prepare
+      // or do they have a separate table for prepared_amount
+      let spellcasting = this.props.character_info.classes.find(cl => cl.id === c.id).spellcasting
+      if (spellcasting && spellcasting.prepared_amount){
+        preparingSpells = 'prepared_amounts'
+      }
       // if that class has spells
-      if (c && c.spells_per_days.length){
+      if (c && c[preparingSpells].length){
         // go through the list of spells per day,
         // and find the spells they can cast per day at their class level
-        let spellsAtThisLevel = c.spells_per_days.filter(spd => {
+        let spellsAtThisLevel = c[preparingSpells].filter(spd => {
           return spd.klass_level === klass.level
         })
         // push into an array
@@ -161,24 +182,17 @@ class PrepareSpells extends React.Component {
     this.setState({spellsPerDay: spells[0].spd, availableSpellLevels})
   }
 
-  renderTH = (num) => {
-    switch (parseInt(num)){
-      case 1:
-        return "1st"
-      case 2:
-        return "2nd"
-      case 3:
-        return "3rd"
-      default:
-        return `${num}th`
-    }
-  }
-
   bonusSPD = (klass_id, spell_level) => {
-    let klass = this.props.classes.find(cl => cl.id === klass_id)
-    let spellcasting = klass.klass_features.find(kf => kf.name === "Spells")
-    let ab = _.lowerCase(spellcasting.spellcasting.ability_score)
-    return ((this.props.character_info.ability_scores[ab] - 10) / 2.0) >= spell_level ? true : false
+    let spellcasting = this.props.character_info.classes.find(cl => cl.id === klass_id).spellcasting
+    let ab = _.lowerCase(spellcasting.ability_score)
+    if (spellcasting.prepared_amount){
+      // if the class spellcasting has another table for calculating how many spells you can prepare
+      // vs how many spells you can cast on a given day
+      // you don't get a bonus to spells per day
+      return false
+    } else {
+      return ((this.props.character_info.ability_scores[ab] - 10) / 2.0) >= spell_level ? true : false
+    }
   }
 
   renderPreparedSpells = () => {
@@ -205,10 +219,10 @@ class PrepareSpells extends React.Component {
     this.setState({availableSpellLevels: filtered})
   }
 
-  removePreparedSpell = (spell_id) => {
+  removePreparedSpell = (spell_id, level) => {
     let found = false
     let filtered = this.state.selectedSpells.filter(ss => {
-      if (ss.id === spell_id && !found){
+      if (ss.spell_id === spell_id && ss.level === level && !found){
         found = true
         // prevent duplicates from being filtered out
         return false
@@ -221,16 +235,30 @@ class PrepareSpells extends React.Component {
 
   render(){
     return (
-      <div className="container-2">
+      <div className="container-65-35">
         <div>
         {this.state.activeClass && this.displayClassOptions()}
-        {this.renderKnownSpells()}
+        <table className='bordered-table'>
+          <tr>
+            <th className='bordered-table'>Level</th>
+            <th className='bordered-table'>P?</th>
+            <th className='bordered-table'>Spell</th>
+            <th className='bordered-table'>Prepared Level</th>
+          </tr>
+          {this.renderKnownSpells()}
+        </table>
         </div>
         <div>
           {this.state.spellsPerDay && this.displaySelectedSpells()}
           {!this.state.spellsPerDay && this.remainingSpells()}
-          {this.state.activeClass && this.renderAlreadyPreparedSpell()}
-          {this.renderPreparedSpells()}
+          <table className='bordered-table'>
+            <tr>
+              <th className='bordered-table'>Spell</th>
+              <th className='bordered-table'>Level</th>
+            </tr>
+            {this.state.activeClass && this.renderAlreadyPreparedSpell()}
+            {this.renderPreparedSpells()}
+          </table>
           {this.state.selectedSpells.length ? <button onClick={this.renderSubmit}>Prepare your spells!</button> : null}
         </div>
       </div>

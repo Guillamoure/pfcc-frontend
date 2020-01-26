@@ -8,20 +8,32 @@ import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 class Details extends React.Component {
 
   languages = (name) => {
+    let languages = []
     switch(name){
       case "Nettie":
-        return ["Common", "Draconic", "Aklo", "Infernal", "Sylvan", "Terran", "Undercommon", "Abyssal", "Celestial", "Sphinx", "Auran"]
+        languages = ["Common", "Draconic", "Aklo", "Infernal", "Sylvan", "Terran", "Undercommon", "Abyssal", "Celestial", "Sphinx", "Auran"]
+        break
       case "Cedrick":
-        return ["Common", "Grippli", "Druidic", "Infernal", "Draconic", "Sylvan"]
+        languages = ["Common", "Grippli", "Druidic", "Infernal", "Draconic", "Sylvan"]
+        break
       case 'Maddox':
-        return ["Common", "Samsaran", 'Celestrial, Infernal', 'Protean', 'Aklo', 'Draconic', 'Sphinx', 'Elven', 'Gnome', 'Abyssal', 'Sylvan', 'Drow']
+        languages = ["Common", "Samsaran", 'Celestrial, Infernal', 'Protean', 'Aklo', 'Draconic', 'Sphinx', 'Elven', 'Gnome', 'Abyssal', 'Sylvan', 'Drow']
+        break
       case 'Merg':
-        return ['Common', 'Orc', 'Sylvan', 'Terran', 'Draconic', 'Giant', 'Undercommon']
+        languages = ['Common', 'Orc', 'Sylvan', 'Terran', 'Draconic', 'Giant', 'Undercommon']
+        break
       case 'Robby':
-        return ['Common', 'Aquan', 'Auran', 'Ignan', 'Halfling (Jabberjaw Gem)', 'Abyssal (Jabberjaw Gem)', 'Dwarven (Jabberjaw Gem)', 'Sylvan (Jabberjaw Gem)', 'Undercommon (Jabberjaw Gem)']
+        languages = ['Common', 'Aquan', 'Auran', 'Ignan', 'Halfling (Jabberjaw Gem)', 'Abyssal (Jabberjaw Gem)', 'Dwarven (Jabberjaw Gem)', 'Sylvan (Jabberjaw Gem)', 'Undercommon (Jabberjaw Gem)']
+        break
       default:
-        return []
+        break
     }
+    this.props.character_info.effects.forEach(e => {
+      if (e.type === 'language'){
+        languages.push(!!e.note.length ? `${e.language} (${e.note})` : e.language)
+      }
+    })
+    return languages
   }
 
   render(){
@@ -60,7 +72,8 @@ const mapStatetoProps = (state) => {
   return {
     currentUser: state.currentUser,
     admin: state.admin,
-    character: state.character
+    character: state.character,
+    character_info: state.character_info
   }
 }
 
