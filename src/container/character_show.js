@@ -51,6 +51,7 @@ import HPChanges from '../modals/hp_changes'
 import SpellDescriptionModal from '../modals/spell'
 import MagicItemModal from '../modals/magic_item'
 import CharacterFeatureModal from '../modals/character_feature_modal'
+import WeaponModal from '../modals/weapon'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCaretRight } from '@fortawesome/free-solid-svg-icons'
@@ -81,7 +82,7 @@ class Character extends React.Component {
     display: "Adventure",
     activeEffects: [],
     spellId: 0,
-    cmiId: 0,
+    characterItemID: 0,
     cfId: 0,
     toolTip: false,
     toolTipX: 0,
@@ -276,8 +277,8 @@ class Character extends React.Component {
     }
     if (section === 'spell' && !!id){
       this.setState({modal: section, spellId: id})
-    } else if (section === 'magic item' && !!id){
-      this.setState({modal: section, cmiId: id})
+    } else if ((section === 'magic item' || section === 'weapon') && !!id){
+      this.setState({modal: section, characterItemID: id})
     } else if (section === 'cFeature' && !!id){
       this.setState({modal: section, cfId: id, detail})
     } else {
@@ -287,11 +288,11 @@ class Character extends React.Component {
 
   clickOut = (e) => {
     if(e.target.classList[0] === "page-dimmer"){
-      this.setState({modal: false, spellId: 0, cmiId: 0})
+      this.setState({modal: false, spellId: 0, characterItemID: 0})
     }
   }
   exitModal = () => {
-    this.setState({modal: false, spellId: 0, cmiId: 0, cfId: 0, detail: ''})
+    this.setState({modal: false, spellId: 0, characterItemID: 0, cfId: 0, detail: ''})
   }
 
   renderTooltip = (e, comment) => {
@@ -344,7 +345,7 @@ class Character extends React.Component {
       <span className="container-8 character">
         {this.state.character.race && <CharacterName character={this.state.character} editModal={this.editModal}/>}
         {this.state.character.race && this.state.display === "Adventure" && <AbilityScores character={this.state.character} editModal={this.editModal}/>}
-        {this.state.character.race && this.state.display === "Adventure" && <FeaturesTraits character={this.state.character} editModal={this.editModal} exitModal={this.exitModal} cmiId={this.state.cmiId}/>}
+        {this.state.character.race && this.state.display === "Adventure" && <FeaturesTraits character={this.state.character} editModal={this.editModal} exitModal={this.exitModal} characterItemID={this.state.characterItemID}/>}
         {this.state.character.race && this.state.display === "Character" && <Details character={this.state.character} editModal={this.editModal}/>}
         {this.state.character.race && (this.state.display === "Adventure" || this.state.display === "Combat") && <Saves character={this.state.character} display={this.state.display} renderTooltip={this.renderTooltip} mouseOut={this.mouseOut}/>}
         {this.state.character.race && (this.state.display === "Adventure" || this.state.display === "Combat") && <HP character={this.state.character} editModal={this.editModal} display={this.state.display}/>}
@@ -369,8 +370,9 @@ class Character extends React.Component {
         {this.state.modal === 'notifications' && <Notifications exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit} changeActiveEffects={this.changeActiveEffects}/>}
         {this.state.modal === 'hitPoints' && <HPChanges exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
         {(this.state.modal === 'spell' && this.state.spellId !== 0) && <SpellDescriptionModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} spellId={this.state.spellId}/>}
-        {(this.state.modal === 'magic item' && this.state.cmiId !== 0) && <MagicItemModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} cmiId={this.state.cmiId}/>}
+        {(this.state.modal === 'magic item' && this.state.characterItemID !== 0) && <MagicItemModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} characterItemID={this.state.characterItemID}/>}
         {(this.state.modal === 'cFeature' && this.state.cfId !== 0) && <CharacterFeatureModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} cfId={this.state.cfId} detail={this.state.detail}/>}
+        {(this.state.modal === 'weapon' && this.state.characterItemID !== 0) && <WeaponModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} characterItemID={this.state.characterItemID}/>}
 
         {/* unfinished, hardcoded features */}
         {this.state.modal === 'points' && <PointModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}

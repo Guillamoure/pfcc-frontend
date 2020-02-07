@@ -387,6 +387,18 @@ const reducer = (state = initialState, action) => {
         }
       })
       return {...state, character: {...state.character, character_magic_items: filteredCMIs}}
+    case 'EQUIP WEAPON':
+      let cws = [...state.character.character_weapons]
+      let filteredCWs = cws.map(w => {
+        if (w.id === action.id){
+          let altered = {...w}
+          altered.equipped = !w.equipped
+          return altered
+        } else {
+          return w
+        }
+      })
+      return {...state, character: {...state.character, character_weapons: filteredCWs}}
     default:
       return state
   }
@@ -445,6 +457,8 @@ const hardcoded = (state, action) => {
       return {speed: 30, points: 4, charmedLife: 0, ammo:[{name: 'arrow', amount: 11}, {name: 'cartridge', amount: 0}, {name: '+1 cunning arrow', amount: 1}], weaponAmmo: [{weapon: 'Long Bow', ammo: 'arrow'}, {weapon: 'Revolver', ammo: 'cartridge'}]}
     case 'Festus':
       return {speed: 35}
+    case 'Grackle':
+      return {speed: 30, bombs: 0, ammo: [{name: 'arrow', amount: 20}], weaponAmmo:[{weapon: 'Long Bow', ammo: 'arrow'}]}
     default:
       return {}
   }

@@ -1,14 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import Portal from '../portal'
-import localhost from '../localhost'
 
-import MagicItemSummary from '../components/magic_item_summary'
+import WeaponSummary from '../components/weapon_summary'
 
-class MagicItemModal extends React.Component {
+class WeaponModal extends React.Component {
 
   findItem = () => {
-    return this.props.character.character_magic_items.find(cmi => cmi.id === this.props.characterItemID)
+    return this.props.character.character_weapons.find(cw => cw.id === this.props.characterItemID)
   }
 
   render(){
@@ -16,7 +15,7 @@ class MagicItemModal extends React.Component {
       <Portal>
       <div className="page-dimmer" onClick={this.props.clickOut}>
         <div id='spell-desc' name="background">
-          <MagicItemSummary item={this.findItem().magic_item} cmi={this.findItem()} editModal={this.props.editModal} exitModal={this.props.exitModal}/>
+          <WeaponSummary item={this.findItem().weapon} cw={this.findItem()} editModal={this.props.editModal} exitModal={this.props.exitModal}/>
         </div>
       </div>
       </Portal>
@@ -31,4 +30,4 @@ const mapStatetoProps = (state) => {
   }
 }
 
-export default connect(mapStatetoProps)(MagicItemModal)
+export default connect(mapStatetoProps)(WeaponModal)

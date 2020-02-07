@@ -19,6 +19,8 @@ const Attacks = props => {
         return robby()
       case 'Festus':
         return festus()
+      case 'Grackle':
+        return grackle()
       default:
         return null
     }
@@ -106,6 +108,31 @@ const Attacks = props => {
           <td>Ignore DR/magic</td>
         </tr>
 
+      </React.Fragment>
+    )
+  }
+
+  const grackle = () => {
+    return (
+      <React.Fragment>
+        <tr>
+          <td><button className={canCast('standard')} onClick={() => renderDispatch('standard', 'Long Bow')}><strong>Attack</strong></button></td>
+          <td onClick={() => props.editModal('ammo', null, null, {name: 'weapon', type: 'ACTIVE WEAPON', weapon: 'Long Bow'})}>Long Bow {renderAmmo('Long Bow')}</td>
+          <td style={renderNum('abD', null, true)}>{renderNum('abD') >= 0 ? '+' + (renderNum('abD')) : (renderNum('abD'))}</td>
+          <td>100 ft</td>
+          <td>{renderDamageDice('1d8')}<span style={renderNum('damageD', null, true)}>{renderNum('damageD') >= 0 ? '+' + (renderNum('damageD')) : (renderNum('damageD'))}</span> P</td>
+          <td>x3</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
+          <td>Unarmed</td>
+          <td style={renderNum('abS', null, true)}>+{renderNum('abS')}</td>
+          <td>-</td>
+          <td>{renderDamageDice('1d3')}<span style={renderNum('damageS', null, true)}>+{renderNum('damageS')}</span> B {sparks()}</td>
+          <td>x2</td>
+          <td>Non-lethal</td>
+        </tr>
       </React.Fragment>
     )
   }
@@ -404,6 +431,7 @@ const Attacks = props => {
     bab = n === 'Robby' ? 6 : bab
     bab = n === 'Festus' ? 6 : bab
     bab = n === 'Nettie' ? 5 : bab
+    bab = n === 'Grackle' ? 5 : bab
     size = size === "Huge" ? -2 : size
     size = size === "Large" ? -1 : size
     size = size === "Medium" ? 0 : size

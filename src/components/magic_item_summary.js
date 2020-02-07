@@ -80,7 +80,7 @@ const MagicItemSummary = props => {
     return (
       <React.Fragment>
         <h3 style={{display: 'inline-block'}}>{item.name}</h3>
-        <UserItemAdjustment cmi={props.cmi} item={props.item} exitModal={props.exitModal} editModal={props.editModal}/>
+        <UserItemAdjustment characterItem={props.cmi} item={props.item} exitModal={props.exitModal} editModal={props.editModal} url='character_magic_item'/>
         <div><strong>Price</strong> {item.price_in_gp} gp; <strong>Slot</strong> {item.slot}; <strong>CL</strong> {th(item.caster_level)}; <strong>Weight</strong> {item.weight} lb; <strong>Aura</strong> {item.aura}</div>
         <br/>
         <div style={{marginBottom: '1%', paddingBottom: '.8%', borderBottom: 'double'}}></div>
