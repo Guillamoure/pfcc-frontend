@@ -114,8 +114,7 @@ class CharacterName extends React.Component {
         prepared = true
       }
     })
-    badge = prepared ? (this.props.character.is_done_preparing_spells ? true : badge) : badge
-
+    badge = prepared ? (!this.props.character.is_done_preparing_spells ? true : badge) : badge
     return badge
   }
 

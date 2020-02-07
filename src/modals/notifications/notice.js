@@ -4,8 +4,8 @@ import localhost from '../../localhost'
 
 class Notice extends React.Component {
 
-  fetchDiscovered = (id) => {
-    fetch(`${localhost}/api/v1/character_magic_items_discovered/${id}`, {
+  fetchDiscovered = (id, detail) => {
+    fetch(`${localhost}/api/v1/${detail}_discovered/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -67,17 +67,32 @@ class Notice extends React.Component {
   }
 
   newItems = () => {
-    let newItems = this.props.character.character_magic_items.filter(cmi => !cmi.discovered)
+    let undiscoveredCMIs = this.props.character.character_magic_items.filter(cmi => !cmi.discovered)
+    let undiscoveredCWs = this.props.character.character_weapons.filter(cw => !cw.discovered)
+    let newItems = [...undiscoveredCMIs, ...undiscoveredCWs]
+
     if (!!newItems.length){
       return (
         <div>
           <h3>New Items</h3>
           <ul>
-            {newItems.map((cmi, idx) => <li key={(idx+10)*3-1}>{cmi.known ? cmi.magic_item.name : cmi.false_desc} <button onClick={() => this.fetchDiscovered(cmi.id)}>Collect</button></li>)}
+            {this.newItemLI(undiscoveredCMIs, 'character_magic_items')}
+            {this.newItemLI(undiscoveredCWs, 'character_weapons')}
           </ul>
         </div>
       )
     }
+  }
+
+  newItemLI = (array, detail) => {
+
+    return array.map((ni, idx) => {
+      let name = ''
+      name = detail ==='character_magic_items' ? (ni.known ? ni.magic_item.name : ni.false_desc) : name
+      name = detail === 'character_weapons' ? (ni.name ? ni.name : ni.weapon.name) : name
+      debugger
+      return <li key={(idx+10)*3-1}>{name} <button onClick={() => this.fetchDiscovered(ni.id, detail)}>Collect</button></li>
+    })
   }
 
   tempFeatures = () => {

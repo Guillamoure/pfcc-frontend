@@ -23,7 +23,7 @@ class FeaturesTraits extends React.Component {
           {this.state.activeTab === "Features" && <Features character={this.props.character} editModal={this.props.editModal}/>}
           {this.state.activeTab === "Traits" && <Traits character={this.props.character}/>}
           {this.state.activeTab === "Feats" && <Feats editModal={this.props.editModal}/>}
-          {this.state.activeTab === "Equipment" && <Equipment editModal={this.props.editModal} exitModal={this.props.exitModal} cmiId={this.props.cmiId}/>}
+          {this.state.activeTab === "Equipment" && <Equipment editModal={this.props.editModal} exitModal={this.props.exitModal} cmiId={this.props.characterItemID}/>}
         </div>
       </div>
     )
