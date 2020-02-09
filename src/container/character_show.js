@@ -202,7 +202,7 @@ class Character extends React.Component {
         let characterKlass = this.props.character.character_klasses.filter(ck => ck.klass_id === id)
         const level = characterKlass.length
         let klass = this.props.character.uniq_klasses.find(k => k.id === id)
-        let spellsFeature = klass.klass_features.find(f => f.name === 'Spells')
+        let spellsFeature = klass.klass_features.find(f => f.name === 'Spells' || f.name === 'Alchemy')
         let spellcasting = spellsFeature ? spellsFeature.spellcasting : null
 
         completedClasses.push(id)
