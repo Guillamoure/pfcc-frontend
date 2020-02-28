@@ -1,11 +1,16 @@
 import React from 'react'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSortDown } from '@fortawesome/free-solid-svg-icons'
+import { faCircle } from '@fortawesome/free-solid-svg-icons'
 
 
-class Characters extends React.Component {
+const Characters = props => {
 
-  renderClasses = (character) => {
+  const [show, setShow] = React.useState(false);
+
+  const renderClasses = (character) => {
     // let klasses = {}
     // character.klasses.forEach(klass => {
     //   if (klasses[klass.name]) {
@@ -25,39 +30,50 @@ class Characters extends React.Component {
     return mappedClasses.join(", ")
   }
 
-  renderCharacters = () => {
-    const sortedCharacters = this.props.characters.sort((a,b) => a.id - b.id)
-    return sortedCharacters.map(char => {return (
-      <div className='card' onClick={() => this.props.history.push(`/characters/${char.id}`)} key={char.id} >
-        <span className='card-char'>
-        <div style={{padding: '.5em', lineHeight: '1.2', fontSize: '1.5em'}}>{char.name}</div>
-        <div style={{padding: '.5em'}}>{char.race.name}</div>
-        <div style={{padding: '.5em', lineHeight: '1.2'}}>{this.renderClasses(char)}</div>
-        </span>
-        <div className="fade"></div>
+  const renderCharacters = () => {
+    const sortedCharacters = props.characters.sort((a,b) => a.name > b.name ? 1 : -1)
+    if (localStorage.computer === 'true'){
+      return sortedCharacters.map(char => {
+        return (
+          <div className='card' onClick={() => props.history.push(`/characters/${char.id}`)} key={char.id} >
+          <span className='card-char'>
+          <div style={{padding: '.5em', lineHeight: '1.2', fontSize: '1.5em'}}>{char.name}</div>
+          <div style={{padding: '.5em'}}>{char.race.name}</div>
+          <div style={{padding: '.5em', lineHeight: '1.2'}}>{renderClasses(char)}</div>
+          </span>
+          <div className="fade"></div>
 
-      </div>
-    )})
+          </div>
+        )
+      })
+    } else {
+      if (sortedCharacters.length > 4){
+        if (show){
+          return (
+            <>
+              <div onClick={() => setShow(!show)}>Characters <FontAwesomeIcon icon={faCircle}/></div>
+              {sortedCharacters.map(ch => <div className='mobile-character-button' onClick={() => props.history.push(`/characters/${ch.id}`)} key={ch.id * 3 - 1 }><strong>{ch.name}</strong> - {ch.race.name} {renderClasses(ch)}</div>)}
+            </>
+          )
+        } else {
+          return <div onClick={() => setShow(!show)}>Characters <FontAwesomeIcon icon={faSortDown}/></div>
+        }
+      } else {
+        // UNTESTED
+        return (
+          <>
+            {sortedCharacters.map(ch => <div className='mobile-character-button' onClick={() => props.history.push(`/characters/${ch.id}`)} key={ch.id * 3 - 1 }><strong>{ch.name}</strong> - {ch.race.name} {renderClasses(ch)}</div>)}
+          </>
+        )
+      }
+    }
   }
 
-  // {this.props.characters.map(character => {
-  //   return (
-  //     <span>
-  //     <p><Link to={`/characters/${character.id}`} key={character.id} >{character.name}</Link></p>
-  //     <p>{character.race.name}</p>
-  //     {character.klasses.map(klass => <p>{klass.name}</p>)}
-  //     </span>
-  //   )
-  // })}
-
-  render() {
-    // console.log(this.props)
-    return (
-      <React.Fragment>
-        {this.props.currentUser && this.renderCharacters()}
-      </React.Fragment>
-    )
-  }
+  return (
+    <React.Fragment>
+      {props.currentUser && renderCharacters()}
+    </React.Fragment>
+  )
 
 }
 

@@ -712,3 +712,57 @@
   border: 1px solid black;
   border-collapse: collapse;
 }
+
+#mobile-navbar {
+  display: flex;
+  background-color: #fff;
+  width: 100%;
+}
+
+#drop-down-menu{
+  z-index: 1000;
+  background-color: #fff;
+  position: absolute;
+}
+
+.ui.secondary.pointing.menu a.item:active{
+  background-color: grey;
+}
+
+.mobile-character-button{
+  margin: .2em;
+  background-color: grey;
+  border-radius: 20px;
+  padding-left: 1em;
+}
+
+.mobile-character-button:active{
+  background-color: white;
+}
+
+#mobile-tabs{
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+}
+
+.mobile-tab-li{
+  list-style-type: none;
+  margin: 0;
+  width: 25%;
+  border: 2px solid #000;
+  /* height: 100%; */
+  text-align: center;
+  bottom: 0px;
+  padding: 1%;
+  background-color: #c0c0c0;
+  border-radius: 30% 30% 0% 0%;
+}
+
+.mobile-active-tab{
+  background-color: #808080;
+}
+
+.white-outline {
+  text-shadow: -1px -1px white, 1px 1px white;
+}

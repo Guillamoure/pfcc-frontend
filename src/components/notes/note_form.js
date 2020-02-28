@@ -83,7 +83,7 @@ const NoteForm = props => {
   return (
     <section>
       <form>
-        <label for='newnote'>
+        <label htmlFor='newnote'>
             <input className='new-note-input' type='text' name='new note title' value={title} onChange={renderTitle}/>
             <span>{date}</span>
             {/*save && <span>X</span>*/}

@@ -12,3 +12,10 @@
 .shrink {
   max-height: 5em;
 }
+
+.mobile-tab-ability{
+  border: 2px solid black;
+  border-radius: 5% 5% 40% 40%;
+  background-image: linear-gradient(rgba(145, 129, 81, 0.4) 25%, rgba(122, 122, 122, 0.2));
+  margin: 1%;
+}

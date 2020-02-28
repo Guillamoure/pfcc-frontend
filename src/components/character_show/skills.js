@@ -17,6 +17,15 @@ class Skills extends React.Component {
     })
   }
 
+  // TODO
+  // A lot of this is outdated, since updating the modified skills function
+  // renderSkillBonus is still used for changes to stats,
+  // and for Persephone's headband of intellect, which gives her a full bonus to Religion checks
+  // modifiedSkills should be renamed and abstracted
+  // one all the hardcoding is removed, strip a lot of this down
+  // note: current name generation is in the asterisk function
+  // to account for craft and profession and the like with detailed skill names
+
   renderSkillBonus = (skill, style) => {
     let score = this.props.character_info.ability_scores[_.lowerCase(skill.ability_score)]
     const age = this.props.character.name === 'Maddox' && this.props.character_info.hardcode.age
@@ -172,26 +181,11 @@ class Skills extends React.Component {
     if (skill.name === 'Religion' && name === "Persephone"){
       skillRanks = skillRanks || {ranks: this.props.character.character_klasses.length}
     }
-    if (skill.name === 'Profession (fence)' && name === "Merg"){
-      skillRanks = {ranks: 0}
-    }
-    if (skill.name === 'Profession (sailor)' && name === "Merg"){
-      skillRanks = {ranks: 2}
-    }
-    if (skill.name === 'Profession (sailor)' && name === "Robby"){
-      skillRanks = {ranks: 2}
-    }
-    if (skill.name === 'Perform (acting)' && name === "Robby"){
-      skillRanks = {ranks: 1}
-    }
     if (skill.name === 'Perform (percussion)' && name === "Nettie"){
       skillRanks = {ranks: 100}
     }
     if (skill.name === 'Perform (strings)' && name === "Nettie"){
       skillRanks = {ranks: 100}
-    }
-    if (skill.name === 'Craft (gears/clockwork)' && name === "Maddox"){
-      skillRanks = {ranks: 3}
     }
     return skillRanks !== undefined ? skillRanks.ranks : 0
   }
@@ -210,9 +204,6 @@ class Skills extends React.Component {
         }
       })
     })
-    if (skill.name.includes('Profession') || skill.name.includes('Perform') || skill.name.includes('Craft')){
-      isThisAClassSkill = true
-    }
     return isThisAClassSkill
   }
 
@@ -259,23 +250,48 @@ class Skills extends React.Component {
       skills.push({name: 'Perform (strings)', ability_score: 'Charisma'})
       skills = skills.filter(sk => sk.name !== 'Perform')
     }
-    if (name === 'Maddox'){
-      skills.push({name: 'Craft (gears/clockwork)', ability_score: 'Intelligence'})
-      skills = skills.filter(sk => sk.name !== 'Craft')
-    }
-    return skills.sort((a,b) => a.name > b.name ? 1 : -1)
+    let clearlyDefinedSkills = []
+    skills.forEach(sk => {
+      let skill = {...sk}
+      let cskSkill = this.props.character.character_skillset_skills.filter(css => css.skill_id === skill.id)
+      if (cskSkill.length === 1){
+        cskSkill = cskSkill[0]
+        skill.detail = cskSkill.detail ? `${skill.name} (${cskSkill.detail})` : cskSkill.detail
+        skill.ranks = cskSkill.ranks
+        skill.classSkill = this.renderClassSkill(skill)
+        skill.bonus = this.renderSkillBonus(skill)
+        clearlyDefinedSkills.push(skill)
+      } else if (cskSkill.length > 1){
+        cskSkill.forEach(css => {
+          let currentSkill = {...skill}
+          currentSkill.detail = css.detail ? `${skill.name} (${css.detail})` : css.detail
+          currentSkill.ranks = css.ranks
+          currentSkill.classSkill = this.renderClassSkill(currentSkill)
+          currentSkill.bonus = this.renderSkillBonus(currentSkill)
+          clearlyDefinedSkills.push(currentSkill)
+        })
+      } else if (cskSkill.length === 0){
+        skill.detail = null
+        skill.ranks = 0
+        skill.classSkill = this.renderClassSkill(skill)
+        skill.bonus = this.renderSkillBonus(skill)
+        clearlyDefinedSkills.push(skill)
+      }
+    })
+    return clearlyDefinedSkills.sort((a,b) => a.name > b.name ? 1 : -1)
   }
 
   renderSkillTableRow = () => {
     const sortedSkills = this.modifiedSkills()
     return sortedSkills.map(skill => {
+
       return (
         <tr key={_.random(1, 2000000)}>
-          <td>{this.renderClassSkill(skill) ? "X" : null}</td>
+          <td>{skill.classSkill ? "X" : null}</td>
           <td onMouseOver={(e) => this.renderTooltip(e, null, skill.ability_score)} onMouseOut={this.props.mouseOut}><strong>{this.renderAbilityScoreAbbreviation(skill)}</strong></td>
           <td className={this.raging(skill.name)} style={this.renderSkillBonus(skill, true)} onMouseOver={(e) => this.renderTooltip(e, skill)} onMouseOut={this.props.mouseOut}>{this.asterisk(skill)}</td>
-          <td style={this.renderSkillBonus(skill, true)}>{this.renderSkillBonus(skill)}</td>
-          <td>{this.renderNumOfRanks(skill)}</td>
+          <td style={this.renderSkillBonus(skill, true)}>{skill.bonus}</td>
+          <td>{skill.ranks}</td>
         </tr>
       )}
     )
@@ -293,12 +309,18 @@ class Skills extends React.Component {
   // }
 
   asterisk = (skillObj) => {
-    let skill = skillObj.name
+    let skill = skillObj.detail ? skillObj.detail : skillObj.name
     let asterisk = skill + "*"
     let name = this.props.character.name
     let hc = this.props.character_info.hardcode
-
+    if(skillObj.customizable){
+      let cskSkill = this.props.character.character_skillset_skills.filter(css => css.skill_id === skillObj.id)
+    }
     let isThereAnAsterisk = false
+
+    // REFACTOR
+    // THIS DOES NOT ACCOUNT FOR BONUSES TO DIFFERENT KINDS OF THE SAME SKILL
+    // IE CRAFT, PROFESSION, PERFORM
     this.props.character_info.bonuses.forEach(b => {
       if (skill && b.skill_id && b.skill_id === skillObj.id && b.note){
         isThereAnAsterisk = true

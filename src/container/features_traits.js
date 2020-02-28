@@ -6,26 +6,67 @@ import Feats from '../components/character_show/feats'
 import Equipment from '../components/character_show/equipment'
 import FeatureTabs from './feature_tabs'
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSortDown } from '@fortawesome/free-solid-svg-icons'
+import { faCircle } from '@fortawesome/free-solid-svg-icons'
+
 class FeaturesTraits extends React.Component {
   state= {
     activeTab: "Features"
   }
 
+  componentDidMount(){
+    if (localStorage.computer === "false"){
+      this.setState({activeTab: 'none'})
+    }
+  }
+
   renderTabClick = (choice) => {
-    this.setState({activeTab: choice})
+    if (localStorage.computer === "false"){
+      if (choice === this.state.activeTab){
+        this.setState({activeTab: 'none'})
+      } else {
+        this.setState({activeTab: choice})
+      }
+    } else {
+      this.setState({activeTab: choice})
+    }
+  }
+
+  renderFeaturesTraits = () => {
+    if (localStorage.computer === "true"){
+      return (
+        <div id='features-traits' className="character-show shadow">
+          <FeatureTabs renderTabClick={this.renderTabClick} activeTab={this.state.activeTab}/>
+          <div style={{height: '100%'}}>
+            {this.state.activeTab === "Features" && <Features editModal={this.props.editModal}/>}
+            {this.state.activeTab === "Traits" && <Traits/>}
+            {this.state.activeTab === "Feats" && <Feats editModal={this.props.editModal}/>}
+            {this.state.activeTab === "Equipment" && <Equipment editModal={this.props.editModal} exitModal={this.props.exitModal} cmiId={this.props.characterItemID}/>}
+          </div>
+        </div>
+      )
+    } else {
+      return (
+        <>
+          <div className='mobile-feature-tab mobile-tab-top' onClick={() => this.renderTabClick('Features')}>Features {this.state.activeTab === 'Features' ? <FontAwesomeIcon icon={faCircle}/> : <FontAwesomeIcon icon={faSortDown}/>}</div>
+          {this.state.activeTab === "Features" && <Features editModal={this.props.editModal}/>}
+          <div className='mobile-feature-tab' onClick={() => this.renderTabClick('Traits')}>Traits {this.state.activeTab === 'Traits' ? <FontAwesomeIcon icon={faCircle}/> : <FontAwesomeIcon icon={faSortDown}/>}</div>
+          {this.state.activeTab === "Traits" && <Traits/>}
+          <div className='mobile-feature-tab' onClick={() => this.renderTabClick('Feats')}>Feats {this.state.activeTab === 'Feats' ? <FontAwesomeIcon icon={faCircle}/> : <FontAwesomeIcon icon={faSortDown}/>}</div>
+          {this.state.activeTab === "Feats" && <Feats editModal={this.props.editModal}/>}
+          <div className='mobile-feature-tab mobile-tab-bottom' onClick={() => this.renderTabClick('Equipment')}>Equipment {this.state.activeTab === 'Equipment' ? <FontAwesomeIcon icon={faCircle}/> : <FontAwesomeIcon icon={faSortDown}/>}</div>
+          {this.state.activeTab === "Equipment" && <Equipment editModal={this.props.editModal} exitModal={this.props.exitModal} cmiId={this.props.characterItemID}/>}
+        </>
+      )
+    }
   }
 
   render(){
-    return(
-      <div id='features-traits' className="character-show shadow">
-        <FeatureTabs renderTabClick={this.renderTabClick} activeTab={this.state.activeTab}/>
-        <div style={{height: '100%'}}>
-          {this.state.activeTab === "Features" && <Features character={this.props.character} editModal={this.props.editModal}/>}
-          {this.state.activeTab === "Traits" && <Traits character={this.props.character}/>}
-          {this.state.activeTab === "Feats" && <Feats editModal={this.props.editModal}/>}
-          {this.state.activeTab === "Equipment" && <Equipment editModal={this.props.editModal} exitModal={this.props.exitModal} cmiId={this.props.characterItemID}/>}
-        </div>
-      </div>
+    return (
+      <>
+        {this.renderFeaturesTraits()}
+      </>
     )
   }
 }

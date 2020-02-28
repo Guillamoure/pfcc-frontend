@@ -129,15 +129,15 @@ class CharacterName extends React.Component {
       <div id='character' className='shrink'>
         <div className='first-row' style={{padding: '.25em'}} id='title'>{this.name()}</div>
         <span className='second-row' style={{padding: '.5em'}}>{this.props.character.race.name} {this.renderClasses()}</span>
-        {this.props.character.user_id === this.props.currentUser.id && <span className='edit' onClick={() => this.props.editModal('character')}><FontAwesomeIcon icon={faPencilAlt} /></span>}
-        <span className='notif'>
+        {this.props.character.user_id === this.props.currentUser.id && localStorage.computer === "true" && <span className='edit' onClick={() => this.props.editModal('character')}><FontAwesomeIcon icon={faPencilAlt} /></span>}
+        {localStorage.computer === "true" && <span className='notif'>
           <div className='notification'>
             {this.greenBadge() && <span className='badge green-badge'></span>}
             {this.yellowBadge() && <span className='badge yellow-badge'></span>}
             {this.redBadge() && <span className='badge red-badge'></span>}
             <FontAwesomeIcon id='spin' icon={faDiceD20} size='3x' onClick={() => this.props.editModal('notifications')} />
           </div>
-        </span >
+        </span >}
       </div>
     )
   }

@@ -37,12 +37,13 @@ class Home extends React.Component {
   }
 
   render() {
+    this.renderSignUp()
+    let className = localStorage.computer === 'true' ? 'container-4' : 'phone-container'
     return (
       <span className='background'>
-        {this.renderSignUp()}
         <button className='btn' onClick={() => this.props.history.push("/creation")} >Create Character</button>
         <br/><br/>
-        <div className='container-4' style={{margin: '0 2em'}} >
+        <div className={className} style={{margin: '0 2em'}} >
           <Settings />
           <Campaigns />
           <Characters characters={this.state.characters}/>

@@ -44,6 +44,15 @@ class App extends React.Component {
 
 
   render(){
+    let computer
+    if (window.outerWidth/window.outerHeight < 0.85){
+      console.log("Imma Phone! Here is my width/height percentage", window.outerWidth/window.outerHeight)
+      computer = false
+    } else {
+      console.log("Imma Computer! Here is my width/height percentage", window.outerWidth/window.outerHeight)
+      computer = true
+    }
+    localStorage.setItem("computer", computer)
     return (
         <Router>
           <React.Fragment>

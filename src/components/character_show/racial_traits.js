@@ -1,5 +1,6 @@
 import React from 'react'
 import _ from 'lodash'
+import { connect } from 'react-redux'
 
 class Traits extends React.Component {
 
@@ -79,4 +80,11 @@ class Traits extends React.Component {
   }
 }
 
-export default Traits
+const mapStateToProps = (state) => {
+  return {
+    character: state.character
+  }
+}
+
+
+export default connect(mapStateToProps)(Traits)

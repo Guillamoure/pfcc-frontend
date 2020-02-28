@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import ItemSearch from '../components/campaign/item_search'
 import CharacterContainer from '../components/campaign/characters'
 import SetDate from '../components/campaign/set_date'
+import Ideas from '../components/campaign/ideas'
 
 
 const CampaignShow = props => {
@@ -20,6 +21,7 @@ const CampaignShow = props => {
       <CharacterContainer campaign={campaign}/>
       <ItemSearch />
       <SetDate campaign={campaign}/>
+      <Ideas/>
     </section>
   )
 
