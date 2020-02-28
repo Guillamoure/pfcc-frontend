@@ -24,7 +24,7 @@ class Spells extends React.Component {
     if (klass.name === 'Vigilante'){
       spellcasting = {ability_score: 'Charisma', klass_feature_id: 2000300, prepared: false, limited: true, expendable: false, infinite_zero_level: true, bonus_spells: true}
     } else {
-      spellcasting = klass.klass_features.find(kf => kf.name === 'Spells').spellcasting
+      spellcasting = klass.klass_features.find(kf => kf.name === 'Spells' || kf.name === 'Alchemy').spellcasting
     }
     return spellcasting
     // HARDCODE ENDS
@@ -177,8 +177,8 @@ class Spells extends React.Component {
     // let klass = this.props.classes.find(cl => cl.id === klass_id)
     // let spellcasting = klass.klass_features.find(kf => kf.name === "Spells")
     // let ab = _.lowerCase(spellcasting.spellcasting.ability_score)
-    let ab = this.props.character_info.classes.find(cl => cl.id === klass_id).spellcastingAbility
-    return ((this.props.character_info.ability_scores[ab] - 10) / 2.0) >= spell_level ? true : false
+    let ab = this.props.character_info.classes.find(cl => cl.id === klass_id).spellcasting.ability_score
+    return ((this.props.character_info.ability_scores[_.lowerCase(ab)] - 10) / 2.0) >= spell_level ? true : false
   }
 
   renderTH = (num) => {

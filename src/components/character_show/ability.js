@@ -66,12 +66,32 @@ function AbilityScore (props) {
   }
 
   const mod = (Math.floor( (score - 10) / 2))
+
+
+  const renderAbilityScore = () => {
+    if (localStorage.computer === "true"){
+      return (
+        <span className='centered egg shadow shrink' >
+          <div className='enhanced'>{mod < 0 ? mod : `+${mod}`}</div>
+          <div className='muted'><strong>{truncate}</strong></div>
+          <div className='dull'>{score}</div>
+        </span>
+      )
+    } else {
+      return (
+        <span className='centered shrink mobile-tab-ability' >
+          <div><strong>{truncate}</strong></div>
+          <div className='enhanced white-outline'>{mod < 0 ? mod : `+${mod}`}</div>
+          <span className='muted'>{score}</span>
+        </span>
+      )
+    }
+  }
+
   return (
-    <span className='centered egg shadow shrink' >
-      <div className='enhanced'>{mod < 0 ? mod : `+${mod}`}</div>
-      <div className='muted'><strong>{truncate}</strong></div>
-      <div className='dull'>{score}</div>
-    </span>
+    <>
+      {renderAbilityScore()}
+    </>
   )
 }
 

@@ -22,7 +22,7 @@ class AbilityScores extends React.Component {
 
   renderEditAbilityToggle = () => {
     let numOfContainers = 'ability'
-    if (this.props.character.user_id === this.props.currentUser.id){
+    if (localStorage.computer === "true" && this.props.character.user_id === this.props.currentUser.id){
       numOfContainers += ' container-7'
     } else {
       numOfContainers += ' container-6'
@@ -39,7 +39,7 @@ class AbilityScores extends React.Component {
         <Ability name={'Intelligence'} ability_score={this.props.character_info.ability_scores.intelligence}/>
         <Ability name={'Wisdom'} ability_score={this.props.character_info.ability_scores.wisdom}/>
         <Ability name={'Charisma'} ability_score={this.props.character_info.ability_scores.charisma}/>
-        {this.props.character.user_id === this.props.currentUser.id && <span className='edit' onClick={() => this.props.editModal('ability')}><FontAwesomeIcon icon={faPencilAlt} /></span>}
+        {localStorage.computer === "true" && this.props.character.user_id === this.props.currentUser.id && <span className='edit' onClick={() => this.props.editModal('ability')}><FontAwesomeIcon icon={faPencilAlt} /></span>}
 
       </div>
     )
@@ -50,6 +50,7 @@ const mapStateToProps = (state) => {
   return {
     currentUser: state.currentUser,
     admin: state.admin,
+    character: state.character,
     character_info: state.character_info
   }
 }

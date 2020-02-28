@@ -3,6 +3,9 @@ import { connect } from 'react-redux'
 
 const Attacks = props => {
 
+  const [bombs, setBombs] = React.useState(false);
+
+
   const renderCharacter = (name) => {
     switch(name){
       case "Nettie":
@@ -113,8 +116,47 @@ const Attacks = props => {
   }
 
   const grackle = () => {
+    // <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
     return (
       <React.Fragment>
+        <tr>
+          <td><button onClick={() => setBombs(!bombs)}>{bombs ? "v" : ">"}</button></td>
+          <td>Bomb</td>
+          <td style={renderNum('abD', null, true)}>{renderNum('abD') >= 0 ? '+' + (renderNum('abD')) : (renderNum('abD'))}</td>
+          <td>20 ft</td>
+          <td>{renderDamageDice('4d6')}<span style={renderNum('damageD', null, true)}>{renderNum('damageD')+6 >= 0 ? '+' + (renderNum('damageD')+6) : (renderNum('damageD')+6)}</span> Fire</td>
+          <td>x2</td>
+          <td><span onMouseOver={e => renderTooltip(e, 'Splash')} onMouseOut={props.mouseOut}>Splash</span>, Those caught in the splash damage can attempt a Reflex save for half damage.</td>
+        </tr>
+        {bombs && <>
+          <tr>
+            <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
+            <td>Frost Bomb</td>
+            <td></td>
+            <td></td>
+            <td>{renderDamageDice('4d6')}<span style={renderNum('damageD', null, true)}>{renderNum('damageD')+6 >= 0 ? '+' + (renderNum('damageD')+6) : (renderNum('damageD')+6)}</span> Cold</td>
+            <td></td>
+            <td>Creatures that take a direct hit from a frost bomb are staggered on their next turn unless they succeed on a Fortitude save.</td>
+          </tr>
+          <tr>
+            <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
+            <td>Healing Bomb</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>Creating a healing bomb requires the alchemist to expend an infused extract or potion containing a <em>cure</em> spell. A creature that takes a direct hit from a healing bomb is healed as if she had imbibed the infusion or potion used to create the bomb.</td>
+          </tr>
+          <tr>
+            <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
+            <td>Stink Bomb</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>Duplicate the effects of <em>stinking cloud</em> instead of <em>fog cloud</em>, filling an area equal to twice the bomb's splash radius for 1 round.</td>
+          </tr>
+        </>}
         <tr>
           <td><button className={canCast('standard')} onClick={() => renderDispatch('standard', 'Long Bow')}><strong>Attack</strong></button></td>
           <td onClick={() => props.editModal('ammo', null, null, {name: 'weapon', type: 'ACTIVE WEAPON', weapon: 'Long Bow'})}>Long Bow {renderAmmo('Long Bow')}</td>
@@ -625,6 +667,8 @@ const Attacks = props => {
     } else if (name === 'cunning'){
       comment = 'This special ability allows a weapon to find chinks in a foe’s defenses using the wielder’s knowledge of the target. Whenever the weapon’s attack is a critical threat, the wielder gains a +4 bonus on the confirmation roll if she has 5 or more ranks in a Knowledge skill that would be used to identify the target’s creature type (such as Knowledge [planes] for an outsider opponent), or a +6 bonus instead if she has 15 or more ranks.'
     } else if (name === 'crazed'){
+      comment = 'On a critical hit, deal an additional +3d8 cold damage instead of +1d4. On a critical failure, the weapon overloads, dealing 4d10+4 damage to you and the weapon is destroyed. DC 20 Reflex save for half damage. If you fail the saving throw, you hand is locked up by ice and cold for 1 hour. -4 to Dexterity checks and attacks with that hand.'
+    } else if (name === 'Splash'){
       comment = 'On a critical hit, deal an additional +3d8 cold damage instead of +1d4. On a critical failure, the weapon overloads, dealing 4d10+4 damage to you and the weapon is destroyed. DC 20 Reflex save for half damage. If you fail the saving throw, you hand is locked up by ice and cold for 1 hour. -4 to Dexterity checks and attacks with that hand.'
     }
     if (comment){

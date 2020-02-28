@@ -17,6 +17,7 @@ class Features extends React.Component {
     }
   }
 
+
   renderClassFeatures = () => {
     // let klass_ids = {}
     // this.props.character.character_klasses.forEach(klass => {
@@ -41,7 +42,7 @@ class Features extends React.Component {
           name = `${feature.name} - ${this.props.classes.find(cl => cl.id === feature.klass_id).name}`
         }
         return (
-          <li key={feature.id *3 -1} data-id={feature.id} onClick={this.changeActiveFeature} className='highlight'>
+          <li key={feature.id *3 -1} data-id={feature.id} onClick={this.changeActiveFeature} className='highlight mobile-selected-tab-content' style={{maxHeight: window.outerHeight * 0.4}}>
             <strong data-id={feature.id}>{name}</strong>
             {this.state.activeFeature === feature.id && <div style={{color: '#000'}}>{feature.description}</div>}
           </li>
@@ -565,7 +566,7 @@ class Features extends React.Component {
 
   render () {
     return(
-      <div style={{padding: '1em'}}>
+      <div style={{padding: '1em'}} className={localStorage.computer === "false" ? 'mobile-tab-selected-tab-container' : 'none'}>
       {this.renderClassFeatures()}
       </div>
     )
@@ -576,6 +577,7 @@ const mapStateToProps = (state) => {
   return {
     currentUser: state.currentUser,
     admin: state.admin,
+    character: state.character,
     character_info: state.character_info,
     classes: state.classes
   }

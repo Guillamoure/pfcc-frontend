@@ -1,5 +1,6 @@
 import React from 'react'
 import _ from 'lodash'
+import { connect } from 'react-redux'
 
 class Traits extends React.Component {
 
@@ -22,7 +23,7 @@ class Traits extends React.Component {
 
     return traits.map(trait => {
         return (
-          <li data-id={trait.id} onClick={this.changeActiveFeature} className='highlight'>
+          <li data-id={trait.id} onClick={this.changeActiveFeature} className='highlight mobile-selected-tab-content'  style={{maxHeight: window.outerHeight * 0.4}}>
             <strong data-id={trait.id}>{trait.name}</strong>
             {this.state.activeTrait === trait.id && <div style={{color: '#000'}}>{trait.description}</div>}
           </li>
@@ -72,11 +73,18 @@ class Traits extends React.Component {
 
   render(){
     return(
-      <div style={{padding: '1em'}}>
+      <div style={{padding: '1em'}} className={localStorage.computer === "false" ? 'mobile-tab-selected-tab-container' : 'none'}>
         {this.renderRacialTraits()}
       </div>
     )
   }
 }
 
-export default Traits
+const mapStateToProps = (state) => {
+  return {
+    character: state.character
+  }
+}
+
+
+export default connect(mapStateToProps)(Traits)

@@ -53,9 +53,12 @@ import MagicItemModal from '../modals/magic_item'
 import CharacterFeatureModal from '../modals/character_feature_modal'
 import WeaponModal from '../modals/weapon'
 
+import MobileTabs from '../components/mobile/tabs'
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCaretRight } from '@fortawesome/free-solid-svg-icons'
 import { faCaretLeft } from '@fortawesome/free-solid-svg-icons'
+import { faDiceD20 } from '@fortawesome/free-solid-svg-icons'
 
 
 // from here
@@ -87,10 +90,12 @@ class Character extends React.Component {
     toolTip: false,
     toolTipX: 0,
     toolTipY: 0,
-    detail: ''
+    detail: '',
+    mobileTab: 'adventure'
   }
 
   componentDidMount() {
+    console.log("HI IM RUNNING")
     fetch(`${localhost}/api/v1${this.props.location.pathname}`)
     .then(r => r.json())
     .then(data => {
@@ -149,6 +154,26 @@ class Character extends React.Component {
             })
           }
         })
+      data.character.uniq_klasses.forEach(kl => {
+        kl.klass_features.forEach(kf => {
+          kf.features.forEach(f =>{
+            if (!!f.skill_bonuses.length){
+              f.skill_bonuses.forEach(sk => {
+                const { skill_id, bonus, bonus_type, duration } = sk
+                // const conditions = sk.feature_skill_bonus_conditions.map(c => {return {condition: c.condition}})
+                this.props.dispatch({type: 'BONUS', bonus: {type: 'skill', skill_id, bonus, bonus_type, duration, source: kf.name}})
+              })
+            }
+            if (!!f.skill_notes.length){
+              f.skill_notes.forEach(sk => {
+                const { skill_id, note} = sk
+                // debugger
+                this.props.dispatch({type: 'BONUS', bonus: {type: 'note', skill_id, note, source: kf.name}})
+              })
+            }
+          })
+        })
+      })
       // } else {
       //   this.props.history.push('/')
       // }
@@ -202,7 +227,7 @@ class Character extends React.Component {
         let characterKlass = this.props.character.character_klasses.filter(ck => ck.klass_id === id)
         const level = characterKlass.length
         let klass = this.props.character.uniq_klasses.find(k => k.id === id)
-        let spellsFeature = klass.klass_features.find(f => f.name === 'Spells')
+        let spellsFeature = klass.klass_features.find(f => f.name === 'Spells' || f.name === 'Alchemy')
         let spellcasting = spellsFeature ? spellsFeature.spellcasting : null
 
         completedClasses.push(id)
@@ -339,10 +364,14 @@ class Character extends React.Component {
     }
   }
 
+  changeActiveMobileTab = tab => {
+    this.setState({mobileTab: tab})
+  }
 
-  render() {
-    return (
-      <span className="container-8 character">
+  renderCharacter = () => {
+    if (localStorage.computer === "true"){
+      return (
+        <span className="container-8 character">
         {this.state.character.race && <CharacterName character={this.state.character} editModal={this.editModal}/>}
         {this.state.character.race && this.state.display === "Adventure" && <AbilityScores character={this.state.character} editModal={this.editModal}/>}
         {this.state.character.race && this.state.display === "Adventure" && <FeaturesTraits character={this.state.character} editModal={this.editModal} exitModal={this.exitModal} characterItemID={this.state.characterItemID}/>}
@@ -396,7 +425,29 @@ class Character extends React.Component {
         <div id='right' onClick={() => this.setState({display: this.rightArrow()})}><FontAwesomeIcon icon={faCaretRight} size='9x'/><div>{this.rightArrow()}</div></div>
         <div id='left' onClick={() => this.setState({display: this.leftArrow()})}><FontAwesomeIcon icon={faCaretLeft} size='9x'/><div>{this.leftArrow()}</div></div>
 
-      </span>
+        </span>
+      )
+    } else {
+      return (
+        <main>
+          {this.state.character.race && <CharacterName />}
+
+          {this.state.character.race && this.state.mobileTab === "adventure" && <AbilityScores/>}
+          {this.state.character.race && this.state.display === "Adventure" && <FeaturesTraits editModal={this.editModal} exitModal={this.exitModal} characterItemID={this.state.characterItemID}/>}
+
+
+          <MobileTabs mobileTab={this.state.mobileTab} changeActiveMobileTab={this.changeActiveMobileTab}/>
+        </main>
+      )
+    }
+  }
+
+
+  render() {
+    return (
+      <>
+        {this.renderCharacter()}
+      </>
     )
   }
 }

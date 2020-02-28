@@ -252,3 +252,40 @@
 #white-space {
   white-space: pre;
 }
+
+.mobile-feature-tab{
+  background-color: grey;
+  margin: 0.7%;
+  border: 1px solid #000;
+  padding-left: 4%;
+}
+
+.mobile-feature-selected-tab{
+  background-color: grey;
+  margin: 0.7%;
+  margin-bottom: 0%;
+  border: 1px solid #000;
+  border-bottom: none;
+  padding-left: 4%;
+}
+
+.mobile-tab-top{
+  border-radius: 15% 15% 0% 0% / 3.3em 3.3em 0em 0em;
+}
+
+.mobile-tab-bottom{
+  border-radius: 0% 0% 15% 15% / 0em 0em 3.3em 3.3em;
+}
+
+.mobile-tab-selected-tab-container{
+  background-color: grey;
+  border: 1px solid #000;
+  border-top: none;
+  margin: 0.7%;
+  margin-top: 0%;
+  max-height: 50%;
+}
+
+.mobile-selected-tab-content{
+  overflow: auto;
+}

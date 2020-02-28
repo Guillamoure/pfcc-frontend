@@ -85,7 +85,7 @@ const SpellSummary = props => {
     if (klass.name === 'Vigilante'){
       spellcasting = {ability_score: 'Charisma', klass_feature_id: 2000300, prepared: false, limited: true, expendable: false, infinite_zero_level: true, bonus_spells: true}
     } else {
-      spellcasting = klass.klass_features.find(kf => kf.name === 'Spells').spellcasting
+      spellcasting = klass.klass_features.find(kf => kf.name === 'Spells' || kf.name === 'Alchemy').spellcasting
     }
     return spellcasting
     // HARDCODE ENDS

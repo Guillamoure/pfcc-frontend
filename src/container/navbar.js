@@ -3,11 +3,14 @@ import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Menu } from 'semantic-ui-react'
 import localhost from '../localhost'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faBars } from '@fortawesome/free-solid-svg-icons'
 
 class NavBar extends React.Component {
 
   state ={
-    currentUser : ""
+    currentUser : "",
+    menuDropDown: false
   }
 
   componentDidMount(){
@@ -37,22 +40,60 @@ class NavBar extends React.Component {
     this.props.history.push('/login')
   }
 
+  menuClick = (url) => {
+    this.props.history.push(url)
+    this.setState({menuDropDown: false})
+  }
+
+  renderNavBar = () => {
+    if (localStorage.computer === "true"){
+      return (
+        <Menu>
+          <Menu.Item className='project-name'>CharacterFinder</Menu.Item>
+          <Menu.Item onClick={() => this.props.history.push('/classes')}>Classes</Menu.Item>
+          <Menu.Item onClick={() => this.props.history.push('/races')}>Races</Menu.Item>
+          <Menu.Item onClick={() => this.props.history.push('/skills')}>Skills</Menu.Item>
+          <Menu.Item onClick={() => this.props.history.push('/spells')}>Spells</Menu.Item>
+          {this.state.currentUser ? <Menu.Item onClick={() => this.props.history.push('/')}>{this.state.currentUser.username}</Menu.Item>: <Menu.Item onClick={() => this.props.history.push('/login')}>Login</Menu.Item>}
+          {this.state.currentUser ? <Menu.Item onClick={this.renderLogOut}>Log Out</Menu.Item> : <Menu.Item onClick={() => this.props.history.push('/signup')}>Sign Up</Menu.Item>}
+        </Menu>
+      )
+    } else {
+      if (!this.state.menuDropDown){
+        return (
+          <div id='mobile-navbar'>
+            <div className='project-name'>CharacterFinder</div>
+            <button onClick={() => this.setState({menuDropDown: !this.state.menuDropDown})}><FontAwesomeIcon icon={faBars}/></button>
+          </div>
+        )
+      } else {
+        return(
+          <>
+            <div id='mobile-navbar'>
+              <div className='project-name'>CharacterFinder</div>
+              <button onClick={() => this.setState({menuDropDown: !this.state.menuDropDown})}><FontAwesomeIcon icon={faBars}/></button>
+            </div>
+            <div id='drop-down-menu'>
+              <Menu pointing secondary vertical>
+                <Menu.Item onClick={() => this.menuClick('/classes')}>Classes</Menu.Item>
+                <Menu.Item onClick={() => this.menuClick('/races')}>Races</Menu.Item>
+                <Menu.Item onClick={() => this.menuClick('/skills')}>Skills</Menu.Item>
+                <Menu.Item onClick={() => this.menuClick('/spells')}>Spells</Menu.Item>
+                {this.state.currentUser ? <Menu.Item onClick={() => this.menuClick('/')}>{this.state.currentUser.username}</Menu.Item>: <Menu.Item onClick={() => this.menuClick('/login')}>Login</Menu.Item>}
+                {this.state.currentUser ? <Menu.Item onClick={this.renderLogOut}>Log Out</Menu.Item> : <Menu.Item onClick={() => this.menuClick('/signup')}>Sign Up</Menu.Item>}
+              </Menu>
+            </div>
+          </>
+        )
+      }
+    }
+  }
+
   render() {
-    // console.log("The navbar state", this.state)
-    // console.log("The navbar props", this.props)
-    // if (this.state.currentUser !== ""){
-    //   this.setState({currentUser: this.props.currentUser})
-    // }
     return (
-      <Menu>
-        <Menu.Item className='project-name'>CharacterFinder</Menu.Item>
-        <Menu.Item onClick={() => this.props.history.push('/classes')}>Classes</Menu.Item>
-        <Menu.Item onClick={() => this.props.history.push('/races')}>Races</Menu.Item>
-        <Menu.Item onClick={() => this.props.history.push('/skills')}>Skills</Menu.Item>
-        <Menu.Item onClick={() => this.props.history.push('/spells')}>Spells</Menu.Item>
-        {this.state.currentUser ? <Menu.Item onClick={() => this.props.history.push('/')}>{this.state.currentUser.username}</Menu.Item>: <Menu.Item onClick={() => this.props.history.push('/login')}>Login</Menu.Item>}
-        {this.state.currentUser ? <Menu.Item onClick={this.renderLogOut}>Log Out</Menu.Item> : <Menu.Item onClick={() => this.props.history.push('/signup')}>Sign Up</Menu.Item>}
-      </Menu>
+      <>
+        {this.renderNavBar()}
+      </>
     )
   }
 }
