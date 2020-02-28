@@ -50,7 +50,7 @@ class Feats extends React.Component {
     }
     return feats.map(f => {
       return (
-        <li onClick={() => this.changeActiveFeature(f.id)} className='highlight'>
+        <li onClick={() => this.changeActiveFeature(f.id)} className='highlight mobile-selected-tab-content' style={{maxHeight: window.outerHeight * 0.4}}>
           <strong data-id={f.id}>{f.name}</strong>
           {this.state.activeFeat === f.id && <div style={{color: '#000'}}>{typeof f.description === 'string' ? this.renderDescription(f.description) : f.description}</div>}
         </li>
@@ -231,7 +231,7 @@ class Feats extends React.Component {
 
   render () {
     return(
-      <div style={{padding: '1em'}}>
+      <div style={{padding: '1em'}} className={localStorage.computer === "false" ? 'mobile-tab-selected-tab-container' : 'none'}>
       {this.renderFeats()}
       </div>
     )
