@@ -14,6 +14,7 @@ const CombatManeuver = props => {
   let power = hc.power
   const enlarger = hc.enlarge
   const reducer = hc.reduce
+  const activeMutagen = hc.activeMutagen ? hc.mutagen : false
 
   const actions = props.character_info.actions
 
@@ -33,6 +34,7 @@ const CombatManeuver = props => {
     mod += !!largeMorph ? 2 : 0
     mod += !!bullMinor ? 1 : 0
 
+    mod += activeMutagen === 'strength' ? 2 : 0
     return mod
   }
 
@@ -43,6 +45,7 @@ const CombatManeuver = props => {
     mod += enlarger ? -1 : 0
     mod += reducer ? 1 : 0
 
+    mod += activeMutagen === 'dexterity' ? 2 : 0
     return mod
   }
 

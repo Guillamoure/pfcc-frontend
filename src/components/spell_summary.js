@@ -22,6 +22,10 @@ const SpellSummary = props => {
     const mod = Math.floor((props.character_info.ability_scores[_.lowerCase(score)] - 10) / 2)
     if (props.character.name === "Persephone"){
       bonus = klassSpell.subschools && klassSpell.subschools.find(ss => ss.name === "Acid") ? bonus+=1 : bonus
+    } else if (props.character.name === 'Grackle'){
+      const hc = props.character_info.hardcode
+      const activeMutagen = hc.activeMutagen ? hc.mutagen : false
+      bonus += activeMutagen === 'strength' ? -1 : 0
     }
     bonus += augment.spellId === klassSpell.spell.id && augment.augment === 'dc' ? 1 : 0
     if (klassSpell.spell.saving_throw === "none"){

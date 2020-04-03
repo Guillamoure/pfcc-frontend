@@ -285,7 +285,8 @@ class Spells extends React.Component {
     let merg = this.props.character.name === 'Merg'
     let nettie = this.props.character.name === 'Nettie'
     let festus = this.props.character.name === 'Festus'
-    if (condor || cedrick || pepper || maddox || robby || merg || nettie || festus){
+    let grackle = this.props.character.name === 'Grackle'
+    if (condor || cedrick || pepper || maddox || robby || merg || nettie || festus || grackle){
       return <HardcodeSpells editModal={this.props.editModal}/>
     }
   }
@@ -314,6 +315,12 @@ class Spells extends React.Component {
     concentration += this.props.character.name === 'Persephone' && name === 'Witch' ? 5 : 0
     concentration += this.props.character.name === 'Persephone' && name === 'Magical Child' ? 3 : 0
     concentration += this.props.character.name === 'Nettie' && name === 'Bard' ? 3 : 0
+
+    concentration += this.props.character.name === 'Grackle' && name === 'Alchemist' ? 3 : 0
+    const hc = this.props.character_info.hardcode
+    const activeMutagen = hc.activeMutagen ? hc.mutagen : false
+    concentration += activeMutagen === 'strength' ? -1 : 0
+
     return <span> | <strong>SR check</strong>: +{cl} | <strong>Concentration</strong>: +{concentration}</span>
   }
 

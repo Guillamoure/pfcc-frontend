@@ -46,6 +46,9 @@ const Attacks = props => {
       if (details === 'Long Bow' || details === 'Revolver'){
         props.dispatch({type: 'SPEND AMMO', weapon: details})
       }
+      if (details === 'bomb'){
+        props.dispatch({type: 'POINTS CHANGE', amount: 'increase'})
+      }
     } else {
       return null
     }
@@ -122,24 +125,24 @@ const Attacks = props => {
         <tr>
           <td><button onClick={() => setBombs(!bombs)}>{bombs ? "v" : ">"}</button></td>
           <td>Bomb</td>
-          <td style={renderNum('abD', null, true)}>{renderNum('abD') >= 0 ? '+' + (renderNum('abD')) : (renderNum('abD'))}</td>
+          <td style={renderNum('abD', null, true)}>{renderNum('abD')+1 >= 0 ? '+' + (renderNum('abD')+1) : (renderNum('abD')+1)}</td>
           <td>20 ft</td>
-          <td>{renderDamageDice('4d6')}<span style={renderNum('damageD', null, true)}>{renderNum('damageD')+6 >= 0 ? '+' + (renderNum('damageD')+6) : (renderNum('damageD')+6)}</span> Fire</td>
+          <td>{renderDamageDice('4d6')}<span style={renderNum('damageD', null, true)}>{renderNum('damageD', null, null, null, 'bomb')+6 >= 0 ? '+' + (renderNum('damageD', null, null, null, 'bomb')+6) : (renderNum('damageD', null, null, null, 'bomb')+6)}</span> Fire</td>
           <td>x2</td>
           <td><span onMouseOver={e => renderTooltip(e, 'Splash')} onMouseOut={props.mouseOut}>Splash</span>, Those caught in the splash damage can attempt a Reflex save for half damage.</td>
         </tr>
         {bombs && <>
           <tr>
-            <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
+            <td><button className={canCast('standard')} onClick={() => renderDispatch('standard', 'bomb')}><strong>Attack</strong></button></td>
             <td>Frost Bomb</td>
             <td></td>
             <td></td>
-            <td>{renderDamageDice('4d6')}<span style={renderNum('damageD', null, true)}>{renderNum('damageD')+6 >= 0 ? '+' + (renderNum('damageD')+6) : (renderNum('damageD')+6)}</span> Cold</td>
+            <td>{renderDamageDice('4d6')}<span style={renderNum('damageD', null, true)}>{renderNum('damageD', null, null, null, 'bomb')+6 >= 0 ? '+' + (renderNum('damageD', null, null, null, 'bomb')+6) : (renderNum('damageD', null, null, null, 'bomb')+6)}</span> Cold</td>
             <td></td>
             <td>Creatures that take a direct hit from a frost bomb are staggered on their next turn unless they succeed on a Fortitude save.</td>
           </tr>
           <tr>
-            <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
+            <td><button className={canCast('standard')} onClick={() => renderDispatch('standard', 'bomb')}><strong>Attack</strong></button></td>
             <td>Healing Bomb</td>
             <td></td>
             <td></td>
@@ -148,7 +151,7 @@ const Attacks = props => {
             <td>Creating a healing bomb requires the alchemist to expend an infused extract or potion containing a <em>cure</em> spell. A creature that takes a direct hit from a healing bomb is healed as if she had imbibed the infusion or potion used to create the bomb.</td>
           </tr>
           <tr>
-            <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
+            <td><button className={canCast('standard')} onClick={() => renderDispatch('standard', 'bomb')}><strong>Attack</strong></button></td>
             <td>Stink Bomb</td>
             <td></td>
             <td></td>
@@ -427,7 +430,7 @@ const Attacks = props => {
   }
 
 
-  const renderNum = (type, strengthMultiplier, style, finesse) => {
+  const renderNum = (type, strengthMultiplier, style, finesse, additionalDetails) => {
     // type includes abS, abD, damageS, damageD
     let bab = 0
     const hc = props.character_info.hardcode
@@ -465,6 +468,7 @@ const Attacks = props => {
     let arcaneStrike = hc.arcane_strike
     let enlarger = hc.enlarge
     let reducer = hc.reduce
+    const activeMutagen = hc.activeMutagen ? hc.mutagen : false
 
     bab = n === "Merg" ? 7 : bab
     bab = n === "Cedrick" ? 7 : bab
@@ -529,6 +533,17 @@ const Attacks = props => {
     damageSBonus += reducer ? -1 : 0
     // dex doesn't effect damage
     // damageDBonus += reducer ? 1 : 0
+
+    // +4 to str
+    abSBonus += activeMutagen === 'strength' ? 2 : 0
+    damageSBonus += activeMutagen === 'strength' ? 2 : 0
+
+    // +4 to dex
+    abDBonus += activeMutagen === 'dexterity' ? 2 : 0
+
+    if (additionalDetails === 'bomb'){
+      damageDBonus += activeMutagen === 'strength' ? -1 : 0
+    }
 
     if (type === 'abS'){
       if (!style){
@@ -669,7 +684,7 @@ const Attacks = props => {
     } else if (name === 'crazed'){
       comment = 'On a critical hit, deal an additional +3d8 cold damage instead of +1d4. On a critical failure, the weapon overloads, dealing 4d10+4 damage to you and the weapon is destroyed. DC 20 Reflex save for half damage. If you fail the saving throw, you hand is locked up by ice and cold for 1 hour. -4 to Dexterity checks and attacks with that hand.'
     } else if (name === 'Splash'){
-      comment = 'On a critical hit, deal an additional +3d8 cold damage instead of +1d4. On a critical failure, the weapon overloads, dealing 4d10+4 damage to you and the weapon is destroyed. DC 20 Reflex save for half damage. If you fail the saving throw, you hand is locked up by ice and cold for 1 hour. -4 to Dexterity checks and attacks with that hand.'
+      comment = 'A splash weapon is a ranged weapon that breaks on impact, splashing or scattering its contents over its target and nearby creatures or objects. To attack with a splash weapon, make a ranged touch attack against the target. Thrown splash weapons require no weapon proficiency, so you don’t take the –4 nonproficiency penalty. A hit deals direct hit damage to the target, and splash damage to all creatures within 5 feet of the target. If the target is Large or larger, you choose one of its squares and the splash damage affects creatures within 5 feet of that square. Splash weapons cannot deal precision-based damage (such as the damage from the rogue’s sneak attack class feature).\n\nYou can instead target a specific grid intersection. Treat this as a ranged attack against AC 5. However, if you target a grid intersection, creatures in all adjacent squares are dealt the splash damage, and the direct hit damage is not dealt to any creature. You can’t target a grid intersection occupied by a creature, such as a Large or larger creature; in this case, you’re aiming at the creature.\n\nIf you miss the target (whether aiming at a creature or a grid intersection), roll 1d8. This determines the misdirection of the throw, with 1 falling short (off-target in a straight line toward the thrower), and 2 through 8 rotating around the target creature or grid intersection in a clockwise direction. Then, count a number of squares in the indicated direction equal to the range increment of the throw. After you determine where the weapon landed, it deals splash damage to all creatures in that square and in all adjacent squares.'
     }
     if (comment){
       props.renderTooltip(e, comment)

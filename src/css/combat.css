@@ -327,3 +327,31 @@
   max-height: 29em;
   position: relative;
 }
+
+.health-box{
+  height: 1em;
+  display: inline-block;
+  min-width: 80%;
+  border: 1px solid black;
+  background-color: none;
+  padding: 1px;
+}
+
+.green-health-bar{
+  display: block;
+  width: inherit;
+  height: 100%;
+}
+
+.blue-health-bar{
+  position: relative;
+  z-index: -1;
+  width: inherit;
+  height: 100%;
+  background-color: #0892D0;
+}
+
+#mobile-combat{
+  display: flex;
+  background-color: hotpink;
+}

@@ -10,9 +10,15 @@ const Tooltip = props => {
     pointerEvents: 'none'
   }
 
+  let width = '200px'
+  console.log(props.comment.length)
+  if (props.comment.length > 600){
+    width = '400px'
+  }
+
   return (
     <section id='tooltip' className='on top' style={style}>
-      <div className='tooltip-arrow'></div><div className='tooltip-inner'>{props.comment}</div>
+      <div className='tooltip-arrow'></div><div className='tooltip-inner' style={{maxWidth: width}}>{props.comment}</div>
     </section>
   )
 }

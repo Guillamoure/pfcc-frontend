@@ -619,7 +619,7 @@
 }
 
 #tooltip .tooltip-inner {
-  max-width: 200px;
+  max-width: inherit;
   padding: 3px 8px;
   color: #fff;
   text-align: center;
@@ -741,7 +741,7 @@
 }
 
 #mobile-tabs{
-  position: absolute;
+  position: fixed;
   bottom: 0px;
   width: 100%;
 }
@@ -765,4 +765,19 @@
 
 .white-outline {
   text-shadow: -1px -1px white, 1px 1px white;
+}
+
+.mobile-centering{
+  display: flex;
+  justify-content: space-between;
+  padding: 1%;
+}
+
+.mobile-flex-boxes{
+  margin: 0.5em;
+  padding: 0.2em;
+  background-color: rgba(235, 235, 235, 0.95);
+  border: solid;
+  border-color: #000;
+  border-radius: 1em;
 }

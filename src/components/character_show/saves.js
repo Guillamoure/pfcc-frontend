@@ -49,6 +49,7 @@ const Saves = props => {
       }
       const ogST = totalSavingThrow
       // hardcoding
+
       if (save === 'will' && hc.rage){
         totalSavingThrow += 2
       }
@@ -57,6 +58,7 @@ const Saves = props => {
       const reducer = hc.reduce
       const charmedActive = hc.charmedActive
       const stealTime = hc.stealTime
+      const activeMutagen = hc.activeMutagen ? hc.mutagen : false
       if (save === 'reflex'){
         if (largeMorph){
           totalSavingThrow += -1
@@ -64,6 +66,12 @@ const Saves = props => {
         totalSavingThrow += enlarger ? -1 : 0
         totalSavingThrow += reducer ? 1 : 0
         totalSavingThrow += stealTime ? 1 : 0
+
+        totalSavingThrow += activeMutagen === 'dexterity' ? 2 : 0
+      } else if (save === 'will'){
+        totalSavingThrow += activeMutagen === 'dexterity' ? -1 : 0
+      } else if (save === 'fortitude'){
+        totalSavingThrow += activeMutagen === 'constitution' ? 2 : 0
       }
       totalSavingThrow += charmedActive ? 4 : 0
       if (!style){
@@ -156,8 +164,8 @@ const Saves = props => {
     return modifiers
   }
 
-
-    return(
+  if (localStorage.computer === "true"){
+    return (
       <div id='saves' className='container-3 shadow shrink' >
         <div id='saving-throw-title' onMouseOver={e => renderTooltip(e, 'Save')} onMouseOut={props.mouseOut}>Saving Throws{ast('Save')}</div>
         <span className='centered' >
@@ -174,6 +182,27 @@ const Saves = props => {
         </span>
       </div>
     )
+  } else if (localStorage.computer === "false"){
+    return (
+      <div id='saves' className='shadow mobile-centering'>
+        {/* when implementing tooltips, also include renderTooltip (e, 'Save'), because I removed the Saving Throw title */}
+        {/* the title has that feature */}
+        <span className='centered' style={{display: 'inline-block', margin: '0.3em'}}>
+          <div className='enhanced' style={renderCharacterSave('fortitude', 'constitution', true)}>{renderCharacterSave('fortitude', 'constitution')}</div>
+          <div className='muted'><strong>Fort</strong></div>
+        </span>
+        <span className='centered' style={{display: 'inline-block', margin: '0.3em'}} onMouseOver={e => renderTooltip(e, 'Reflex')} onMouseOut={props.mouseOut}>
+          <div className='enhanced' style={renderCharacterSave('reflex', 'dexterity', true)}>{renderCharacterSave('reflex', 'dexterity')}{ast('Reflex')}</div>
+          <div className='muted'><strong>Refl</strong></div>
+        </span>
+        <span className='centered' style={{display: 'inline-block', margin: '0.3em'}}>
+          <div className='enhanced' style={renderCharacterSave('will', 'wisdom', true)}>{renderCharacterSave('will', 'wisdom')}</div>
+          <div className='muted'><strong>Will</strong></div>
+        </span>
+      </div>
+    )
+  }
+
 
 }
 
@@ -181,6 +210,7 @@ const mapStateToProps = (state) => {
   return {
     currentUser: state.currentUser,
     admin: state.admin,
+    character: state.character,
     character_info: state.character_info,
     classes: state.classes
   }

@@ -399,6 +399,11 @@ const reducer = (state = initialState, action) => {
         }
       })
       return {...state, character: {...state.character, character_weapons: filteredCWs}}
+    case 'MUTAGEN':
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, mutagen: action.name}}}
+    case 'TOGGLE MUTAGEN':
+      let activeMutagen = state.character_info.hardcode.activeMutagen || false
+      return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, activeMutagen: !activeMutagen}}}
     default:
       return state
   }
@@ -458,7 +463,7 @@ const hardcoded = (state, action) => {
     case 'Festus':
       return {speed: 35}
     case 'Grackle':
-      return {speed: 30, bombs: 0, ammo: [{name: 'arrow', amount: 20}], weaponAmmo:[{weapon: 'Long Bow', ammo: 'arrow'}]}
+      return {speed: 30, points: 0, ammo: [{name: 'arrow', amount: 20}], weaponAmmo:[{weapon: 'Long Bow', ammo: 'arrow'}]}
     default:
       return {}
   }

@@ -15,6 +15,7 @@ const ArmorClass = props => {
   const enlarger = hc.enlarge
   const reducer = hc.reduce
   const stealTime = hc.stealTime ? 1 : 0
+  const activeMutagen = hc.activeMutagen ? hc.mutagen : false
   const age = name === 'Maddox' && hc.age
 
   const quick = hc.quick ? 2 : 0
@@ -59,6 +60,7 @@ const ArmorClass = props => {
         dex = 27
       }
     }
+    dex += activeMutagen === 'dexterity' ? 4 : 0
     return Math.floor((dex - 10) / 2)
   }
 
@@ -104,6 +106,12 @@ const ArmorClass = props => {
     }
     if (name === "Persephone"){
       bonus+=1
+    }
+    if (name === "Grackle"){
+      bonus+=1
+    }
+    if (activeMutagen){
+      bonus +=2
     }
     return bonus
   }
@@ -173,6 +181,7 @@ const ArmorClass = props => {
     defaultAC += name === "Robby" ? 1 : 0 // nimble feature
     defaultAC += name === "Persephone" ? 1 : 0 // dodge feat
     defaultAC += name === "Persephone" ? 1 : 0 // natural armor
+    defaultAC += name === "Grackle" ? 1 : 0 // natural armor
     defaultAC += name === "Merg" ? 2 : 0 // fabric of reality
     if (type === 't'){
       defaultAC = 10 + dex + size + bonus
@@ -182,6 +191,7 @@ const ArmorClass = props => {
     } else if (type === 'ff'){
       defaultAC = 10 + size + armorBonus + natural + bonus
       defaultAC += name === "Persephone" ? 1 : 0 // natural armor
+      defaultAC += name === "Grackle" ? 1 : 0 // natural armor
       defaultAC += name === "Merg" ? 2 : 0 // fabric of reality
     }
     if (defaultAC > acCalc(type)){
@@ -193,25 +203,44 @@ const ArmorClass = props => {
     }
   }
 
-
-  return(
-    <div id='ac' className='shadow shrink'>
-      <span className='centered container-3'>
-        <section>
+  if (localStorage.computer === "true"){
+    return (
+      <div id='ac' className='shadow shrink'>
+        <span className='centered container-3'>
+          <section>
+            <div className='enhanced' style={colorStyle('ac')}>{acCalc('ac')}</div>
+            <div><strong>AC</strong></div>
+          </section>
+          <section>
+            <div className='enhanced' style={colorStyle('t')}>{acCalc('t')}</div>
+            <div className='dull'><strong>T</strong></div>
+          </section>
+          <section>
+            <div className='enhanced' style={colorStyle('ff')}>{acCalc('ff')}</div>
+            <div className='dull'><strong>FF</strong></div>
+          </section>
+        </span>
+      </div>
+    )
+  } else if (localStorage.computer === "false"){
+    return (
+      <div className='shadow mobile-flex-boxes mobile-centering'>
+        <span style={{display: 'inline-block', margin: '0.3em', textAlign: 'center'}}>
           <div className='enhanced' style={colorStyle('ac')}>{acCalc('ac')}</div>
           <div><strong>AC</strong></div>
-        </section>
-        <section>
+        </span>
+        <span style={{display: 'inline-block', margin: '0.3em', textAlign: 'center'}}>
           <div className='enhanced' style={colorStyle('t')}>{acCalc('t')}</div>
           <div className='dull'><strong>T</strong></div>
-        </section>
-        <section>
+        </span>
+        <span style={{display: 'inline-block', margin: '0.3em', textAlign: 'center'}}>
           <div className='enhanced' style={colorStyle('ff')}>{acCalc('ff')}</div>
           <div className='dull'><strong>FF</strong></div>
-        </section>
-      </span>
-    </div>
-  )
+        </span>
+      </div>
+    )
+  }
+
 }
 
 const mapStatetoProps = (state) => {

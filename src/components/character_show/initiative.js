@@ -10,12 +10,17 @@ const Initiative = props => {
     const enlarger = hc.enlarge
     const reducer = hc.reduce
     const age = name === 'Maddox' && hc.age
+    const activeMutagen = hc.activeMutagen ? hc.mutagen : false
 
     let mod = Math.floor((props.character_info.ability_scores.dexterity - 10) / 2)
     if (name === "Cedrick"){
       mod += 1
     }
     if (name === 'Maddox'){
+      // improved initiative
+      mod += 4
+    }
+    if (name === 'Grackle'){
       // improved initiative
       mod += 4
     }
@@ -38,6 +43,9 @@ const Initiative = props => {
     }
     mod += enlarger ? -1 : 0
     mod += reducer ? 1 : 0
+
+    mod += activeMutagen === 'dexterity' ? 2 : 0
+
     if (!style){
       return mod < 0 ? mod : `+${mod}`
     } else {

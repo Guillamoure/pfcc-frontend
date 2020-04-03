@@ -8,6 +8,7 @@ const HardcodeSpells = props => {
   const pepper = props.character.name === "Persephone"
   const maddox = props.character.name === "Maddox"
   const robby = props.character.name === "Robby"
+  const grackle = props.character.name === "Grackle"
 
   const spells = () => {
     let availableSpells = []
@@ -175,6 +176,9 @@ const HardcodeSpells = props => {
       availableSpells.push(slipstream)
       let elements = {id: 75, level: 1, action: "move", name: "Endure Elements", range: "self", duration: "1 hour", dc: "-", limit: 1, source: 'Brass Griffin Cloak'}
       availableSpells.push(elements)
+    } else if (grackle){
+      let deathwatch = {id: 107, level: 1, action: "standard", name: "Deathwatch", range: "30 ft", duration: "70 minutes", dc: "-", source: 'Soul Seer'}
+      availableSpells.push(deathwatch)
     }
 
     if (props.character_info.hardcode.helmsman || props.character_info.hardcode.crew){
