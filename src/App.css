@@ -764,7 +764,7 @@
 }
 
 .white-outline {
-  text-shadow: -1px -1px white, 1px 1px white;
+  text-shadow: -1px -1px white, 1px 1px white, -1px 1px white, 1px -1px white;
 }
 
 .mobile-centering{
@@ -780,4 +780,22 @@
   border: solid;
   border-color: #000;
   border-radius: 1em;
+}
+
+#sidebar {
+  background-color: maroon;
+  border: 2px solid black;
+  margin: 1%;
+  border-radius: 2em 2em 0 0;
+  padding: 2%;
+  position: fixed;
+  color: white;
+}
+
+#sidebar-exit{
+  background-color: maroon;
+  border: 2px solid black;
+  padding: 1%;
+  border-radius: 1em 1em 0 0;
+  position: fixed;
 }

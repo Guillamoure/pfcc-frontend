@@ -88,7 +88,7 @@ class Traits extends React.Component {
 
   render(){
     return(
-      <div style={{padding: '1em'}} className={localStorage.computer === "false" ? 'mobile-tab-selected-tab-container' : 'none'}>
+      <div style={{padding: '1em'}} className={localStorage.computer === "false" ? 'mobile-tab-selected-tab-container shadow' : 'none'}>
         {this.renderRacialTraits()}
       </div>
     )

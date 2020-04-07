@@ -326,7 +326,7 @@ class Skills extends React.Component {
   renderMobileSkillsRow = () => {
     const sortedSkills = this.modifiedSkills()
     return sortedSkills.map((skill, i) => {
-      return <p key={i*3-1} style={{fontSize: '11px', textAlign: 'center'}}>{this.renderAbilityScoreAbbreviation(skill)} | <strong>{this.asterisk(skill)}</strong> | {skill.bonus}</p>
+      return <p key={i*3-1} style={{fontSize: '14px', textAlign: 'center', marginBottom: '2%'}}><strong style={{fontSize: '11px'}}>{this.asterisk(skill)}</strong> {skill.bonus}</p>
     })
   }
 
@@ -598,6 +598,7 @@ class Skills extends React.Component {
 
 
   render(){
+
     if (localStorage.computer === "true"){
       return(
         <div id='skills' className='shadow'>

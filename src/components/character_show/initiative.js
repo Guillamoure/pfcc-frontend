@@ -70,18 +70,30 @@ const Initiative = props => {
   }
 
 
+  if (localStorage.computer === "true"){
+    return (
+      <div id='init' className='shadow shrink'>
+        <span className='centered'>
+          <div className='dull'><strong>Init</strong></div>
+          <div className='enhanced' style={dexMod(true)}>{dexMod()}</div>
+        </span>
+      </div>
+    )
+  } else if (localStorage.computer === "false"){
+    return (
+      <div id='init' className='shadow' style={{padding: '2%'}}>
+        <span className='centered'>
+          <div className='enhanced' style={dexMod(true)}>{dexMod()}</div>
+          <div className='dull'><strong>Init</strong></div>
+        </span>
+      </div>
+    )
+  }
 
-  return (
-    <div id='init' className='shadow shrink'>
-      <span className='centered'>
-        <div className='dull'><strong>Init</strong></div>
-        <div className='enhanced' style={dexMod(true)}>{dexMod()}</div>
-      </span>
-    </div>
-  )
 }
 const mapStatetoProps = (state) => {
   return {
+    character: state.character,
     character_info: state.character_info
   }
 }

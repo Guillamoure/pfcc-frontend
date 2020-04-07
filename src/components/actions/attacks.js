@@ -5,6 +5,15 @@ const Attacks = props => {
 
   const [bombs, setBombs] = React.useState(false);
 
+  const referenceState = (specific) => {
+    switch(specific){
+      case 'bombs':
+        return bombs
+      default:
+        break
+    }
+  }
+
 
   const renderCharacter = (name) => {
     switch(name){
@@ -119,6 +128,49 @@ const Attacks = props => {
   }
 
   const grackle = () => {
+    if (localStorage.computer === "false"){
+      return [
+        {
+          name: 'Bomb',
+          action: null,
+          buttonName: 'Expand',
+          attackBonus: 'Dexterity',
+          hardcodeAttackBonus: 1,
+          range: 20,
+          damageDice: '4d6',
+          hardcodeDamageBonus: 6,
+          damageBonus: 'Dexterity',
+          damageType: 'Fire',
+          strengthMultiplier: null,
+          finesse: null,
+          additionalDetails: 'bomb',
+          critical: 'x2',
+          special: <><span onMouseOver={e => renderTooltip(e, 'Splash')} onMouseOut={props.mouseOut}>Splash</span>, Those caught in the splash damage can attempt a Reflex save for half damage.</>,
+          toggle: ['bombs', setBombs],
+          displayIfTrue: null
+        },
+        {
+          name: 'Frost Bomb',
+          action: 'standard',
+          dispatchDetails: 'bomb',
+          buttonName: 'Attack',
+          attackBonus: null,
+          hardcodeAttackBonus: 0,
+          range: null,
+          damageDice: '4d6',
+          hardcodeDamageBonus: 6,
+          damageBonus: 'Dexterity',
+          damageType: 'Cold',
+          strengthMultiplier: null,
+          finesse: null,
+          additionalDetails: 'bomb',
+          critical: 'x2',
+          special: <>Creatures that take a direct hit from a frost bomb are staggered on their next turn unless they succeed on a Fortitude save.</>,
+          toggle: null,
+          displayIfTrue: 'bombs'
+        },
+      ]
+    }
     // <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
     return (
       <React.Fragment>
@@ -909,26 +961,73 @@ const Attacks = props => {
     return <span style={{color}}>({ammo.name})</span>
   }
 
-  return (
-    <section>
-      <table>
-        <thead>
-          <tr>
-            <th>Action</th>
-            <th>Weapon</th>
-            <th>Bonus</th>
-            <th>Range</th>
-            <th>Damage</th>
-            <th>Critical</th>
-            <th>Special</th>
-          </tr>
-        </thead>
-        <tbody>
-        {renderCharacter(props.character.name)}
-        </tbody>
-      </table>
-    </section>
-  )
+  const renderMobileAttack = (attack) => {
+    let clickEvent = () => renderDispatch(attack.action)
+    if (attack.action === null){
+      if (attack.toggle){
+        clickEvent = () => attack.toggle[1](!(referenceState(attack.toggle[0])))
+      }
+    }
+
+    let attackType = attack.attackBonus === "Strength" ? "abS" : "abD"
+    let damageType = attack.damageType === "Strength" ? "damageS" : "damageD"
+
+    if ((referenceState(attack.displayIfTrue)) === false){
+      return null
+    }
+    return (
+      <tr>
+        <td style={{fontSize: '12px'}}><button className={canCast(attack.action)} onClick={clickEvent}><strong>{attack.buttonName}</strong></button></td>
+        <td>{attack.name}</td>
+        {attack.attackBonus ? <td style={renderNum(attackType, null, true)}>{renderNum(attackType)+attack.hardcodeAttackBonus >= 0 ? '+' + (renderNum(attackType)+attack.hardcodeAttackBonus) : (renderNum(attackType)+attack.hardcodeAttackBonus)}</td> : <td></td>}
+        <td>{renderDamageDice(attack.damageDice)}<span style={renderNum(damageType, attack.strengthMultiplier, true)}>{renderNum(damageType, attack.strengthMultiplier, null, attack.finesse, attack.additionalDetails)+attack.hardcodeDamageBonus >= 0 ? '+' + (renderNum(damageType, attack.strengthMultiplier, null, attack.finesse, attack.additionalDetails)+attack.hardcodeDamageBonus) : (renderNum(damageType, attack.strengthMultiplier, null, attack.finesse, attack.additionalDetails)+attack.hardcodeDamageBonus)}</span> {attack.damageType}</td>
+        <td style={{fontSize: '12px', border: '2px solid black', borderRadius: '0.5em'}} onClick={() => props.editSidebar(true, 'bottom', 'attack', attack)}>See More</td>
+      </tr>
+    )
+  }
+
+  if (localStorage.computer === "true"){
+    return (
+      <section>
+        <table>
+          <thead>
+            <tr>
+              <th>Action</th>
+              <th>Weapon</th>
+              <th>Bonus</th>
+              <th>Range</th>
+              <th>Damage</th>
+              <th>Critical</th>
+              <th>Special</th>
+            </tr>
+          </thead>
+          <tbody>
+          {renderCharacter(props.character.name)}
+          </tbody>
+        </table>
+      </section>
+    )
+  } else if (localStorage.computer === "false"){
+    let attacks = renderCharacter(props.character.name)
+    return (
+      <section className='mobile-tab-selected-tab-container shadow' style={{textAlign: 'center'}}>
+        <table style={{ width: '98%', marginLeft: '1%', marginRight: '1%', fontSize: '10px'}}>
+          <thead>
+            <tr>
+              <th style={{width: '20%'}}>Action</th>
+              <th style={{width: '20%'}}>Weapon</th>
+              <th style={{width: '15%'}}>Bonus</th>
+              <th style={{width: '20%'}}>Damage</th>
+              <th style={{width: '25%'}}></th>
+            </tr>
+          </thead>
+          <tbody>
+            {attacks.map(renderMobileAttack)}
+          </tbody>
+        </table>
+      </section>
+    )
+  }
 }
 
 const mapStatetoProps = (state) => {

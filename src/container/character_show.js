@@ -43,6 +43,7 @@ import AmmoModal from '../modals/ammo'
 import SaseaModal from '../modals/sasea'
 import AuraModal from '../modals/aura'
 import MutagenModal from '../modals/mutagen'
+import SideBar from './sidebar/sidebar'
 
 import BackgroundForm from '../modals/background_form'
 import CharacterForm from '../modals/character_form'
@@ -97,7 +98,15 @@ class Character extends React.Component {
     mobileTab: 'adventure',
     startTime: 0,
     startSwipe: 0,
-    drag: false
+    drag: false,
+    changeBackground: false,
+    justSwipedMobile: false,
+    offset: 0,
+    sidebar: {
+      display: false,
+      position: 'right',
+      content: ''
+    }
   }
 
   componentDidMount() {
@@ -317,6 +326,10 @@ class Character extends React.Component {
     }
   }
 
+  editSidebar = (display, position, description, content) => {
+    this.setState({sidebar: {display, position, description, content}})
+  }
+
   clickOut = (e) => {
     if(e.target.classList[0] === "page-dimmer"){
       this.setState({modal: false, spellId: 0, characterItemID: 0})
@@ -375,20 +388,66 @@ class Character extends React.Component {
   }
 
   handleMouseDown = (e) => {
-    console.log('excuse me, what are you?', e.clientX)
-    let d = new Date
-    this.setState({startTime: d.getTime(), startSwipe: e.clientX, drag: true})
+    // the swipe mechanic will often skip over tabs, if it's too quick and long
+    // so in the adjustTabs setState, going to have a settimeout so there is a delay between swipes
+    if (!this.state.justSwipedMobile){
+      let d = new Date
+      console.log('clicked down on mouse', e.targetTouches[0].clientX)
+      this.setState({
+        startTime: d.getTime(),
+        startSwipe: e.targetTouches[0].clientX,
+        drag: true
+      })
+    }
   }
 
   handleMouseUp = (e) => {
-    console.log('why are you running?', e)
-    let d = new Date
-    this.setState({drag: false, startTime: null, startSwipe: null})
+    this.setState({drag: false, startTime: null, startSwipe: null, offset: 0})
   }
 
   handleMouseMove = (e) => {
     if (this.state.drag){
-      debugger
+      const currentSwipe = e.targetTouches[0].clientX
+      let d = new Date
+      const currentTime = d.getTime()
+      // calculate velocity
+      // velocity = current clientX position - starting clientX position / current date - starting date
+      const deltaX = this.state.startSwipe - currentSwipe
+      const deltaT = (currentTime - this.state.startTime) / 1000
+      // converting deltaT to seconds from milliseconds
+      const velocity = (deltaX / deltaT)
+
+      if (velocity > 900 || velocity < -900){
+        this.adjustTabs(velocity)
+      } else {
+        this.setState({offset: deltaX/1.5})
+      }
+      // if velocity is a certain amount, or if delta clientX is great enough
+      // move to next tab
+
+    }
+  }
+
+  adjustTabs = (velocity) => {
+    let newTab = ''
+    // adventure, combat, character, settings (left to right)
+    if (velocity > 0){
+      newTab = this.state.mobileTab === 'adventure' ? 'combat' : newTab
+      newTab = this.state.mobileTab === 'combat' ? 'character' : newTab
+      newTab = this.state.mobileTab === 'character' ? 'settings' : newTab
+      newTab = this.state.mobileTab === 'settings' ? 'settings' : newTab
+
+    } else if (velocity < 0){
+      newTab = this.state.mobileTab === 'adventure' ? 'adventure' : newTab
+      newTab = this.state.mobileTab === 'combat' ? 'adventure' : newTab
+      newTab = this.state.mobileTab === 'character' ? 'combat' : newTab
+      newTab = this.state.mobileTab === 'settings' ? 'character' : newTab
+    }
+    //
+    if (!this.state.justSwipedMobile){
+      this.setState({mobileTab: newTab, justSwipedMobile: true, offset: 0}, () => {
+        setTimeout(() => this.setState({justSwipedMobile: false}), 150)
+      })
     }
   }
 
@@ -455,7 +514,7 @@ class Character extends React.Component {
     } else {
       return (
         <>
-          <main style={{marginBottom: '10vh'}} onMouseDown={e => this.handleMouseDown(e)}>
+          <main style={{marginBottom: '10vh', minHeight: '90vh', position: 'relative', left: 0 - this.state.offset}} onTouchStart={this.handleMouseDown} onTouchMove={this.handleMouseMove} onTouchEnd={this.handleMouseUp}>
             {this.state.character.race && <CharacterName />}
 
             {this.state.character.race && this.state.mobileTab === "adventure" && <AbilityScores/>}
@@ -466,11 +525,14 @@ class Character extends React.Component {
             {this.state.character.race && this.state.mobileTab === "combat" && <section id='mobile-combat'>
               <Saves renderTooltip={this.renderTooltip} mouseOut={this.mouseOut}/>
               <ArmorClass/>
+              <Initiative/>
             </section>}
+            {this.state.character.race && this.state.mobileTab === "combat" && <Actions editModal={this.editModal} clickOut={this.clickOut} renderTooltip={this.renderTooltip} mouseOut={this.mouseOut} editSidebar={this.editSidebar}/>}
+
 
             {this.state.character.race && this.state.mobileTab === "character" && <CharacterDetails editModal={this.editModal}/>}
 
-
+            {this.state.sidebar.display && <SideBar sidebar={this.state.sidebar} editSidebar={this.editSidebar}/>}
           </main>
           <footer>
             <MobileTabs mobileTab={this.state.mobileTab} changeActiveMobileTab={this.changeActiveMobileTab}/>

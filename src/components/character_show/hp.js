@@ -102,7 +102,7 @@ const HP = props => {
               <span className='green-health-bar' style={{background: `linear-gradient(to right, ${color} ${percentageHP}%, #0892D0 ${percentageHP}%, #0892D0 ${percentageHP+tempPercentage}%, white ${percentageHP+tempPercentage}%)`}}/>
             </div>
           </span>
-          <span style={{textAlign: 'center', display: 'inline-block', width: '20%'}}>
+          <span style={{textAlign: 'center', display: 'inline-block', width: '18%'}}>
             {currentHP}/{totalHP}
           </span>
         </section>
