@@ -66,6 +66,21 @@ class Traits extends React.Component {
         }
       ]
     }
+    if (name === "Grackle"){
+      replacedTraits = ['Fiendish Sorcery', 'Spell-like Ability', 'Fiendish Resistance']
+      addedTraits = [
+        {
+          id: 4000,
+          name: 'Soul Seer',
+          description: <span>Rare tieflings have a peculiar sight that allows them to see the state of a creature’s soul. They can use <em>deathwatch</em> at will as spell-like ability.</span>
+        },
+        {
+          id: 4001,
+          name: 'Scaled Skin',
+          description: <span>The skin of these tieflings provides some energy resistance, but is also as hard as armor. Choose one of the following energy types: cold, electricity, or <strong>fire</strong>. A tiefling with this trait gains resistance 5 in the chosen energy type and also gains a +1 natural armor bonus to AC.</span>
+        }
+      ]
+    }
     newTraits = traits.filter(f => !replacedTraits.includes(f.name))
     addedTraits.forEach(af => newTraits.push(af))
     return newTraits
@@ -73,7 +88,7 @@ class Traits extends React.Component {
 
   render(){
     return(
-      <div style={{padding: '1em'}} className={localStorage.computer === "false" ? 'mobile-tab-selected-tab-container' : 'none'}>
+      <div style={{padding: '1em'}} className={localStorage.computer === "false" ? 'mobile-tab-selected-tab-container shadow' : 'none'}>
         {this.renderRacialTraits()}
       </div>
     )

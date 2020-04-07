@@ -158,7 +158,7 @@ class Equipment extends React.Component {
 
   render(){
     return(
-      <div style={{padding: '1em', display: 'grid', gridTemplateColumns: '40% 60%'}} className={localStorage.computer === "false" ? 'mobile-tab-selected-tab-container mobile-tab-bottom' : 'none'}>
+      <div style={{padding: '1em', display: 'grid', gridTemplateColumns: '40% 60%'}} className={localStorage.computer === "false" ? 'mobile-tab-selected-tab-container mobile-tab-bottom shadow' : 'none'}>
         {this.renderEquipment()}
       </div>
     )

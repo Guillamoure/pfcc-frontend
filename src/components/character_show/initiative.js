@@ -10,12 +10,17 @@ const Initiative = props => {
     const enlarger = hc.enlarge
     const reducer = hc.reduce
     const age = name === 'Maddox' && hc.age
+    const activeMutagen = hc.activeMutagen ? hc.mutagen : false
 
     let mod = Math.floor((props.character_info.ability_scores.dexterity - 10) / 2)
     if (name === "Cedrick"){
       mod += 1
     }
     if (name === 'Maddox'){
+      // improved initiative
+      mod += 4
+    }
+    if (name === 'Grackle'){
       // improved initiative
       mod += 4
     }
@@ -38,6 +43,9 @@ const Initiative = props => {
     }
     mod += enlarger ? -1 : 0
     mod += reducer ? 1 : 0
+
+    mod += activeMutagen === 'dexterity' ? 2 : 0
+
     if (!style){
       return mod < 0 ? mod : `+${mod}`
     } else {
@@ -62,18 +70,30 @@ const Initiative = props => {
   }
 
 
+  if (localStorage.computer === "true"){
+    return (
+      <div id='init' className='shadow shrink'>
+        <span className='centered'>
+          <div className='dull'><strong>Init</strong></div>
+          <div className='enhanced' style={dexMod(true)}>{dexMod()}</div>
+        </span>
+      </div>
+    )
+  } else if (localStorage.computer === "false"){
+    return (
+      <div id='init' className='shadow' style={{padding: '2%'}}>
+        <span className='centered'>
+          <div className='enhanced' style={dexMod(true)}>{dexMod()}</div>
+          <div className='dull'><strong>Init</strong></div>
+        </span>
+      </div>
+    )
+  }
 
-  return (
-    <div id='init' className='shadow shrink'>
-      <span className='centered'>
-        <div className='dull'><strong>Init</strong></div>
-        <div className='enhanced' style={dexMod(true)}>{dexMod()}</div>
-      </span>
-    </div>
-  )
 }
 const mapStatetoProps = (state) => {
   return {
+    character: state.character,
     character_info: state.character_info
   }
 }

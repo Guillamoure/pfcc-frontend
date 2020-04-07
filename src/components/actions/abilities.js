@@ -26,6 +26,8 @@ class Abilities extends React.Component {
         return this.robby()
       case 'Festus':
         return this.festus()
+      case 'Grackle':
+        return this.grackle()
       default:
         return 0
     }
@@ -35,8 +37,11 @@ class Abilities extends React.Component {
     if (typeof points !== 'number' || points){
       if (!this.props.character_info.actions[action]){
         this.props.dispatch({type: 'TRIGGER ACTION', action})
-        if (specific){
+        if (specific !== 'mutagen' && specific){
           this.props.dispatch({type: specific})
+        } else if (specific === 'mutagen'){
+
+          this.props.editModal('mutagen')
         }
       }
       if (pointsDirection){
@@ -518,6 +523,53 @@ class Abilities extends React.Component {
           <td className='table-details'>Teleport 60 ft. You can use this feature again after 1d4 rounds.</td>
         </tr>
       </React.Fragment>
+    )
+  }
+
+  grackle = () => {
+    let actions = this.props.character_info.actions
+    return(
+      <React.Fragment>
+        {!this.props.character_info.hardcode.mutagen && <tr>
+          <td><button className={actions.move ? 'cannot-cast': 'long'} onClick={() => this.dispatchManager('long', null, 'mutagen')}><strong>Brew</strong></button></td>
+          <td>Brew Mutagen</td>
+          <td className='table-details'>Create a mutagen. +2 to AC, +4 to selected ability score, -2 to opposite ability score. Options: Strength/Intelligence, Dexterity/Wisdom, Constitution/Charisma.</td>
+        </tr>}
+        {this.props.character_info.hardcode.mutagen && this.renderMutagen()}
+      </React.Fragment>
+    )
+  }
+
+  renderMutagen = () => {
+    let actions = this.props.character_info.actions
+    let chosenMutagen = this.props.character_info.hardcode.mutagen
+    let activeMutagen = this.props.character_info.hardcode.activeMutagen || false
+    let positiveAbilityScore
+    let negativeAbilityScore
+    switch(chosenMutagen){
+      case "strength":
+        positiveAbilityScore = 'Strength'
+        negativeAbilityScore = 'Intelligence'
+        break
+      case "dexterity":
+        positiveAbilityScore = 'Dexterity'
+        negativeAbilityScore = 'Wisdom'
+        break
+      case "constitution":
+        positiveAbilityScore = 'Constitution'
+        negativeAbilityScore = 'Charisma'
+        break
+      default:
+        break
+    }
+    let className = actions.move ? 'cannot-cast': 'standard'
+    className = activeMutagen ? 'cannot-cast' : className
+    return (
+      <tr>
+        <td><button className={className} onClick={() => this.dispatchManager(className, null, 'TOGGLE MUTAGEN')}><strong>Imbibe</strong></button></td>
+        <td>{positiveAbilityScore}/{negativeAbilityScore} Mutagen</td>
+        <td className='table-details'>70 minutes, +2 natural armor bonus to AC, +4 alchemical bonus to {positiveAbilityScore}, -2 penalty to {negativeAbilityScore}</td>
+      </tr>
     )
   }
 

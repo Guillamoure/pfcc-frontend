@@ -35,12 +35,15 @@ class AttackBonus extends React.Component {
 
   renderPolymorph = (ability) => {
     let bonus = 0
-    let minor = this.props.character_info.hardcode.minor
-    let major = this.props.character_info.hardcode.major
+    const hc = this.props.character_info.hardcode
+    let minor = hc.minor
+    let major = hc.major
     let name = this.props.character.name
     const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major', 'Chameleon - Major'].includes(major)
-    const enlarger = this.props.character_info.hardcode.enlarge
-    const reducer = this.props.character_info.hardcode.reduce
+    const enlarger = hc.enlarge
+    const reducer = hc.reduce
+    const activeMutagen = hc.activeMutagen ? hc.mutagen : false
+
 
     switch(ability){
       case "strength":
@@ -56,7 +59,7 @@ class AttackBonus extends React.Component {
         bonus += reducer ? 1 : 0
         bonus += reducer ? -1 : 0
 
-
+        bonus += activeMutagen === 'strength' ? 2 : 0
         break
       case "dexterity":
         if (largeMorph){
@@ -68,7 +71,7 @@ class AttackBonus extends React.Component {
         bonus += reducer ? 1 : 0
         bonus += reducer ? 1 : 0
 
-
+        bonus += activeMutagen === 'dexterity' ? 2 : 0
         break
       default:
         break
@@ -153,8 +156,8 @@ class AttackBonus extends React.Component {
         <span className='centered'>
           <div className='duller'><strong>Attack Bonus</strong></div>
           <div className='container-2'>
-            <span className='enhanced' style={this.renderAB('strength', true)}>{this.renderAB('strength')}</span>
-            <span className='enhanced' style={this.renderAB('dexterity', true)}>{this.renderAB('dexterity')}</span>
+            {!!this.props.classes.length && <span className='enhanced' style={this.renderAB('strength', true)}>{this.renderAB('strength')}</span>}
+            {!!this.props.classes.length && <span className='enhanced' style={this.renderAB('dexterity', true)}>{this.renderAB('dexterity')}</span>}
             <span>Melee</span>
             <span>Ranged</span>
           </div>

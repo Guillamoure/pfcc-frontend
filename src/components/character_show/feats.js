@@ -45,6 +45,9 @@ class Feats extends React.Component {
       case 'Festus':
         feats = this.festus()
         break
+      case 'Grackle':
+        feats = this.grackle()
+        break
       default:
         break
     }
@@ -228,10 +231,40 @@ class Feats extends React.Component {
     ]
   }
 
+  grackle = () => {
+    return [
+      {
+        id: 8000,
+        description: 'You do not suffer any penalties for using an improvised ranged weapon. You receive a +1 circumstance bonus on attack rolls made with thrown splash weapons.',
+        name: 'Throw Anything'
+      },
+      {
+        id: 8001,
+        description: "You gain one additional discovery. You must meet all of the prerequisites for this discovery.",
+        name: 'Extra Discovery'
+      },
+      {
+        id: 8002,
+        description: "You get a +1 bonus on attack and damage rolls with ranged weapons at ranges of up to 30 feet.",
+        name: "Point-Blank Shot"
+      },
+      {
+        id: 8003,
+        description: "You can shoot or throw ranged weapons at an opponent engaged in melee without taking the standard –4 penalty on your attack roll.",
+        name: "Precise Shot"
+      },
+      {
+        id: 8004,
+        description: "You get a +4 bonus on initiative checks.",
+        name: "Improved Initiative"
+      }
+    ]
+  }
+
 
   render () {
     return(
-      <div style={{padding: '1em'}} className={localStorage.computer === "false" ? 'mobile-tab-selected-tab-container' : 'none'}>
+      <div style={{padding: '1em'}} className={localStorage.computer === "false" ? 'mobile-tab-selected-tab-container shadow' : 'none'}>
       {this.renderFeats()}
       </div>
     )

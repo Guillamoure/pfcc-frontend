@@ -30,6 +30,8 @@ const Active = props => {
   const helmsman = hc.helmsman
   const crew = hc.crew
   const stealTime = hc.stealTime
+  const activeMutagen = hc.activeMutagen ? hc.mutagen : false
+
 
   const renderFeatures = () => {
     let temp = props.character_info.features.filter(f => f.duration === 'temporary')
@@ -39,6 +41,28 @@ const Active = props => {
 
       return <li>{t.source}: {detail}</li>
     })
+  }
+
+  const renderMutagen = () => {
+    let positiveAbilityScore
+    let negativeAbilityScore
+    switch(activeMutagen){
+      case "strength":
+        positiveAbilityScore = 'Strength'
+        negativeAbilityScore = 'Intelligence'
+        break
+      case "dexterity":
+        positiveAbilityScore = 'Dexterity'
+        negativeAbilityScore = 'Wisdom'
+        break
+      case "constitution":
+        positiveAbilityScore = 'Constitution'
+        negativeAbilityScore = 'Charisma'
+        break
+      default:
+        break
+    }
+    return <li>Mutagen: +4 to {positiveAbilityScore}, -2 to {negativeAbilityScore}, +2 to AC, 70 minutes</li>
   }
 
   return (
@@ -68,6 +92,7 @@ const Active = props => {
         {land20 && <li>Base Speed +20 ft.</li>}
         {quick && <li>Base Speed +10 ft., +2 AC, adv. on next attack, Reflex save, Dex or Charisma check</li>}
         {stealTime && <li>+1 to AC, Reflex, +5 base speed</li>}
+        {activeMutagen && renderMutagen()}
         {renderFeatures()}
       </ul>
     </div>

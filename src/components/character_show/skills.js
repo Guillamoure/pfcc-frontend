@@ -40,28 +40,33 @@ class Skills extends React.Component {
       score += age === 'Middle' ? -1 : 0
       score += age === 'Old' ? -2 : 0
       score += age === 'Venerable' ? -3 : 0
+
     }
     if (skill.ability_score === 'Constitution'){
       score += age === 'Young' ? -2 : 0
       score += age === 'Middle' ? -1 : 0
       score += age === 'Old' ? -2 : 0
       score += age === 'Venerable' ? -3 : 0
+
     }
     if (skill.ability_score === "Intelligence"){
       score += age === 'Middle' ? 1 : 0
       score += age === 'Old' ? 1 : 0
       score += age === 'Venerable' ? 1 : 0
+
     }
     if (skill.ability_score === 'Wisdom'){
       score += age === 'Young' ? -2 : 0
       score += age === 'Middle' ? 1 : 0
       score += age === 'Old' ? 1 : 0
       score += age === 'Venerable' ? 1 : 0
+
     }
     if (skill.ability_score === 'Charisma'){
       score += age === 'Middle' ? 1 : 0
       score += age === 'Old' ? 1 : 0
       score += age === 'Venerable' ? 1 : 0
+
     }
     let mod = Math.floor((score - 10) / 2)
     let skillRanks = this.renderNumOfRanks(skill)
@@ -106,6 +111,10 @@ class Skills extends React.Component {
     mod += skill.name === 'Acrobatics' && name === 'Robby' ? 2 : 0
     mod += skill.name === 'Climb' && name === 'Robby' ? 2 : 0
     mod += skill.name === 'Swim' && name === 'Robby' ? 2 : 0
+    //  skilled trait
+    mod += skill.name === 'Bluff' && name === 'Grackle' ? 2 : 0
+    mod += skill.name === 'Stealth' && name === 'Grackle' ? 2 : 0
+
 
 
     let bonus = 0
@@ -117,6 +126,7 @@ class Skills extends React.Component {
     mod += bonus
     // check to see if the starting mod is modified
     let ogMod = mod
+    const activeMutagen = hc.activeMutagen ? hc.mutagen : false
     if (skill.ability_score === 'Strength'){
       if (largeMorph){
         mod += 2
@@ -126,6 +136,8 @@ class Skills extends React.Component {
       }
       mod += enlarger ? 1 : 0
       mod += reducer ? -1 : 0
+
+      mod += activeMutagen === 'strength' ? 4 : 0
     }
     if (skill.ability_score === 'Dexterity'){
       if (largeMorph){
@@ -133,6 +145,20 @@ class Skills extends React.Component {
       }
       mod += enlarger ? -1 : 0
       mod += reducer ? 1 : 0
+
+      mod += activeMutagen === 'dexterity' ? 4 : 0
+    }
+    if (skill.ability_score === 'Constitution'){
+      mod += activeMutagen === 'constitution' ? 4 : 0
+    }
+    if (skill.ability_score === 'Intelligence'){
+      mod += activeMutagen === 'strength' ? -2 : 0
+    }
+    if (skill.ability_score === 'Wisdom'){
+      mod += activeMutagen === 'dexterity' ? -2 : 0
+    }
+    if (skill.ability_score === 'Charisma'){
+      mod += activeMutagen === 'constitution' ? -2 : 0
     }
     if (skill.name === 'Swim'){
       if (hc.minor === 'Frog - Minor'){
@@ -297,6 +323,13 @@ class Skills extends React.Component {
     )
   }
 
+  renderMobileSkillsRow = () => {
+    const sortedSkills = this.modifiedSkills()
+    return sortedSkills.map((skill, i) => {
+      return <p key={i*3-1} style={{fontSize: '14px', textAlign: 'center', marginBottom: '2%'}}><strong style={{fontSize: '11px'}}>{this.asterisk(skill)}</strong> {skill.bonus}</p>
+    })
+  }
+
 // HARDCODING INSTEAD OF DYNAMIC
   // cheatingSize = (skill) => {
   //   if (this.props.character.name === "Nettie"){
@@ -356,7 +389,7 @@ class Skills extends React.Component {
           return skill
         }
       case 'Stealth':
-        if (name === 'Cedrick'){
+        if (name === 'Cedrick' || name === 'Grackle'){
           return asterisk
         } else if (hc.major === 'Chameleon - Major') {
           return asterisk
@@ -401,6 +434,12 @@ class Skills extends React.Component {
         }
       case 'Sense Motive':
         if (name === 'Merg'){
+          return asterisk
+        } else {
+          return skill
+        }
+      case 'Bluff':
+        if (name === 'Grackle'){
           return asterisk
         } else {
           return skill
@@ -460,6 +499,9 @@ class Skills extends React.Component {
       if (hc.major === 'Chameleon - Major'){
         comment.push(comment + ', +10 bonus if you are standing still')
       }
+      if (name === "Grackle"){
+        comment.push('+2 racial bonus from Skilled trait')
+      }
     }
     if (skill === 'Intimidate'){
       if (name === 'Cedrick'){
@@ -504,6 +546,11 @@ class Skills extends React.Component {
         comment.push('If the Fabric of Reality is draped over your eyes, +4 bonus.')
       }
     }
+    if (skill === 'Bluff'){
+      if (name === "Grackle"){
+        comment.push('+2 racial bonus from Skilled trait')
+      }
+    }
     if (ability){
       let armor = hc.armor
       if (armor && (ability === 'Strength' || ability === 'Dexterity')){
@@ -541,15 +588,33 @@ class Skills extends React.Component {
     )
   }
 
-
-  render(){
-    return(
-      <div id='skills' className='shadow'>
-        <div name="skill list">
-          {!!this.state.skillset ? this.renderSkillsTable() : null}
-        </div>
+  renderMobileSkills = () => {
+    return (
+      <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr'}}>
+        {this.renderMobileSkillsRow()}
       </div>
     )
+  }
+
+
+  render(){
+
+    if (localStorage.computer === "true"){
+      return(
+        <div id='skills' className='shadow'>
+          <div name="skill list">
+            {!!this.state.skillset ? this.renderSkillsTable() : null}
+          </div>
+        </div>
+      )
+    } else if (localStorage.computer === "false"){
+      return (
+        <section className='mobile-flex-boxes shadow'>
+          {!!this.state.skillset ? this.renderMobileSkills() : null}
+        </section>
+      )
+    }
+
   }
 }
 

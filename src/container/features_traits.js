@@ -42,6 +42,7 @@ class FeaturesTraits extends React.Component {
     }
     className = tab === 'Features' ? className + ' mobile-tab-top' : className
     className = tab === 'Equipment' && tab !== this.state.activeTab ? className + ' mobile-tab-bottom' : className
+    className += ' shadow'
     return className
   }
 

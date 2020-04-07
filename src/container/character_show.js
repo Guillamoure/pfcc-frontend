@@ -11,7 +11,7 @@ import Saves from '../components/character_show/saves'
 import HP from '../components/character_show/hp'
 import ArmorClass from '../components/character_show/ac'
 import AttackBonus from '../components/character_show/attack_bonus'
-// import Details from '../components/character_show/details'
+import CharacterDetails from '../components/character_show/details'
 import Skills from '../components/character_show/skills'
 import FeaturesTraits from './features_traits'
 import Actions from './actions'
@@ -42,18 +42,22 @@ import DebilitatingModal from '../modals/debilitating'
 import AmmoModal from '../modals/ammo'
 import SaseaModal from '../modals/sasea'
 import AuraModal from '../modals/aura'
+import MutagenModal from '../modals/mutagen'
+import SideBar from './sidebar/sidebar'
 
 import BackgroundForm from '../modals/background_form'
 import CharacterForm from '../modals/character_form'
 import AbilityForm from '../modals/ability_form'
 import Notifications from '../modals/notifications'
-import HPChanges from '../modals/hp_changes'
+// import HPChanges from '../modals/hp_changes'
 import SpellDescriptionModal from '../modals/spell'
 import MagicItemModal from '../modals/magic_item'
 import CharacterFeatureModal from '../modals/character_feature_modal'
 import WeaponModal from '../modals/weapon'
 
 import MobileTabs from '../components/mobile/tabs'
+
+import ModalSkeleton from '../modals/skeleton'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCaretRight } from '@fortawesome/free-solid-svg-icons'
@@ -91,7 +95,18 @@ class Character extends React.Component {
     toolTipX: 0,
     toolTipY: 0,
     detail: '',
-    mobileTab: 'adventure'
+    mobileTab: 'adventure',
+    startTime: 0,
+    startSwipe: 0,
+    drag: false,
+    changeBackground: false,
+    justSwipedMobile: false,
+    offset: 0,
+    sidebar: {
+      display: false,
+      position: 'right',
+      content: ''
+    }
   }
 
   componentDidMount() {
@@ -311,6 +326,10 @@ class Character extends React.Component {
     }
   }
 
+  editSidebar = (display, position, description, content) => {
+    this.setState({sidebar: {display, position, description, content}})
+  }
+
   clickOut = (e) => {
     if(e.target.classList[0] === "page-dimmer"){
       this.setState({modal: false, spellId: 0, characterItemID: 0})
@@ -368,6 +387,70 @@ class Character extends React.Component {
     this.setState({mobileTab: tab})
   }
 
+  handleMouseDown = (e) => {
+    // the swipe mechanic will often skip over tabs, if it's too quick and long
+    // so in the adjustTabs setState, going to have a settimeout so there is a delay between swipes
+    if (!this.state.justSwipedMobile){
+      let d = new Date
+      console.log('clicked down on mouse', e.targetTouches[0].clientX)
+      this.setState({
+        startTime: d.getTime(),
+        startSwipe: e.targetTouches[0].clientX,
+        drag: true
+      })
+    }
+  }
+
+  handleMouseUp = (e) => {
+    this.setState({drag: false, startTime: null, startSwipe: null, offset: 0})
+  }
+
+  handleMouseMove = (e) => {
+    if (this.state.drag){
+      const currentSwipe = e.targetTouches[0].clientX
+      let d = new Date
+      const currentTime = d.getTime()
+      // calculate velocity
+      // velocity = current clientX position - starting clientX position / current date - starting date
+      const deltaX = this.state.startSwipe - currentSwipe
+      const deltaT = (currentTime - this.state.startTime) / 1000
+      // converting deltaT to seconds from milliseconds
+      const velocity = (deltaX / deltaT)
+
+      if (velocity > 900 || velocity < -900){
+        this.adjustTabs(velocity)
+      } else {
+        this.setState({offset: deltaX/1.5})
+      }
+      // if velocity is a certain amount, or if delta clientX is great enough
+      // move to next tab
+
+    }
+  }
+
+  adjustTabs = (velocity) => {
+    let newTab = ''
+    // adventure, combat, character, settings (left to right)
+    if (velocity > 0){
+      newTab = this.state.mobileTab === 'adventure' ? 'combat' : newTab
+      newTab = this.state.mobileTab === 'combat' ? 'character' : newTab
+      newTab = this.state.mobileTab === 'character' ? 'settings' : newTab
+      newTab = this.state.mobileTab === 'settings' ? 'settings' : newTab
+
+    } else if (velocity < 0){
+      newTab = this.state.mobileTab === 'adventure' ? 'adventure' : newTab
+      newTab = this.state.mobileTab === 'combat' ? 'adventure' : newTab
+      newTab = this.state.mobileTab === 'character' ? 'combat' : newTab
+      newTab = this.state.mobileTab === 'settings' ? 'character' : newTab
+    }
+    //
+    if (!this.state.justSwipedMobile){
+      this.setState({mobileTab: newTab, justSwipedMobile: true, offset: 0}, () => {
+        setTimeout(() => this.setState({justSwipedMobile: false}), 150)
+      })
+    }
+  }
+
   renderCharacter = () => {
     if (localStorage.computer === "true"){
       return (
@@ -397,7 +480,7 @@ class Character extends React.Component {
         {this.state.modal === 'character' && <CharacterForm character={this.state.character} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
         {this.state.modal === 'ability' && <AbilityForm character={this.state.character} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
         {this.state.modal === 'notifications' && <Notifications exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit} changeActiveEffects={this.changeActiveEffects}/>}
-        {this.state.modal === 'hitPoints' && <HPChanges exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
+        {this.state.modal === 'hitPoints' && <ModalSkeleton modal={this.state.modal} exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
         {(this.state.modal === 'spell' && this.state.spellId !== 0) && <SpellDescriptionModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} spellId={this.state.spellId}/>}
         {(this.state.modal === 'magic item' && this.state.characterItemID !== 0) && <MagicItemModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} characterItemID={this.state.characterItemID}/>}
         {(this.state.modal === 'cFeature' && this.state.cfId !== 0) && <CharacterFeatureModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} cfId={this.state.cfId} detail={this.state.detail}/>}
@@ -420,6 +503,7 @@ class Character extends React.Component {
         {this.state.modal === 'ammo' && <AmmoModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
         {this.state.modal === 'sasea' && <SaseaModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
         {this.state.modal === 'aura' && <AuraModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
+        {this.state.modal === 'mutagen' && <MutagenModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
         {/* unfinished, hardcoded features */}
 
         <div id='right' onClick={() => this.setState({display: this.rightArrow()})}><FontAwesomeIcon icon={faCaretRight} size='9x'/><div>{this.rightArrow()}</div></div>
@@ -429,15 +513,31 @@ class Character extends React.Component {
       )
     } else {
       return (
-        <main>
-          {this.state.character.race && <CharacterName />}
+        <>
+          <main style={{marginBottom: '10vh', minHeight: '90vh', position: 'relative', left: 0 - this.state.offset}} onTouchStart={this.handleMouseDown} onTouchMove={this.handleMouseMove} onTouchEnd={this.handleMouseUp}>
+            {this.state.character.race && <CharacterName />}
 
-          {this.state.character.race && this.state.mobileTab === "adventure" && <AbilityScores/>}
-          {this.state.character.race && this.state.display === "Adventure" && <FeaturesTraits editModal={this.editModal} exitModal={this.exitModal} characterItemID={this.state.characterItemID}/>}
+            {this.state.character.race && this.state.mobileTab === "adventure" && <AbilityScores/>}
+            {this.state.character.race && this.state.mobileTab === "adventure" && <FeaturesTraits editModal={this.editModal} exitModal={this.exitModal} characterItemID={this.state.characterItemID}/>}
+            {this.state.character.race && (this.state.mobileTab === "adventure" || this.state.mobileTab === "combat") && <HP renderEdit={this.renderEdit} display={this.state.display}/>}
+            {this.state.character.race && this.state.mobileTab === "adventure" && <Skills renderTooltip={this.renderTooltip} mouseOut={this.mouseOut}/>}
+
+            {this.state.character.race && this.state.mobileTab === "combat" && <section id='mobile-combat'>
+              <Saves renderTooltip={this.renderTooltip} mouseOut={this.mouseOut}/>
+              <ArmorClass/>
+              <Initiative/>
+            </section>}
+            {this.state.character.race && this.state.mobileTab === "combat" && <Actions editModal={this.editModal} clickOut={this.clickOut} renderTooltip={this.renderTooltip} mouseOut={this.mouseOut} editSidebar={this.editSidebar}/>}
 
 
-          <MobileTabs mobileTab={this.state.mobileTab} changeActiveMobileTab={this.changeActiveMobileTab}/>
-        </main>
+            {this.state.character.race && this.state.mobileTab === "character" && <CharacterDetails editModal={this.editModal}/>}
+
+            {this.state.sidebar.display && <SideBar sidebar={this.state.sidebar} editSidebar={this.editSidebar}/>}
+          </main>
+          <footer>
+            <MobileTabs mobileTab={this.state.mobileTab} changeActiveMobileTab={this.changeActiveMobileTab}/>
+          </footer>
+        </>
       )
     }
   }

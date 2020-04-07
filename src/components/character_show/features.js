@@ -8,8 +8,7 @@ class Features extends React.Component {
     activeFeature: 0
   }
 
-  changeActiveFeature = (e) => {
-    let id = _.parseInt(e.target.dataset.id)
+  changeActiveFeature = (id) => {
     if (this.state.activeFeature === id) {
       this.setState({activeFeature: 0})
     } else {
@@ -42,8 +41,8 @@ class Features extends React.Component {
           name = `${feature.name} - ${this.props.classes.find(cl => cl.id === feature.klass_id).name}`
         }
         return (
-          <li key={feature.id *3 -1} data-id={feature.id} onClick={this.changeActiveFeature} className='highlight mobile-selected-tab-content' style={{maxHeight: window.outerHeight * 0.4}}>
-            <strong data-id={feature.id}>{name}</strong>
+          <li key={(feature.id * 3) -1} onClick={() => this.changeActiveFeature(feature.id)} className='highlight mobile-selected-tab-content' style={{maxHeight: window.outerHeight * 0.4}}>
+            <strong>{name}</strong>
             {this.state.activeFeature === feature.id && <div style={{color: '#000'}}>{feature.description}</div>}
           </li>
         )
@@ -566,7 +565,7 @@ class Features extends React.Component {
 
   render () {
     return(
-      <div style={{padding: '1em'}} className={localStorage.computer === "false" ? 'mobile-tab-selected-tab-container' : 'none'}>
+      <div style={{padding: '1em'}} className={localStorage.computer === "false" ? 'mobile-tab-selected-tab-container shadow' : 'none'}>
       {this.renderClassFeatures()}
       </div>
     )

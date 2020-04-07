@@ -40,6 +40,13 @@ class Points extends React.Component {
             <div className='muted'>Arcane Reservoir</div>
           </span>
         )
+      case "Grackle":
+        return (
+          <span className='centered' onClick={() => this.props.editModal('points')}>
+            <div className='enhanced'>{this.props.character_info.hardcode.points} / 10</div>
+            <div className='muted'>Bombs Used</div>
+          </span>
+        )
       default:
         return ""
     }
