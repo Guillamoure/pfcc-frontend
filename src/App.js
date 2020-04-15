@@ -6,6 +6,7 @@ import './css/card.css';
 import './css/container.css';
 import './css/animations.css';
 import './css/form.css';
+import './css/new.scss'
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { connect } from 'react-redux'
@@ -36,13 +37,15 @@ import SkillForm from './components/skill_form'
 
 class App extends React.Component {
 
-  componentDidMount(){
-    fetch(`${localhost}/api/v1/data`)
-    .then(r => r.json())
-    .then(data => {
-      this.props.dispatch({type: 'EVERYTHING', classes: data.klasses, races: data.races })
-    })
-  }
+  // COMMENTED OUT FOR TESTING PURPOSES
+  // componentDidMount(){
+  //   fetch(`${localhost}/api/v1/data`)
+  //   .then(r => r.json())
+  //   .then(data => {
+  //     this.props.dispatch({type: 'EVERYTHING', classes: data.klasses, races: data.races })
+  //   })
+  // }
+  // COMMENTED OUT FOR TESTING PURPOSES
 
 
   render(){

@@ -1,14 +1,22 @@
 #new-campaign-form {
   margin: 1%;
   display: grid;
-  grid-template-columns: 15% 15% auto auto;
+  grid-template-columns: auto 15% auto auto;
   grid-template-rows: 1fr 1fr 1fr;
   grid-template-areas:
-    "setting . races classes"
+    "setting calendar races classes"
     ". . races classes"
     "submit submit submit submit";
   grid-column-gap: 1.5%;
   grid-row-gap: 2%;
+}
+
+@media screen and (max-width: 600px) {
+  #new-campaign-form {
+    margin: 1%;
+    display: block;
+    text-align: center;
+  }
 }
 
 #new-campaign-form-setting {
@@ -52,6 +60,17 @@
   grid-template-columns: repeat(3, 1fr);
 }
 
-.form-races-checkbox{
+#new-campaign-form-calendar {
+  grid-area: calendar;
+  margin: 1%;
+}
 
+#new-campaign-form-calendar h4 {
+  margin: 1%;
+}
+
+#new-campaign-form-calendar ol {
+  margin-top: 1%;
+  margin-bottom: 1%;
+  padding-left: 1.5rem;
 }
