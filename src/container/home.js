@@ -42,6 +42,7 @@ class Home extends React.Component {
     return (
       <span className='background'>
         <button className='btn' onClick={() => this.props.history.push("/creation")} >Create Character</button>
+        <button className='btn' onClick={() => this.props.history.push("/campaigns/new")}>Create Campaign</button>
         <br/><br/>
         <div className={className} style={{margin: '0 2em'}} >
           <Settings />

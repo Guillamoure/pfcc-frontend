@@ -1,0 +1,57 @@
+#new-campaign-form {
+  margin: 1%;
+  display: grid;
+  grid-template-columns: 15% 15% auto auto;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-areas:
+    "setting . races classes"
+    ". . races classes"
+    "submit submit submit submit";
+  grid-column-gap: 1.5%;
+  grid-row-gap: 2%;
+}
+
+#new-campaign-form-setting {
+  grid-area: setting;
+  margin: 1%;
+}
+
+#new-campaign-form-submit {
+  grid-area: submit;
+  margin: 1%;
+}
+
+#new-campaign-form-races {
+  grid-area: races;
+  margin: 1%;
+}
+
+#new-campaign-form-all-races h4 {
+  margin-bottom: 1%;
+}
+
+#new-campaign-form-all-races section {
+  margin: 1%;
+}
+
+#new-campaign-form-classes {
+  grid-area: classes;
+  margin: 1%;
+}
+
+#new-campaign-form-all-classes h4 {
+  margin-bottom: 1%;
+}
+
+#new-campaign-form-all-classes section {
+  margin: 1%;
+}
+
+.form-races-checkbox-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.form-races-checkbox{
+
+}
