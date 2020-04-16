@@ -799,3 +799,17 @@
   border-radius: 1em 1em 0 0;
   position: fixed;
 }
+
+.standard-container-bubble {
+  background-color: rgba(235, 235, 235, 0.95);
+  margin: 0.25em 0.5em;
+  border: 3px solid #000;
+  border-radius: 0.5em;
+  box-shadow: 5px 4px 2px maroon;
+  padding: 0.25em;
+}
+
+.spinning-die {
+  animation: spinning 4s infinite linear;
+  -webkit-animation: spinning 4s infinite linear;
+}

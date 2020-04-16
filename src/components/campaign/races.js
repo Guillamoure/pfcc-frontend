@@ -51,13 +51,31 @@ const Races = props => {
     props.updateSelectedRaceIds(updatedIdArray)
   }
 
+  const changeDisplay = () => {
+    if (!displayAvailableRaces){
+      props.updateSelectedRaceIds(props.races.map(r => r.id))
+    }
+    toggleAvailableRaces(!displayAvailableRaces)
+  }
+
+  const display = () => {
+    if (!props.races.length){
+      return <>{props.loadingDie}</>
+    } else {
+      return (
+        <>
+          <input type="checkbox" id="all-races" name="all-races" value="All" checked={!displayAvailableRaces} onChange={changeDisplay}/>
+          <label htmlFor="all-races"> All Races</label><br/>
+          {displayAllRaces}
+        </>
+      )
+    }
+  }
 
   return (
-    <section id="new-campaign-form-races">
+    <section id="new-campaign-form-races" className="standard-container-bubble">
       <h3>Available Races</h3>
-      <input type="checkbox" id="all-races" name="all-races" value="All" checked={!displayAvailableRaces} onChange={() => toggleAvailableRaces(!displayAvailableRaces)}/>
-      <label htmlFor="all-races"> All Races</label><br/>
-      {displayAllRaces}
+      {display()}
     </section>
   )
 }

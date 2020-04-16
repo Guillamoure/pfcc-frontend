@@ -5,8 +5,7 @@ import './css/combat.css';
 import './css/card.css';
 import './css/container.css';
 import './css/animations.css';
-import './css/form.css';
-import './css/new.scss'
+import './css/form.scss';
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { connect } from 'react-redux'

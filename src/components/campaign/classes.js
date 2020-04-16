@@ -52,12 +52,31 @@ const Classes = props => {
     props.updateSelectedClassIds(updatedIdArray)
   }
 
+  const changeDisplay = () => {
+    if (!displayAvailableClasses){
+      props.updateSelectedClassIds(props.classes.map(cl => cl.id))
+    }
+    toggleAvailableClasses(!displayAvailableClasses)
+  }
+
+  const display = () => {
+    if (!props.classes.length){
+      return <>{props.loadingDie}</>
+    } else {
+      return (
+        <>
+          <input type="checkbox" id="all-classes" name="all-classes" value="All" checked={!displayAvailableClasses} onChange={changeDisplay}/>
+          <label htmlFor="all-classes"> All Classes</label><br/>
+          {displayAllClasses}
+        </>
+      )
+    }
+  }
+
   return (
-    <section id="new-campaign-form-classes">
+    <section id="new-campaign-form-classes" className="standard-container-bubble">
       <h3>Available Classes</h3>
-      <input type="checkbox" id="all-classes" name="all-classes" value="All" checked={!displayAvailableClasses} onChange={() => toggleAvailableClasses(!displayAvailableClasses)}/>
-      <label htmlFor="all-classes"> All Classes</label><br/>
-      {displayAllClasses}
+      {display()}
     </section>
   )
 }

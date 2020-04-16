@@ -6,6 +6,10 @@ import _ from 'lodash'
 import Classes from '../components/campaign/classes'
 import Races from '../components/campaign/races'
 import Calendar from '../components/campaign/calendar'
+import Setting from '../components/campaign/setting'
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faDiceD20 } from '@fortawesome/free-solid-svg-icons'
 
 const NewCampaign = props => {
 
@@ -22,6 +26,9 @@ const NewCampaign = props => {
   const [name, setName] = React.useState("")
   const [setting, setSetting] = React.useState("")
   const [theme, setTheme] = React.useState("")
+
+  const loadingDie = <FontAwesomeIcon icon={faDiceD20} className="spinning-die"/>
+
 
   React.useEffect(() => {
     fetch(`${localhost}/api/v1/campaigns/new`)
@@ -58,25 +65,28 @@ const NewCampaign = props => {
       .then(console.log)
   }
 
+  // Theme
+  // setting
+  // classes and races
+  // calendar
+  // skillset
+  // start date
+  // TODO: campaign page, next day patch button
+  // TODO: random days for some months
+  // starting level
+  // custom notes
+
 
   const renderForm = () => {
     return (
       <form id="new-campaign-form" onSubmit={renderSubmit}>
-        <section id="new-campaign-form-setting">
-          <label htmlFor="new-campaign-name">Campaign Name</label><br/>
-          <input type="text" id="new-campaign-name" name="new-campaign-name" value={name} onChange={(e) => setName(e.target.value)}/><br/>
+        <Setting name={name} setName={setName} theme={theme} setTheme={setTheme} setting={setting} setSetting={setSetting}/>
+        <Calendar calendars={calendars} selectedCalendarId={selectedCalendarId} updateSelectedCalendarId={updateSelectedCalendarId} loadingDie={loadingDie}/>
+        <Races races={races} selectedRaceIds={selectedRaceIds} updateSelectedRaceIds={updateSelectedRaceIds} loadingDie={loadingDie}/>
+        <Classes classes={classes} selectedClassIds={selectedClassIds} updateSelectedClassIds={updateSelectedClassIds} loadingDie={loadingDie}/>
 
-          <label htmlFor="new-campaign-setting">Setting</label><br/>
-          <input type="text" id="new-campaign-setting" name="new-campaign-setting"  value={setting} onChange={(e) => setSetting(e.target.value)}/><br/>
-
-          <label htmlFor="new-campaign-theme">Theme</label><br/>
-          <input type="text" id="new-campaign-theme" name="new-campaign-theme"  value={theme} onChange={(e) => setTheme(e.target.value)}/><br/>
-        </section>
-        <Calendar calendars={calendars} selectedCalendarId={selectedCalendarId} updateSelectedCalendarId={updateSelectedCalendarId}/>
-        <Races races={races} selectedRaceIds={selectedRaceIds} updateSelectedRaceIds={updateSelectedRaceIds}/>
-        <Classes classes={classes} selectedClassIds={selectedClassIds} updateSelectedClassIds={updateSelectedClassIds}/>
         <section id='new-campaign-form-submit'>
-          <input type="submit" />
+          <input type="submit" value="Create Campaign"/>
         </section>
       </form>
     )

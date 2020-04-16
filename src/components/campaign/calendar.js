@@ -31,16 +31,30 @@ const Calendar = props => {
   }
 
 
+  const display = () => {
+    if (!props.calendars.length){
+      return <>{props.loadingDie}</>
+    } else {
+      return (
+        <>
+          <select id="new-campaigin-calendar" name="new-campaign-setting" value={props.selectedCalendarId} onChange={(e) => props.updateSelectedCalendarId(e.target.value)}>
+            <option value="0">Select A Calendar</option>
+            {props.calendars.map(c => <option key={c.id * 3 - 1} value={c.id}>{c.name}</option>)}
+          </select>
+
+          {selectedCalendar}
+        </>
+      )
+    }
+  }
+
+
   return (
-    <section id="new-campaign-form-calendar">
+    <section id="new-campaign-form-calendar" className="standard-container-bubble">
 
       <label htmlFor="new-campaign-calendar"><h3>Calendar</h3></label>
-      <select id="new-campaigin-calendar" name="new-campaign-setting" value={props.selectedCalendarId} onChange={(e) => props.updateSelectedCalendarId(e.target.value)}>
-        <option value="0">Select A Calendar</option>
-        {props.calendars.map(c => <option key={c.id * 3 - 1} value={c.id}>{c.name}</option>)}
-      </select>
-
-      {selectedCalendar}
+      {display()}
+      
     </section>
   )
 }
