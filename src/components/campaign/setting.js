@@ -10,12 +10,6 @@ const Setting = props => {
   const settingEl = React.useRef(null);
   const themeEl = React.useRef(null);
 
-  React.useEffect(() => {
-    if (nameField){
-      nameEl.current.focus()
-    }
-  }, [nameField, settingField, themeField])
-
 
   return (
     <section id="new-campaign-form-setting" className="standard-container-bubble">

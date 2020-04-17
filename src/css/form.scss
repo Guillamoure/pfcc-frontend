@@ -1,11 +1,12 @@
 #new-campaign-form {
   margin: 1%;
   display: grid;
-  grid-template-columns: auto 15% auto auto;
-  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
   grid-template-areas:
-    "setting calendar races classes"
-    ". . races classes"
+    "setting details calendar calendar"
+    "races races classes classes"
+    "races races classes classes"
     "submit submit submit submit";
   grid-column-gap: 1.5%;
   grid-row-gap: 2%;
@@ -16,6 +17,8 @@
     margin: 1%;
     display: block;
     text-align: center;
+    min-height: 93vh;
+    margin-bottom: 7vh;
     section {
       select {
         border: 2px inset #bbb;
@@ -35,7 +38,7 @@
       border-radius: 1em;
       background-color: #fff;
       margin: 0%;
-      box-shadow: 3px 2px 2px maroon;
+      box-shadow: 3px 2px 2px #9b111e;
     }
   }
 }
@@ -48,6 +51,22 @@
 #new-campaign-form-submit {
   grid-area: submit;
   margin: 1%;
+}
+
+#new-campaign-form-submit input {
+  width: 100%;
+  height: 3em;
+  color: #0f52ba;
+  background-color: #9b111e;
+  font-size: 1.5em;
+  border-radius: 2em;
+  font-weight: 800;
+  text-shadow: 1px 1px 3px #ddd;
+  border: 3px solid black;
+}
+#new-campaign-form-submit input:hover {
+  color: #9b111e;
+  background-color: #0f52ba;
 }
 
 #new-campaign-form-races {
@@ -94,4 +113,26 @@
   margin-top: 1%;
   margin-bottom: 1%;
   padding-left: 1.5rem;
+}
+
+#new-campaign-form-details{
+  grid-area: details;
+  margin: 1%;
+}
+
+#new-campaign-custom-notes:focus {
+  outline-color: #0f52ba;
+}
+
+#new-campaign-starting-date {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-areas:
+    "start start"
+    ". ."
+    ". ."
+    ". ."
+    ". ."
+    ". .";
 }

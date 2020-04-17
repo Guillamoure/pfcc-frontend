@@ -75,7 +75,7 @@ const Classes = props => {
 
   return (
     <section id="new-campaign-form-classes" className="standard-container-bubble">
-      <h3>Available Classes</h3>
+      <h3 style={{marginBottom: '0'}}>Available Classes</h3>
       {display()}
     </section>
   )

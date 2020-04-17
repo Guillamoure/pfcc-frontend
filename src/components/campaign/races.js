@@ -74,7 +74,7 @@ const Races = props => {
 
   return (
     <section id="new-campaign-form-races" className="standard-container-bubble">
-      <h3>Available Races</h3>
+      <h3 style={{marginBottom: '0'}}>Available Races</h3>
       {display()}
     </section>
   )

@@ -62,7 +62,7 @@ class NavBar extends React.Component {
       if (!this.state.menuDropDown){
         return (
           <div id='mobile-navbar'>
-            <div className='project-name'>CharacterFinder</div>
+            <div className='project-name' onClick={() => this.setState({menuDropDown: !this.state.menuDropDown})}>CharacterFinder</div>
             <button onClick={() => this.setState({menuDropDown: !this.state.menuDropDown})}><FontAwesomeIcon icon={faBars}/></button>
           </div>
         )

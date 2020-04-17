@@ -41,8 +41,8 @@ class Home extends React.Component {
     let className = localStorage.computer === 'true' ? 'container-4' : 'phone-container'
     return (
       <span className='background'>
-        <button className='btn' onClick={() => this.props.history.push("/creation")} >Create Character</button>
-        <button className='btn' onClick={() => this.props.history.push("/campaigns/new")}>Create Campaign</button>
+        <button className='home-btn-create-links' onClick={() => this.props.history.push("/creation")} >Create Character</button>
+        <button className='home-btn-create-links' onClick={() => this.props.history.push("/campaigns/new")}>Create Campaign</button>
         <br/><br/>
         <div className={className} style={{margin: '0 2em'}} >
           <Settings />

@@ -1,5 +1,5 @@
 import React from 'react';
-import './App.css';
+import './App.scss';
 import './css/character.css';
 import './css/combat.css';
 import './css/card.css';
@@ -8,7 +8,6 @@ import './css/animations.css';
 import './css/form.scss';
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-import { connect } from 'react-redux'
 import localhost from './localhost'
 
 
@@ -49,6 +48,7 @@ class App extends React.Component {
 
   render(){
     let computer
+    console.log(this.props)
     if (window.outerWidth/window.outerHeight < 0.85){
       console.log("Imma Phone! Here is my width/height percentage", window.outerWidth/window.outerHeight)
       computer = false
@@ -86,11 +86,4 @@ class App extends React.Component {
   }
 }
 
-const mapStatetoProps = (state) => {
-  return {
-    currentUser: state.currentUser,
-    admin: state.admin
-  }
-}
-
-export default connect(mapStatetoProps)(App);
+export default App;
