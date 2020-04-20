@@ -15,22 +15,39 @@ class NavBar extends React.Component {
 
   componentDidMount(){
     const token = localStorage.getItem("token")
-    if (!this.state.currentUser && token){
-      fetch(`${localhost}/api/v1/auth`, {
-        headers: {
-          Authenticate: token
-        }
-      })
-      .then(r => r.json())
-      .then((data) => {
-        if (!data.error) {
-          this.props.dispatch({type: 'SIGNIN', user: data.current_user, admin: data.current_user.admin })
-          console.log(data)
-          this.setState({currentUser: data.current_user})
-          if(this.props.location.pathname === "/login" || this.props.location.pathname === "/signup"){this.props.history.push("/")}
-        }
-      })
+    // if (!this.state.currentUser && token){
+    //   fetch(`${localhost}/api/v1/auth`, {
+    //     headers: {
+    //       Authenticate: token
+    //     }
+    //   })
+    //   .then(r => r.json())
+    //   .then((data) => {
+    //     if (!data.error) {
+    //       this.props.dispatch({type: 'SIGNIN', user: data.current_user, admin: data.current_user.admin })
+    //       console.log(data)
+    //       this.setState({currentUser: data.current_user})
+    //       if(this.props.location.pathname === "/login" || this.props.location.pathname === "/signup"){this.props.history.push("/")}
+    //     }
+    //   })
+    // }
+    // COMMENTED OUT FOR TESTING PURPOSES
+    let data = {
+      current_user: {
+        id: 1,
+        skillset_id: 2,
+        username: "jack",
+        admin: true,
+        campaigns: [],
+        characters: []
+      }
     }
+    this.props.dispatch({type: 'SIGNIN', user: data.current_user, admin: data.current_user.admin })
+    console.log(data)
+    this.setState({currentUser: data.current_user})
+    // console.log(this.props.location.pathname)
+    // this.props.history.push("/")
+
   }
 
   renderLogOut = () => {

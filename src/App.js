@@ -31,6 +31,8 @@ import ClassForm from './components/class_form'
 import RaceForm from './components/race_form'
 import SkillForm from './components/skill_form'
 
+import HowToFeature from './container/how_to_feature'
+
 
 
 class App extends React.Component {
@@ -79,6 +81,7 @@ class App extends React.Component {
               <Route exact path="/characters/:slug" component={Character} />
               <Route exact path="/campaigns/new" component={NewCampaign} />
               <Route path="/campaigns/:slug" component={Campaign} />
+              <Route path="/how-to-build-a-feature" component={HowToFeature} />
             </Switch>
           </React.Fragment>
         </Router>
