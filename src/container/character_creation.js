@@ -93,14 +93,17 @@ class CharacterCreation extends React.Component{
 
   validClasses = () => {
     let valid = true
-    this.state.classes.forEach(klass => {
-      if (klass.level > 20 || klass.level < 1){
-        valid = false
-      }
-      if (klass.classId === 0){
-        valid = false
-      }
-    })
+    // this.state.classes.forEach(klass => {
+    //   if (klass.level > 20 || klass.level < 1){
+    //     valid = false
+    //   }
+    //   if (klass.classId === 0){
+    //     valid = false
+    //   }
+    // })
+    if (this.state.classes[this.state.classes.length - 1] === 0 || this.state.classes[this.state.classes.length - 1] === ""){
+      valid = false
+    }
     return valid
   }
 
@@ -219,7 +222,7 @@ class CharacterCreation extends React.Component{
           {/*<button onClick={() => this.renderButtonClick("race")}>{this.state.activeField === "race" ? "Hide Race Form": "Choose Your Fantasy Race"}</button>*/}
           {/*<button onClick={() => this.renderButtonClick("class")}>{this.state.activeField === "class" ? "Hide Class Form": "Choose Your Class"}</button>*/}
         </span>
-        <div className='centered'>
+        <div id="new-character-validation-bubbles" className='centered'>
           {(this.state.strength && this.state.constitution && this.state.dexterity && this.state.intelligence && this.state.wisdom && this.state.charisma) ? <span className='complete'>Ability Scores</span> : <span className='incomplete'>Ability Scores</span>}
           {(this.state.name) ? <span className='complete'>Character Name</span> : <span className='incomplete' >Character Name</span>}
           {(this.validClasses()) ? <span className='complete' >Character Class(es)</span> : <span className='incomplete' >Character Class(es)</span>}

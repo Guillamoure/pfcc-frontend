@@ -583,6 +583,22 @@ $tan: #cfb997;
   display: inline-block;
 }
 
+#tooltip:before {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border-top: 2px solid #000;
+  border-right: 0px solid #000;
+  border-bottom: 0px solid #000;
+  border-left: 2px solid #000;
+  top: -10px;
+  left: 50%;
+  margin-left: -3px;
+  content: '';
+  transform: rotate(45deg);
+  background: #000;
+}
+
 /* Tooltips! Copied from blog by Arseniy Tomkevich, url: https://medium.com/@jsmuster/building-a-tooltip-component-with-react-2de14761e02 */
 
 #tooltip.top {
@@ -823,4 +839,11 @@ $tan: #cfb997;
   color: $ruby;
   background-color: $sapphire;
   text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
+
+#new-character-validation-bubbles {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }

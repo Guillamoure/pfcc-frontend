@@ -122,3 +122,21 @@ export const truncatedDate = (date) => {
   }
   return `${monthNum}/${day}/${year}`
 }
+
+export const ab = (characterObj, characterInfoObj, type) => {
+  let attackBonus = 0
+  characterInfoObj.classes.forEach(cl => {
+    let klass = characterObj.uniq_klasses.find(uk => uk.id === cl.id)
+    let bab = 1
+    bab = klass.hit_die == 8 ? 0.75 : bab
+    bab = klass.hit_die == 6 ? 0.5 : bab
+    attackBonus += bab * cl.level
+  })
+  if (type === "melee"){
+    let str = mod(characterInfoObj.ability_scores.strength)
+    return attackBonus + str
+  } else if (type === "range"){
+    let dex = mod(characterInfoObj.ability_scores.dexterity)
+    return attackBonus + dex
+  }
+}

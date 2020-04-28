@@ -17,11 +17,13 @@ const initialState = {
       swift: false,
       immediate: false
     },
-    conditions: []
+    conditions: [],
+    proficiencies: {weapon: {groups: [], individualIds: []}, armor: {groups: [], individualIds: []}}
   },
   classes: [],
   races: [],
-  spells: []
+  spells: [],
+  tooltip: {}
 }
 
 
@@ -404,6 +406,21 @@ const reducer = (state = initialState, action) => {
     case 'TOGGLE MUTAGEN':
       let activeMutagen = state.character_info.hardcode.activeMutagen || false
       return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, activeMutagen: !activeMutagen}}}
+    case 'PROFICIENCY':
+      let proficiencies = {...state.character_info.proficiencies}
+      if (action.detail.type === "weapon"){
+        if (action.detail.additive){
+          if (action.detail.proficiency_group) proficiencies.weapon.groups.push(action.detail.proficiency_group)
+          if (action.detail.weapon_id) proficiencies.weapon.individualIds.push(action.detail.weapon_id)
+        }
+      }
+      return {...state, character_info: {...state.character_info, proficiencies}}
+    case 'TOOLTIP':
+      let tooltip = {message: action.message, target: action.target}
+      if (state.tooltip.target === action.target){
+        tooltip = {}
+      }
+      return {...state, tooltip}
     default:
       return state
   }

@@ -3,31 +3,36 @@ import { connect } from 'react-redux'
 
 const Tooltip = props => {
 
-  const style = {
-    left: ((props.x + window.scrollX + 15) + 'px'),
-    top: ((props.y + window.scrollY - 5) + 'px'),
-    position: 'absolute',
-    pointerEvents: 'none'
-  }
+  const tooltipEl = React.useRef(null)
+  const [elementWidth, setWidth] = React.useState(200)
 
-  let width = '200px'
-  console.log(props.comment.length)
-  if (props.comment.length > 600){
-    width = '400px'
+  React.useEffect(() => {
+    setWidth(tooltipEl.current.offsetWidth)
+  }, [])
+
+  const howFarElementIsFromTop = window.pageYOffset + props.tooltip.target.getBoundingClientRect().top
+  const heightOfElement = props.tooltip.target.offsetHeight
+  const howFarElementIsFromLeft = window.pageXOffset + props.tooltip.target.getBoundingClientRect().left
+  const widthOfElement = props.tooltip.target.offsetWidth
+
+  const style = {
+    left: (howFarElementIsFromLeft + (widthOfElement/2)-(elementWidth/2) + 'px'),
+    top: (howFarElementIsFromTop + heightOfElement + 17 + 'px'),
+    position: 'absolute',
+    zIndex: 1
   }
 
   return (
-    <section id='tooltip' className='on top' style={style}>
-      <div className='tooltip-arrow'></div><div className='tooltip-inner' style={{maxWidth: width}}>{props.comment}</div>
+    <section ref={tooltipEl} id='tooltip' className='on top' style={style}>
+      <div className='tooltip-arrow'></div><div className='tooltip-inner' style={{maxWidth: elementWidth+'px'}}>{props.tooltip.message}</div>
     </section>
   )
 }
 
 const mapStatetoProps = (state) => {
   return {
-    character: state.character,
-    character_info: state.character_info
+    tooltip: state.tooltip
   }
 }
 
-export default connect(mapStatetoProps)(Tooltip)
+export default connect(mapStatetoProps)(Tooltip);

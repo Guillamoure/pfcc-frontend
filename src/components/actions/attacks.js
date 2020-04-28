@@ -1,5 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { ab, pluser, mod } from '../../fuf'
+// import { tooltip } from '../../dispatches/tooltip'
+
 
 const Attacks = props => {
 
@@ -34,8 +37,90 @@ const Attacks = props => {
       case 'Grackle':
         return grackle()
       default:
-        return null
+        return renderAttacks()
     }
+  }
+
+  const renderAttacks = () => {
+    console.log(props.character.character_weapons)
+    let onlyEquippedWeapons = props.character.character_weapons.filter(cw => cw.equipped)
+    return onlyEquippedWeapons.map(renderTableElement)
+  }
+
+  const renderTableElement = (cw) => {
+    let name = cw.name !== "" ? cw.name : cw.weapon.name
+    let damageDice = cw.weapon.num_of_dice + "d" + cw.weapon.damage_dice
+    return (
+      <tr>
+        <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
+        <td>{name}</td>
+        <td style={renderNum('abS', null, true)}>{calculateAttackBonuses(cw)}</td>
+        <td>{cw.weapon.range ? cw.weapon.range + " ft" : null}</td>
+        <td>{renderDamageDice(damageDice)}{renderAdditionalDamage(cw)}</td>
+        <td>{renderCritical(cw)}</td>
+        <td>{collectAdditionalInfo(cw).map(renderAdditionalInfo)}</td>
+      </tr>
+    )
+  }
+
+  const calculateAttackBonuses = (cw) => {
+    // attackBonus is ability score modifier + class bab
+    let meleeAttackBonus = null
+    let rangeAttackBonus = null
+    if (cw.weapon.weapon_type === "Melee"){
+      meleeAttackBonus = ab(props.character, props.character_info, "melee")
+    }
+    if (cw.weapon.weapon_type === "Range" || cw.weapon.thrown){
+      rangeAttackBonus = ab(props.character, props.character_info, "range")
+    }
+    // is the character proficient with this weapon
+    let proficiencyPenalty = 0
+    let weaponProficiencies = props.character_info.proficiencies.weapon
+    // if it's proficiencyGroup can't be found, or if it's id isn't specifically found
+    // not proficient -4
+    if ( !weaponProficiencies.groups.includes(cw.weapon.proficiency) && !weaponProficiencies.individualIds.includes(cw.weapon.id) ) proficiencyPenalty = -4
+
+    // add everything together
+    // use pluser on Each
+    // shovel into array
+    let attackBonuses = []
+    if (meleeAttackBonus !== null) attackBonuses.push(pluser(meleeAttackBonus + proficiencyPenalty))
+    if (rangeAttackBonus !== null) attackBonuses.push(pluser(rangeAttackBonus + proficiencyPenalty))
+
+    // join that array together
+    return attackBonuses.join(", ")
+  }
+
+  const renderCritical = (characterWeapon) => {
+    let weapon = characterWeapon.weapon
+    let crit = ""
+    if (weapon.critical_range < 20){
+      crit = weapon.critical_range + "-20/"
+    }
+    crit += "x"+ weapon.critical
+    return crit
+  }
+
+  const collectAdditionalInfo = (characterWeapon) => {
+    let additionalArray = []
+    if (characterWeapon.weapon.weapon_type === "Melee" && characterWeapon.weapon.thrown){
+      additionalArray.push({name: "Thrown", tooltip: "If throwing, use second attack bonus", sidebarRules: 0, italics: false})
+    }
+    return additionalArray
+  }
+
+  const renderAdditionalInfo = (obj) => {
+    if (obj.italics){
+      return <em>{obj.name}</em>
+    } else {
+      return <span onMouseOver={(e) => dispatchTooltip(obj, e)} onMouseOut={(e) => dispatchTooltip(obj, e)}>{obj.name}</span>
+    }
+  }
+
+  const dispatchTooltip = (obj, e) => {
+    // debugger
+
+    props.tooltip(obj.tooltip, e.target)
   }
 
   const renderDispatch = (action, details) => {
@@ -145,7 +230,8 @@ const Attacks = props => {
           finesse: null,
           additionalDetails: 'bomb',
           critical: 'x2',
-          special: <><span onMouseOver={e => renderTooltip(e, 'Splash')} onMouseOut={props.mouseOut}>Splash</span>, Those caught in the splash damage can attempt a Reflex save for half damage.</>,
+          special: <><span onMouseOver={e =>
+            (e, 'Splash')} onMouseOut={props.mouseOut}>Splash</span>, Those caught in the splash damage can attempt a Reflex save for half damage.</>,
           toggle: ['bombs', setBombs],
           displayIfTrue: null
         },
@@ -479,6 +565,18 @@ const Attacks = props => {
         </tr>
       </React.Fragment>
     )
+  }
+
+  const renderAdditionalDamage = (characterWeapon) => {
+    let str = mod(props.character_info.ability_scores.strength)
+    let dex = mod(props.character_info.ability_scores.dexterity)
+
+    if (characterWeapon.weapon.weapon_type === "Melee" || characterWeapon.weapon.thrown) {
+      return pluser(str)
+    }
+    if (characterWeapon.weapon.weapon_type === "Range"){
+      return pluser(dex)
+    }
   }
 
 
@@ -1039,4 +1137,10 @@ const mapStatetoProps = (state) => {
   }
 }
 
-export default connect(mapStatetoProps)(Attacks)
+const mapDispatchtoProps = dispatch => {
+  return {
+    tooltip: (message, target) => dispatch({type: "TOOLTIP", message, target})
+  }
+}
+
+export default connect(mapStatetoProps, mapDispatchtoProps)(Attacks)

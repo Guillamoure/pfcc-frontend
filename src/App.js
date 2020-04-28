@@ -8,8 +8,11 @@ import './css/animations.css';
 import './css/form.scss';
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { connect } from 'react-redux'
 import localhost from './localhost'
 
+import NavBar from './container/navbar'
+import Tooltip from './modals/tooltip'
 
 import Home from './container/home'
 import Classes from './container/classes'
@@ -17,7 +20,6 @@ import Races from './container/races'
 import Skills from './container/skills'
 import Spells from './container/spells'
 import Class from './container/class_show'
-import NavBar from './container/navbar'
 import Race from './container/race_show'
 import Skill from './container/skill_show'
 import CharacterCreation from './container/character_creation'
@@ -38,13 +40,13 @@ import HowToFeature from './container/how_to_feature'
 class App extends React.Component {
 
   // COMMENTED OUT FOR TESTING PURPOSES
-  // componentDidMount(){
-  //   fetch(`${localhost}/api/v1/data`)
-  //   .then(r => r.json())
-  //   .then(data => {
-  //     this.props.dispatch({type: 'EVERYTHING', classes: data.klasses, races: data.races })
-  //   })
-  // }
+  componentDidMount(){
+    fetch(`${localhost}/api/v1/data`)
+    .then(r => r.json())
+    .then(data => {
+      this.props.dispatch({type: 'EVERYTHING', classes: data.klasses, races: data.races })
+    })
+  }
   // COMMENTED OUT FOR TESTING PURPOSES
 
 
@@ -63,6 +65,7 @@ class App extends React.Component {
         <Router>
           <React.Fragment>
             <NavBar />
+            {this.props.tooltip.message && <Tooltip />}
             <Switch>
               <Route exact path="/" component={Home} />
               <Route exact path="/classes" component={Classes} />
@@ -89,4 +92,12 @@ class App extends React.Component {
   }
 }
 
-export default App;
+const mapStatetoProps = (state) => {
+  return {
+    currentUser: state.currentUser,
+    admin: state.admin,
+    tooltip: state.tooltip
+  }
+}
+
+export default connect(mapStatetoProps)(App);
