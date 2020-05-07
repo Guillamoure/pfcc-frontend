@@ -59,13 +59,15 @@ const UserItemAdjustment = props => {
       })
   }
 
-  const renderEquip = () => {
+  const renderEquip = (e) => {
+    let newEquippedStatus = e.target.value
     fetch(`${localhost}/api/v1/${url}s_equip/${props.characterItem.id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
-      }
+      },
+      body: JSON.stringify({equipped: newEquippedStatus})
     })
       .then(r => r.json())
       .then(data => {
@@ -106,7 +108,7 @@ const UserItemAdjustment = props => {
           let dispatchType
           dispatchType = url === 'character_magic_item' ? 'EQUIP CMI' : dispatchType
           dispatchType = url === 'character_weapon' ? 'EQUIP WEAPON' : dispatchType
-          props.dispatch({type: dispatchType, id: props.characterItem.id})
+          props.dispatch({type: dispatchType, id: props.characterItem.id, equipped: newEquippedStatus})
         }
       })
   }
@@ -277,10 +279,25 @@ const UserItemAdjustment = props => {
     )
   }
 
+  const equipSelection = () => {
+
+    return (
+      <label htmlFor="equipType" name="Equip">
+        <select name="equipType" value={equipped} onChange={e => renderEquip(e)}>
+          <option value="">Unequipped</option>
+          <option value="Primary">Primary Hand</option>
+          <option value="Off">Off Hand</option>
+          <option value="Two">Two-Handed</option>
+          <option value="Double">Double</option>
+        </select>
+      </label>
+    )
+  }
+
 
   return (
     <div>
-      {canEquip && <button id='equipBtn' onClick={renderEquip}>{equipped ? 'Unequip' : 'Equip'}</button>}
+      {canEquip ? equipSelection() : null}
       <button id='tradeBtn' onClick={() => setTrading(!trading)}>Trade</button>
       {canBeStored ? <button className={stash ? 'pressedBtn' : null} onClick={() => setStash(!stash)}>Stash</button> : <button onClick={() => renderWithdraw(props.characterItem.id)}>Withdraw</button>}
       {hasContents && <button className={!!contents.length ? 'pressedBtn' : null} onClick={fetchContents}>Contents</button>}

@@ -394,7 +394,7 @@ const reducer = (state = initialState, action) => {
       let filteredCWs = cws.map(w => {
         if (w.id === action.id){
           let altered = {...w}
-          altered.equipped = !w.equipped
+          altered.equipped = action.equipped
           return altered
         } else {
           return w

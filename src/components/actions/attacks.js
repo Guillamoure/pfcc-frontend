@@ -78,6 +78,7 @@ const Attacks = props => {
     let weaponProficiencies = props.character_info.proficiencies.weapon
     // if it's proficiencyGroup can't be found, or if it's id isn't specifically found
     // not proficient -4
+
     if ( !weaponProficiencies.groups.includes(cw.weapon.proficiency) && !weaponProficiencies.individualIds.includes(cw.weapon.id) ) proficiencyPenalty = -4
 
     // add everything together
@@ -103,17 +104,31 @@ const Attacks = props => {
 
   const collectAdditionalInfo = (characterWeapon) => {
     let additionalArray = []
+    if (characterWeapon.equipped === "Primary"){
+      additionalArray.push({name: "Primary", tooltip: "Wielded in primary hand, 1x Str bonus to damage", sidebarRules: 0, italics: false})
+    }
+    if (characterWeapon.equipped === "Off"){
+      additionalArray.push({name: "Off", tooltip: "Wielded in off hand, 0.5x Str bonus to damage", sidebarRules: 0, italics: false})
+    }
+    if (characterWeapon.equipped === "Two"){
+      additionalArray.push({name: "Two-Handed", tooltip: "Wielded in both hands, 1.5x Str bonus to damage", sidebarRules: 0, italics: false})
+    }
+    if (characterWeapon.equipped === "Double"){
+      additionalArray.push({name: "Double Weapon", tooltip: "Wielded in both hands, 1.5x Str bonus to damage on primary attack, 0.5x Str bonus to damage on off attack", sidebarRules: 0, italics: false})
+    }
     if (characterWeapon.weapon.weapon_type === "Melee" && characterWeapon.weapon.thrown){
       additionalArray.push({name: "Thrown", tooltip: "If throwing, use second attack bonus", sidebarRules: 0, italics: false})
     }
     return additionalArray
   }
 
-  const renderAdditionalInfo = (obj) => {
+  const renderAdditionalInfo = (obj, i, arr) => {
+    let comma = ", "
+    if (i === arr.length-1){comma = ""}
     if (obj.italics){
-      return <em>{obj.name}</em>
+      return <em>{obj.name}{comma}</em>
     } else {
-      return <span onMouseOver={(e) => dispatchTooltip(obj, e)} onMouseOut={(e) => dispatchTooltip(obj, e)}>{obj.name}</span>
+      return <span onMouseOver={(e) => dispatchTooltip(obj, e)} onMouseOut={(e) => dispatchTooltip(obj, e)}>{obj.name}{comma}</span>
     }
   }
 
@@ -572,6 +587,19 @@ const Attacks = props => {
     let dex = mod(props.character_info.ability_scores.dexterity)
 
     if (characterWeapon.weapon.weapon_type === "Melee" || characterWeapon.weapon.thrown) {
+      switch(characterWeapon.equipped){
+        case "Primary":
+          return pluser(str)
+        case "Off":
+          return pluser(Math.floor(str/2))
+        case "Two":
+          return pluser(Math.floor(str * 1.5))
+        case "Double":
+          // account for both sides of the weapon
+          return pluser(Math.floor(str * 1.5))
+        default:
+          return pluser(str)
+      }
       return pluser(str)
     }
     if (characterWeapon.weapon.weapon_type === "Range"){
@@ -771,6 +799,9 @@ const Attacks = props => {
           break
         case '1d10':
           newDice = '1d8'
+          break
+        case '2d4':
+          newDice = '1d6'
           break
         default:
           break

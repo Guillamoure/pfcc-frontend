@@ -138,6 +138,7 @@ class Character extends React.Component {
           this.props.dispatch({type: 'HELMSMAN'})
         }
 
+
         this.props.fetchCharacter(data)(this.props.dispatch)
 
       //   data.character.character_magic_items.forEach(cmi => {
@@ -229,14 +230,6 @@ class Character extends React.Component {
   }
 
   dispatchClassLevels = () => {
-    // let charKlassesLevels = {}
-    // this.props.character.character_klasses.forEach(charKlass => {
-    //   if (charKlassesLevels[charKlass.klass_id]) {
-    //     charKlassesLevels[charKlass.klass_id]++
-    //   } else {
-    //     charKlassesLevels[charKlass.klass_id] = 1
-    //   }
-    // })
     let cKArray = []
     let completedClasses = []
     this.props.character.character_klasses.forEach(cK => {
@@ -245,11 +238,15 @@ class Character extends React.Component {
         let characterKlass = this.props.character.character_klasses.filter(ck => ck.klass_id === id)
         const level = characterKlass.length
         let klass = this.props.character.uniq_klasses.find(k => k.id === id)
-        let spellsFeature = klass.klass_features.find(f => f.name === 'Spells' || f.name === 'Alchemy')
-        let spellcasting = spellsFeature ? spellsFeature.spellcasting : null
 
         completedClasses.push(id)
         const classInfo = {id, level}
+
+        // changing fetch data, this part is not applicable with starting fetch
+
+        let spellsFeature = klass.klass_features.find(f => f.name === 'Spells' || f.name === 'Alchemy')
+        let spellcasting = spellsFeature ? spellsFeature.spellcasting : null
+
         // look to see if there are any cast spells for the given class
         const castSpellsForThisClass = this.props.character.cast_spells.filter(cs => cs.klass_id === id)
         // if (castSpellsForThisClass[0]){
@@ -269,6 +266,9 @@ class Character extends React.Component {
           }
         // hardcoded end
         // }
+
+        // relocate to a new function when data is applcable
+
         cKArray.push(classInfo)
       }
     })

@@ -102,7 +102,7 @@ class Equipment extends React.Component {
               return (
                 <>
                   <li className='noStyleLi' style={{fontSize: 'smaller'}} key={idx*i.id*3-1} onClick={() => this.changeSelectedItem(id, group)}>
-                    {name}{percentages}{equipped ? <span className='equipped'>E</span> : null}{stored ? <span className='equipped'>S</span> : null}
+                    {name}{percentages}{equipped ? <span className='equipped'>{equipped[0]}</span> : null}{stored ? <span className='equipped'>S</span> : null}
                     {!!actions.length && remappedActions.map((a, idx) => <span key={idx*3+1} className={a} style={{borderRadius: '100%', paddingLeft: '8%', margin: '1.5%'}}>{'  '}</span>)}
                   </li>
                 </>
