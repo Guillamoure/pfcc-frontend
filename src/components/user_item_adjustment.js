@@ -280,15 +280,19 @@ const UserItemAdjustment = props => {
   }
 
   const equipSelection = () => {
+    let options = []
+    if (item.category === "Light" || item.category === "One-Handed") {
+      options.push(<option value="Primary">Primary Hand</option>)
+      options.push(<option value="Off">Off Hand</option>)
+    }
+    if (item.category === "One-Handed" || item.category === "Two-Handed"){options.push(<option value="Two">Two-Handed</option>)}
+    if (item.double_weapon){options.push(<option value="Double">Double</option>)}
 
     return (
       <label htmlFor="equipType" name="Equip">
         <select name="equipType" value={equipped} onChange={e => renderEquip(e)}>
           <option value="">Unequipped</option>
-          <option value="Primary">Primary Hand</option>
-          <option value="Off">Off Hand</option>
-          <option value="Two">Two-Handed</option>
-          <option value="Double">Double</option>
+          {options}
         </select>
       </label>
     )

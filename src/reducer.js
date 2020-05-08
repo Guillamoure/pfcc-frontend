@@ -391,16 +391,23 @@ const reducer = (state = initialState, action) => {
       return {...state, character: {...state.character, character_magic_items: filteredCMIs}}
     case 'EQUIP WEAPON':
       let cws = [...state.character.character_weapons]
-      let filteredCWs = cws.map(w => {
+      let mappedCWs = cws.map(w => {
         if (w.id === action.id){
           let altered = {...w}
           altered.equipped = action.equipped
           return altered
+        } else if (w.equipped === action.equipped || ((action.equipped === "Primary" || action.equipped === "Off") && (w.equipped === "Two")) || action.equipped === "Two" || action.equipped === "Double"){
+          // if the weapon is in the same slot as the new weapon, remove it
+          // if the weapon is in two hands, and new weapon is in one hand, remove it
+          // if the new weapon is in two hands or a double weapon, remove all other weapons
+          let alteredOldEquipped = {...w}
+          alteredOldEquipped.equipped = ""
+          return alteredOldEquipped
         } else {
           return w
         }
       })
-      return {...state, character: {...state.character, character_weapons: filteredCWs}}
+      return {...state, character: {...state.character, character_weapons: mappedCWs}}
     case 'MUTAGEN':
       return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, mutagen: action.name}}}
     case 'TOGGLE MUTAGEN':
