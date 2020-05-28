@@ -6,6 +6,7 @@ import './css/card.css';
 import './css/container.css';
 import './css/animations.css';
 import './css/form.scss';
+import './css/mobile.scss';
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { connect } from 'react-redux'
@@ -13,6 +14,7 @@ import localhost from './localhost'
 
 import NavBar from './container/navbar'
 import Tooltip from './modals/tooltip'
+import ModalSkeleton from './modals/skeleton'
 
 import Home from './container/home'
 import Classes from './container/classes'
@@ -66,6 +68,7 @@ class App extends React.Component {
           <React.Fragment>
             <NavBar />
             {this.props.tooltip.message && <Tooltip />}
+            {this.props.modal.detail && <ModalSkeleton />}
             <Switch>
               <Route exact path="/" component={Home} />
               <Route exact path="/classes" component={Classes} />
@@ -96,7 +99,8 @@ const mapStatetoProps = (state) => {
   return {
     currentUser: state.currentUser,
     admin: state.admin,
-    tooltip: state.tooltip
+    tooltip: state.tooltip,
+    modal: state.modal
   }
 }
 

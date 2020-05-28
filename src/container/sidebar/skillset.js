@@ -7,7 +7,7 @@ const Skillset = props => {
   let [containerHeight, setContainerHeight] = React.useState(0)
 
   const skillEl = skillObj => {
-    let abbrev = skillObj.ability_score.slice(0, 3)
+    // let abbrev = skillObj.ability_score.slice(0, 3)
     return (<span key={skillObj.id * 3 - 1} style={{border: '1px solid #0f52ba', padding: "0.5rem"}}>{skillObj.name}</span>)
   }
 

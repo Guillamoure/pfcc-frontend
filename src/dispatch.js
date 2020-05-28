@@ -74,3 +74,60 @@ const dispatchWeaponProficiencies = (wp, dispatch) => {
     type: "weapon", additive, proficiency_group, weapon_id
   }})
 }
+
+export function changeAmmo(characterWeapon, stringAmmoId) {
+  return function (dispatch) {
+    let ammoId = parseInt(stringAmmoId)
+
+    fetch(`${localhost}/api/v1/character_weapons_ammo/${characterWeapon.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "Response": "application/json"
+      },
+      body: JSON.stringify({ammo_id: ammoId})
+    })
+      .then(r => r.json())
+      .then(data => {
+        dispatch({type: "CHANGE AMMO", characterWeapon, ammoId})
+      })
+  }
+}
+
+export function expendAmmo(characterWeapon, characterWeaponAmmo){
+  return function (dispatch){
+    let ammunition_amount = characterWeaponAmmo ? characterWeaponAmmo.ammunition_amount - 1 : 0
+
+    fetch(`${localhost}/api/v1/character_weapons_update_ammo/${characterWeapon.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "Response": "application/json"
+      },
+      body: JSON.stringify({magazine: characterWeapon.magazine - 1, ammunition_amount})
+    })
+      .then(r => r.json())
+      .then(data => {
+        dispatch({type: "UPDATE AMMO", cw: characterWeapon, magazine: characterWeapon.magazine - 1, ammunition_amount})
+      })
+  }
+}
+
+export function reloadAmmo(characterWeapon, magazine){
+  return function (dispatch){
+    fetch(`${localhost}/api/v1/character_weapons_update_ammo/${characterWeapon.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "Response": "application/json"
+      },
+      body: JSON.stringify({magazine: magazine})
+    })
+      .then(r => r.json())
+      .then(data => {
+        dispatch({type: "UPDATE AMMO", cw: characterWeapon, magazine})
+      })
+  }
+}
+
+export const exitModal = () => ({type: "MODAL", remove: true})

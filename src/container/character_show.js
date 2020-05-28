@@ -530,6 +530,7 @@ class Character extends React.Component {
               <ArmorClass/>
               <Initiative/>
             </section>}
+            {this.state.character.race && this.state.mobileTab === "combat" && <TurnActions/>}
             {this.state.character.race && this.state.mobileTab === "combat" && <Actions editModal={this.editModal} clickOut={this.clickOut} renderTooltip={this.renderTooltip} mouseOut={this.mouseOut} editSidebar={this.editSidebar}/>}
 
 

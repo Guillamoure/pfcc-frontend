@@ -23,7 +23,8 @@ const initialState = {
   classes: [],
   races: [],
   spells: [],
-  tooltip: {}
+  tooltip: {},
+  modal: {}
 }
 
 
@@ -393,10 +394,10 @@ const reducer = (state = initialState, action) => {
       let cws = [...state.character.character_weapons]
       let mappedCWs = cws.map(w => {
         if (w.id === action.id){
-          let altered = {...w}
+          var altered = {...w}
           altered.equipped = action.equipped
           return altered
-        } else if (w.equipped === action.equipped || ((action.equipped === "Primary" || action.equipped === "Off") && (w.equipped === "Two")) || action.equipped === "Two" || action.equipped === "Double"){
+        } else if (w.equipped === action.equipped || ( (action.equipped === "Primary" || action.equipped === "Off") && ( (w.equipped === "Two") || (w.equipped === "Double") ) ) || action.equipped === "Two" || action.equipped === "Double"){
           // if the weapon is in the same slot as the new weapon, remove it
           // if the weapon is in two hands, and new weapon is in one hand, remove it
           // if the new weapon is in two hands or a double weapon, remove all other weapons
@@ -408,6 +409,22 @@ const reducer = (state = initialState, action) => {
         }
       })
       return {...state, character: {...state.character, character_weapons: mappedCWs}}
+    case 'EQUIP ARMOR':
+      var selectedCA = state.character.character_armors.find(a => a.id === action.id)
+      let cas = [...state.character.character_armors].map(a => {
+        if (a.id === action.id){
+          var altered = {...a}
+          altered.equipped = action.equipped
+          return altered
+        } else if (a.armor.proficiency === selectedCA.armor.proficiency && a.equipped && action.equipped){
+          var altered = {...a}
+          altered.equipped = false
+          return altered
+        } else {
+          return a
+        }
+      })
+      return {...state, character: {...state.character, character_armors: cas}}
     case 'MUTAGEN':
       return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, mutagen: action.name}}}
     case 'TOGGLE MUTAGEN':
@@ -428,6 +445,45 @@ const reducer = (state = initialState, action) => {
         tooltip = {}
       }
       return {...state, tooltip}
+    case 'MODAL':
+      let modal = {detail: action.detail, obj: action.obj}
+      if (action.remove){
+        modal = {}
+      }
+      return {...state, modal}
+    case "CHANGE AMMO":
+      var characterWeapons = [...state.character.character_weapons].map(cw => {
+        if (cw.id === action.characterWeapon.id){
+          let newCW = {...cw}
+          newCW.character_weapon_ammunition_id = action.ammoId
+          newCW.magazine = 0
+          newCW.improvised_ammunition = action.ammoId === 0 ? true : false
+          return newCW
+        } else {return cw}
+      })
+      return {...state, character: {...state.character, character_weapons: characterWeapons}}
+    case "UPDATE AMMO":
+      var characterWeapons = [...state.character.character_weapons].map(cw => {
+        if (cw.id === action.cw.id){
+          let newCW = {...cw}
+          newCW.magazine = action.magazine
+          return newCW
+        } else if (cw.id === action.cw.character_weapon_ammunition_id && action.ammunition_amount){
+          let newCWAmmo = {...cw}
+          newCWAmmo.ammunition_amount = action.ammunition_amount
+          return newCWAmmo
+        } else {return cw}
+      })
+      return {...state, character: {...state.character, character_weapons: characterWeapons}}
+    case "DISCOVER EQUIPMENT":
+      var equipment = [...state.character[action.detail]].map(eq => {
+        if (eq.id === action.id){
+          var newEq = {...eq}
+          newEq.discovered = true
+          return newEq
+        } else {return eq}
+      })
+      return {...state, character: {...state.character, [action.detail]: equipment}}
     default:
       return state
   }

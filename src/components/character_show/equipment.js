@@ -22,14 +22,18 @@ class Equipment extends React.Component {
     }
   }
 
-  changeSelectedItem = (cmiID, detail) => {
+  changeSelectedItem = (cmiID, detail, obj) => {
     if (this.props.cmidId === cmiID) {
       this.props.exitModal()
       // this.setState({itemObject: null})
     } else {
       let changingState = 'magic item'
       changingState = detail === 'weapon' ? 'weapon' : changingState
+      changingState = detail === 'armor' ? 'armor' : changingState
       this.props.editModal(changingState, null, cmiID)
+      if (detail === 'armor'){
+        this.props.dispatch({type: "MODAL", detail: "armor", obj: obj})
+      }
       // this.setState({itemObject: obj, descriptionAvailable: false})
     }
   }
@@ -59,6 +63,7 @@ class Equipment extends React.Component {
 
     let cmis = this.props.character.character_magic_items.filter(cmi => cmi.discovered)
     let cws = this.props.character.character_weapons.filter(cw => cw.discovered)
+    let cas = this.props.character.character_armors.filter(cw => cw.discovered)
     let weapons = cws.map(w => w.weapon)
 
     let equipment = [...cmis]
@@ -70,18 +75,20 @@ class Equipment extends React.Component {
     if (unknowns.length){
       groupings.push('unknown')
     }
-    if (cws.length){
-      groupings.push('weapon')
-    }
+    if (cws.length){groupings.push('weapon')}
+    if (cas.length){groupings.push('armor')}
 
     return groupings.map((group, idx) => {
       let groupedItems = cmis.filter(cmi => cmi.magic_item.group === group)
       groupedItems = group === 'unknown' ? unknowns : groupedItems
       groupedItems = group === 'weapon' ? cws : groupedItems
+      groupedItems = group === 'armor' ? cas : groupedItems
+      // remove unarmed as a valid weapon
+      if (group === "weapon"){ groupedItems = groupedItems.filter(gi => gi.weapon.name !== "Unarmed") }
 
       let chosen = this.state.activeItemGroup === group
       return (
-        <div label={group + 's'}>
+        <div key={idx * 6 - 1} label={group + 's'}>
           <div key={idx*3-1} onClick={() => this.changeActiveFeature(group)}><strong>{_.capitalize(group) + 's'} ({groupedItems.length})</strong></div>
           {chosen && <ul style={{margin: '0', padding: '0'}}>
             {groupedItems.map((i, idx) => {
@@ -101,7 +108,7 @@ class Equipment extends React.Component {
 
               return (
                 <>
-                  <li className='noStyleLi' style={{fontSize: 'smaller'}} key={idx*i.id*3-1} onClick={() => this.changeSelectedItem(id, group)}>
+                  <li className='noStyleLi' style={{fontSize: 'smaller'}} key={idx*i.id*3-1} onClick={() => this.changeSelectedItem(id, group, i)}>
                     {name}{percentages}{equipped ? <span className='equipped'>{equipped[0]}</span> : null}{stored ? <span className='equipped'>S</span> : null}
                     {!!actions.length && remappedActions.map((a, idx) => <span key={idx*3+1} className={a} style={{borderRadius: '100%', paddingLeft: '8%', margin: '1.5%'}}>{'  '}</span>)}
                   </li>
