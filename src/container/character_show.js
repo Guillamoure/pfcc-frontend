@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import localhost from '../localhost'
 import { mod } from '../fuf'
 import { fetchCharacter } from '../dispatch'
+import { characterDistributer } from '../helper_functions/distributers/character'
 
 import AbilityScores from '../components/character_show/ability_scores'
 import CharacterName from '../components/character_show/character_name'
@@ -117,9 +118,10 @@ class Character extends React.Component {
     .then(data => {
       // IF YOU WANT THE PAGE TO BE PRIVATE
       // if (this.props.currentUser.id === data.character.user.id){
-        this.props.dispatch({type: 'CHARACTER', character: data.character })
-        this.dispatchAbilityScores()
-        this.dispatchClassLevels()
+        characterDistributer(data.character)
+
+        // this.dispatchAbilityScores()
+        // this.dispatchClassLevels()
         this.props.dispatch({type: 'SPECIFIC USER', name: data.character.name})
         this.dispatchAbilityScoreImprovements(data.character.character_klasses)
         this.setState({character: data.character})
