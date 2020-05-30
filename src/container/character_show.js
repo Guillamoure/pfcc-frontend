@@ -123,7 +123,7 @@ class Character extends React.Component {
         // this.dispatchAbilityScores()
         // this.dispatchClassLevels()
         this.props.dispatch({type: 'SPECIFIC USER', name: data.character.name})
-        this.dispatchAbilityScoreImprovements(data.character.character_klasses)
+        // this.dispatchAbilityScoreImprovements(data.character.character_klasses)
         this.setState({character: data.character})
         if (data.character.name === 'Merg'){
           this.props.dispatch({type: 'ACTIVE ARMOR', name: '+1 chain shirt'})

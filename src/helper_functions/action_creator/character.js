@@ -8,3 +8,5 @@ export const characterAction = (character) => dispatch({type: 'CHARACTER', chara
 export const characterClassesAction = (array) => dispatch({type: 'CHARACTER_CLASSES', classes: array})
 
 export const abilityScoreAction = ({ability, score}) => dispatch({type: 'ABILITY SCORE', ability, score })
+
+export const abilityScoreImprovementAction = (ability_score) => dispatch({type: "ABILITY SCORE IMPROVEMENT", ability_score})
