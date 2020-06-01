@@ -34,6 +34,9 @@ const UserItemAdjustment = props => {
     case "character_armor":
       itemType = 'armor'
       break
+    case "character_magic_item":
+      itemType = 'magicItem'
+      break
   }
 
   const { item, url } = props
@@ -312,6 +315,9 @@ const UserItemAdjustment = props => {
     } else if (itemType === 'armor'){
       options.push(<option value={false}>Unequip{!equipped && "ed"} ({item.remove})</option>)
       options.push(<option value={true}>Equip{equipped && "ed"} ({item.don})</option>)
+    } else if (itemType === 'magicItem'){
+      options.push(<option value={false}>Unequip{!equipped && "ed"}</option>)
+      options.push(<option value={true}>Equip{equipped && "ed"}</option>)
     }
 
     return (

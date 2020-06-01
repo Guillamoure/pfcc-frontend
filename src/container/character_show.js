@@ -141,7 +141,7 @@ class Character extends React.Component {
         }
 
 
-        this.props.fetchCharacter(data)(this.props.dispatch)
+        // this.props.fetchCharacter(data)(this.props.dispatch)
 
       //   data.character.character_magic_items.forEach(cmi => {
       //     if (cmi.equipped){

@@ -9,6 +9,7 @@ export const fetchCharacter = (data) => {
             f.skill_bonuses.forEach(sk => {
               const { skill_id, bonus, bonus_type, duration } = sk
               // const conditions = sk.feature_skill_bonus_conditions.map(c => {return {condition: c.condition}})
+              console.log("Skill Bonus")
               dispatch({type: 'BONUS', bonus: {type: 'skill', skill_id, bonus, bonus_type, duration, source: cmi.magic_item.name}})
             })
           }

@@ -144,7 +144,7 @@ class Equipment extends React.Component {
         return null
       }
       let cmifus = this.props.character.character_magic_item_feature_usages
-      let fu = cmifus.find(fu => fu.feature_usage_id === usage.id)
+      let fu = cmifus.find(fu => fu.feature_usage_id === usage.id) || 0
       let currentUsage = fu.current_usage || 0
       let remaining = limit - currentUsage
       return ` (${remaining}/${limit})`
