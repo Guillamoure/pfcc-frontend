@@ -3,32 +3,41 @@ import {
 } from '../action_creator/features'
 
 export const initialCharacterDistribution = (character) => {
+  let character_info = {
+    bonuses: [],
+    effects: [],
+    features: [],
+    proficiencies: {}
+  }
+
   // racial traits
   // klass features
   character.applicable_klass_features.forEach(akf => {
-    akf.features.forEach(klassFeaturesFeatureDistribution)
+    akf.features.forEach((el) => klassFeaturesFeatureDistribution(el, character_info, { id: akf.id, type: "applicable_klass_features" }))
   })
   // weapon
   // armor
   // magic items
   character.character_magic_items.forEach(cmi => {
-    cmi.magic_item.features.forEach(klassFeaturesFeatureDistribution)
+    cmi.magic_item.features.forEach((el) => klassFeaturesFeatureDistribution(el, character_info, { id: cmi.id, type: "character_magic_items" }))
+  })
+  console.log(character_info)
+}
+
+const klassFeaturesFeatureDistribution = (feature, character_info, source) => {
+  feature.skill_bonuses.forEach((el) => {
+    character_info.bonuses.push(skillBonusFeature(el, source))
   })
 }
 
-const klassFeaturesFeatureDistribution = (feature) => {
-  feature.skill_bonuses.forEach(skillBonusFeature)
-}
-
-const skillBonusFeature = (sk) => {
+const skillBonusFeature = (sk, source) => {
   const { skill_id, bonus, bonus_type, duration } = sk
-  const obj = {
+  return {
     type: 'skill',
     skill_id,
     bonus,
     bonus_type,
     duration,
-    source: "does this work?"
+    source
   }
-  skillBonusAction(obj)
 }
