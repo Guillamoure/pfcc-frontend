@@ -2,4 +2,4 @@ import Store from '../../store'
 
 const { getState, dispatch } = Store
 
-export const skillBonusAction = (bonus) => dispatch({type: 'BONUS', bonus})
+export const bonusAction = (bonus) => dispatch({type: 'BONUS', bonus})

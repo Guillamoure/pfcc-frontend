@@ -112,7 +112,7 @@ class Character extends React.Component {
   }
 
   componentDidMount() {
-    console.log("HI IM RUNNING")
+    // console.log("HI IM RUNNING")
     fetch(`${localhost}/api/v1${this.props.location.pathname}`)
     .then(r => r.json())
     .then(data => {
