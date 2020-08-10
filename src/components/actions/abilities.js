@@ -29,8 +29,14 @@ class Abilities extends React.Component {
       case 'Grackle':
         return this.grackle()
       default:
-        return 0
+        break
     }
+    let activatableAbilities = []
+    this.props.character.applicable_klass_features.forEach(akf => {
+      // if an akf has a feature with an action, display it
+      // only display the feature, but the text should be from the akf
+    })
+    return 1
   }
 
   dispatchManager = (action, pointsDirection, specific, points) => {
@@ -786,7 +792,7 @@ class Abilities extends React.Component {
             </tr>
           </thead>
           <tbody>
-          {this.renderAbilities()}
+            {this.renderAbilities()}
           </tbody>
         </table>
       </section>

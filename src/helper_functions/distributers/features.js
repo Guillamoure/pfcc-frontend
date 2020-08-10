@@ -1,5 +1,6 @@
 import {
-  bonusAction
+  bonusAction,
+  addMovementAction
 } from '../action_creator/features'
 
 export const initialCharacterDistribution = (character) => {
@@ -7,26 +8,38 @@ export const initialCharacterDistribution = (character) => {
     bonuses: [],
     effects: [],
     features: [],
-    proficiencies: {}
+    proficiencies: {},
+    movement: []
   }
 
   // racial traits
   // klass features
   character.applicable_klass_features.forEach(akf => {
-    akf.features.forEach((el) => klassFeaturesFeatureDistribution(el, character_info, { id: el.id, type: "applicable_klass_features" }))
+    akf.features.forEach((feature) => {
+      if (!feature.action){
+        klassFeaturesFeatureDistribution(feature, character_info, { id: feature.id, type: "applicable_klass_features" })
+      }
+    })
   })
 
   // weapon
   // armor
   // magic items
   character.character_magic_items.forEach(cmi => {
-    cmi.magic_item.features.forEach((el) => klassFeaturesFeatureDistribution(el, character_info, { id: cmi.id, type: "character_magic_items" }))
+    cmi.magic_item.features.forEach((feature) => {
+      if (!feature.action){
+        klassFeaturesFeatureDistribution(feature, character_info, { id: cmi.id, type: "character_magic_items" })
+      }
+    })
   })
-
 
   character_info.bonuses.forEach(b => {
     bonusAction(b)
   })
+  // HARDCODE TESTING
+  character_info.movement.push({movement: "Base", feet: 30, bonus: false, penalty: false})
+  
+  character_info.movement.forEach(addMovementAction)
 }
 
 const klassFeaturesFeatureDistribution = (feature, character_info, source) => {
@@ -35,6 +48,9 @@ const klassFeaturesFeatureDistribution = (feature, character_info, source) => {
   })
   feature.stat_bonuses.forEach((el) => {
     character_info.bonuses.push(statBonusFeature(el, source))
+  })
+  feature.movements.forEach((el) => {
+    character_info.movement.push(movementsFeature(el, source))
   })
 }
 
@@ -61,5 +77,21 @@ const statBonusFeature = (sb, source) => {
     specific_statistic,
     bonus_multiplier,
     source
+  }
+}
+
+const movementsFeature = (m, source) => {
+  const { movement, feet, bonus, penalty, permanent } = m
+  if (permanent){
+    return {
+      movement,
+      feet,
+      bonus,
+      penalty,
+      permanent,
+      source
+    }
+  } else {
+    return {}
   }
 }

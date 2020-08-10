@@ -18,7 +18,8 @@ const initialState = {
       immediate: false
     },
     conditions: [],
-    proficiencies: {weapon: {groups: [], individualIds: []}, armor: {groups: [], individualIds: []}}
+    proficiencies: {weapon: {groups: [], individualIds: []}, armor: {groups: [], individualIds: []}},
+    movement: []
   },
   classes: [],
   races: [],
@@ -484,6 +485,17 @@ const reducer = (state = initialState, action) => {
         } else {return eq}
       })
       return {...state, character: {...state.character, [action.detail]: equipment}}
+    case "ADD MOVEMENT":
+      return {
+        ...state,
+        character_info: {
+          ...state.character_info,
+          movement: [
+            ...state.character_info.movement,
+            action.movement
+          ]
+        }
+      }
     default:
       return state
   }
