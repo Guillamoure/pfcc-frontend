@@ -56,7 +56,10 @@ const klassFeaturesFeatureDistribution = (feature, character_info, source) => {
     character_info.movement.push(movementsFeature(el, source, feature.usage, feature.applications, feature.conditions))
   })
 	feature.armor_proficiencies.forEach(el => {
-		armorProficienciesFeature(el, source, character_info.proficiencies.armor)
+		weaponArmorProficienciesFeature(el, source, character_info.proficiencies.armor)
+	})
+	feature.weapon_proficiencies.forEach(el => {
+		weaponArmorProficienciesFeature(el, source, character_info.proficiencies.weapon)
 	})
 }
 
@@ -105,13 +108,16 @@ const movementsFeature = (m, source, usage, applications, conditions) => {
   }
 }
 
-const armorProficienciesFeature = (ap, source, armorObj) => {
+const weaponArmorProficienciesFeature = (wap, source, obj) => {
 
-	if (ap.proficiency_group){
-		armorObj.groups.push({source, proficiency_group: ap.proficiency_group, additive: ap.additive })
+	if (wap.proficiency_group){
+		obj.groups.push({ source, proficiency_group: wap.proficiency_group, additive: wap.additive })
 	}
-	if (ap.armor_id){
-		armorObj.individualIds.push({source, armor_id: ap.armor_id, additive: ap.additive })
+	if (wap.armor_id){
+		obj.individualIds.push({ source, armor_id: wap.armor_id, additive: wap.additive })
+	}
+	if (wap.weapon_id){
+		obj.individualIds.push({ source, weapon_id: wap.weapon_id, additive: wap.additive })
 	}
 
 }
