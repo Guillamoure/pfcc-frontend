@@ -1,6 +1,7 @@
 import {
   bonusAction,
-  addMovementAction
+  addMovementAction,
+	proficiencyAction
 } from '../action_creator/features'
 
 export const initialCharacterDistribution = (character) => {
@@ -8,7 +9,7 @@ export const initialCharacterDistribution = (character) => {
     bonuses: [],
     effects: [],
     features: [],
-    proficiencies: {},
+    proficiencies: { weapon: {groups: [], individualIds: []}, armor: {groups: [], individualIds: []} },
     movement: []
   }
 
@@ -17,7 +18,7 @@ export const initialCharacterDistribution = (character) => {
   character.applicable_klass_features.forEach(akf => {
     akf.features.forEach((feature) => {
       if (!feature.action){
-        klassFeaturesFeatureDistribution(feature, character_info, { id: feature.id, type: "applicable_klass_features" })
+        klassFeaturesFeatureDistribution(feature, character_info, { id: akf.id, type: "applicable_klass_features", feature_id: feature.id })
       }
     })
   })
@@ -28,7 +29,7 @@ export const initialCharacterDistribution = (character) => {
   character.character_magic_items.forEach(cmi => {
     cmi.magic_item.features.forEach((feature) => {
       if (!feature.action){
-        klassFeaturesFeatureDistribution(feature, character_info, { id: cmi.id, type: "character_magic_items" })
+        klassFeaturesFeatureDistribution(feature, character_info, { id: cmi.id, type: "character_magic_items", feature_id: feature.id })
       }
     })
   })
@@ -40,6 +41,8 @@ export const initialCharacterDistribution = (character) => {
   character_info.movement.push({movement: "Base", feet: 30, bonus: false, penalty: false})
 
   character_info.movement.forEach(addMovementAction)
+
+	proficiencyAction(character_info.proficiencies)
 }
 
 const klassFeaturesFeatureDistribution = (feature, character_info, source) => {
@@ -52,6 +55,9 @@ const klassFeaturesFeatureDistribution = (feature, character_info, source) => {
   feature.movements.forEach((el) => {
     character_info.movement.push(movementsFeature(el, source, feature.usage, feature.applications, feature.conditions))
   })
+	feature.armor_proficiencies.forEach(el => {
+		armorProficienciesFeature(el, source, character_info.proficiencies.armor)
+	})
 }
 
 const skillBonusFeature = (sk, source) => {
@@ -97,4 +103,15 @@ const movementsFeature = (m, source, usage, applications, conditions) => {
   } else {
     return {}
   }
+}
+
+const armorProficienciesFeature = (ap, source, armorObj) => {
+
+	if (ap.proficiency_group){
+		armorObj.groups.push({source, proficiency_group: ap.proficiency_group, additive: ap.additive })
+	}
+	if (ap.armor_id){
+		armorObj.individualIds.push({source, armor_id: ap.armor_id, additive: ap.additive })
+	}
+
 }

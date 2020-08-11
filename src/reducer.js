@@ -433,15 +433,22 @@ const reducer = (state = initialState, action) => {
     case 'TOGGLE MUTAGEN':
       let activeMutagen = state.character_info.hardcode.activeMutagen || false
       return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, activeMutagen: !activeMutagen}}}
+		// TO BE DEPRECATED
     case 'PROFICIENCY':
       let proficiencies = {...state.character_info.proficiencies}
-      if (action.detail.type === "weapon"){
-        if (action.detail.additive){
-          if (action.detail.proficiency_group) proficiencies.weapon.groups.push(action.detail.proficiency_group)
-          if (action.detail.weapon_id) proficiencies.weapon.individualIds.push(action.detail.weapon_id)
+			let d = action.detail
+      if (d.type === "weapon"){
+        if (d.additive){
+          if (d.proficiency_group) proficiencies.weapon.groups.push(d.proficiency_group)
+          if (d.weapon_id) proficiencies.weapon.individualIds.push(d.weapon_id)
         }
       }
       return {...state, character_info: {...state.character_info, proficiencies}}
+		// NEW IMPROVED "PROFICIENCY"
+		// CHANGE NAME TO JUST "PROFICIENCY" WHEN OTHER CAN BE REMOVED
+		// LOCATED IN /helper_functions/action_creator/features
+		case 'NEW PROFICIENCY':
+			return {...state, character_info: {...state.character_info, proficiencies: action.proficiencies}}
     case 'TOOLTIP':
       let tooltip = {message: action.message, target: action.target}
       if (state.tooltip.target === action.target){
