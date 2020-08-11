@@ -48,24 +48,22 @@ const Details = props => {
 		return (
 			<>
 				<li><strong>Carrying</strong>: {weight} lbs (<em>{load} Load</em>)</li>
-				<li>
-					<table>
-						<thead>
-							<tr>
-								<th>Light</th>
-								<th>Medium</th>
-								<th>Heavy</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>{cc[0]} lbs or less</td>
-								<td>{cc[0]+1} - {cc[1]} lbs</td>
-								<td>{cc[1]+1} - {cc[2]} lbs</td>
-							</tr>
-						</tbody>
-					</table>
-				</li>
+				<table>
+					<thead>
+						<tr>
+							<th style={{textAlign: "center", borderRight: "1px solid black"}}>Light</th>
+							<th style={{textAlign: "center", borderRight: "1px solid black"}}>Medium</th>
+							<th style={{textAlign: "center"}}>Heavy</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td style={{borderRight: "1px solid black"}}>{cc[0]} lbs or less</td>
+							<td style={{borderRight: "1px solid black"}}>{cc[0]+1} - {cc[1]} lbs</td>
+							<td>{cc[1]+1} - {cc[2]} lbs</td>
+						</tr>
+					</tbody>
+				</table>
 			</>
 		)
 	}
