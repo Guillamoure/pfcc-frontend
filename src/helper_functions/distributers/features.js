@@ -38,7 +38,7 @@ export const initialCharacterDistribution = (character) => {
   })
   // HARDCODE TESTING
   character_info.movement.push({movement: "Base", feet: 30, bonus: false, penalty: false})
-  
+
   character_info.movement.forEach(addMovementAction)
 }
 
@@ -50,7 +50,7 @@ const klassFeaturesFeatureDistribution = (feature, character_info, source) => {
     character_info.bonuses.push(statBonusFeature(el, source))
   })
   feature.movements.forEach((el) => {
-    character_info.movement.push(movementsFeature(el, source))
+    character_info.movement.push(movementsFeature(el, source, feature.usage, feature.applications, feature.conditions))
   })
 }
 
@@ -80,7 +80,7 @@ const statBonusFeature = (sb, source) => {
   }
 }
 
-const movementsFeature = (m, source) => {
+const movementsFeature = (m, source, usage, applications, conditions) => {
   const { movement, feet, bonus, penalty, permanent } = m
   if (permanent){
     return {
@@ -89,6 +89,9 @@ const movementsFeature = (m, source) => {
       bonus,
       penalty,
       permanent,
+      usage,
+      applications,
+      conditions,
       source
     }
   } else {

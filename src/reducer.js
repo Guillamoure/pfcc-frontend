@@ -19,7 +19,9 @@ const initialState = {
     },
     conditions: [],
     proficiencies: {weapon: {groups: [], individualIds: []}, armor: {groups: [], individualIds: []}},
-    movement: []
+    movement: [],
+    load: 0,
+    equipped: []
   },
   classes: [],
   races: [],

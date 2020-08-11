@@ -61,3 +61,65 @@ export const renderAbilityScoreCalc = (ability, character) => {
   }
   return { ability: downcaseAbility, score }
 }
+
+export const calculateWeight = (character, character_info) => {
+  let weight = 0;
+
+  character.character_weapons.forEach(cw => {
+    weight += cw.weapon.weight
+  })
+  character.character_armors.forEach(ca => {
+    weight += ca.armor.weight
+  })
+
+
+  return weight
+}
+
+export const equippedWeapons = characterWeapons => {
+  return characterWeapons.filter(cw => cw.equipped !== "")
+}
+
+export const calculateLoad = (weight, strength) => {
+  let carryingCapacityByStrength = carryingCapacity(strength)
+  if (weight <= carryingCapacityByStrength[0]){return "Light"}
+  if (weight <= carryingCapacityByStrength[1]){return "Medium"}
+  if (weight <= carryingCapacityByStrength[2]){return "Heavy"}
+  return "Overload"
+}
+
+export const carryingCapacity = strength => {
+  switch(strength){
+    case 1: return [3, 6, 10]
+    case 2: return [6, 13, 20]
+    case 3: return [10, 20, 30]
+    case 4: return [13, 26, 40]
+    case 5: return [16, 33, 50]
+    case 6: return [20, 40, 60]
+    case 7: return [23, 46, 70]
+    case 8: return [26, 53, 80]
+    case 9: return [30, 60, 90]
+    case 10: return [33, 66, 100]
+    case 11: return [38, 76, 115]
+    case 12: return [43, 86, 130]
+    case 13: return [50, 100, 150]
+    case 14: return [58, 116, 175]
+    case 15: return [66, 133, 200]
+    case 16: return [76, 153, 230]
+    case 17: return [86, 173, 260]
+    case 18: return [100, 200, 300]
+    case 19: return [116, 233, 350]
+    case 20: return [133, 266, 400]
+    case 21: return [153, 306, 460]
+    case 22: return [173, 346, 520]
+    case 23: return [200, 400, 600]
+    case 24: return [233, 466, 700]
+    case 25: return [266, 533, 800]
+    case 26: return [306, 613, 920]
+    case 27: return [346, 693, 1040]
+    case 28: return [400, 800, 1200]
+    case 29: return [466, 933, 1400]
+    case 30: return [532, 1064, 1600]
+    default: return [0, 0, 0]
+  }
+}
