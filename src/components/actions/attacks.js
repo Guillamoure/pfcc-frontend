@@ -157,7 +157,7 @@ const Attacks = props => {
   const proficiency = (cw) => {
     let isProficient = true
     let weaponProficiencies = props.character_info.proficiencies.weapon
-    if (!weaponProficiencies.groups.includes(cw.weapon.proficiency) && !weaponProficiencies.individualIds.includes(cw.weapon.id)){isProficient = false}
+    if (!weaponProficiencies.groups.find(wp => wp.proficiency_group === cw.weapon.proficiency) && !weaponProficiencies.individualIds.find(wp => cw.weapon.id === wp.weapon_id)){isProficient = false}
     if (cw.weapon.name === "Bastard Sword"){
       if (weaponProficiencies.groups.includes("Martial") && cw.equipped === "Two"){isProficient = true}
       else if (weaponProficiencies.individualIds.includes(cw.weapon.id)){isProficient = true}
