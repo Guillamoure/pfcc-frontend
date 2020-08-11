@@ -123,3 +123,32 @@ export const carryingCapacity = strength => {
     default: return [0, 0, 0]
   }
 }
+
+export const reducedSpeed = (speed) => {
+	switch(speed){
+		case 15: return 10
+		case 20: return 15
+		case 25: return 20
+		case 30: return 20
+		case 35: return 25
+		case 40: return 30
+		case 45: return 30
+		case 50: return 35
+		case 55: return 40
+		case 60: return 40
+		case 65: return 45
+		case 70: return 50
+		case 75: return 50
+		case 80: return 55
+		case 85: return 60
+		case 90: return 60
+		case 95: return 65
+		case 100: return 70
+		case 105: return 70
+		case 110: return 75
+		case 115: return 80
+		case 120: return 80
+
+		default: return speed
+	}
+}

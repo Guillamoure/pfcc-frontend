@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 
-import { calculateWeight, calculateLoad } from '../../../helper_functions/calculations/character'
+import { calculateWeight, calculateLoad, reducedSpeed } from '../../../helper_functions/calculations/character'
 
 const Movement = props => {
 
@@ -15,20 +15,53 @@ const Movement = props => {
     let base = _.maxBy(movementRedux.map(mr => {
       return mr.movement === "Base" && !mr.bonus && !mr.penalty ? mr.feet : 0
     }))
+		let speed = base
+		let load = calculateLoad(calculateWeight(props.character, props.character_info), props.character_info.ability_scores.strength)
+
     movementRedux.forEach(mr => {
-      let unlessLoads = mr.conditions?.map(c => c.unless_load)
+			let applicationsBefore = mr.applications?.map(a => a.calculate_before)
+      if (applicationsBefore?.includes("load") || applicationsBefore?.includes("armor")){
 
-      let load = calculateLoad(calculateWeight(props.character, props.character_info), props.character_info.ability_scores.strength)
+        let unlessLoads = mr.conditions?.map(c => c.unless_load)
 
-      if (!unlessLoads || !unlessLoads.includes(load) || (load === "Light" && (!unlessLoads.includes("Medium") || !unlessLoads.includes("Heavy"))) || (load === "Medium" && !unlessLoads.includes("Heavy"))){
-        base += mr.movement === "Base" && mr.bonus && !mr.penalty ? mr.feet : 0
-        base -= mr.movement === "Base" && !mr.bonus && mr.penalty ? mr.feet : 0
+        if (!unlessLoads || !unlessLoads.includes(load) || (load === "Light" && (!unlessLoads.includes("Medium") || !unlessLoads.includes("Heavy"))) || (load === "Medium" && !unlessLoads.includes("Heavy"))){
+          speed += mr.movement === "Base" && mr.bonus && !mr.penalty ? mr.feet : 0
+          speed -= mr.movement === "Base" && !mr.bonus && mr.penalty ? mr.feet : 0
+        }
+
       }
+
     })
 
+		if (load === "Medium" || load === "Heavy"){
+			speed = reducedSpeed(speed)
+		}
+
+		// DONT HAVE ARMOR CALCULATED YET
+		// if (armor === "Medium" || armor === "Heavy"){
+		// 	speed = reducedSpeed(speed)
+		// }
+
+		movementRedux.forEach(mr => {
+			let applicationsAfter = mr.applications?.map(a => a.calculate_after)
+			if (applicationsAfter?.includes("load") || applicationsAfter?.includes("armor")){
+
+				let unlessLoads = mr.conditions?.map(c => c.unless_load)
+
+				debugger
+
+				if (!unlessLoads || !unlessLoads.includes(load) || (load === "Light" && (!unlessLoads.includes("Medium") || !unlessLoads.includes("Heavy"))) || (load === "Medium" && !unlessLoads.includes("Heavy"))){
+					speed += mr.movement === "Base" && mr.bonus && !mr.penalty ? mr.feet : 0
+					speed -= mr.movement === "Base" && !mr.bonus && mr.penalty ? mr.feet : 0
+				}
+
+			}
+
+		})
 
 
-    setBaseSpeed(base)
+
+    setBaseSpeed(speed)
   }, [movementRedux])
 
   const renderDispatch = action => {
