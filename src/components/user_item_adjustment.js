@@ -21,7 +21,6 @@ const UserItemAdjustment = props => {
     fetch(`${localhost}/api/v1/campaign_containers/${props.character.campaign.id}`)
       .then(r => r.json())
       .then(data => {
-        console.log("Using the Effect!")
         setContainers(data)
       })
   }, [props.item])
@@ -41,6 +40,7 @@ const UserItemAdjustment = props => {
 
   const { item, url } = props
   const { equipped, known } = props.characterItem
+	console.log("equipped", equipped)
 
   let featureWithUsage = item.features ? item.features.find(f => f.usage) : false
   let usage = featureWithUsage ? featureWithUsage.usage : false
@@ -124,6 +124,9 @@ const UserItemAdjustment = props => {
           dispatchType = url === 'character_weapon' ? 'EQUIP WEAPON' : dispatchType
           dispatchType = url === 'character_armor' ? 'EQUIP ARMOR' : dispatchType
           props.dispatch({type: dispatchType, id: props.characterItem.id, equipped: newEquippedStatus})
+					if (itemType === "armor"){
+						props.dispatch({type: "MODAL", detail: "armor", obj: {...props.characterItem, equipped: newEquippedStatus}})
+					}
         }
       })
   }

@@ -32,7 +32,6 @@ const ModalSkeleton = (props) => {
     props.dispatch(props.exitModal())
   }
 
-  console.log(props)
   return (
     <Portal>
       <div className="page-dimmer" onClick={clickOut}>

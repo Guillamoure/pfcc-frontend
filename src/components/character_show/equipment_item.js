@@ -1,28 +1,13 @@
 import React from 'react'
 
+import { actionClass } from '../../fuf'
+
 const EquipmentItem = props => {
 
 	let { item, index, group } = props
 
 	const remappedActions = (actions) => {
-		return actions.map(a => {
-			switch(a){
-				case 'Standard Action':
-					return 'standard'
-				case 'Swift Action':
-					return 'swift'
-				case 'Move Action':
-					return 'move'
-				case 'Full-Round Action':
-					return 'full'
-				case 'Immediate Action':
-					return 'immediate'
-				case 'Free Action':
-					return 'free'
-				default:
-					return a
-			}
-		})
+		return actions.map(actionClass)
 	}
 
 	const renderPercentage = (magicItem) => {
@@ -65,11 +50,30 @@ const EquipmentItem = props => {
 	let stored = isThisStored(item, keyWord)
 	let id = item.id
 
+	const renderTitle = () => {
+		return (
+			<>
+				{name}
+				{percentages}
+				{equipped ? <span className='equipped'>{equipped === true ? "E" : equipped[0]}</span> : null}
+				{stored ? <span className='equipped'>S</span> : null}
+			</>
+		)
+	}
+
+	const renderAction = () => {
+		return (
+			<>
+				{!!actions.length && mappedActions.map((a, index) => <span key={index*3+1} className={a} style={{borderRadius: '100%', paddingLeft: '8%', margin: '1.5%'}}>{'  '}</span>)}
+			</>
+		)
+	}
+
 	return (
 		<>
 			<li className='noStyleLi' style={{fontSize: 'smaller'}} key={index*item.id*3-1} onClick={() => props.changeSelectedItem(id, group, item)}>
-				{name}{percentages}{equipped ? <span className='equipped'>{equipped[0]}</span> : null}{stored ? <span className='equipped'>S</span> : null}
-				{!!actions.length && mappedActions.map((a, index) => <span key={index*3+1} className={a} style={{borderRadius: '100%', paddingLeft: '8%', margin: '1.5%'}}>{'  '}</span>)}
+				{renderTitle()}
+				{renderAction()}
 			</li>
 		</>
 	)

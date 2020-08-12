@@ -42,6 +42,7 @@ const ArmorSummary = props => {
   const renderArmor = () => {
     let armorName = ca.masterwork ? `mwk ${ca.armor.name}` : ca.armor.name
     let name = ca.name ? <h3 style={{display: 'inline-block'}}><em>{ca.name}</em> (armorName)</h3> : <h3 style={{display: 'inline-block'}}>{armorName}</h3>
+		
     return (
       <React.Fragment>
         {name}
