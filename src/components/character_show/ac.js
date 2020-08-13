@@ -1,12 +1,14 @@
 import React from 'react'
 import _  from 'lodash'
 import { connect } from 'react-redux'
-import { armorClass } from '../../helper_functions/calculations/armor_class'
+import { armorClassModifiers, armorClassTotal } from '../../helper_functions/calculations/armor_class'
 
 
 const ArmorClass = props => {
 
-	let acModifiers = armorClass()
+	// CALCULATED DATA
+	let acModifiers = armorClassModifiers()
+	let acTotal = armorClassTotal()
 
   const hc = props.character_info.hardcode
   const raging = hc.rage ? -2 : 0
@@ -123,17 +125,11 @@ const ArmorClass = props => {
 		if(!["Cedrick", "Nettie", "Persephone", "Merg", "Grackle", "Robby", "Maddox"].includes(name)){
 			switch(type){
 				case 'ac':
-					return 10 + _.sum(acModifiers.map(m => m.mod))
+					return acTotal.armorClass
 				case 't':
-					let touchModifiers = acModifiers.filter(m => {
-						return (m.bonus !== "armor" && m.bonus !== "natural")
-					})
-					return 10 + _.sum(touchModifiers.map(m => m.mod))
+					return acTotal.touch
 				case 'ff':
-					let flatFootedModifiers = acModifiers.filter(m => {
-						return (m.bonus !== "dex" && m.bonus !== "dodge")
-					})
-					return 10 + _.sum(flatFootedModifiers.map(m => m.mod))
+					return acTotal.flatFooted
 				default:
 					return 10
 			}

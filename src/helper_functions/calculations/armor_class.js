@@ -1,8 +1,9 @@
 import store from '../../store'
+import _ from 'lodash'
 import { mod, size } from '../../fuf'
 import { areYouProficientWithThisArmor } from './proficiencies'
 
-export const armorClass = () => {
+export const armorClassModifiers = () => {
 	// NEW DATA
 	let acModifiers = []
 
@@ -66,4 +67,29 @@ const wornArmor = (equipped, all) => {
 	bonus += equipped.armor.bonus
 
 	return bonus
+}
+
+export const armorClassTotal = () => {
+	// NEW DATA
+	let ac = {armorClass: 10, touch: 10, flatFooted: 10}
+
+	// CALCULATED DATA
+	let acModifiers = armorClassModifiers()
+
+	// BASE ARMOR CLASS
+	ac.armorClass += _.sum(acModifiers.map(m => m.mod))
+
+	// TOUCH ARMOR CLASS
+	let touchModifiers = acModifiers.filter(m => {
+		return (m.bonus !== "armor" && m.bonus !== "natural")
+	})
+	ac.touch += _.sum(touchModifiers.map(m => m.mod))
+
+	// FLAT FOOTED ARMOR CLASS
+	let flatFootedModifiers = acModifiers.filter(m => {
+		return (m.bonus !== "dex" && m.bonus !== "dodge")
+	})
+	ac.flatFooted += _.sum(flatFootedModifiers.map(m => m.mod))
+
+	return ac
 }
