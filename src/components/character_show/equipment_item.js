@@ -53,7 +53,7 @@ const EquipmentItem = props => {
 	const renderTitle = () => {
 		return (
 			<>
-				{name}
+				{name} 
 				{percentages}
 				{equipped ? <span className='equipped'>{equipped === true ? "E" : equipped[0]}</span> : null}
 				{stored ? <span className='equipped'>S</span> : null}

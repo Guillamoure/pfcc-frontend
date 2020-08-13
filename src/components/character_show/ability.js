@@ -16,7 +16,7 @@ function AbilityScore (props) {
   const activeMutagen = hc.activeMutagen ? hc.mutagen : false
   const age = name === 'Maddox' && hc.age
 
-  console.log('what is activeMutagen?', activeMutagen)
+  // console.log('what is activeMutagen?', activeMutagen)
 
   if (props.name === "Strength"){
     if (largeMorph){

@@ -1,7 +1,12 @@
 import React from 'react'
+import _  from 'lodash'
 import { connect } from 'react-redux'
+import { armorClass } from '../../helper_functions/calculations/armor_class'
+
 
 const ArmorClass = props => {
+
+	let acModifiers = armorClass()
 
   const hc = props.character_info.hardcode
   const raging = hc.rage ? -2 : 0
@@ -64,14 +69,6 @@ const ArmorClass = props => {
     return Math.floor((dex - 10) / 2)
   }
 
-  // renderSize = () => {
-  //   if (props.character.race.size === 'Small'){
-  //     return 1
-  //   } else {
-  //     return 0
-  //   }
-  // }
-
   const renderSize = () => {
     switch (props.character_info.size){
       case 'Tiny':
@@ -87,47 +84,27 @@ const ArmorClass = props => {
 
   const dodge = () => {
     let bonus = 0
-    if (fd){
-      bonus += 2
-    }
-    if (name === "Persephone"){
-      bonus+=1
-    }
-    if (name === "Robby"){
-      bonus+=1
-    }
+    if (fd){bonus += 2}
+    if (name === "Persephone"){bonus+=1}
+    if (name === "Robby"){bonus+=1}
     return bonus
   }
 
   const natural = () => {
     let bonus = 0
-    if (largeMorph){
-      bonus +=4
-    }
-    if (name === "Persephone"){
-      bonus+=1
-    }
-    if (name === "Grackle"){
-      bonus+=1
-    }
-    if (activeMutagen){
-      bonus +=2
-    }
+    if (largeMorph){bonus +=4}
+    if (name === "Persephone"){bonus+=1}
+    if (name === "Grackle"){bonus+=1}
+    if (activeMutagen){bonus +=2}
     return bonus
   }
 
   const armorBonus = () => {
     let bonus = 0
     if (armor){
-      if (armor === "Wooden"){
-        bonus += 3
-      }
-      if (armor === "+1 chain shirt"){
-        bonus += 5
-      }
-      if (armor === 'Padded'){
-        bonus += 1
-      }
+      if (armor === "Wooden"){bonus += 3}
+      if (armor === "+1 chain shirt"){bonus += 5}
+      if (armor === 'Padded'){bonus += 1}
     }
     return bonus
   }
@@ -142,6 +119,29 @@ const ArmorClass = props => {
   }
 
   const acCalc = (type) => {
+
+		if(!["Cedrick", "Nettie", "Persephone", "Merg", "Grackle", "Robby", "Maddox"].includes(name)){
+			switch(type){
+				case 'ac':
+					return 10 + _.sum(acModifiers.map(m => m.mod))
+				case 't':
+					let touchModifiers = acModifiers.filter(m => {
+						return (m.bonus !== "armor" && m.bonus !== "natural")
+					})
+					return 10 + _.sum(touchModifiers.map(m => m.mod))
+				case 'ff':
+					let flatFootedModifiers = acModifiers.filter(m => {
+						return (m.bonus !== "dex" && m.bonus !== "dodge")
+					})
+					return 10 + _.sum(flatFootedModifiers.map(m => m.mod))
+				default:
+					return 10
+			}
+		}
+
+
+
+
     switch(type){
       case 'ac':
         return (10 + dexMod() + renderSize() + armorBonus() + dodge() + natural() + deflection() + raging + charging + cleave + cedrick + enlarge + reduce + dodgingPanache + quick + stealTime)
