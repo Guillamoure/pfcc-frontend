@@ -9,7 +9,7 @@ export const armorClassModifiers = () => {
 
 	// STORED DATA
 	const { character, character_info } = store.getState()
-	let equippedCharacterArmor = character.character_armors.find(ca => ca.equipped)
+	let equippedCharacterArmor = character.character_armors.find(ca => ca.equipped) || null
 
 	// CALCULATED DATA
 	let dexMod = mod(character_info.ability_scores.dexterity)
@@ -18,7 +18,7 @@ export const armorClassModifiers = () => {
 	// DEXTERITY BONUS
 	acModifiers.push({
 		bonus: "dex",
-		mod: equippedCharacterArmor.armor.max_dex_bonus < dexMod ? equippedCharacterArmor.armor.max_dex_bonus : dexMod
+		mod: equippedCharacterArmor?.armor.max_dex_bonus < dexMod ? equippedCharacterArmor.armor.max_dex_bonus : dexMod
 	})
 
 	// ARMOR BONUS
@@ -56,6 +56,9 @@ export const armorClassModifiers = () => {
 
 const wornArmor = (equipped, all) => {
 	let bonus = 0
+	// if not wearing any armor
+	if (equipped === null){return bonus}
+
 	if (equipped.extra_armor_options.length){
 		let extraCharacterArmorIds = equipped.extra_armor_options.map(ex => ex.id)
 		all.forEach(ca => {

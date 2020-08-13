@@ -33,7 +33,7 @@ export const initialCharacterDistribution = (character) => {
       }
     })
   })
-
+	
   character_info.bonuses.forEach(b => {
     bonusAction(b)
   })

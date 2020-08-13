@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import _ from 'lodash'
+import { isThisActionAvailable } from '../../helper_functions/calculations/round_actions'
 
 class Abilities extends React.Component {
 
@@ -32,11 +33,25 @@ class Abilities extends React.Component {
         break
     }
     let activatableAbilities = []
-    this.props.character.applicable_klass_features.forEach(akf => {
+    this.props.character.applicable_klass_features.map(akf => {
       // if an akf has a feature with an action, display it
+			akf.features.forEach(f => {
+				if (f.action){
+					activatableAbilities.push({...f, klassFeatureId: akf.id, klassFeatureName: akf.name, klassId: akf.klass_id})
+				}
+			})
       // only display the feature, but the text should be from the akf
     })
-    return 1
+
+    return activatableAbilities.map(ability => {
+			return (
+				<tr>
+					<td><button className={isThisActionAvailable(ability.action)}><strong>Click</strong></button></td>
+					<td>{ability.klassFeatureName}</td>
+					<td className='table-details'>Nothin'</td>
+				</tr>
+			)
+		})
   }
 
   dispatchManager = (action, pointsDirection, specific, points) => {
