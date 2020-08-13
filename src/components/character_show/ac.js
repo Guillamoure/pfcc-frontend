@@ -2,6 +2,8 @@ import React from 'react'
 import _  from 'lodash'
 import { connect } from 'react-redux'
 import { armorClassModifiers, armorClassTotal } from '../../helper_functions/calculations/armor_class'
+import { tooltipAction } from '../../helper_functions/action_creator/additional_info'
+import { pluser } from '../../fuf'
 
 
 const ArmorClass = props => {
@@ -199,9 +201,22 @@ const ArmorClass = props => {
     }
   }
 
+	const dispatchTooltip = e => {
+		let element = e.target
+		while(element.id !== "ac"){
+			element = element.parentElement
+		}
+
+		let armorClassBreakdown = acModifiers.map(m => {
+			return <li>{pluser(m.mod)} {m.bonus}</li>
+		})
+
+		tooltipAction(<ul style={{listStyle: "none", paddingLeft: "0px", margin: '0px'}}>{armorClassBreakdown}</ul>, element)
+	}
+
   if (localStorage.computer === "true"){
     return (
-      <div id='ac' className='shadow shrink'>
+      <div id='ac' className='shadow shrink' onMouseOver={dispatchTooltip} onMouseOut={dispatchTooltip}>
         <span className='centered container-3'>
           <section>
             <div className='enhanced' style={colorStyle('ac')}>{acCalc('ac')}</div>

@@ -7,7 +7,7 @@ const Tooltip = props => {
   const [elementWidth, setWidth] = React.useState(200)
 
   React.useEffect(() => {
-    setWidth(tooltipEl.current.offsetWidth)
+    setWidth(tooltipEl.current.offsetWidth + 10)
   }, [])
 
   const howFarElementIsFromTop = window.pageYOffset + props.tooltip.target.getBoundingClientRect().top
