@@ -21,7 +21,8 @@ const initialState = {
     proficiencies: {weapon: {groups: [], individualIds: []}, armor: {groups: [], individualIds: []}},
     movement: [],
     load: 0,
-    equipped: []
+    equipped: [],
+		activeFeatures: []
   },
   classes: [],
   races: [],
@@ -348,7 +349,9 @@ const reducer = (state = initialState, action) => {
       let bonuses
       if (action.alreadyEquipped){
         bonuses = state.character_info.bonuses.filter(b => b.source !== action.bonus.source)
-      } else {
+      } else if (action.remove) {
+				bonuses = [...state.character_info.bonuses].filter(b => b.source.featureId !== action.bonus.source.featureId && b.source.sourceId !== action.bonus.source.sourceId && b.source.source !== action.bonus.source.source)
+			} else {
         bonuses = [...state.character_info.bonuses, action.bonus]
       }
       return { ...state, character_info: { ...state.character_info, bonuses } }
@@ -505,6 +508,15 @@ const reducer = (state = initialState, action) => {
           ]
         }
       }
+		case "ACTIVE FEATURE":
+			var activeFeatures = [...state.character_info.activeFeatures]
+			var oldActiveFeaturesLength = activeFeatures.length
+			activeFeatures = activeFeatures.filter(af => af.featureId !== action.featureSource.featureId && af.sourceId !== action.featureSource.sourceId && af.source !== action.featureSource.source)
+
+			if (activeFeatures.length === oldActiveFeaturesLength){
+				activeFeatures.push(action.featureSource)
+			}
+			return {...state, character_info: {...state.character_info, activeFeatures}}
     default:
       return state
   }

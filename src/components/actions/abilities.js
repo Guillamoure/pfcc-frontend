@@ -2,6 +2,8 @@ import React from 'react'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 import { isThisActionAvailable } from '../../helper_functions/calculations/round_actions'
+import { calculateFeaturePercentage, remainingUsage } from '../../helper_functions/calculations/feature_usage'
+import { featureDistribution } from '../../helper_functions/distributers/features'
 
 class Abilities extends React.Component {
 
@@ -37,7 +39,10 @@ class Abilities extends React.Component {
       // if an akf has a feature with an action, display it
 			akf.features.forEach(f => {
 				if (f.action){
-					activatableAbilities.push({...f, klassFeatureId: akf.id, klassFeatureName: akf.name, klassId: akf.klass_id})
+					let ckfus = this.props.character.character_klass_feature_usages.filter(fu => fu.klass_feature_id === akf.id)
+					// the id value in the below object refers to the id of the character[type]
+					// so that specific klass_feature, magic_item_feature, etc. can be found by id
+					activatableAbilities.push({...f, sourceId: akf.id, klassFeatureName: akf.name, klassId: akf.klass_id, character_klass_feature_usages: ckfus, source: "applicable_klass_features"})
 				}
 			})
       // only display the feature, but the text should be from the akf
@@ -46,8 +51,8 @@ class Abilities extends React.Component {
     return activatableAbilities.map(ability => {
 			return (
 				<tr>
-					<td><button className={isThisActionAvailable(ability.action)}><strong>Click</strong></button></td>
-					<td>{ability.klassFeatureName}</td>
+					<td><button className={isThisActionAvailable(ability.action)} onClick={() => this.newRenderClick(ability)}><strong>Click</strong></button></td>
+					<td>{ability.klassFeatureName} {calculateFeaturePercentage(ability)}</td>
 					<td className='table-details'>Nothin'</td>
 				</tr>
 			)
@@ -70,6 +75,23 @@ class Abilities extends React.Component {
       }
     }
   }
+
+	newRenderClick = ability => {
+		// NEW DATA
+
+		// STORED DATA
+
+		// CALCULATED DATA
+		let areThereEnoughPoints = !!remainingUsage(ability)
+		let isThereAnAction = isThisActionAvailable(ability.action) !== "cannot-cast" ? true : false
+
+		if (!areThereEnoughPoints || !isThereAnAction){
+			return null
+		}
+
+		console.log("yay")
+		featureDistribution(ability)
+	}
 
   renderClick = (ability, amount) => {
     let { modal, action, limit, starting, name, points, redux } = ability

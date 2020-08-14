@@ -1,10 +1,13 @@
+import store from '../../store'
 import {
   bonusAction,
   addMovementAction,
-	proficiencyAction
+	proficiencyAction,
+	activeFeatureAction
 } from '../action_creator/features'
 
 export const initialCharacterDistribution = (character) => {
+	// NEW DATA
   let character_info = {
     bonuses: [],
     effects: [],
@@ -18,7 +21,7 @@ export const initialCharacterDistribution = (character) => {
   character.applicable_klass_features.forEach(akf => {
     akf.features.forEach((feature) => {
       if (!feature.action){
-        klassFeaturesFeatureDistribution(feature, character_info, { id: akf.id, type: "applicable_klass_features", feature_id: feature.id })
+        klassFeaturesFeatureDistribution(feature, character_info, { sourceId: akf.id, source: "applicable_klass_features", featureId: feature.id })
       }
     })
   })
@@ -29,11 +32,11 @@ export const initialCharacterDistribution = (character) => {
   character.character_magic_items.forEach(cmi => {
     cmi.magic_item.features.forEach((feature) => {
       if (!feature.action){
-        klassFeaturesFeatureDistribution(feature, character_info, { id: cmi.id, type: "character_magic_items", feature_id: feature.id })
+        klassFeaturesFeatureDistribution(feature, character_info, { sourceId: cmi.id, source: "character_magic_items", featureId: feature.id })
       }
     })
   })
-	
+
   character_info.bonuses.forEach(b => {
     bonusAction(b)
   })
@@ -45,21 +48,50 @@ export const initialCharacterDistribution = (character) => {
 	proficiencyAction(character_info.proficiencies)
 }
 
-const klassFeaturesFeatureDistribution = (feature, character_info, source) => {
+
+export const featureDistribution = (feature) => {
+	// NEW DATA
+	let character_info = {
+		bonuses: [],
+		effects: [],
+		features: [],
+		proficiencies: { weapon: {groups: [], individualIds: []}, armor: {groups: [], individualIds: []} },
+		movement: []
+	}
+	let source = {featureId: feature.id, sourceId: feature.sourceId, source: feature.source}
+
+	// STORED DATA
+	let activeFeatures = store.getState().character_info.activeFeatures
+	let oldActiveFeaturesLength = activeFeatures.length
+
+	klassFeaturesFeatureDistribution(feature, character_info, source)
+
+	activeFeatureAction(source)
+
+	activeFeatures = store.getState().character_info.activeFeatures
+	if(activeFeatures.length > oldActiveFeaturesLength){
+		character_info.bonuses.forEach((b) => bonusAction(b))
+	} else {
+		character_info.bonuses.forEach((b) => bonusAction(b, true))
+	}
+}
+
+
+const klassFeaturesFeatureDistribution = (feature, obj, source) => {
   feature.skill_bonuses.forEach((el) => {
-    character_info.bonuses.push(skillBonusFeature(el, source))
+    obj.bonuses.push(skillBonusFeature(el, source))
   })
   feature.stat_bonuses.forEach((el) => {
-    character_info.bonuses.push(statBonusFeature(el, source))
+    obj.bonuses.push(statBonusFeature(el, source))
   })
   feature.movements.forEach((el) => {
-    character_info.movement.push(movementsFeature(el, source, feature.usage, feature.applications, feature.conditions))
+    obj.movement.push(movementsFeature(el, source, feature.usage, feature.applications, feature.conditions))
   })
 	feature.armor_proficiencies.forEach(el => {
-		weaponArmorProficienciesFeature(el, source, character_info.proficiencies.armor)
+		weaponArmorProficienciesFeature(el, source, obj.proficiencies.armor)
 	})
 	feature.weapon_proficiencies.forEach(el => {
-		weaponArmorProficienciesFeature(el, source, character_info.proficiencies.weapon)
+		weaponArmorProficienciesFeature(el, source, obj.proficiencies.weapon)
 	})
 }
 
