@@ -1,6 +1,5 @@
 import React from 'react'
 import _ from 'lodash'
-import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import localhost from '../localhost'
 import { mod } from '../fuf'
@@ -457,7 +456,7 @@ class Character extends React.Component {
   }
 
   renderCharacter = () => {
-    if (localStorage.computer === "true"){
+    if (localStorage.computer !== "false"){
       return (
         <span className="container-8 character">
         {this.state.character.race && <CharacterName character={this.state.character} editModal={this.editModal}/>}
@@ -562,8 +561,6 @@ class Character extends React.Component {
 
 const mapStatetoProps = (state) => {
   return {
-    currentUser: state.currentUser,
-    admin: state.admin,
     character: state.character,
     character_info: state.character_info
   }
@@ -576,4 +573,4 @@ const mapDispatchtoProps = dispatch => {
   }
 }
 
-export default withRouter(connect(mapStatetoProps, mapDispatchtoProps)(Character))
+export default connect(mapStatetoProps, mapDispatchtoProps)(Character)
