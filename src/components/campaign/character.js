@@ -5,6 +5,8 @@ import { withRouter } from 'react-router-dom'
 
 const Character = props => {
 
+  console.log(props.character)
+
   const { name, character_magic_items, id } = props.character
   let unknowns = character_magic_items.filter(cmi => !cmi.known)
 

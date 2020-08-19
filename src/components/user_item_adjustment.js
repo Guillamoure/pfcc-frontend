@@ -21,17 +21,30 @@ const UserItemAdjustment = props => {
     fetch(`${localhost}/api/v1/campaign_containers/${props.character.campaign.id}`)
       .then(r => r.json())
       .then(data => {
-        console.log("Using the Effect!")
         setContainers(data)
       })
   }, [props.item])
 
+  let itemType
+  switch(props.url){
+    case "character_weapon":
+      itemType = 'weapon'
+      break
+    case "character_armor":
+      itemType = 'armor'
+      break
+    case "character_magic_item":
+      itemType = 'magicItem'
+      break
+  }
+
   const { item, url } = props
   const { equipped, known } = props.characterItem
+	console.log("equipped", equipped)
 
   let featureWithUsage = item.features ? item.features.find(f => f.usage) : false
   let usage = featureWithUsage ? featureWithUsage.usage : false
-  const canEquip = ((item.slot !== 'potion' && item.slot !== 'none') || usage.wieldable) ? true : false
+  const canEquip = ((item.slot !== 'potion' && item.slot !== 'none' && item.proficiency !== "") || usage.wieldable) ? true : false
   // AN ITEM IS EQUIPABLE IF IT:
     // IS NOT A POTION
     // IS A SLOTLESS ITEM
@@ -59,13 +72,16 @@ const UserItemAdjustment = props => {
       })
   }
 
-  const renderEquip = () => {
+  const renderEquip = (e) => {
+    let newEquippedStatus = e.target.value
+    if (itemType === 'armor'){ newEquippedStatus = newEquippedStatus === "true" ? true : false }
     fetch(`${localhost}/api/v1/${url}s_equip/${props.characterItem.id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
-      }
+      },
+      body: JSON.stringify({equipped: newEquippedStatus})
     })
       .then(r => r.json())
       .then(data => {
@@ -106,7 +122,11 @@ const UserItemAdjustment = props => {
           let dispatchType
           dispatchType = url === 'character_magic_item' ? 'EQUIP CMI' : dispatchType
           dispatchType = url === 'character_weapon' ? 'EQUIP WEAPON' : dispatchType
-          props.dispatch({type: dispatchType, id: props.characterItem.id})
+          dispatchType = url === 'character_armor' ? 'EQUIP ARMOR' : dispatchType
+          props.dispatch({type: dispatchType, id: props.characterItem.id, equipped: newEquippedStatus})
+					if (itemType === "armor"){
+						props.dispatch({type: "MODAL", detail: "armor", obj: {...props.characterItem, equipped: newEquippedStatus}})
+					}
         }
       })
   }
@@ -223,7 +243,7 @@ const UserItemAdjustment = props => {
           Who?
           <select name="tradedChar" value={tradedChar} onChange={(e) => setTradedChar(e.target.value)}>
             <option value= "" >Select One</option>
-            {props.character.allies.filter(a => a.name !== props.character.name).map(a => <option value={a.id} >{a.name}</option>)}
+            {props.character.campaign.characters.filter(a => a.name !== props.character.name).map(a => <option value={a.id} >{a.name}</option>)}
           </select>
         </label>
         {!!tradedChar && <button onClick={renderTrade}>Enter</button>}
@@ -277,10 +297,45 @@ const UserItemAdjustment = props => {
     )
   }
 
+  const equipSelection = () => {
+    let options = []
+    if (itemType === 'weapon'){
+      options.push(<option value="">{equipped ? "Unequip" : "Unequipped"}</option>)
+      if (item.category === "Light" || item.category === "One-Handed") {
+        options.push(<option value="Primary">Primary Hand</option>)
+        options.push(<option value="Off">Off Hand</option>)
+      }
+      if (item.category === "One-Handed" || item.category === "Two-Handed"){options.push(<option value="Two">Two-Handed</option>)}
+      if (item.double_weapon){options.push(<option value="Double">Double</option>)}
+
+      if (item.weapon_hands.length){
+        item.weapon_hands.forEach(wh => {
+          if (wh.hands === "One") {options.push(<option value="Primary">Primary Hand</option>)}
+          if (wh.hands === "One") {options.push(<option value="Off">Off Hand</option>)}
+          if (wh.hands === "Two") {options.push(<option value="Two">Two-Handed</option>)}
+        })
+      }
+    } else if (itemType === 'armor'){
+      options.push(<option value={false}>Unequip{!equipped && "ed"} ({item.remove})</option>)
+      options.push(<option value={true}>Equip{equipped && "ed"} ({item.don})</option>)
+    } else if (itemType === 'magicItem'){
+      options.push(<option value={false}>Unequip{!equipped && "ed"}</option>)
+      options.push(<option value={true}>Equip{equipped && "ed"}</option>)
+    }
+
+    return (
+      <label htmlFor="equipType" name="Equip">
+        <select name="equipType" value={`${equipped}`} onChange={e => renderEquip(e)}>
+          {options}
+        </select>
+      </label>
+    )
+  }
+
 
   return (
     <div>
-      {canEquip && <button id='equipBtn' onClick={renderEquip}>{equipped ? 'Unequip' : 'Equip'}</button>}
+      {canEquip ? equipSelection() : null}
       <button id='tradeBtn' onClick={() => setTrading(!trading)}>Trade</button>
       {canBeStored ? <button className={stash ? 'pressedBtn' : null} onClick={() => setStash(!stash)}>Stash</button> : <button onClick={() => renderWithdraw(props.characterItem.id)}>Withdraw</button>}
       {hasContents && <button className={!!contents.length ? 'pressedBtn' : null} onClick={fetchContents}>Contents</button>}

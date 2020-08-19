@@ -93,3 +93,17 @@
     display: none;
   }
 }
+
+#decay-animation {
+  animation: decay 3s ease-out 1 forwards
+}
+
+@keyframes decay {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    display: none;
+  }
+}

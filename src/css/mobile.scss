@@ -1,0 +1,54 @@
+@media screen and (max-width: 600px) {
+  .action-container {
+    grid-template-columns: auto auto;
+    font-size: 12px;
+  }
+  #full-action {
+    padding: .1em;
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+  }
+
+  #immediate-action {
+    padding: .1em;
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+  }
+
+  #standard-action {
+    padding: .1em;
+    width: 44%;
+    display: inline-block;
+    text-align: center;
+  }
+
+  #move-action {
+    padding: .1em;
+    width: 29%;
+    display: inline-block;
+    text-align: center;
+  }
+
+  #swift-action {
+    padding: .1em;
+    width: 27%;
+    display: inline-block;
+    text-align: center;
+  }
+
+  #free-action {
+    padding: .1em;
+    width: 40%;
+    display: inline-block;
+    text-align: center;
+  }
+
+  #start-turn {
+    padding: .1em;
+    width: 60%;
+    display: inline-block;
+    text-align: center;
+  }
+}

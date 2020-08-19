@@ -17,11 +17,18 @@ const initialState = {
       swift: false,
       immediate: false
     },
-    conditions: []
+    conditions: [],
+    proficiencies: {weapon: {groups: [], individualIds: []}, armor: {groups: [], individualIds: []}},
+    movement: [],
+    load: 0,
+    equipped: [],
+		activeFeatures: []
   },
   classes: [],
   races: [],
-  spells: []
+  spells: [],
+  tooltip: {},
+  modal: {}
 }
 
 
@@ -342,7 +349,9 @@ const reducer = (state = initialState, action) => {
       let bonuses
       if (action.alreadyEquipped){
         bonuses = state.character_info.bonuses.filter(b => b.source !== action.bonus.source)
-      } else {
+      } else if (action.remove) {
+				bonuses = [...state.character_info.bonuses].filter(b => b.source.featureId !== action.bonus.source.featureId && b.source.sourceId !== action.bonus.source.sourceId && b.source.source !== action.bonus.source.source)
+			} else {
         bonuses = [...state.character_info.bonuses, action.bonus]
       }
       return { ...state, character_info: { ...state.character_info, bonuses } }
@@ -389,21 +398,125 @@ const reducer = (state = initialState, action) => {
       return {...state, character: {...state.character, character_magic_items: filteredCMIs}}
     case 'EQUIP WEAPON':
       let cws = [...state.character.character_weapons]
-      let filteredCWs = cws.map(w => {
+      let mappedCWs = cws.map(w => {
         if (w.id === action.id){
-          let altered = {...w}
-          altered.equipped = !w.equipped
+          var altered = {...w}
+          altered.equipped = action.equipped
           return altered
+        } else if (w.equipped === action.equipped || ( (action.equipped === "Primary" || action.equipped === "Off") && ( (w.equipped === "Two") || (w.equipped === "Double") ) ) || action.equipped === "Two" || action.equipped === "Double"){
+          // if the weapon is in the same slot as the new weapon, remove it
+          // if the weapon is in two hands, and new weapon is in one hand, remove it
+          // if the new weapon is in two hands or a double weapon, remove all other weapons
+          let alteredOldEquipped = {...w}
+          alteredOldEquipped.equipped = ""
+          return alteredOldEquipped
         } else {
           return w
         }
       })
-      return {...state, character: {...state.character, character_weapons: filteredCWs}}
+      return {...state, character: {...state.character, character_weapons: mappedCWs}}
+    case 'EQUIP ARMOR':
+      var selectedCA = state.character.character_armors.find(a => a.id === action.id)
+      let cas = [...state.character.character_armors].map(a => {
+        if (a.id === action.id){
+          var altered = {...a}
+          altered.equipped = action.equipped
+          return altered
+        } else if (a.armor.proficiency === selectedCA.armor.proficiency && a.equipped && action.equipped){
+          var altered = {...a}
+          altered.equipped = false
+          return altered
+        } else {
+          return a
+        }
+      })
+      return {...state, character: {...state.character, character_armors: cas}}
     case 'MUTAGEN':
       return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, mutagen: action.name}}}
     case 'TOGGLE MUTAGEN':
       let activeMutagen = state.character_info.hardcode.activeMutagen || false
       return {...state, character_info: {...state.character_info, hardcode: {...state.character_info.hardcode, activeMutagen: !activeMutagen}}}
+		// TO BE DEPRECATED
+    case 'PROFICIENCY':
+      let proficiencies = {...state.character_info.proficiencies}
+			let d = action.detail
+      if (d.type === "weapon"){
+        if (d.additive){
+          if (d.proficiency_group) proficiencies.weapon.groups.push(d.proficiency_group)
+          if (d.weapon_id) proficiencies.weapon.individualIds.push(d.weapon_id)
+        }
+      }
+      return {...state, character_info: {...state.character_info, proficiencies}}
+		// NEW IMPROVED "PROFICIENCY"
+		// CHANGE NAME TO JUST "PROFICIENCY" WHEN OTHER CAN BE REMOVED
+		// LOCATED IN /helper_functions/action_creator/features
+		case 'NEW PROFICIENCY':
+			return {...state, character_info: {...state.character_info, proficiencies: action.proficiencies}}
+    case 'TOOLTIP':
+      let tooltip = {message: action.message, target: action.target}
+      if (state.tooltip.target === action.target){
+        tooltip = {}
+      }
+      return {...state, tooltip}
+    case 'MODAL':
+      let modal = {detail: action.detail, obj: action.obj}
+      if (action.remove){
+        modal = {}
+      }
+      return {...state, modal}
+    case "CHANGE AMMO":
+      var characterWeapons = [...state.character.character_weapons].map(cw => {
+        if (cw.id === action.characterWeapon.id){
+          let newCW = {...cw}
+          newCW.character_weapon_ammunition_id = action.ammoId
+          newCW.magazine = 0
+          newCW.improvised_ammunition = action.ammoId === 0 ? true : false
+          return newCW
+        } else {return cw}
+      })
+      return {...state, character: {...state.character, character_weapons: characterWeapons}}
+    case "UPDATE AMMO":
+      var characterWeapons = [...state.character.character_weapons].map(cw => {
+        if (cw.id === action.cw.id){
+          let newCW = {...cw}
+          newCW.magazine = action.magazine
+          return newCW
+        } else if (cw.id === action.cw.character_weapon_ammunition_id && action.ammunition_amount){
+          let newCWAmmo = {...cw}
+          newCWAmmo.ammunition_amount = action.ammunition_amount
+          return newCWAmmo
+        } else {return cw}
+      })
+      return {...state, character: {...state.character, character_weapons: characterWeapons}}
+    case "DISCOVER EQUIPMENT":
+      var equipment = [...state.character[action.detail]].map(eq => {
+        if (eq.id === action.id){
+          var newEq = {...eq}
+          newEq.discovered = true
+          return newEq
+        } else {return eq}
+      })
+      return {...state, character: {...state.character, [action.detail]: equipment}}
+    case "ADD MOVEMENT":
+      return {
+        ...state,
+        character_info: {
+          ...state.character_info,
+          movement: [
+            ...state.character_info.movement,
+            action.movement
+          ]
+        }
+      }
+		case "ACTIVE FEATURE":
+			var activeFeatures = [...state.character_info.activeFeatures]
+			var oldActiveFeaturesLength = activeFeatures.length
+			activeFeatures = activeFeatures.filter(af => af.featureId !== action.featureSource.featureId && af.sourceId !== action.featureSource.sourceId && af.source !== action.featureSource.source)
+
+			if (activeFeatures.length === oldActiveFeaturesLength){
+				activeFeatures.push(action.featureSource)
+			}
+			return {...state, character_info: {...state.character_info, activeFeatures}}
     default:
       return state
   }

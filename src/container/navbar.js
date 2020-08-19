@@ -9,7 +9,7 @@ import { faBars } from '@fortawesome/free-solid-svg-icons'
 class NavBar extends React.Component {
 
   state ={
-    currentUser : "",
+    currentUser : null,
     menuDropDown: false
   }
 
@@ -31,6 +31,23 @@ class NavBar extends React.Component {
         }
       })
     }
+    // COMMENTED OUT FOR TESTING PURPOSES
+    // let data = {
+    //   current_user: {
+    //     id: 1,
+    //     skillset_id: 2,
+    //     username: "jack",
+    //     admin: true,
+    //     campaigns: [],
+    //     characters: []
+    //   }
+    // }
+    // this.props.dispatch({type: 'SIGNIN', user: data.current_user, admin: data.current_user.admin })
+    // console.log(data)
+    // this.setState({currentUser: data.current_user})
+    // console.log(this.props.location.pathname)
+    // this.props.history.push("/")
+
   }
 
   renderLogOut = () => {
@@ -62,7 +79,7 @@ class NavBar extends React.Component {
       if (!this.state.menuDropDown){
         return (
           <div id='mobile-navbar'>
-            <div className='project-name'>CharacterFinder</div>
+            <div className='project-name' onClick={() => this.setState({menuDropDown: !this.state.menuDropDown})}>CharacterFinder</div>
             <button onClick={() => this.setState({menuDropDown: !this.state.menuDropDown})}><FontAwesomeIcon icon={faBars}/></button>
           </div>
         )

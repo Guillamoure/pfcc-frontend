@@ -13,7 +13,7 @@ const Saves = props => {
   }
 
   const renderCharacterSave = (save, score, style) => {
-    if (!props.classes.length){
+    if (!props.character.uniq_klasses.length){
       return null
     } else {
       let totalSavingThrow = 0
@@ -103,7 +103,7 @@ const Saves = props => {
   }
 
   const findCurrentClass = (klassId) => {
-    return props.classes.find(ck => ck.id === klassId)
+    return props.character.uniq_klasses.find(ck => ck.id === klassId)
   }
 
   // let ast = props.character.name === 'Robby' ? '*' : null

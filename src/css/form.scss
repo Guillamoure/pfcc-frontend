@@ -1,0 +1,253 @@
+// VARIABLES
+
+$ruby: #9b111e;
+$sapphire: #0f52ba;
+$emerald: #046307;
+
+$tan: #cfb997;
+
+// VARIABLES
+
+#new-campaign-form {
+  margin: 1%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+  grid-template-areas:
+    "setting details calendar calendar"
+    "races races classes classes"
+    "races races classes classes"
+    "submit submit submit submit";
+  grid-column-gap: 1.5%;
+  grid-row-gap: 2%;
+}
+
+@media screen and (max-width: 600px) {
+  #new-campaign-form {
+    margin: 1%;
+    display: block;
+    text-align: center;
+    min-height: 93vh;
+    margin-bottom: 7vh;
+    section {
+      select {
+        border: 2px inset #bbb;
+        border-radius: 1em;
+        background-color: #fff;
+        padding-left: 0.5em;
+      }
+    }
+    .form-races-checkbox-options {
+      text-align: left;
+    }
+    #new-campaign-form-submit {
+      position: fixed;
+      bottom: 5px;
+      width: 98%;
+      border: 2px inset #bbb;
+      border-radius: 1em;
+      background-color: #fff;
+      margin: 0%;
+      box-shadow: 3px 2px 2px #9b111e;
+    }
+  }
+}
+
+#new-campaign-form-setting {
+  grid-area: setting;
+  margin: 1%;
+}
+
+#new-campaign-form-submit {
+  grid-area: submit;
+  margin: 1%;
+}
+
+#new-campaign-form-submit input {
+  width: 100%;
+  height: 3em;
+  color: #0f52ba;
+  background-color: #9b111e;
+  font-size: 1.5em;
+  border-radius: 2em;
+  font-weight: 800;
+  text-shadow: 1px 1px 3px #ddd;
+  border: 3px solid black;
+}
+#new-campaign-form-submit input:hover {
+  color: #9b111e;
+  background-color: #0f52ba;
+}
+
+#new-campaign-form-races {
+  grid-area: races;
+  margin: 1%;
+}
+
+#new-campaign-form-all-races h4 {
+  margin-bottom: 1%;
+}
+
+#new-campaign-form-all-races section {
+  margin: 1%;
+}
+
+#new-campaign-form-classes {
+  grid-area: classes;
+  margin: 1%;
+}
+
+#new-campaign-form-all-classes h4 {
+  margin-bottom: 1%;
+}
+
+#new-campaign-form-all-classes section {
+  margin: 1%;
+}
+
+.form-races-checkbox-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+#new-campaign-form-calendar {
+  grid-area: calendar;
+  margin: 1%;
+}
+
+#new-campaign-form-calendar h4 {
+  margin: 1%;
+}
+
+#new-campaign-form-calendar ol {
+  margin-top: 1%;
+  margin-bottom: 1%;
+  padding-left: 1.5rem;
+}
+
+#new-campaign-form-details{
+  grid-area: details;
+  margin: 1%;
+}
+
+#new-campaign-custom-notes:focus {
+  outline-color: #0f52ba;
+}
+
+#new-campaign-starting-date {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-areas:
+    "start start"
+    ". ."
+    ". ."
+    ". ."
+    ". ."
+    ". .";
+}
+
+#creation-form {
+  display: grid;
+  /* grid-template-rows: repeat(2, 1fr); */
+  text-align: center;
+  input[type=number] {
+    width: 3em;
+    text-align: center;
+  }
+  input[type=text] {
+    width: 5em;
+    text-align: center;
+  }
+}
+
+
+@media screen and (max-width: 600px){
+  #creation-form{
+    margin: 1%;
+    padding: 1%;
+  }
+  #new-character-details{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "name name"
+      "alignment age-gender"
+      "description description";
+    #new-character-details-name {
+      grid-area: name;
+    }
+    #new-character-details-alignment {
+      grid-area: alignment;
+    }
+    #new-character-details-age-gender {
+      grid-area: age-gender;
+    }
+    #new-character-details-description {
+      grid-area: description;
+      #new-character-details-description-misc{
+        display: grid;
+        grid-template-columns: 1fr 2fr 1fr 2fr;
+      }
+    }
+  }
+  #new-character-tab {
+    position: fixed;
+    bottom: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    .tab-list-item {
+      // list-style-type: none;
+      margin: 0;
+      width: 25vw;
+      border: 1px solid #000;
+      /* height: 100%; */
+      text-align: center;
+      padding: 1%;
+      background-color: #c0c0c0;
+      // border-radius: 30% 30% 0% 0%;
+    }
+    .tab-list-active {
+      background-color: $emerald;
+    }
+  }
+}
+
+
+.square-btn {
+  width: 3em;
+  padding: 0.5em;
+  height: 3em;
+  border: 1px solid black;
+}
+
+.square-container-9 {
+  width: 9em;
+  height: 12em;
+  display: grid;
+  text-align: center;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+  grid-template-areas:
+    ". . ."
+    ". . ."
+    ". . ."
+    "clear clear clear";
+}
+
+.top-left-corner {
+  border-radius: 1em 0 0 0;
+}
+
+.top-right-corner {
+  border-radius: 0 1em 0 0;
+}
+
+.bottom-left-corner {
+  border-radius: 0 0 0 1em;
+}
+
+.bottom-right-corner {
+  border-radius: 0 0 1em 0;
+}

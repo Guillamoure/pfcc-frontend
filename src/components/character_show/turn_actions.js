@@ -11,13 +11,35 @@ const TurnActions = props => {
     props.dispatch({type: 'TRIGGER ACTION', action})
   }
 
-  const newTurn = () => {
+  // const newTurn = () => {
     // patch fetch
     // reset all features, items, abilities, etc, that have a limit of a round
     // if successful, dispatch new turn
+  // }
+
+  if (localStorage.computer === "false"){
+    return (
+      <section id='actions' className='character-show shadow action-container'>
+        <section style={{padding: '.15em'}}>
+          <span id='full-action' className={used("full")} onClick={() => dispatch("full")}>Full-Round</span>
+        </section>
+        <section style={{padding: '.15em', paddingLeft: '0em'}}>
+          <span id='immediate-action' className={used("immediate")} onClick={() => dispatch("immediate")}>Immediate</span>
+        </section>
+        <section style={{padding: '.15em', paddingTop: '0em'}}>
+          <span id='standard-action' className={used("standard")} onClick={() => dispatch("standard")}>Standard</span>
+          <span id='move-action' className={used("move")} onClick={() => dispatch("move")}>Move</span>
+          <span id='swift-action' className={used("swift")} onClick={() => dispatch("swift")}>Swift</span>
+        </section>
+        <section style={{padding: '.15em', paddingTop: '0em', paddingLeft: '0em'}}>
+          <span id='free-action' className="free">Free</span>
+          <span id='start-turn' className="start" onClick={() => props.dispatch({type: 'NEW TURN'})}>Start Turn</span>
+        </section>
+      </section>
+    )
   }
 
-  return(
+  return (
     <section id='actions' className='character-show shadow action-container'>
       <section style={{padding: '.15em'}}>
         <span id='full-action' className={used("full")} onClick={() => dispatch("full")}>Full-Round Action</span>

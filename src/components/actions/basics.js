@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import CombatManeuver from './basics/combat_maneuver'
+import Movement from './basics/movement'
 
 const Basics = props => {
 
@@ -290,7 +291,8 @@ const Basics = props => {
 
   return (
     <section>
-      {mvmt()}
+      {/* mvmt() */}
+      <Movement renderTooltip={props.renderTooltip} mouseOut={props.mouseOut}/>
       {fight()}
       <CombatManeuver renderTooltip={props.renderTooltip} mouseOut={props.mouseOut}/>
     </section>
