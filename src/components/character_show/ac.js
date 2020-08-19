@@ -1,7 +1,16 @@
 import React from 'react'
+import _  from 'lodash'
 import { connect } from 'react-redux'
+import { armorClassModifiers, armorClassTotal } from '../../helper_functions/calculations/armor_class'
+import { tooltipAction } from '../../helper_functions/action_creator/additional_info'
+import { pluser } from '../../fuf'
+
 
 const ArmorClass = props => {
+
+	// CALCULATED DATA
+	let acModifiers = armorClassModifiers()
+	let acTotal = armorClassTotal()
 
   const hc = props.character_info.hardcode
   const raging = hc.rage ? -2 : 0
@@ -64,14 +73,6 @@ const ArmorClass = props => {
     return Math.floor((dex - 10) / 2)
   }
 
-  // renderSize = () => {
-  //   if (props.character.race.size === 'Small'){
-  //     return 1
-  //   } else {
-  //     return 0
-  //   }
-  // }
-
   const renderSize = () => {
     switch (props.character_info.size){
       case 'Tiny':
@@ -87,47 +88,27 @@ const ArmorClass = props => {
 
   const dodge = () => {
     let bonus = 0
-    if (fd){
-      bonus += 2
-    }
-    if (name === "Persephone"){
-      bonus+=1
-    }
-    if (name === "Robby"){
-      bonus+=1
-    }
+    if (fd){bonus += 2}
+    if (name === "Persephone"){bonus+=1}
+    if (name === "Robby"){bonus+=1}
     return bonus
   }
 
   const natural = () => {
     let bonus = 0
-    if (largeMorph){
-      bonus +=4
-    }
-    if (name === "Persephone"){
-      bonus+=1
-    }
-    if (name === "Grackle"){
-      bonus+=1
-    }
-    if (activeMutagen){
-      bonus +=2
-    }
+    if (largeMorph){bonus +=4}
+    if (name === "Persephone"){bonus+=1}
+    if (name === "Grackle"){bonus+=1}
+    if (activeMutagen){bonus +=2}
     return bonus
   }
 
   const armorBonus = () => {
     let bonus = 0
     if (armor){
-      if (armor === "Wooden"){
-        bonus += 3
-      }
-      if (armor === "+1 chain shirt"){
-        bonus += 5
-      }
-      if (armor === 'Padded'){
-        bonus += 1
-      }
+      if (armor === "Wooden"){bonus += 3}
+      if (armor === "+1 chain shirt"){bonus += 5}
+      if (armor === 'Padded'){bonus += 1}
     }
     return bonus
   }
@@ -142,6 +123,23 @@ const ArmorClass = props => {
   }
 
   const acCalc = (type) => {
+
+		if(!["Cedrick", "Nettie", "Persephone", "Merg", "Grackle", "Robby", "Maddox"].includes(name)){
+			switch(type){
+				case 'ac':
+					return acTotal.armorClass
+				case 't':
+					return acTotal.touch
+				case 'ff':
+					return acTotal.flatFooted
+				default:
+					return 10
+			}
+		}
+
+
+
+
     switch(type){
       case 'ac':
         return (10 + dexMod() + renderSize() + armorBonus() + dodge() + natural() + deflection() + raging + charging + cleave + cedrick + enlarge + reduce + dodgingPanache + quick + stealTime)
@@ -203,9 +201,22 @@ const ArmorClass = props => {
     }
   }
 
+	const dispatchTooltip = e => {
+		let element = e.target
+		while(element.id !== "ac"){
+			element = element.parentElement
+		}
+
+		let armorClassBreakdown = acModifiers.map(m => {
+			return <li>{pluser(m.mod)} {m.bonus}</li>
+		})
+
+		tooltipAction(<ul style={{listStyle: "none", paddingLeft: "0px", margin: '0px'}}>{armorClassBreakdown}</ul>, element)
+	}
+
   if (localStorage.computer === "true"){
     return (
-      <div id='ac' className='shadow shrink'>
+      <div id='ac' className='shadow shrink' onMouseOver={dispatchTooltip} onMouseOut={dispatchTooltip}>
         <span className='centered container-3'>
           <section>
             <div className='enhanced' style={colorStyle('ac')}>{acCalc('ac')}</div>

@@ -1,9 +1,10 @@
 import React from 'react'
 import _ from 'lodash'
-import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import localhost from '../localhost'
 import { mod } from '../fuf'
+import { fetchCharacter } from '../dispatch'
+import { characterDistributer } from '../helper_functions/distributers/character'
 
 import AbilityScores from '../components/character_show/ability_scores'
 import CharacterName from '../components/character_show/character_name'
@@ -110,17 +111,18 @@ class Character extends React.Component {
   }
 
   componentDidMount() {
-    console.log("HI IM RUNNING")
+    // console.log("HI IM RUNNING")
     fetch(`${localhost}/api/v1${this.props.location.pathname}`)
     .then(r => r.json())
     .then(data => {
       // IF YOU WANT THE PAGE TO BE PRIVATE
       // if (this.props.currentUser.id === data.character.user.id){
-        this.props.dispatch({type: 'CHARACTER', character: data.character })
-        this.dispatchAbilityScores()
-        this.dispatchClassLevels()
+        characterDistributer(data.character)
+
+        // this.dispatchAbilityScores()
+        // this.dispatchClassLevels()
         this.props.dispatch({type: 'SPECIFIC USER', name: data.character.name})
-        this.dispatchAbilityScoreImprovements(data.character.character_klasses)
+        // this.dispatchAbilityScoreImprovements(data.character.character_klasses)
         this.setState({character: data.character})
         if (data.character.name === 'Merg'){
           this.props.dispatch({type: 'ACTIVE ARMOR', name: '+1 chain shirt'})
@@ -137,58 +139,61 @@ class Character extends React.Component {
           this.props.dispatch({type: 'HELMSMAN'})
         }
 
-        data.character.character_magic_items.forEach(cmi => {
-          if (cmi.equipped){
-            cmi.magic_item.features.forEach(f => {
-              if (!!f.skill_bonuses.length){
-                f.skill_bonuses.forEach(sk => {
-                  const { skill_id, bonus, bonus_type, duration } = sk
-                  // const conditions = sk.feature_skill_bonus_conditions.map(c => {return {condition: c.condition}})
-                  this.props.dispatch({type: 'BONUS', bonus: {type: 'skill', skill_id, bonus, bonus_type, duration, source: cmi.magic_item.name}})
-                })
-              }
-              if (!!f.stat_bonuses.length){
-                f.stat_bonuses.forEach(st => {
-                  const { statistic, bonus, bonus_type, duration } = st
-                  const conditions = st.feature_stat_bonus_conditions.map(c => {return {condition: c.condition}})
-                  this.props.dispatch({type: 'BONUS', bonus: {type: 'stat', statistic, bonus, bonus_type, duration, source: cmi.magic_item.name, conditions}})
-                })
-              }
-              if (!!f.skill_notes.length){
-                f.skill_notes.forEach(sk => {
-                  const { skill_id, note} = sk
-                  this.props.dispatch({type: 'BONUS', bonus: {type: 'note', skill_id, note, source: cmi.magic_item.name}})
-                })
-              }
-              if (!!f.languages.length){
-                f.languages.forEach(l => {
-                  const { language, note } = l
-                  this.props.dispatch({type: 'EFFECT', effect: {type: 'language', language, note, source: cmi.magic_item.name}})
-                })
-              }
-            })
-          }
-        })
-      data.character.uniq_klasses.forEach(kl => {
-        kl.klass_features.forEach(kf => {
-          kf.features.forEach(f =>{
-            if (!!f.skill_bonuses.length){
-              f.skill_bonuses.forEach(sk => {
-                const { skill_id, bonus, bonus_type, duration } = sk
-                // const conditions = sk.feature_skill_bonus_conditions.map(c => {return {condition: c.condition}})
-                this.props.dispatch({type: 'BONUS', bonus: {type: 'skill', skill_id, bonus, bonus_type, duration, source: kf.name}})
-              })
-            }
-            if (!!f.skill_notes.length){
-              f.skill_notes.forEach(sk => {
-                const { skill_id, note} = sk
-                // debugger
-                this.props.dispatch({type: 'BONUS', bonus: {type: 'note', skill_id, note, source: kf.name}})
-              })
-            }
-          })
-        })
-      })
+
+        // this.props.fetchCharacter(data)(this.props.dispatch)
+
+      //   data.character.character_magic_items.forEach(cmi => {
+      //     if (cmi.equipped){
+      //       cmi.magic_item.features.forEach(f => {
+      //         if (!!f.skill_bonuses.length){
+      //           f.skill_bonuses.forEach(sk => {
+      //             const { skill_id, bonus, bonus_type, duration } = sk
+      //             // const conditions = sk.feature_skill_bonus_conditions.map(c => {return {condition: c.condition}})
+      //             this.props.dispatch({type: 'BONUS', bonus: {type: 'skill', skill_id, bonus, bonus_type, duration, source: cmi.magic_item.name}})
+      //           })
+      //         }
+      //         if (!!f.stat_bonuses.length){
+      //           f.stat_bonuses.forEach(st => {
+      //             const { statistic, bonus, bonus_type, duration } = st
+      //             const conditions = st.feature_stat_bonus_conditions.map(c => {return {condition: c.condition}})
+      //             this.props.dispatch({type: 'BONUS', bonus: {type: 'stat', statistic, bonus, bonus_type, duration, source: cmi.magic_item.name, conditions}})
+      //           })
+      //         }
+      //         if (!!f.skill_notes.length){
+      //           f.skill_notes.forEach(sk => {
+      //             const { skill_id, note} = sk
+      //             this.props.dispatch({type: 'BONUS', bonus: {type: 'note', skill_id, note, source: cmi.magic_item.name}})
+      //           })
+      //         }
+      //         if (!!f.languages.length){
+      //           f.languages.forEach(l => {
+      //             const { language, note } = l
+      //             this.props.dispatch({type: 'EFFECT', effect: {type: 'language', language, note, source: cmi.magic_item.name}})
+      //           })
+      //         }
+      //       })
+      //     }
+      //   })
+      // data.character.uniq_klasses.forEach(kl => {
+      //   kl.klass_features.forEach(kf => {
+      //     kf.features.forEach(f =>{
+      //       if (!!f.skill_bonuses.length){
+      //         f.skill_bonuses.forEach(sk => {
+      //           const { skill_id, bonus, bonus_type, duration } = sk
+      //           // const conditions = sk.feature_skill_bonus_conditions.map(c => {return {condition: c.condition}})
+      //           this.props.dispatch({type: 'BONUS', bonus: {type: 'skill', skill_id, bonus, bonus_type, duration, source: kf.name}})
+      //         })
+      //       }
+      //       if (!!f.skill_notes.length){
+      //         f.skill_notes.forEach(sk => {
+      //           const { skill_id, note} = sk
+      //           // debugger
+      //           this.props.dispatch({type: 'BONUS', bonus: {type: 'note', skill_id, note, source: kf.name}})
+      //         })
+      //       }
+      //     })
+      //   })
+      // })
       // } else {
       //   this.props.history.push('/')
       // }
@@ -226,14 +231,6 @@ class Character extends React.Component {
   }
 
   dispatchClassLevels = () => {
-    // let charKlassesLevels = {}
-    // this.props.character.character_klasses.forEach(charKlass => {
-    //   if (charKlassesLevels[charKlass.klass_id]) {
-    //     charKlassesLevels[charKlass.klass_id]++
-    //   } else {
-    //     charKlassesLevels[charKlass.klass_id] = 1
-    //   }
-    // })
     let cKArray = []
     let completedClasses = []
     this.props.character.character_klasses.forEach(cK => {
@@ -242,11 +239,15 @@ class Character extends React.Component {
         let characterKlass = this.props.character.character_klasses.filter(ck => ck.klass_id === id)
         const level = characterKlass.length
         let klass = this.props.character.uniq_klasses.find(k => k.id === id)
-        let spellsFeature = klass.klass_features.find(f => f.name === 'Spells' || f.name === 'Alchemy')
-        let spellcasting = spellsFeature ? spellsFeature.spellcasting : null
 
         completedClasses.push(id)
         const classInfo = {id, level}
+
+        // changing fetch data, this part is not applicable with starting fetch
+
+        let spellsFeature = klass.klass_features.find(f => f.name === 'Spells' || f.name === 'Alchemy')
+        let spellcasting = spellsFeature ? spellsFeature.spellcasting : null
+
         // look to see if there are any cast spells for the given class
         const castSpellsForThisClass = this.props.character.cast_spells.filter(cs => cs.klass_id === id)
         // if (castSpellsForThisClass[0]){
@@ -266,6 +267,9 @@ class Character extends React.Component {
           }
         // hardcoded end
         // }
+
+        // relocate to a new function when data is applcable
+
         cKArray.push(classInfo)
       }
     })
@@ -452,7 +456,7 @@ class Character extends React.Component {
   }
 
   renderCharacter = () => {
-    if (localStorage.computer === "true"){
+    if (localStorage.computer !== "false"){
       return (
         <span className="container-8 character">
         {this.state.character.race && <CharacterName character={this.state.character} editModal={this.editModal}/>}
@@ -527,6 +531,7 @@ class Character extends React.Component {
               <ArmorClass/>
               <Initiative/>
             </section>}
+            {this.state.character.race && this.state.mobileTab === "combat" && <TurnActions/>}
             {this.state.character.race && this.state.mobileTab === "combat" && <Actions editModal={this.editModal} clickOut={this.clickOut} renderTooltip={this.renderTooltip} mouseOut={this.mouseOut} editSidebar={this.editSidebar}/>}
 
 
@@ -556,11 +561,16 @@ class Character extends React.Component {
 
 const mapStatetoProps = (state) => {
   return {
-    currentUser: state.currentUser,
-    admin: state.admin,
     character: state.character,
     character_info: state.character_info
   }
 }
 
-export default withRouter(connect(mapStatetoProps)(Character))
+const mapDispatchtoProps = dispatch => {
+  return {
+    fetchCharacter: fetchCharacter,
+    dispatch: dispatch
+  }
+}
+
+export default connect(mapStatetoProps, mapDispatchtoProps)(Character)

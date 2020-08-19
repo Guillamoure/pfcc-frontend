@@ -16,6 +16,8 @@ class Notice extends React.Component {
       .then(data => {
         if (data.status === 404 || data.status === 500){
           console.log(data)
+        } else if (data.message){
+          this.props.dispatch({type: 'DISCOVER EQUIPMENT', detail, id})
         } else {
           this.props.dispatch({type: 'CHARACTER', character: data.character })
         }
@@ -69,7 +71,8 @@ class Notice extends React.Component {
   newItems = () => {
     let undiscoveredCMIs = this.props.character.character_magic_items.filter(cmi => !cmi.discovered)
     let undiscoveredCWs = this.props.character.character_weapons.filter(cw => !cw.discovered)
-    let newItems = [...undiscoveredCMIs, ...undiscoveredCWs]
+    let undiscoveredCAs = this.props.character.character_armors.filter(cw => !cw.discovered)
+    let newItems = [...undiscoveredCMIs, ...undiscoveredCWs, ...undiscoveredCAs]
 
     if (!!newItems.length){
       return (
@@ -78,6 +81,7 @@ class Notice extends React.Component {
           <ul>
             {this.newItemLI(undiscoveredCMIs, 'character_magic_items')}
             {this.newItemLI(undiscoveredCWs, 'character_weapons')}
+            {this.newItemLI(undiscoveredCAs, 'character_armors')}
           </ul>
         </div>
       )
@@ -90,7 +94,7 @@ class Notice extends React.Component {
       let name = ''
       name = detail ==='character_magic_items' ? (ni.known ? ni.magic_item.name : ni.false_desc) : name
       name = detail === 'character_weapons' ? (ni.name ? ni.name : ni.weapon.name) : name
-      debugger
+      name = detail === 'character_armors' ? (ni.name ? ni.name : ni.armor.name) : name
       return <li key={(idx+10)*3-1}>{name} <button onClick={() => this.fetchDiscovered(ni.id, detail)}>Collect</button></li>
     })
   }

@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 
+import { calculateWeight, carryingCapacity, calculateLoad } from '../../helper_functions/calculations/character'
+
 
 const Details = props => {
 
@@ -39,6 +41,33 @@ const Details = props => {
     return knownLanguages
   }
 
+	const displayLoad = () => {
+		let weight = calculateWeight(props.character, props.character_info)
+		let cc = carryingCapacity(props.character_info.ability_scores.strength)
+		let load = calculateLoad(weight, props.character_info.ability_scores.strength)
+		return (
+			<>
+				<li><strong>Carrying</strong>: {weight} lbs (<em>{load} Load</em>)</li>
+				<table>
+					<thead>
+						<tr>
+							<th style={{textAlign: "center", borderRight: "1px solid black"}}>Light</th>
+							<th style={{textAlign: "center", borderRight: "1px solid black"}}>Medium</th>
+							<th style={{textAlign: "center"}}>Heavy</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td style={{borderRight: "1px solid black"}}>{cc[0]} lbs or less</td>
+							<td style={{borderRight: "1px solid black"}}>{cc[0]+1} - {cc[1]} lbs</td>
+							<td>{cc[1]+1} - {cc[2]} lbs</td>
+						</tr>
+					</tbody>
+				</table>
+			</>
+		)
+	}
+
   if (localStorage.computer === "true"){
     return(
       <>
@@ -66,6 +95,10 @@ const Details = props => {
           <div className='nested'>
           {languages(props.character.name).join(", ")}
           </div>
+				<div className='header'>Statistics</div>
+					<div className='nested'>
+						{displayLoad()}
+					</div>
       </>
     )
   } else if (localStorage.computer === "false"){

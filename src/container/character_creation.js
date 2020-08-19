@@ -41,16 +41,14 @@ class CharacterCreation extends React.Component{
     activeTab: "Details"
   }
 
-  renderTabClick = (choice) => {
-    this.setState({activeTab: choice})
-  }
-
   componentDidMount() {
-    if (!this.props.currentUser){
-      this.props.history.push("/signup")
-    } else {
-      this.setState({activeSkillset: this.props.currentUser.skillset_id})
-    }
+    // COMMENTED OUT FOR TESTING PURPOSES
+    // if (!this.props.currentUser){
+    //   this.props.history.push("/signup")
+    // } else {
+    //   this.setState({activeSkillset: this.props.currentUser.skillset_id})
+    // }
+    // COMMENTED OUT FOR TESTING PURPOSES
   }
 
   renderButtonClick = (field) => {
@@ -63,6 +61,10 @@ class CharacterCreation extends React.Component{
 
   renderChange = (e) => {
     this.setState({[e.target.name]: e.target.value})
+  }
+
+  renderTabClick = (choice) => {
+    this.setState({activeTab: choice})
   }
 
   renderSubmit = () => {
@@ -91,15 +93,17 @@ class CharacterCreation extends React.Component{
 
   validClasses = () => {
     let valid = true
-    this.state.classes.forEach(klass => {
-      if (klass.level > 20 || klass.level < 1){
-        valid = false
-      }
-      if (klass.classId === 0){
-        valid = false
-      }
-    })
-
+    // this.state.classes.forEach(klass => {
+    //   if (klass.level > 20 || klass.level < 1){
+    //     valid = false
+    //   }
+    //   if (klass.classId === 0){
+    //     valid = false
+    //   }
+    // })
+    if (this.state.classes[this.state.classes.length - 1] === 0 || this.state.classes[this.state.classes.length - 1] === ""){
+      valid = false
+    }
     return valid
   }
 
@@ -162,23 +166,63 @@ class CharacterCreation extends React.Component{
   // {this.validClasses() && this.state.activeField !== "class" ? <div><strong>Class Picked!</strong></div> : null}
   // <div className='header' style={{marginLeft: '2em'}}>Character Form</div>
 
+  // campaign tab?
+  // deity selected (way in the future)
+  // equipment
+  // spell selection?
+  // familiar selection?
+  // help/how to section?
+
+  displayForm = () => {
+    switch(this.state.activeTab){
+      case "Details":
+        return (
+          <>
+            <Details renderChange={this.renderChange} name={this.state.name} description={this.state.description} alignment={this.state.alignment} background={this.state.background} age={this.state.age} gender={this.state.gender} hair={this.state.hair} eyes={this.state.eyes} height={this.state.height} weight={this.state.weight} homeland={this.state.homeland} deity={this.state.deity}/>
+          </>
+        )
+      case "Ability Scores":
+        return (
+          <>
+            <AbilityForm renderChange={this.renderChange} strength={this.state.strength}  dexterity={this.state.dexterity} constitution={this.state.constitution} intelligence={this.state.intelligence} wisdom={this.state.wisdom} charisma={this.state.charisma} mapAbilityScores={this.mapAbilityScores}/>
+          </>
+        )
+      case "Race":
+        return (
+          <>
+            <Race renderChange={this.renderChange} chosenRaceId={this.state.race} anyBonus={this.state.anyBonus} doesRacehaveAnyBonus={this.state.doesRacehaveAnyBonus} renderdoesHaveAnyBonus={this.renderdoesHaveAnyBonus}/>
+          </>
+        )
+      case "Class":
+        return (
+          <>
+            <Class renderChange={this.renderChange} renderDynamicChanges={this.renderDynamicChanges} addClassField={this.addClassField} classes={this.state.classes} />
+          </>
+        )
+      case "Skills":
+        return (
+          <>
+            <Skills activeSkillset={this.state.activeSkillset} renderChange={this.renderChange} classes={this.state.classes}/>
+          </>
+        )
+      default:
+        return <>Ya</>
+    }
+  }
+
   render () {
     return (
-      <div>
+      <>
 
+        <CreationTabs renderTabClick={this.renderTabClick} activeTab={this.state.activeTab}/>
         <span id='creation-form'>
-          <CreationTabs renderTabClick={this.renderTabClick} activeTab={this.state.activeTab}/>
 
-          {this.state.activeTab === "Details" && <Details renderChange={this.renderChange} name={this.state.name} description={this.state.description} alignment={this.state.alignment} background={this.state.background} age={this.state.age} gender={this.state.gender} hair={this.state.hair} eyes={this.state.eyes} height={this.state.height} weight={this.state.weight} homeland={this.state.homeland} deity={this.state.deity}/>}
-          {this.state.activeTab === "Ability Scores" && <AbilityForm renderChange={this.renderChange} strength={this.state.strength}  dexterity={this.state.dexterity} constitution={this.state.constitution} intelligence={this.state.intelligence} wisdom={this.state.wisdom} charisma={this.state.charisma} mapAbilityScores={this.mapAbilityScores}/>}
-          {this.state.activeTab === "Race" && <Race renderChange={this.renderChange} chosenRaceId={this.state.race} anyBonus={this.state.anyBonus} doesRacehaveAnyBonus={this.state.doesRacehaveAnyBonus} renderdoesHaveAnyBonus={this.renderdoesHaveAnyBonus}/>}
-          {this.state.activeTab === "Class" && <Class renderChange={this.renderChange} renderDynamicChanges={this.renderDynamicChanges} addClassField={this.addClassField} classes={this.state.classes} />}
-          {this.state.activeTab === "Skills" && <Skills activeSkillset={this.state.activeSkillset} renderChange={this.renderChange} classes={this.state.classes}/>}
+          {this.displayForm()}
           {/*<button onClick={() => this.renderButtonClick("abilityScores")}>{this.state.activeField === "abilityScores" ? "Hide Ability Score Form": "Create Your Ability Scores"}</button>*/}
           {/*<button onClick={() => this.renderButtonClick("race")}>{this.state.activeField === "race" ? "Hide Race Form": "Choose Your Fantasy Race"}</button>*/}
           {/*<button onClick={() => this.renderButtonClick("class")}>{this.state.activeField === "class" ? "Hide Class Form": "Choose Your Class"}</button>*/}
         </span>
-        <div className='centered'>
+        <div id="new-character-validation-bubbles" className='centered'>
           {(this.state.strength && this.state.constitution && this.state.dexterity && this.state.intelligence && this.state.wisdom && this.state.charisma) ? <span className='complete'>Ability Scores</span> : <span className='incomplete'>Ability Scores</span>}
           {(this.state.name) ? <span className='complete'>Character Name</span> : <span className='incomplete' >Character Name</span>}
           {(this.validClasses()) ? <span className='complete' >Character Class(es)</span> : <span className='incomplete' >Character Class(es)</span>}
@@ -187,7 +231,7 @@ class CharacterCreation extends React.Component{
         <div className='confirmation centered'>
           {this.renderSubmit()}
         </div>
-      </div>
+      </>
     )
   }
 

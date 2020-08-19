@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 
 import Attack from './attack'
+import Skillset from './skillset'
 
 const SideBar = props => {
 
@@ -13,13 +14,15 @@ const SideBar = props => {
   const [style, setStyle] = React.useState(null)
   const [exitStyle, setExitStyle] = React.useState(null)
 
+  const sidebarContainer = React.useRef(null)
+
   // add a lifecycle method
   // after the animation (set timeout, see below for inspiration)
   // remove classes so there less clutter on the dom
 
   if (position === 'bottom'){
     if (!style){
-      setStyle({width: '98%', height: '50%', bottom: '0px', zIndex: '1'})
+      setStyle({width: '98%', height: '50%', bottom: '0px', zIndex: '1', overflowY: "scroll"})
       setExitStyle({zIndex: '2', bottom: `${window.innerHeight/2 + 1}px`, width: '20%', textAlign: 'center', borderBottom: 'none', left: '10%'})
     }
   }
@@ -35,12 +38,12 @@ const SideBar = props => {
     }, 800)
 
   }
-
   return (
     <>
-      <aside id='sidebar' className={isThisBeingRemoved} style={style}>
-      <div id='sidebar-exit' className={isThisBeingRemovedTab} style={exitStyle} onClick={exiting}><FontAwesomeIcon icon={faChevronDown}/></div>
+      <aside id='sidebar' className={isThisBeingRemoved} ref={sidebarContainer} style={style}>
+        <div id='sidebar-exit' className={isThisBeingRemovedTab} style={exitStyle} onClick={exiting}><FontAwesomeIcon icon={faChevronDown}/></div>
         {description === 'attack' && <Attack content={content}/>}
+        {description === 'skillset' && <Skillset content={content} sidebarContainer={sidebarContainer}/>}
       </aside>
     </>
   )

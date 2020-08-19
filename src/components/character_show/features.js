@@ -24,21 +24,22 @@ class Features extends React.Component {
     // })
     let klasses = [...this.props.character.uniq_klasses]
     let justFeatures = klasses.map(kl => kl.klass_features)
-    let features = _.flatten(justFeatures)
+    // let features = _.flatten(justFeatures)
+    let features = [...this.props.character.applicable_klass_features]
     features = this.circumventFeatures(this.props.character.name, features)
     return features.map(feature => {
-      let level = this.props.character_info.classes.find(cl => cl.id === feature.klass_id).level
-      let startingLevel = 20
-      feature.feature_levels.forEach(fl => {
-        if (fl.level < startingLevel){
-          startingLevel = fl.level
-        }
-      })
-      if (startingLevel <= level){
-        let klass = this.props.classes.find(cl => cl.id === feature.klass_id)
+      // let level = this.props.character_info.classes.find(cl => cl.id === feature.klass_id).level
+      // let startingLevel = 20
+      // feature.feature_levels.forEach(fl => {
+      //   if (fl.level < startingLevel){
+      //     startingLevel = fl.level
+      //   }
+      // })
+      // if (startingLevel <= level){
+        let klass = klasses.find(cl => cl.id === feature.klass_id)
         let name = feature.name
         if (klass && feature.name === "Weapon and Armor Proficiency"){
-          name = `${feature.name} - ${this.props.classes.find(cl => cl.id === feature.klass_id).name}`
+          name = `${feature.name} - ${klass.name}`
         }
         return (
           <li key={(feature.id * 3) -1} onClick={() => this.changeActiveFeature(feature.id)} className='highlight mobile-selected-tab-content' style={{maxHeight: window.outerHeight * 0.4}}>
@@ -46,9 +47,9 @@ class Features extends React.Component {
             {this.state.activeFeature === feature.id && <div style={{color: '#000'}}>{feature.description}</div>}
           </li>
         )
-      } else {
-        return null
-      }
+      // } else {
+      //   return null
+      // }
 
     })
   }
@@ -539,10 +540,10 @@ class Features extends React.Component {
 
 
     newFeatures = features.filter(f => {
-      let klass = this.props.classes.find(cl => cl.id === f.klass_id)
+      let klass = this.props.character.uniq_klasses.find(cl => cl.id === f.klass_id)
       let name = f.name
       if (klass && f.name === "Weapon and Armor Proficiency"){
-        name = `${f.name} - ${this.props.classes.find(cl => cl.id === f.klass_id).name}`
+        name = `${f.name} - ${klass.name}`
       }
       return !replacedFeatures.includes(name)
     })

@@ -21,7 +21,7 @@ class CharacterName extends React.Component {
       return null
     }
     let remapped = this.props.character_info.classes.map(cl => {
-      let name = this.props.classes.find(k => k.id === cl.id).name
+      let name = this.props.character.uniq_klasses.find(k => k.id === cl.id).name
       switch(name){
         case 'Barbarian':
           name = 'Drunken Brute Invulnerable Rager ' + name
@@ -97,7 +97,8 @@ class CharacterName extends React.Component {
 
   greenBadge = () => {
     let badge = false
-    this.props.character.character_magic_items.forEach(cmi => {
+    let cmis = this.props.character?.character_magic_items || []
+    cmis.forEach(cmi => {
       if (!cmi.discovered){
         badge = true
       }

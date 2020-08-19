@@ -1,7 +1,14 @@
 import React from 'react'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
+import { pluser, mod } from '../../fuf'
+import { ab } from '../../helper_functions/calculations/attack_bonus'
+// import { tooltip } from '../../dispatches/tooltip'
+import { expendAmmo, reloadAmmo } from '../../dispatch'
+
 
 const Attacks = props => {
+
+  const dispatch = useDispatch()
 
   const [bombs, setBombs] = React.useState(false);
 
@@ -34,7 +41,258 @@ const Attacks = props => {
       case 'Grackle':
         return grackle()
       default:
-        return null
+        return renderAttacks()
+    }
+  }
+
+  const renderAttacks = () => {
+    console.log(props.character.character_weapons)
+    let onlyEquippedWeapons = props.character.character_weapons.filter(cw => cw.equipped)
+    let nonUnarmedWeapons = [...onlyEquippedWeapons]
+    let unarmed = props.character.character_weapons.find(cw => cw.weapon.name === "Unarmed")
+    onlyEquippedWeapons.push(unarmed)
+
+    let attacks = onlyEquippedWeapons.map(renderTableElement)
+    // add unarmed attack to end
+    // two weapon fighting
+    // multi attacks from high BAB
+    if (nonUnarmedWeapons.length > 1 || onlyEquippedWeapons.find(ew => ew.equipped === "Double")){
+      attacks.push(renderTwoWeaponTableElement())
+    }
+    return attacks
+  }
+
+  const renderTableElement = (cw, index) => {
+    let name = cw.name !== "" ? cw.name : cw.weapon.name
+    let damageDice = cw.weapon.num_of_dice + "d" + cw.weapon.damage_dice
+    let damageType = cw.weapon.damage_type
+    let damageDiceSizeChange = null
+
+    let action = "standard"
+    let clickAction = () => newRenderDispatch(action, {characterWeapon: cw})
+    let buttonName = "Attack"
+
+    if (cw.weapon.features.find(f => f.loading)){
+      let loading = cw.weapon.features.find(f => f.loading)
+      if(!cw.magazine || cw.magazine < 0){
+
+        switch(loading.action.name){
+          case "Move Action":
+            action = "move"
+            break
+          default:
+            break
+        }
+        buttonName = "Reload"
+        clickAction = () => dispatchReload(cw, action)
+        if ((cw.equipped === "Off" && props.character.character_weapons.find(w => w.equipped === "Primary")) || (cw.equipped === "Primary" && props.character.character_weapons.find(w => w.equipped === "Off"))){
+          action = "none"
+          buttonName = "Cannot Reload"
+          clickAction = null
+        }
+      }
+      if (!cw.character_weapon_ammunition_id && !cw.improvised_ammunition){
+        action = "none"
+        buttonName = "No Ammo"
+        clickAction = null
+      }
+      if (cw.improvised_ammunition){
+        damageDiceSizeChange = "-1"
+      }
+    }
+    if (localStorage.computer === "true"){
+      return (
+        <tr key={index * 3 - 1}>
+          <td><button className={canCast(action)} onClick={clickAction}><strong>{buttonName}</strong></button></td>
+          <td>{name}</td>
+          <td style={renderNum('abS', null, true)}>{calculateAttackBonuses(cw)}</td>
+          <td>{cw.weapon.range ? cw.weapon.range + " ft" : null}</td>
+          <td>{renderDamageDice(damageDice, damageDiceSizeChange)}{typeof renderAdditionalDamage(cw) === "string" ? renderAdditionalDamage(cw) : renderAdditionalDamage(cw)[0]} {damageType[0]}</td>
+          <td>{renderCritical(cw)}</td>
+          <td>{collectAdditionalInfo(cw).map(renderAdditionalInfo)}</td>
+        </tr>
+      )
+    } else if (localStorage.computer === "false"){
+      let sidebarInfo = {characterWeapon: cw, critical: renderCritical(cw), additionalInfo: collectAdditionalInfo(cw)}
+
+      return (
+        <tr key={index * 3 - 1}>
+          <td><button className={canCast(action)} onClick={clickAction}><strong>{buttonName}</strong></button></td>
+          <td>{name}</td>
+          <td style={renderNum('abS', null, true)}>{calculateAttackBonuses(cw)}</td>
+          <td>{renderDamageDice(damageDice, damageDiceSizeChange)}{typeof renderAdditionalDamage(cw) === "string" ? renderAdditionalDamage(cw) : renderAdditionalDamage(cw)[0]} {damageType[0]}</td>
+          <td style={{fontSize: '12px', border: '2px solid black', borderRadius: '0.5em'}} onClick={() => props.editSidebar(true, 'bottom', 'attack', sidebarInfo)}>See More</td>
+        </tr>
+      )
+    }
+  }
+
+  const calculateAttackBonuses = (cw, bonus = 0) => {
+    // attackBonus is ability score modifier + class bab
+    let meleeAttackBonus = null
+    let rangeAttackBonus = null
+    if (cw.weapon.weapon_type === "Melee"){
+      meleeAttackBonus = ab(props.character, props.character_info, "melee")
+    }
+    if (cw.weapon.weapon_type === "Range" || cw.weapon.thrown){
+      rangeAttackBonus = ab(props.character, props.character_info, "range")
+    }
+    // is the character proficient with this weapon
+    // if it's proficiencyGroup can't be found, or if it's id isn't specifically found
+    // not proficient -4
+
+    let proficiencyPenalty = proficiency(cw) ? 0 : -4
+
+    bonus = cw.improvised_ammunition ? bonus - 1 : bonus
+    // add everything together
+    // use pluser on Each
+    // shovel into array
+    let attackBonuses = []
+    if (meleeAttackBonus !== null) {attackBonuses.push(pluser(meleeAttackBonus + proficiencyPenalty + bonus))}
+    if (rangeAttackBonus !== null) {attackBonuses.push(pluser(rangeAttackBonus + proficiencyPenalty + bonus))}
+
+    // join that array together
+    return attackBonuses.join(", ")
+  }
+
+  const proficiency = (cw) => {
+    let isProficient = true
+    let weaponProficiencies = props.character_info.proficiencies.weapon
+    if (!weaponProficiencies.groups.find(wp => wp.proficiency_group === cw.weapon.proficiency) && !weaponProficiencies.individualIds.find(wp => cw.weapon.id === wp.weapon_id)){isProficient = false}
+    if (cw.weapon.name === "Bastard Sword"){
+      if (weaponProficiencies.groups.includes("Martial") && cw.equipped === "Two"){isProficient = true}
+      else if (weaponProficiencies.individualIds.includes(cw.weapon.id)){isProficient = true}
+      else {isProficient = false}
+    }
+    return isProficient
+  }
+
+  const renderCritical = (characterWeapon) => {
+    let weapon = characterWeapon.weapon
+    let crit = ""
+    if (weapon.critical_range < 20){
+      crit = weapon.critical_range + "-20/"
+    }
+    crit += "x"+ weapon.critical
+    return crit
+  }
+
+  const collectAdditionalInfo = (characterWeapon) => {
+    let additionalArray = []
+    if (!proficiency(characterWeapon)){additionalArray.push({name: "Not Proficient", tooltip: "-4 penalty to attack rolls if you are not proficient", sidebarRules: 0, italics: false})}
+    if (characterWeapon.improvised_ammunition){additionalArray.push({name: "Improvised Ammo", tooltip: "-1 penalty to attack rolls, 1 size category smaller damage die", sidebarRules: 0, italics: false})}
+    if (characterWeapon.weapon.category !== "Ranged"){
+      if (characterWeapon.equipped === "Primary"){
+        additionalArray.push({name: "Primary", tooltip: "Wielded in primary hand, 1x Str bonus to damage", sidebarRules: 0, italics: false})
+      }
+      if (characterWeapon.equipped === "Off"){
+        additionalArray.push({name: "Off", tooltip: "Wielded in off hand, 0.5x Str bonus to damage", sidebarRules: 0, italics: false})
+      }
+      if (characterWeapon.equipped === "Two"){
+        additionalArray.push({name: "Two-Handed", tooltip: "Wielded in both hands, 1.5x Str bonus to damage", sidebarRules: 0, italics: false})
+      }
+      if (characterWeapon.equipped === "Double"){
+        additionalArray.push({name: "Double Weapon", tooltip: "Wielded in both hands, 1x Str bonus to damage on primary attack, 0.5x Str bonus to damage on off attack", sidebarRules: 0, italics: false})
+      }
+      if (characterWeapon.weapon.weapon_type === "Melee" && characterWeapon.weapon.thrown){
+        additionalArray.push({name: "Thrown", tooltip: "If throwing, use second attack bonus", sidebarRules: 0, italics: false})
+      }
+    }
+    return additionalArray
+  }
+
+  const renderAdditionalInfo = (obj, i, arr) => {
+    let comma = ", "
+    if (i === arr.length-1){comma = ""}
+    if (obj.italics){
+      return <em>{obj.name}{comma}</em>
+    } else {
+      return <span key={i * 3 - 1} onMouseOver={(e) => dispatchTooltip(obj, e)} onMouseOut={(e) => dispatchTooltip(obj, e)}>{obj.name}{comma}</span>
+    }
+  }
+
+  const dispatchTooltip = (obj, e) => {
+    // debugger
+    props.tooltip(obj.tooltip, e.target)
+  }
+
+  const renderTwoWeaponTableElement = () => {
+    let onlyEquippedWeapons = props.character.character_weapons.filter(cw => cw.equipped)
+    let primary = onlyEquippedWeapons.find(cw => cw.equipped === "Primary")
+    let off = onlyEquippedWeapons.find(cw => cw.equipped === "Off")
+    let double = onlyEquippedWeapons.find(cw => cw.equipped === "Double")
+    let penalties = [-6, -10]
+    if ((double) || (off && off.weapon.category === "Light")){
+      penalties[0] = penalties[0] + 2
+      penalties[1] = penalties[1] + 2
+    }
+    let damageDiceSizeChange = null
+
+    function name(cw){return cw.name !== "" ? cw.name : cw.weapon.name}
+    function damageDice(cw){return cw.weapon.num_of_dice + "d" + cw.weapon.damage_dice}
+    function range(cw){return cw.weapon.range ? cw.weapon.range + " ft" : "-"}
+    function damageType(cw){return cw.weapon.damage_type}
+
+    let twfAttackBonuses
+    if (double){twfAttackBonuses = `${calculateAttackBonuses(double, penalties[0])}/${calculateAttackBonuses(double, penalties[1])}`}
+    if (primary && off){twfAttackBonuses = `${calculateAttackBonuses(primary, penalties[0])}/${calculateAttackBonuses(off, penalties[1])}`}
+
+    let twfRange
+    if (double){twfRange = range(double)}
+    if (primary && off){twfRange = `${range(primary)}/${range(off)}`}
+
+    let twfDamage
+    if (double){twfDamage = `${damageDice(double, damageDiceSizeChange)}${renderAdditionalDamage(double)[0]} ${damageType(double)}/${double.weapon.double_num_of_dice + "d" + double.weapon.double_damage_dice}${renderAdditionalDamage(double)[1]} ${damageType(double)}`}
+    if (primary && off){twfDamage = `${damageDice(primary, damageDiceSizeChange)}${renderAdditionalDamage(primary)} ${damageType(primary)}/${damageDice(off, damageDiceSizeChange)}/${renderAdditionalDamage(off)} ${damageType(off)}`}
+
+    let allAttacks
+    if (double){allAttacks = [double]}
+    if (primary && off){allAttacks = [primary, off]}
+
+    return (
+      <tr>
+        <td><button className={canCast('full')} onClick={() => renderMultipleDispatch(allAttacks)}><strong>Attack</strong></button></td>
+        <td>{double ? name(double) : `${name(primary)} / ${name(off)}`}</td>
+        <td style={renderNum('abS', null, true)}>{twfAttackBonuses}</td>
+        <td>{twfRange}</td>
+        <td>{twfDamage}</td>
+        <td>{}</td>
+        <td></td>
+      </tr>
+    )
+  }
+
+  const renderMultipleDispatch = (array) => {
+    array.forEach((el, i) => {
+      if (i === 0){
+        newRenderDispatch('full', {characterWeapon: el})
+      } else {
+        newRenderDispatch('free', {characterWeapon: el})
+      }
+    })
+  }
+
+  const newRenderDispatch = (action, details) => {
+    let actions = props.character_info.actions
+    if ((action === 'standard' || action  === 'move' || action === 'swift') && actions.full){
+      return null
+    } else if (action === 'full' && (actions.standard || actions.move || actions.swift)){
+      return null
+    } else if (!actions[action]){
+      props.dispatch({type: 'TRIGGER ACTION', action})
+
+      if (details.characterWeapon){
+        let cw = details.characterWeapon
+        if (cw.weapon.category === "Ranged"){
+          if ((cw.character_weapon_ammunition_id || cw.improvised_ammunition) && cw.weapon.features.find(f => f.loading?.id)){
+            let cwAmmo = props.character.character_weapons.find(cwa => cwa.id === cw.character_weapon_ammunition_id)
+            dispatch(expendAmmo(cw, cwAmmo))
+          }
+        }
+      }
+
+    } else {
+      return null
     }
   }
 
@@ -61,6 +319,16 @@ const Attacks = props => {
     } else {
       return null
     }
+  }
+
+  const dispatchReload = (cw, action) => {
+    let loading = cw.weapon.features.find(f => f.loading)
+    let magazine = loading.loading.capacity
+    let cwAmmo = props.character.character_weapons.find(cwa => cwa.id === cw.character_weapon_ammunition_id)
+    // patch fetch with new magazine amount
+    // dispatch
+    dispatch(reloadAmmo(cw, magazine))
+    newRenderDispatch(action, {})
   }
 
   const canCast = (action) => {
@@ -145,7 +413,8 @@ const Attacks = props => {
           finesse: null,
           additionalDetails: 'bomb',
           critical: 'x2',
-          special: <><span onMouseOver={e => renderTooltip(e, 'Splash')} onMouseOut={props.mouseOut}>Splash</span>, Those caught in the splash damage can attempt a Reflex save for half damage.</>,
+          special: <><span onMouseOver={e =>
+            (e, 'Splash')} onMouseOut={props.mouseOut}>Splash</span>, Those caught in the splash damage can attempt a Reflex save for half damage.</>,
           toggle: ['bombs', setBombs],
           displayIfTrue: null
         },
@@ -481,6 +750,30 @@ const Attacks = props => {
     )
   }
 
+  const renderAdditionalDamage = (characterWeapon) => {
+    let str = mod(props.character_info.ability_scores.strength)
+    let dex = mod(props.character_info.ability_scores.dexterity)
+
+    if (characterWeapon.weapon.weapon_type === "Melee" || characterWeapon.weapon.thrown) {
+      switch(characterWeapon.equipped){
+        case "Primary":
+          return pluser(str)
+        case "Off":
+          return pluser(str >= 0 ? Math.floor(str/2) : str)
+        case "Two":
+          return pluser(str >= 0 ? Math.floor(str * 1.5) : str)
+        case "Double":
+          // account for both sides of the weapon
+          return [pluser(Math.floor(str)), pluser(str >= 0 ? Math.floor(str/2) : str)]
+        default:
+          return pluser(str)
+      }
+    }
+    if (characterWeapon.weapon.weapon_type === "Range"){
+      return ""
+    }
+  }
+
 
   const renderNum = (type, strengthMultiplier, style, finesse, additionalDetails) => {
     // type includes abS, abD, damageS, damageD
@@ -634,8 +927,20 @@ const Attacks = props => {
     }
   }
 
-  const renderDamageDice = (dice) => {
-    const size = props.character_info.size
+  const renderDamageDice = (dice, sizeChange) => {
+    let size = props.character_info.size
+    if (sizeChange){
+      switch(sizeChange){
+        case "1":
+          size = size === "Medium" ? "Large" : size
+          break
+        case "-1":
+          size = size === "Medium" ? "Small" : size
+          break
+        default:
+          break
+      }
+    }
     let newDice = dice
     if (size === "Large"){
       switch(dice){
@@ -673,6 +978,9 @@ const Attacks = props => {
           break
         case '1d10':
           newDice = '1d8'
+          break
+        case '2d4':
+          newDice = '1d6'
           break
         default:
           break
@@ -1022,7 +1330,7 @@ const Attacks = props => {
             </tr>
           </thead>
           <tbody>
-            {attacks.map(renderMobileAttack)}
+            {renderCharacter(props.character.name)}
           </tbody>
         </table>
       </section>
@@ -1039,4 +1347,11 @@ const mapStatetoProps = (state) => {
   }
 }
 
-export default connect(mapStatetoProps)(Attacks)
+const mapDispatchtoProps = dispatch => {
+  return {
+    tooltip: (message, target) => dispatch({type: "TOOLTIP", message, target}),
+    dispatch
+  }
+}
+
+export default connect(mapStatetoProps, mapDispatchtoProps)(Attacks)

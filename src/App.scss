@@ -1,3 +1,13 @@
+// VARIABLES
+
+$ruby: #9b111e;
+$sapphire: #0f52ba;
+$emerald: #046307;
+
+$tan: #cfb997;
+
+// VARIABLES
+
 .background {
   height: 100%;
   background-repeat: no-repeat;
@@ -318,28 +328,6 @@
   text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 
-#creation-form {
-  display: grid;
-  /* grid-template-rows: repeat(2, 1fr); */
-  background-color: rgba(220, 220, 220, 0.95);
-  text-align: center;
-  border: solid;
-  border-color: #000;
-  border-radius: 2.2em;
-  padding: .15em;
-  margin: 2em;
-}
-
-#creation-form input[type=number] {
-  width: 3em;
-  text-align: center;
-}
-
-#creation-form input[type=text] {
-  width: 5em;
-  text-align: center;
-}
-
 .tinted {
   background-color: rgba(0, 0, 0, 0.4);
 }
@@ -595,6 +583,22 @@
   display: inline-block;
 }
 
+#tooltip:before {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border-top: 2px solid #000;
+  border-right: 0px solid #000;
+  border-bottom: 0px solid #000;
+  border-left: 2px solid #000;
+  top: -10px;
+  left: 50%;
+  margin-left: -3px;
+  content: '';
+  transform: rotate(45deg);
+  background: #000;
+}
+
 /* Tooltips! Copied from blog by Arseniy Tomkevich, url: https://medium.com/@jsmuster/building-a-tooltip-component-with-react-2de14761e02 */
 
 #tooltip.top {
@@ -798,4 +802,48 @@
   padding: 1%;
   border-radius: 1em 1em 0 0;
   position: fixed;
+}
+
+.standard-container-bubble {
+  background-color: rgba(235, 235, 235, 0.95);
+  margin: 0.25em 0.5em;
+  border: 3px solid #000;
+  border-radius: 0.5em;
+  box-shadow: 5px 4px 2px $ruby;
+  color: $sapphire;
+  padding: 0.25em;
+}
+
+.spinning-die {
+  animation: spinning 4s infinite linear;
+  -webkit-animation: spinning 4s infinite linear;
+}
+
+.home-btn-create-links {
+  background: $ruby;
+  font-size: 3em;
+  font-weight: 700;
+  display: inline-block;
+  margin: 0 1%;
+  padding: 0.5em;
+  border-radius: .8em;
+  width: 30%;
+  text-align: center;
+  color: $tan;
+  text-shadow: -2px -2px 0 $sapphire, 2px -2px 0 $sapphire, -2px 2px 0 $sapphire, 2px 2px 0 $sapphire;
+  /* text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff; */
+  border: 3px solid $sapphire;
+}
+
+.home-btn-create-links:hover{
+  color: $ruby;
+  background-color: $sapphire;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
+
+#new-character-validation-bubbles {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
