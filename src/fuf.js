@@ -123,6 +123,10 @@ export const truncatedDate = (date) => {
   return `${monthNum}/${day}/${year}`
 }
 
+// DEPRICATED
+// PLEASE REFER ALL NEW ATTACK BONUS CALCULATIONS TO
+// helper_functions/calculations/attack_bonus
+
 export const ab = (characterObj, characterInfoObj, type) => {
   let attackBonus = 0
   characterInfoObj.classes.forEach(cl => {

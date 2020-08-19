@@ -48,9 +48,9 @@ class Abilities extends React.Component {
       // only display the feature, but the text should be from the akf
     })
 
-    return activatableAbilities.map(ability => {
+    return activatableAbilities.map((ability, idx) => {
 			return (
-				<tr>
+				<tr key={idx * 3 - 1}>
 					<td><button className={isThisActionAvailable(ability.action)} onClick={() => this.newRenderClick(ability)}><strong>Click</strong></button></td>
 					<td>{ability.klassFeatureName} {calculateFeaturePercentage(ability)}</td>
 					<td className='table-details'>Nothin'</td>
@@ -90,6 +90,8 @@ class Abilities extends React.Component {
 		}
 
 		console.log("yay")
+		// use action
+		// reduce points
 		featureDistribution(ability)
 	}
 

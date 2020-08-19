@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect, useDispatch } from 'react-redux'
-import { ab, pluser, mod } from '../../fuf'
+import { pluser, mod } from '../../fuf'
+import { ab } from '../../helper_functions/calculations/attack_bonus'
 // import { tooltip } from '../../dispatches/tooltip'
 import { expendAmmo, reloadAmmo } from '../../dispatch'
 
@@ -206,7 +207,7 @@ const Attacks = props => {
     if (obj.italics){
       return <em>{obj.name}{comma}</em>
     } else {
-      return <span onMouseOver={(e) => dispatchTooltip(obj, e)} onMouseOut={(e) => dispatchTooltip(obj, e)}>{obj.name}{comma}</span>
+      return <span key={i * 3 - 1} onMouseOver={(e) => dispatchTooltip(obj, e)} onMouseOut={(e) => dispatchTooltip(obj, e)}>{obj.name}{comma}</span>
     }
   }
 
