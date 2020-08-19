@@ -64,14 +64,19 @@ export const featureDistribution = (feature) => {
 	let activeFeatures = store.getState().character_info.activeFeatures
 	let oldActiveFeaturesLength = activeFeatures.length
 
+	// go through the feature, and add it to character_info
 	klassFeaturesFeatureDistribution(feature, character_info, source)
 
+	// add/remove this feature to the list of active features in character_info.activeFeatures (redux)
 	activeFeatureAction(source)
 
+	// check to see if this feature was added or removed
 	activeFeatures = store.getState().character_info.activeFeatures
 	if(activeFeatures.length > oldActiveFeaturesLength){
+		// if added
 		character_info.bonuses.forEach((b) => bonusAction(b))
 	} else {
+		// if removed
 		character_info.bonuses.forEach((b) => bonusAction(b, true))
 	}
 }
