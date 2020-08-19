@@ -43,6 +43,20 @@ const Active = props => {
     })
   }
 
+	const renderActiveFeatures = (features) => {
+		return features.map(f => {
+			let foundAbility = props.character[f.source].find(ability => ability.id === f.sourceId)
+			if (foundAbility){
+				let foundFeature = foundAbility.features.find(feat => feat.id === f.featureId)
+				let name = !foundFeature.name ? foundAbility.name : foundFeature.name
+
+				return <li>{name}</li>
+			} else {
+				return null;
+			}
+		})
+	}
+
   const renderMutagen = () => {
     let positiveAbilityScore
     let negativeAbilityScore
@@ -94,6 +108,7 @@ const Active = props => {
         {stealTime && <li>+1 to AC, Reflex, +5 base speed</li>}
         {activeMutagen && renderMutagen()}
         {renderFeatures()}
+				{renderActiveFeatures(props.character_info.activeFeatures)}
       </ul>
     </div>
   )
