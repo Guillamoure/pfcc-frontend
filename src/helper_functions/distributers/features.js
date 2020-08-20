@@ -72,6 +72,8 @@ export const featureDistribution = (feature) => {
 
 	// check to see if this feature was added or removed
 	activeFeatures = store.getState().character_info.activeFeatures
+
+	console.log(character_info.bonuses)
 	if(activeFeatures.length > oldActiveFeaturesLength){
 		// if added
 		character_info.bonuses.forEach((b) => bonusAction(b))

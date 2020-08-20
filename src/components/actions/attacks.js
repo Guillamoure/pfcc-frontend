@@ -4,6 +4,7 @@ import { pluser, mod } from '../../fuf'
 import { ab } from '../../helper_functions/calculations/attack_bonus'
 // import { tooltip } from '../../dispatches/tooltip'
 import { expendAmmo, reloadAmmo } from '../../dispatch'
+import _ from 'lodash'
 
 
 const Attacks = props => {
@@ -14,10 +15,10 @@ const Attacks = props => {
 
   const referenceState = (specific) => {
     switch(specific){
-      case 'bombs':
-        return bombs
-      default:
-        break
+	  case 'bombs':
+	    return bombs
+	  default:
+	    break
     }
   }
 
@@ -96,9 +97,6 @@ const Attacks = props => {
         buttonName = "No Ammo"
         clickAction = null
       }
-      if (cw.improvised_ammunition){
-        damageDiceSizeChange = "-1"
-      }
     }
     if (localStorage.computer === "true"){
       return (
@@ -107,7 +105,7 @@ const Attacks = props => {
           <td>{name}</td>
           <td style={renderNum('abS', null, true)}>{calculateAttackBonuses(cw)}</td>
           <td>{cw.weapon.range ? cw.weapon.range + " ft" : null}</td>
-          <td>{renderDamageDice(damageDice, damageDiceSizeChange)}{typeof renderAdditionalDamage(cw) === "string" ? renderAdditionalDamage(cw) : renderAdditionalDamage(cw)[0]} {damageType[0]}</td>
+          <td>{renderDamage(cw)}</td>
           <td>{renderCritical(cw)}</td>
           <td>{collectAdditionalInfo(cw).map(renderAdditionalInfo)}</td>
         </tr>
@@ -120,7 +118,7 @@ const Attacks = props => {
           <td><button className={canCast(action)} onClick={clickAction}><strong>{buttonName}</strong></button></td>
           <td>{name}</td>
           <td style={renderNum('abS', null, true)}>{calculateAttackBonuses(cw)}</td>
-          <td>{renderDamageDice(damageDice, damageDiceSizeChange)}{typeof renderAdditionalDamage(cw) === "string" ? renderAdditionalDamage(cw) : renderAdditionalDamage(cw)[0]} {damageType[0]}</td>
+          <td>{renderDamage(cw)}</td>
           <td style={{fontSize: '12px', border: '2px solid black', borderRadius: '0.5em'}} onClick={() => props.editSidebar(true, 'bottom', 'attack', sidebarInfo)}>See More</td>
         </tr>
       )
@@ -154,6 +152,40 @@ const Attacks = props => {
     // join that array together
     return attackBonuses.join(", ")
   }
+
+	const renderDamage = (cw) => {
+		// NEW DATA
+		let damageDiceSizeChange = null
+		let baseDamage
+		let thrownDamage
+
+		// STORED DATA
+		let damageType = cw.weapon.damage_type
+
+		// CALCULATED DATA
+		let baseDamageDice = cw.weapon.num_of_dice + "d" + cw.weapon.damage_dice
+		let damageDice = renderDamageDice(baseDamageDice, damageDiceSizeChange)
+
+		if (cw.weapon.features.find(f => f.loading)){
+			if (cw.improvised_ammunition){
+				damageDiceSizeChange = "-1"
+			}
+		}
+		if (cw.weapon.weapon_type === "Melee"){
+			baseDamage = `${damageDice}${typeof renderAdditionalDamage(cw, "Melee") === "string" ? renderAdditionalDamage(cw, "Melee") : renderAdditionalDamage(cw, "Melee")[0]} ${damageType[0]}`
+		} else if (cw.weapon.weapon_type === "Range"){
+			baseDamage = `${damageDice}${typeof renderAdditionalDamage(cw, "Range") === "string" ? renderAdditionalDamage(cw, "Range") : renderAdditionalDamage(cw, "Range")[0]} ${damageType[0]}`
+		}
+		if (cw.weapon.thrown){
+			thrownDamage = `${damageDice}${typeof renderAdditionalDamage(cw, "Thrown") === "string" ? renderAdditionalDamage(cw, "Thrown") : renderAdditionalDamage(cw, "Thrown")[0]} ${damageType[0]}`
+		}
+
+		if (baseDamage == thrownDamage || !thrownDamage){
+			return baseDamage
+		} else {
+			return `${baseDamage}, ${thrownDamage}`
+		}
+	}
 
   const proficiency = (cw) => {
     let isProficient = true
@@ -217,37 +249,44 @@ const Attacks = props => {
   }
 
   const renderTwoWeaponTableElement = () => {
-    let onlyEquippedWeapons = props.character.character_weapons.filter(cw => cw.equipped)
-    let primary = onlyEquippedWeapons.find(cw => cw.equipped === "Primary")
-    let off = onlyEquippedWeapons.find(cw => cw.equipped === "Off")
-    let double = onlyEquippedWeapons.find(cw => cw.equipped === "Double")
-    let penalties = [-6, -10]
-    if ((double) || (off && off.weapon.category === "Light")){
-      penalties[0] = penalties[0] + 2
-      penalties[1] = penalties[1] + 2
-    }
-    let damageDiceSizeChange = null
+		// NEW DATA
+		let penalties = [-6, -10]
+		let damageDiceSizeChange = null
+		let twfAttackBonuses
+		let twfRange
+		let twfDamage
+		let allAttacks
 
-    function name(cw){return cw.name !== "" ? cw.name : cw.weapon.name}
-    function damageDice(cw){return cw.weapon.num_of_dice + "d" + cw.weapon.damage_dice}
-    function range(cw){return cw.weapon.range ? cw.weapon.range + " ft" : "-"}
-    function damageType(cw){return cw.weapon.damage_type}
+		// STORED DATA
+		let onlyEquippedWeapons = props.character.character_weapons.filter(cw => cw.equipped)
+		let primary = onlyEquippedWeapons.find(cw => cw.equipped === "Primary")
+		let off = onlyEquippedWeapons.find(cw => cw.equipped === "Off")
+		let double = onlyEquippedWeapons.find(cw => cw.equipped === "Double")
 
-    let twfAttackBonuses
-    if (double){twfAttackBonuses = `${calculateAttackBonuses(double, penalties[0])}/${calculateAttackBonuses(double, penalties[1])}`}
-    if (primary && off){twfAttackBonuses = `${calculateAttackBonuses(primary, penalties[0])}/${calculateAttackBonuses(off, penalties[1])}`}
+		// CALCULATED DATA
+		function name(cw){return cw.name !== "" ? cw.name : cw.weapon.name}
+		function damageDice(cw){return cw.weapon.num_of_dice + "d" + cw.weapon.damage_dice}
+		function range(cw){return cw.weapon.range ? cw.weapon.range + " ft" : "-"}
+		function damageType(cw){return cw.weapon.damage_type}
+		if ((double) || (off && off.weapon.category === "Light")){
+			penalties[0] = penalties[0] + 2
+			penalties[1] = penalties[1] + 2
+		}
 
-    let twfRange
-    if (double){twfRange = range(double)}
-    if (primary && off){twfRange = `${range(primary)}/${range(off)}`}
+		if (double) {
+			twfAttackBonuses = `${calculateAttackBonuses(double, penalties[0])}/${calculateAttackBonuses(double, penalties[1])}`
+			twfRange = range(double)
+			let additionalDamage = renderAdditionalDamage(double, "Melee")
+			twfDamage = `${damageDice(double, damageDiceSizeChange)}${additionalDamage[0]} ${damageType(double)[0]}/${double.weapon.double_num_of_dice + "d" + double.weapon.double_damage_dice}${additionalDamage[1]} ${damageType(double)[0]}`
+			allAttacks = [double]
 
-    let twfDamage
-    if (double){twfDamage = `${damageDice(double, damageDiceSizeChange)}${renderAdditionalDamage(double)[0]} ${damageType(double)}/${double.weapon.double_num_of_dice + "d" + double.weapon.double_damage_dice}${renderAdditionalDamage(double)[1]} ${damageType(double)}`}
-    if (primary && off){twfDamage = `${damageDice(primary, damageDiceSizeChange)}${renderAdditionalDamage(primary)} ${damageType(primary)}/${damageDice(off, damageDiceSizeChange)}/${renderAdditionalDamage(off)} ${damageType(off)}`}
+		} else if (primary && off) {
+			twfAttackBonuses = `${calculateAttackBonuses(primary, penalties[0])}/${calculateAttackBonuses(off, penalties[1])}`
+			twfRange = `${range(primary)}/${range(off)}`
+			twfDamage = `${damageDice(primary, damageDiceSizeChange)}${renderAdditionalDamage(primary)[0]} ${damageType(primary)}/${damageDice(off, damageDiceSizeChange)}/${renderAdditionalDamage(off)} ${damageType(off)[0]}`
+			allAttacks = [primary, off]
 
-    let allAttacks
-    if (double){allAttacks = [double]}
-    if (primary && off){allAttacks = [primary, off]}
+		}
 
     return (
       <tr>
@@ -750,24 +789,45 @@ const Attacks = props => {
     )
   }
 
-  const renderAdditionalDamage = (characterWeapon) => {
+  const renderAdditionalDamage = (characterWeapon, weaponType) => {
+		// NEW DATA
+		let handedStrengthModifier = 0
+		let bonusModifiers = []
+
+		// STORED DATA
+		let bonuses = props.character_info.bonuses
+
+		// CALCULATED DATA
     let str = mod(props.character_info.ability_scores.strength)
     let dex = mod(props.character_info.ability_scores.dexterity)
 
-    if (characterWeapon.weapon.weapon_type === "Melee" || characterWeapon.weapon.thrown) {
+		bonuses.forEach(b => {
+			if (b.statistic === "Damage" && _.capitalize(b.specific_statistic) === weaponType){
+				bonusModifiers.push(b)
+			}
+		})
+
+    if (weaponType === "Melee" || weaponType === "Thrown") {
       switch(characterWeapon.equipped){
         case "Primary":
-          return pluser(str)
+          break
         case "Off":
-          return pluser(str >= 0 ? Math.floor(str/2) : str)
+          if (str >= 0) {handedStrengthModifier = -Math.ceil(str/2)}
+					break
         case "Two":
-          return pluser(str >= 0 ? Math.floor(str * 1.5) : str)
+					if (str >= 0) {handedStrengthModifier = Math.floor(str * 0.5)}
+          break
         case "Double":
           // account for both sides of the weapon
-          return [pluser(Math.floor(str)), pluser(str >= 0 ? Math.floor(str/2) : str)]
+					// recursive! :D
+          return [renderAdditionalDamage({...characterWeapon, equipped: "Primary"}, weaponType), renderAdditionalDamage({...characterWeapon, equipped: "Off"}, weaponType)]
         default:
-          return pluser(str)
+          break
       }
+
+			let tempBonuses = bonusModifiers.reduce((agg, el) => (agg + el.bonus), 0)
+
+			return pluser(str + handedStrengthModifier + tempBonuses)
     }
     if (characterWeapon.weapon.weapon_type === "Range"){
       return ""
