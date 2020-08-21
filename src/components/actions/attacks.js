@@ -187,6 +187,60 @@ const Attacks = props => {
 		}
 	}
 
+	const renderTwoWeaponTableElement = () => {
+		// NEW DATA
+		let penalties = [-6, -10]
+		let damageDiceSizeChange = null
+		let twfAttackBonuses
+		let twfRange
+		let twfDamage
+		let allAttacks
+
+		// STORED DATA
+		let onlyEquippedWeapons = props.character.character_weapons.filter(cw => cw.equipped)
+		let primary = onlyEquippedWeapons.find(cw => cw.equipped === "Primary")
+		let off = onlyEquippedWeapons.find(cw => cw.equipped === "Off")
+		let double = onlyEquippedWeapons.find(cw => cw.equipped === "Double")
+
+		// CALCULATED DATA
+		function name(cw){return cw.name !== "" ? cw.name : cw.weapon.name}
+		function damageDice(cw){return cw.weapon.num_of_dice + "d" + cw.weapon.damage_dice}
+		function range(cw){return cw.weapon.range ? cw.weapon.range + " ft" : "-"}
+		function damageType(cw){return cw.weapon.damage_type}
+		if ((double) || (off && off.weapon.category === "Light")){
+			penalties[0] = penalties[0] + 2
+			penalties[1] = penalties[1] + 2
+		}
+
+		if (double) {
+			twfAttackBonuses = `${calculateAttackBonuses(double, penalties[0])}/${calculateAttackBonuses(double, penalties[1])}`
+			twfRange = range(double)
+			let additionalDamage = renderAdditionalDamage(double, double.weapon.weapon_type)
+			twfDamage = `${damageDice(double, damageDiceSizeChange)}${additionalDamage[0]} ${damageType(double)[0]}/${double.weapon.double_num_of_dice + "d" + double.weapon.double_damage_dice}${additionalDamage[1]} ${damageType(double)[0]}`
+			allAttacks = [double]
+
+		} else if (primary && off) {
+			twfAttackBonuses = `${calculateAttackBonuses(primary, penalties[0])}/${calculateAttackBonuses(off, penalties[1])}`
+			twfRange = `${range(primary)}/${range(off)}`
+			twfDamage = `${renderDamage(primary)}/${renderDamage(off)}`
+			allAttacks = [primary, off]
+
+		}
+
+    return (
+      <tr>
+        <td><button className={canCast('full')} onClick={() => renderMultipleDispatch(allAttacks)}><strong>Attack</strong></button></td>
+        <td>{double ? name(double) : `${name(primary)} / ${name(off)}`}</td>
+        <td style={renderNum('abS', null, true)}>{twfAttackBonuses}</td>
+        <td>{twfRange}</td>
+        <td>{twfDamage}</td>
+        <td>{}</td>
+        <td></td>
+      </tr>
+    )
+  }
+
+
   const proficiency = (cw) => {
     let isProficient = true
     let weaponProficiencies = props.character_info.proficiencies.weapon
@@ -246,59 +300,6 @@ const Attacks = props => {
   const dispatchTooltip = (obj, e) => {
     // debugger
     props.tooltip(obj.tooltip, e.target)
-  }
-
-  const renderTwoWeaponTableElement = () => {
-		// NEW DATA
-		let penalties = [-6, -10]
-		let damageDiceSizeChange = null
-		let twfAttackBonuses
-		let twfRange
-		let twfDamage
-		let allAttacks
-
-		// STORED DATA
-		let onlyEquippedWeapons = props.character.character_weapons.filter(cw => cw.equipped)
-		let primary = onlyEquippedWeapons.find(cw => cw.equipped === "Primary")
-		let off = onlyEquippedWeapons.find(cw => cw.equipped === "Off")
-		let double = onlyEquippedWeapons.find(cw => cw.equipped === "Double")
-
-		// CALCULATED DATA
-		function name(cw){return cw.name !== "" ? cw.name : cw.weapon.name}
-		function damageDice(cw){return cw.weapon.num_of_dice + "d" + cw.weapon.damage_dice}
-		function range(cw){return cw.weapon.range ? cw.weapon.range + " ft" : "-"}
-		function damageType(cw){return cw.weapon.damage_type}
-		if ((double) || (off && off.weapon.category === "Light")){
-			penalties[0] = penalties[0] + 2
-			penalties[1] = penalties[1] + 2
-		}
-
-		if (double) {
-			twfAttackBonuses = `${calculateAttackBonuses(double, penalties[0])}/${calculateAttackBonuses(double, penalties[1])}`
-			twfRange = range(double)
-			let additionalDamage = renderAdditionalDamage(double, "Melee")
-			twfDamage = `${damageDice(double, damageDiceSizeChange)}${additionalDamage[0]} ${damageType(double)[0]}/${double.weapon.double_num_of_dice + "d" + double.weapon.double_damage_dice}${additionalDamage[1]} ${damageType(double)[0]}`
-			allAttacks = [double]
-
-		} else if (primary && off) {
-			twfAttackBonuses = `${calculateAttackBonuses(primary, penalties[0])}/${calculateAttackBonuses(off, penalties[1])}`
-			twfRange = `${range(primary)}/${range(off)}`
-			twfDamage = `${damageDice(primary, damageDiceSizeChange)}${renderAdditionalDamage(primary)[0]} ${damageType(primary)}/${damageDice(off, damageDiceSizeChange)}/${renderAdditionalDamage(off)} ${damageType(off)[0]}`
-			allAttacks = [primary, off]
-
-		}
-
-    return (
-      <tr>
-        <td><button className={canCast('full')} onClick={() => renderMultipleDispatch(allAttacks)}><strong>Attack</strong></button></td>
-        <td>{double ? name(double) : `${name(primary)} / ${name(off)}`}</td>
-        <td style={renderNum('abS', null, true)}>{twfAttackBonuses}</td>
-        <td>{twfRange}</td>
-        <td>{twfDamage}</td>
-        <td>{}</td>
-        <td></td>
-      </tr>
-    )
   }
 
   const renderMultipleDispatch = (array) => {
