@@ -22,7 +22,6 @@ const Attacks = props => {
     }
   }
 
-
   const renderCharacter = (name) => {
     switch(name){
       case "Nettie":
@@ -50,16 +49,19 @@ const Attacks = props => {
     console.log(props.character.character_weapons)
     let onlyEquippedWeapons = props.character.character_weapons.filter(cw => cw.equipped)
     let nonUnarmedWeapons = [...onlyEquippedWeapons]
+
+		// add unarmed attack to end
     let unarmed = props.character.character_weapons.find(cw => cw.weapon.name === "Unarmed")
     onlyEquippedWeapons.push(unarmed)
 
     let attacks = onlyEquippedWeapons.map(renderTableElement)
-    // add unarmed attack to end
     // two weapon fighting
-    // multi attacks from high BAB
     if (nonUnarmedWeapons.length > 1 || onlyEquippedWeapons.find(ew => ew.equipped === "Double")){
       attacks.push(renderTwoWeaponTableElement())
     }
+
+		// multi attacks from high BAB
+
     return attacks
   }
 
@@ -104,7 +106,7 @@ const Attacks = props => {
           <td><button className={canCast(action)} onClick={clickAction}><strong>{buttonName}</strong></button></td>
           <td>{name}</td>
           <td style={renderNum('abS', null, true)}>{calculateAttackBonuses(cw)}</td>
-          <td>{cw.weapon.range ? cw.weapon.range + " ft" : null}</td>
+          <td>{cw.weapon.range ? cw.weapon.range + " ft" : "-"}</td>
           <td>{renderDamage(cw)}</td>
           <td>{renderCritical(cw)}</td>
           <td>{collectAdditionalInfo(cw).map(renderAdditionalInfo)}</td>
@@ -150,10 +152,15 @@ const Attacks = props => {
     if (rangeAttackBonus !== null) {attackBonuses.push(pluser(rangeAttackBonus + proficiencyPenalty + bonus))}
 
     // join that array together
+
+		if (cw.weapon.thrown && attackBonuses.length === 2) {
+			return attackBonuses[0] + " (T " + attackBonuses[1] + ")"
+		}
     return attackBonuses.join(", ")
   }
 
-	const renderDamage = (cw) => {
+	const renderDamage = (cw, options) => {
+
 		// NEW DATA
 		let damageDiceSizeChange = null
 		let baseDamage
@@ -171,13 +178,32 @@ const Attacks = props => {
 				damageDiceSizeChange = "-1"
 			}
 		}
+
+		if (options?.double) {
+			let baseDoubleDamageDice = cw.weapon.double_num_of_dice + "d" + cw.weapon.double_damage_dice
+			let doubleDamageType = cw.weapon.double_damage_type
+
+			let doubleDamageDice = renderDamageDice(baseDoubleDamageDice, damageDiceSizeChange)
+
+			// REFACTOR
+			// THIS DOESN'T WORK IF A DOUBLE WEAPON IS MELEE ON ONE SIDE AND RANGED ON THE OTHER
+			let additionalDamage = renderAdditionalDamage(cw, cw.weapon.weapon_type)
+
+			return `${damageDice}${additionalDamage[0]} ${damageType[0]}/${doubleDamageDice}${additionalDamage[1]} ${doubleDamageType[0]}`
+		}
+
+
 		if (cw.weapon.weapon_type === "Melee"){
 			baseDamage = `${damageDice}${typeof renderAdditionalDamage(cw, "Melee") === "string" ? renderAdditionalDamage(cw, "Melee") : renderAdditionalDamage(cw, "Melee")[0]} ${damageType[0]}`
-		} else if (cw.weapon.weapon_type === "Range"){
+		} else if (cw.weapon.weapon_type === "Range" && !cw.weapon.thrown){
 			baseDamage = `${damageDice}${typeof renderAdditionalDamage(cw, "Range") === "string" ? renderAdditionalDamage(cw, "Range") : renderAdditionalDamage(cw, "Range")[0]} ${damageType[0]}`
 		}
 		if (cw.weapon.thrown){
 			thrownDamage = `${damageDice}${typeof renderAdditionalDamage(cw, "Thrown") === "string" ? renderAdditionalDamage(cw, "Thrown") : renderAdditionalDamage(cw, "Thrown")[0]} ${damageType[0]}`
+			if (cw.weapon.weapon_type === "Range"){
+				baseDamage = thrownDamage
+				thrownDamage = null
+			}
 		}
 
 		if (baseDamage == thrownDamage || !thrownDamage){
@@ -215,8 +241,8 @@ const Attacks = props => {
 		if (double) {
 			twfAttackBonuses = `${calculateAttackBonuses(double, penalties[0])}/${calculateAttackBonuses(double, penalties[1])}`
 			twfRange = range(double)
-			let additionalDamage = renderAdditionalDamage(double, double.weapon.weapon_type)
-			twfDamage = `${damageDice(double, damageDiceSizeChange)}${additionalDamage[0]} ${damageType(double)[0]}/${double.weapon.double_num_of_dice + "d" + double.weapon.double_damage_dice}${additionalDamage[1]} ${damageType(double)[0]}`
+			twfDamage = renderDamage(double, {double: true})
+
 			allAttacks = [double]
 
 		} else if (primary && off) {
@@ -224,7 +250,6 @@ const Attacks = props => {
 			twfRange = `${range(primary)}/${range(off)}`
 			twfDamage = `${renderDamage(primary)}/${renderDamage(off)}`
 			allAttacks = [primary, off]
-
 		}
 
     return (
@@ -281,7 +306,7 @@ const Attacks = props => {
         additionalArray.push({name: "Double Weapon", tooltip: "Wielded in both hands, 1x Str bonus to damage on primary attack, 0.5x Str bonus to damage on off attack", sidebarRules: 0, italics: false})
       }
       if (characterWeapon.weapon.weapon_type === "Melee" && characterWeapon.weapon.thrown){
-        additionalArray.push({name: "Thrown", tooltip: "If throwing, use second attack bonus", sidebarRules: 0, italics: false})
+        additionalArray.push({name: "Thrown", tooltip: "If throwing, use second attack bonus (T)", sidebarRules: 0, italics: false})
       }
     }
     return additionalArray
