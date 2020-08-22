@@ -209,7 +209,7 @@ const Attacks = props => {
 		if (baseDamage == thrownDamage || !thrownDamage){
 			return baseDamage
 		} else {
-			return `${baseDamage}, ${thrownDamage}`
+			return `${baseDamage} (T ${thrownDamage})`
 		}
 	}
 
