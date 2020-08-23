@@ -3,25 +3,28 @@ import _ from 'lodash'
 import { connect } from 'react-redux'
 import localhost from '../../localhost'
 import HPChanges from '../hp_changes'
+import { abilityScoreMod } from '../../helper_functions/calculations/ability_scores'
+
 
 const HP = props => {
 
   const [mobileHPChange, setMobileHPChange] = React.useState(false);
 
-  const conMod = () => {
-    let con = props.character_info.ability_scores.constitution
-    const age = props.character.name === 'Maddox' && props.character_info.hardcode.age
-    const activeMutagen = props.character_info.hardcode.activeMutagen ? props.character_info.hardcode.mutagen : false
+  // const conMod = () => {
+  //   let con = props.character_info.ability_scores.constitution
+  //   const age = props.character.name === 'Maddox' && props.character_info.hardcode.age
+  //   const activeMutagen = props.character_info.hardcode.activeMutagen ? props.character_info.hardcode.mutagen : false
+	//
+  //   con += age === 'Young' ? -2 : 0
+  //   con += age === 'Middle' ? -1 : 0
+  //   con += age === 'Old' ? -2 : 0
+  //   con += age === 'Venerable' ? -3 : 0
+	//
+  //   con += activeMutagen === 'constitution' ? 4 : 0
+	//
+  //   return Math.floor((con  - 10) / 2)
+  // }
 
-    con += age === 'Young' ? -2 : 0
-    con += age === 'Middle' ? -1 : 0
-    con += age === 'Old' ? -2 : 0
-    con += age === 'Venerable' ? -3 : 0
-
-    con += activeMutagen === 'constitution' ? 4 : 0
-
-    return Math.floor((con  - 10) / 2)
-  }
 
   const renderDamaged = () => {
     // oh GOD please refactor
@@ -38,15 +41,43 @@ const HP = props => {
   }
 
   const renderCharacterHP = () => {
-    let totalHP = 0
+		// NEW DATA
+		let totalHP = 0
+		let additionalTempHP = 0
+
+		// STORED DATA
+		let storedLethalDamage = props.character.lethal_damage
+		let storedTemporary = props.character.temp_hp
+		let hitPointBonuses =  props.character_info.bonuses.filter(b => b.statistic === "Hit Points")
+
+		// CALCULATED DATA
+		const conMod = abilityScoreMod("constitution")
+
     props.character.character_klasses.forEach(klass => {
       if (klass.hp !== null) {
         totalHP += klass.hp
       }
-      totalHP += conMod()
+      totalHP += conMod
     })
+		hitPointBonuses.forEach(bonus => {
+			if (bonus.bonus_multiplier){
+				let multiplier = 0
+				if (bonus.bonus_multiplier === "level"){
+					if (bonus.bonus_multiplier_based_on_feature_level){
+						let ability = props.character[bonus.source.source].find(a => a.id === bonus.source.sourceId)
+						if (ability.klass_id){
+							multiplier = props.character_info.classes.find(cl => cl.id === ability.klass_id).level
+						}
+					}
+				}
+				if (bonus.bonus_type === "temporary"){
+					additionalTempHP += multiplier * bonus.bonus
+				}
+			}
+		})
 
-    let currentHP = totalHP - props.character.lethal_damage + props.character.temp_hp
+		let currentHP = totalHP - storedLethalDamage + storedTemporary + additionalTempHP
+
 
     if (props.character.max_hp !== totalHP){
       fetch (`${localhost}/api/v1/character_max_hp/${props.character.id}`, {

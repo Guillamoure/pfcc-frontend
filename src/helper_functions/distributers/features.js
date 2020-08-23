@@ -115,7 +115,7 @@ const skillBonusFeature = (sk, source) => {
 }
 
 const statBonusFeature = (sb, source) => {
-  const { statistic, bonus, bonus_type, duration, specific_statistic, bonus_multiplier } = sb
+  const { statistic, bonus, bonus_type, duration, specific_statistic, bonus_multiplier, bonus_multiplier_based_on_feature_level } = sb
   return {
     type: 'stat',
     statistic,
@@ -124,6 +124,7 @@ const statBonusFeature = (sb, source) => {
     duration,
     specific_statistic,
     bonus_multiplier,
+		bonus_multiplier_based_on_feature_level,
     source
   }
 }
