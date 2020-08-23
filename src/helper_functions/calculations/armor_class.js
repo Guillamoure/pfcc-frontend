@@ -1,7 +1,8 @@
 import store from '../../store'
 import _ from 'lodash'
-import { mod, size } from '../../fuf'
+import { size } from '../../fuf'
 import { areYouProficientWithThisArmor } from './proficiencies'
+import { abilityScoreMod } from './ability_scores'
 
 export const armorClassModifiers = () => {
 	// NEW DATA
@@ -10,9 +11,10 @@ export const armorClassModifiers = () => {
 	// STORED DATA
 	const { character, character_info } = store.getState()
 	let equippedCharacterArmor = character.character_armors.find(ca => ca.equipped) || null
+	const bonuses = character_info.bonuses.filter(b => b.statistic === "Armor Class")
 
 	// CALCULATED DATA
-	let dexMod = mod(character_info.ability_scores.dexterity)
+	let dexMod = abilityScoreMod("dexterity")
 	let wornArmorBonus = wornArmor(equippedCharacterArmor, character.character_armors)
 
 	// DEXTERITY BONUS
@@ -49,6 +51,18 @@ export const armorClassModifiers = () => {
 	// resistance
 	// sacred
 	// shield
+	// untyped (take name from ability/item/spell)
+	bonuses.forEach(bonus => {
+		if (bonus.bonus_type === "untyped"){
+			let sourceName = character[bonus.source.source].find(ability => ability.id === bonus.source.sourceId).name
+			sourceName = sourceName.toLowerCase()
+			acModifiers.push({
+				bonus: "untyped",
+				source: sourceName,
+				mod: bonus.bonus
+			})
+		}
+	})
 
 
 	return acModifiers

@@ -208,7 +208,8 @@ const ArmorClass = props => {
 		}
 
 		let armorClassBreakdown = acModifiers.map(m => {
-			return <li>{pluser(m.mod)} {m.bonus}</li>
+			let bonusType = m.bonus !== "untyped" ? m.bonus : m.source
+			return <li>{pluser(m.mod)} {bonusType}</li>
 		})
 
 		tooltipAction(<ul style={{listStyle: "none", paddingLeft: "0px", margin: '0px'}}>{armorClassBreakdown}</ul>, element)

@@ -33,6 +33,7 @@ export const calculateSave = (save, ability) => {
 		return (b.statistic === "Save" || b.statistic === "Fortitude" || b.statistic === "Reflex" || b.statistic === "Will")
 	})
 
+
 	permanent += abilityMod
 	permanent += classSavesTotal
 
