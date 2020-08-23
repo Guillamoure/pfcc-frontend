@@ -172,32 +172,69 @@ class HPChanges extends React.Component {
 		return damageDealt
 	}
 
-  buttonEvent = () => {
-		let remainder = this.state.amount
-		if (this.state.adjustment === "harm"){
-			remainder = this.removeTemporaryHPRedux()
+	renderHPDispatch = (amount) => {
+		switch(this.state.adjustment){
+			// if it was harm, calculate the damage done to temp, and reduce temp and increase lethal
+			// if it was heal, reduce lethal and/or non lethal
+			// if it was temp, increase temp
+			// if it was non-lethal, increase non-lethal
+			case "harm":
+				if (this.state.lethality === "nonLethal"){
+					this.props.dispatch({type: "ADJUST CHARACTER", adjust: "non_lethal_damage", value: this.props.character.non_lethal_damage + amount})
+					break
+				} else if (this.state.lethality === "lethal"){
+					let remainingDamage = amount
+					if (this.props.character.temp_hp){
+						let reducedTempHP = remainingDamage >= this.props.character.temp_hp ? 0 : this.props.character.temp_hp - remainingDamage
+						remainingDamage = remainingDamage <= this.props.character.temp_hp ? 0 : remainingDamage - this.props.character.temp_hp
+						this.props.dispatch({type: "ADJUST CHARACTER", adjust: "temp_hp", value: reducedTempHP})
+					}
+					this.props.dispatch({type: "ADJUST CHARACTER", adjust: "lethal_damage", value: this.props.character.lethal_damage + remainingDamage})
+					break
+				}
+			case "heal":
+				let toBeHealedLethal = amount >= this.props.character.lethal_damage ? 0 : this.props.character.lethal_damage - amount
+				this.props.dispatch({type: "ADJUST CHARACTER", adjust: "lethal_damage", value: toBeHealedLethal})
+				let toBeHealedNonLethal = amount >= this.props.character.non_lethal_damage ? 0 : this.props.character.non_lethal_damage - amount
+				this.props.dispatch({type: "ADJUST CHARACTER", adjust: "non_lethal_damage", value: toBeHealedNonLethal})
+				break
+			case "temp":
+				this.props.dispatch({type: "ADJUST CHARACTER", adjust: "temp_hp", value: this.props.character.temp_hp + amount})
+				break
+			default:
+				break
 		}
-		if (remainder > 0){
+	}
 
+  buttonEvent = () => {
+		let amount = parseInt(this.state.amount)
+		if (this.state.adjustment === "harm"){
+			amount = this.removeTemporaryHPRedux()
 		}
-		// fetch(`${localhost}/api/v1/${details}`, {
-		// 	method: 'PATCH',
-		// 	headers: {
-		// 		'Content-Type': 'application/json',
-		// 		'Accept': 'application/json'
-		// 	},
-		// 	body: JSON.stringify(info)
-		// })
-		// .then(res => res.json())
-		// .then(data => {
-		// 	console.log(data)
-		// 	this.props.dispatch({type: 'CHARACTER', character: data.character })
-		// 	this.setState({character: data.character, modal: false}, this.dispatchAbilityScores(), this.dispatchClassLevels())
-		// })
+		if (amount > 0){
+			fetch(`${localhost}/api/v1/hp_changes`, {
+				method: 'PATCH',
+				headers: {
+					'Content-Type': 'application/json',
+					'Accept': 'application/json'
+				},
+				body: JSON.stringify({...this.state})
+			})
+			.then(res => res.json())
+			.then(data => {
+				this.renderHPDispatch(amount)
+
+
+				// this.props.dispatch({type: 'CHARACTER', character: data.character })
+				// this.setState({character: data.character, modal: false}, this.dispatchAbilityScores(), this.dispatchClassLevels())
+				this.props.exitModal()
+			})
+		} else {
+			this.props.exitModal()
+		}
     if (localStorage.computer === "false"){
       this.props.closeHPChanges()
     }
-		this.props.exitModal()
   }
 
   renderMobileButtons = () => {

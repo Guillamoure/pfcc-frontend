@@ -535,6 +535,8 @@ const reducer = (state = initialState, action) => {
 				} else {return fhp}
 			})
 			return {...state, character_info: {...state.character_info, temporaryHitPoints}}
+		case "ADJUST CHARACTER":
+			return {...state, character: {...state.character, [action.adjust]: action.value}}
     default:
       return state
   }
