@@ -2,8 +2,9 @@ import React from 'react'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 import { isThisActionAvailable } from '../../helper_functions/calculations/round_actions'
-import { calculateFeaturePercentage, remainingUsage } from '../../helper_functions/calculations/feature_usage'
+import { calculateFeaturePercentage, remainingUsage, calculateCurrentUsage } from '../../helper_functions/calculations/feature_usage'
 import { featureDistribution } from '../../helper_functions/distributers/features'
+import { patchFetch } from '../../helper_functions/fetches'
 
 class Abilities extends React.Component {
 
@@ -82,17 +83,37 @@ class Abilities extends React.Component {
 		// STORED DATA
 
 		// CALCULATED DATA
-		let areThereEnoughPoints = !!remainingUsage(ability)
-		let isThereAnAction = isThisActionAvailable(ability.action) !== "cannot-cast" ? true : false
 
-		if (!areThereEnoughPoints || !isThereAnAction){
-			return null
+		let isThisFeatureActive = !!this.props.character_info.activeFeatures.find(af => af.featureId === ability.id && af.sourceId === ability.sourceId && af.source === ability.source)
+
+		if (isThisFeatureActive){
+			featureDistribution(ability)
+		} else {
+
+			let areThereEnoughPoints = !!remainingUsage(ability)
+			let isThereAnAction = isThisActionAvailable(ability.action) !== "cannot-cast" ? true : false
+
+			if (!areThereEnoughPoints || !isThereAnAction){
+				return null
+			}
+
+			let body = {
+				character_id: this.props.character.id,
+				klass_feature_id: ability.sourceId,
+				feature_usage_id: ability.usage.id,
+				current_usage: calculateCurrentUsage(ability.character_klass_feature_usages) + 1
+			}
+
+			patchFetch("character_klass_feature_usages", body)
+				.then(data => {
+					this.props.dispatch({type: "ADJUST CHARACTER REPLACE VALUE IN ARRAY", adjust: "character_klass_feature_usages", value: data})
+					featureDistribution(ability)
+				})
+
 		}
 
-		console.log("yay")
 		// use action
 		// reduce points
-		featureDistribution(ability)
 	}
 
   renderClick = (ability, amount) => {

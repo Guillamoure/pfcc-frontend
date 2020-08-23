@@ -35,7 +35,7 @@ export const calculateMaxUsage = (usage, klassId) => {
 export const calculateCurrentUsage = used => {
 	if (used.length === 0){return 0}
 
-	if (used.length === 1){return used.current_usage}
+	if (used.length === 1){return used[0].current_usage}
 }
 
 export const remainingUsage = feature => {

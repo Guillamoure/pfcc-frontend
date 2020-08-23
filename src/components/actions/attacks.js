@@ -46,7 +46,6 @@ const Attacks = props => {
   }
 
   const renderAttacks = () => {
-    console.log(props.character.character_weapons)
     let onlyEquippedWeapons = props.character.character_weapons.filter(cw => cw.equipped)
     let nonUnarmedWeapons = [...onlyEquippedWeapons]
 

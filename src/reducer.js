@@ -537,6 +537,16 @@ const reducer = (state = initialState, action) => {
 			return {...state, character_info: {...state.character_info, temporaryHitPoints}}
 		case "ADJUST CHARACTER":
 			return {...state, character: {...state.character, [action.adjust]: action.value}}
+		case "ADJUST CHARACTER REPLACE VALUE IN ARRAY":
+			var adjustedArray = [...state.character[action.adjust]]
+			if (!adjustedArray.length){
+				adjustedArray.push(action.value)
+			} else {
+				adjustedArray = adjustedArray.map(aa => {
+					return aa.id === action.value.id ? action.value : aa
+				})
+			}
+			return {...state, character: {...state.character, [action.adjust]: adjustedArray}}
     default:
       return state
   }
