@@ -40,6 +40,10 @@ const HP = props => {
     return id
   }
 
+	const renderClick = () => {
+		props.dispatch({type: "MODAL", detail: "hitPoints"})
+	}
+
   const renderCharacterHP = () => {
 		// NEW DATA
 		let totalHP = 0
@@ -48,7 +52,7 @@ const HP = props => {
 		// STORED DATA
 		let storedLethalDamage = props.character.lethal_damage
 		let storedTemporary = props.character.temp_hp
-		let hitPointBonuses =  props.character_info.bonuses.filter(b => b.statistic === "Hit Points")
+ 		let hitPointBonuses =  props.character_info.temporaryHitPoints
 
 		// CALCULATED DATA
 		const conMod = abilityScoreMod("constitution")
@@ -60,20 +64,21 @@ const HP = props => {
       totalHP += conMod
     })
 		hitPointBonuses.forEach(bonus => {
-			if (bonus.bonus_multiplier){
-				let multiplier = 0
-				if (bonus.bonus_multiplier === "level"){
-					if (bonus.bonus_multiplier_based_on_feature_level){
-						let ability = props.character[bonus.source.source].find(a => a.id === bonus.source.sourceId)
-						if (ability.klass_id){
-							multiplier = props.character_info.classes.find(cl => cl.id === ability.klass_id).level
-						}
-					}
-				}
-				if (bonus.bonus_type === "temporary"){
-					additionalTempHP += multiplier * bonus.bonus
-				}
-			}
+			additionalTempHP += bonus.bonus - bonus.damage
+		// 	if (bonus.bonus_multiplier){
+		// 		let multiplier = 0
+		// 		if (bonus.bonus_multiplier === "level"){
+		// 			if (bonus.bonus_multiplier_based_on_feature_level){
+		// 				let ability = props.character[bonus.source.source].find(a => a.id === bonus.source.sourceId)
+		// 				if (ability.klass_id){
+		// 					multiplier = props.character_info.classes.find(cl => cl.id === ability.klass_id).level
+		// 				}
+		// 			}
+		// 		}
+		// 		if (bonus.bonus_type === "temporary"){
+		// 			additionalTempHP += multiplier * bonus.bonus
+		// 		}
+		// 	}
 		})
 
 		let currentHP = totalHP - storedLethalDamage + storedTemporary + additionalTempHP
@@ -99,7 +104,7 @@ const HP = props => {
           <div className='middle'>
             <span id={renderDamaged()} className='enhanced'>{currentHP}</span>
             <span className='enhanced'>/{totalHP}</span>
-            <span><button className='spacing' style={{boxShadow: "1px 1px 2px #000", borderRadius: ".5em"}} onClick={() => props.editModal("hitPoints")}>Adjust</button></span>
+            <span><button className='spacing' style={{boxShadow: "1px 1px 2px #000", borderRadius: ".5em"}} onClick={renderClick}>Adjust</button></span>
           </div>
           {!!props.character.non_lethal_damage && <div><small>Non-Lethal: {props.character.non_lethal_damage}</small></div>}
         </span>

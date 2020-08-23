@@ -22,7 +22,8 @@ const initialState = {
     movement: [],
     load: 0,
     equipped: [],
-		activeFeatures: []
+		activeFeatures: [],
+		temporaryHitPoints: []
   },
   classes: [],
   races: [],
@@ -517,6 +518,23 @@ const reducer = (state = initialState, action) => {
 				activeFeatures.push(action.featureSource)
 			}
 			return {...state, character_info: {...state.character_info, activeFeatures}}
+		case "ADD TEMP HP":
+			var temporaryHitPoints = [...state.character_info.temporaryHitPoints]
+			temporaryHitPoints.push({...action.tempHP, damage: 0})
+			return {...state, character_info: {...state.character_info, temporaryHitPoints}}
+		case "REMOVE TEMP HP":
+			var temporaryHitPoints = [...state.character_info.temporaryHitPoints]
+			temporaryHitPoints = temporaryHitPoints.filter(fhp => fhp.source.sourceId !== action.source.sourceId && fhp.source.featureId !== action.source.featureId && fhp.source.source !== action.source.source)
+			return {...state, character_info: {...state.character_info, temporaryHitPoints}}
+		case "DAMAGE TEMP HP":
+			var temporaryHitPoints = [...state.character_info.temporaryHitPoints]
+			temporaryHitPoints = temporaryHitPoints.map(fhp => {
+				if (fhp.source.sourceId === action.source.sourceId && fhp.source.featureId === action.source.featureId && fhp.source.source === action.source.source) {
+					fhp.damage += action.damage
+					return fhp
+				} else {return fhp}
+			})
+			return {...state, character_info: {...state.character_info, temporaryHitPoints}}
     default:
       return state
   }

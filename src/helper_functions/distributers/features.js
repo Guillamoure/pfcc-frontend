@@ -3,7 +3,9 @@ import {
   bonusAction,
   addMovementAction,
 	proficiencyAction,
-	activeFeatureAction
+	activeFeatureAction,
+	addTemporaryHitPointsAction,
+	removeTemporaryHitPointsAction
 } from '../action_creator/features'
 
 export const initialCharacterDistribution = (character) => {
@@ -76,10 +78,27 @@ export const featureDistribution = (feature) => {
 	console.log(character_info.bonuses)
 	if(activeFeatures.length > oldActiveFeaturesLength){
 		// if added
-		character_info.bonuses.forEach((b) => bonusAction(b))
+		character_info.bonuses.forEach((b) => {
+			if (b.statistic === "Hit Points" && b.bonus_type === "temporary"){
+				let redux = store.getState()
+				let tempHP = { source: {...b.source} }
+				let ability = redux.character[b.source.source].find(a => a.id === b.source.sourceId)
+				let multiplier = redux.character_info.classes.find(cl => cl.id === ability.klass_id).level
+				tempHP.bonus = b.bonus * multiplier
+				addTemporaryHitPointsAction(tempHP)
+			} else {
+				bonusAction(b)
+			}
+		})
 	} else {
 		// if removed
-		character_info.bonuses.forEach((b) => bonusAction(b, true))
+		character_info.bonuses.forEach((b) => {
+			if (b.statistic === "Hit Points" && b.bonus_type === "temporary"){
+				removeTemporaryHitPointsAction(b.source)
+			} else {
+				bonusAction(b, true)
+			}
+		})
 	}
 }
 

@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import localhost from '../localhost'
 
 
 class HPChanges extends React.Component {
@@ -148,11 +149,55 @@ class HPChanges extends React.Component {
     )
   }
 
+	removeTemporaryHPRedux = () => {
+		// NEW DATA
+
+		// STORED DATA
+		const { temporaryHitPoints } = this.props.character_info
+		let damageDealt = parseInt(this.state.amount)
+
+		// CALCULATED DATA
+
+		temporaryHitPoints.forEach(thp => {
+			let remainingTHP = thp.bonus - thp.damage
+			if (damageDealt >= remainingTHP){
+				this.props.dispatch({type: 'REMOVE TEMP HP', source: thp.source})
+				damageDealt -= remainingTHP
+			} else {
+				 this.props.dispatch({type: 'DAMAGE TEMP HP', source: thp.source, damage: damageDealt})
+				 damageDealt = 0
+			}
+		})
+
+		return damageDealt
+	}
+
   buttonEvent = () => {
-    this.props.renderEdit(this.state, 'hp_changes')
+		let remainder = this.state.amount
+		if (this.state.adjustment === "harm"){
+			remainder = this.removeTemporaryHPRedux()
+		}
+		if (remainder > 0){
+
+		}
+		// fetch(`${localhost}/api/v1/${details}`, {
+		// 	method: 'PATCH',
+		// 	headers: {
+		// 		'Content-Type': 'application/json',
+		// 		'Accept': 'application/json'
+		// 	},
+		// 	body: JSON.stringify(info)
+		// })
+		// .then(res => res.json())
+		// .then(data => {
+		// 	console.log(data)
+		// 	this.props.dispatch({type: 'CHARACTER', character: data.character })
+		// 	this.setState({character: data.character, modal: false}, this.dispatchAbilityScores(), this.dispatchClassLevels())
+		// })
     if (localStorage.computer === "false"){
       this.props.closeHPChanges()
     }
+		this.props.exitModal()
   }
 
   renderMobileButtons = () => {

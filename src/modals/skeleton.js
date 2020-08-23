@@ -13,7 +13,7 @@ const ModalSkeleton = (props) => {
     if (modal !== "hitPoints"){m = modal.detail}
     switch(m){
       case 'hitPoints':
-        return <HPChanges exitModal={props.exitModal} editModal={props.editModal} clickOut={props.clickOut} renderEdit={props.renderEdit}/>
+        return <HPChanges exitModal={exitModal} editModal={props.editModal} clickOut={clickOut} renderEdit={props.renderEdit}/>
       case 'armor':
         return <Armor characterArmor={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
       default:
