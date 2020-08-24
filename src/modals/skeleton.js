@@ -5,6 +5,7 @@ import { exitModal } from '../dispatch'
 
 import HPChanges from '../components/hp_changes'
 import Armor from '../components/armor_summary'
+import Points from '../components/modals/points'
 
 const ModalSkeleton = (props) => {
 
@@ -16,6 +17,8 @@ const ModalSkeleton = (props) => {
         return <HPChanges exitModal={exitModal} editModal={props.editModal} clickOut={clickOut} renderEdit={props.renderEdit}/>
       case 'armor':
         return <Armor characterArmor={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
+      case 'adjust points':
+        return <Points feature={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
       default:
         console.log("Hey, It works!")
         break

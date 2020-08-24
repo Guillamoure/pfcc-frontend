@@ -5,6 +5,10 @@ import { calculateFeaturePercentage } from '../../helper_functions/calculations/
 
 const Points = props => {
 
+	const renderClick = (feature) => {
+		props.dispatch({type: "MODAL", detail: "adjust points", obj: feature})
+	}
+
   const renderPoints = (name) => {
     switch(name){
       case "Nettie":
@@ -61,7 +65,7 @@ const Points = props => {
 				})
 				return pointsFeatures.map(f => {
 					return (
-						<span className='centered'>
+						<span className='centered' onClick={() => renderClick(f)}>
 							<div className='enhanced'>{calculateFeaturePercentage(f)}</div>
 							<div className='muted'>{_.capitalize(f.klassFeatureName)} {_.capitalize(f.usage.unit)}</div>
 						</span>

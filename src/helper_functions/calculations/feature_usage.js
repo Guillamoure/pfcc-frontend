@@ -50,11 +50,22 @@ export const remainingUsage = feature => {
 export const incrementFeatureUsage = async feature => {
 	if (remainingUsage(feature) > 0){
 		let usage = feature.character_klass_feature_usages.length === 1 && feature.character_klass_feature_usages[0]
-		await patchFetch("character_klass_feature_usages", {...usage, current_usage: usage.current_usage + 1})
-			.then(data => {
-				replaceCharacterArrayAction("character_klass_feature_usages", data)
-			})
+		await alterCurrentUsage(usage, 1)
 	} else {
 		removeFeature(feature)
 	}
+}
+
+export const decrementFeatureUsage = async feature => {
+	let usage = feature.character_klass_feature_usages.length === 1 && feature.character_klass_feature_usages[0]
+	if (!!usage.current_usage){
+		await alterCurrentUsage(usage, -1)
+	}
+}
+
+export const alterCurrentUsage = async (usage, amount) => {
+	await patchFetch("character_klass_feature_usages", {...usage, current_usage: usage.current_usage + amount})
+		.then(data => {
+			replaceCharacterArrayAction("character_klass_feature_usages", data)
+		})
 }
