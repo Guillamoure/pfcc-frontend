@@ -33,12 +33,12 @@ class AbilityScores extends React.Component {
   render () {
     return (
       <div className={this.renderEditAbilityToggle()}>
-        <Ability name={'Strength'} ability_score={this.props.character_info.ability_scores.strength}/>
-        <Ability name={'Dexterity'} ability_score={this.props.character_info.ability_scores.dexterity}/>
-        <Ability name={'Constitution'} ability_score={this.props.character_info.ability_scores.constitution}/>
-        <Ability name={'Intelligence'} ability_score={this.props.character_info.ability_scores.intelligence}/>
-        <Ability name={'Wisdom'} ability_score={this.props.character_info.ability_scores.wisdom}/>
-        <Ability name={'Charisma'} ability_score={this.props.character_info.ability_scores.charisma}/>
+        <Ability name={'strength'} ability_score={this.props.character_info.ability_scores.strength}/>
+        <Ability name={'dexterity'} ability_score={this.props.character_info.ability_scores.dexterity}/>
+        <Ability name={'constitution'} ability_score={this.props.character_info.ability_scores.constitution}/>
+        <Ability name={'intelligence'} ability_score={this.props.character_info.ability_scores.intelligence}/>
+        <Ability name={'wisdom'} ability_score={this.props.character_info.ability_scores.wisdom}/>
+        <Ability name={'charisma'} ability_score={this.props.character_info.ability_scores.charisma}/>
         {localStorage.computer === "true" && this.props.character.user_id === this.props.currentUser.id && <span className='edit' onClick={() => this.props.editModal('ability')}><FontAwesomeIcon icon={faPencilAlt} /></span>}
 
       </div>

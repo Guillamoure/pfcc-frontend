@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import _ from 'lodash'
+import { abilityScore, abilityScoreModString } from '../../helper_functions/calculations/ability_scores'
 
 function AbilityScore (props) {
 
@@ -87,17 +88,17 @@ function AbilityScore (props) {
     if (localStorage.computer === "true"){
       return (
         <span className='centered egg shadow shrink' >
-          <div className='enhanced'>{mod < 0 ? mod : `+${mod}`}</div>
+          <div className='enhanced'>{abilityScoreModString(props.name)}</div>
           <div className='muted'><strong>{truncate}</strong></div>
-          <div className='dull'>{score}</div>
+          <div className='dull'>{abilityScore(props.name, true)}</div>
         </span>
       )
     } else {
       return (
         <span className='centered shrink mobile-tab-ability' >
           <div><strong>{truncate}</strong></div>
-          <div className='enhanced white-outline'>{mod < 0 ? mod : `+${mod}`}</div>
-          <span className='muted'>{score}</span>
+          <div className='enhanced white-outline'>{abilityScoreModString(props.name)}</div>
+          <span className='muted'>{abilityScore(props.name, true)}</span>
         </span>
       )
     }
