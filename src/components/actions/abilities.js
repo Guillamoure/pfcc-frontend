@@ -52,7 +52,7 @@ class Abilities extends React.Component {
     return activatableAbilities.map((ability, idx) => {
 			return (
 				<tr key={idx * 3 - 1}>
-					<td><button className={isThisActionAvailable(ability.action)} onClick={() => this.newRenderClick(ability)}><strong>Click</strong></button></td>
+					<td><button className={isThisActionAvailable(ability)} onClick={() => this.newRenderClick(ability)}><strong>Click</strong></button></td>
 					<td>{ability.klassFeatureName} {calculateFeaturePercentage(ability)}</td>
 					<td className='table-details'>Nothin'</td>
 				</tr>
@@ -91,7 +91,7 @@ class Abilities extends React.Component {
 		} else {
 
 			let areThereEnoughPoints = !!remainingUsage(ability)
-			let isThereAnAction = isThisActionAvailable(ability.action) !== "cannot-cast" ? true : false
+			let isThereAnAction = isThisActionAvailable(ability) !== "cannot-cast" ? true : false
 
 			if (!areThereEnoughPoints || !isThereAnAction){
 				return null

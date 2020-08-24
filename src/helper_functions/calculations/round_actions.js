@@ -1,7 +1,10 @@
 import store from '../../store'
+import { remainingUsage } from './feature_usage'
+import _ from 'lodash'
 
-export const isThisActionAvailable = (action) => {
+export const isThisActionAvailable = (feature) => {
 	// 	STORED DATA
+	let action = feature.action
 	let actions = store.getState().character_info.actions
 
 	// CALCULATED DATA
@@ -19,7 +22,15 @@ export const isThisActionAvailable = (action) => {
 	// cannot use the action
 	} else if (actions[action]){
 		return 'cannot-cast'
-	} else {
+	// if there are no points left
+	// cannot use the action
+	} else if (!remainingUsage(feature)) {
+		return 'cannot-cast'
+	} else if (sharingConditions(feature)) {
+		return 'cannot-cast'
+	// if the cost of this feature is higher than the remaining points
+	// cannot use the action
+	}	else {
 		return action
 	}
 
@@ -42,4 +53,10 @@ export const actionClass = a => {
     default:
       return a
   }
+}
+
+export const sharingConditions = feature => {
+	let statusConditions = store.getState().character_info.statusConditions.map(c => c.condition.toLowerCase())
+	let preventativeConditions = feature.conditions.filter(c => c.if_affected_by_condition).map(c => c.if_affected_by_condition.toLowerCase())
+	return _.intersection(statusConditions, preventativeConditions).length ? true : false
 }
