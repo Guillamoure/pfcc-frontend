@@ -1,5 +1,8 @@
 import store from '../../store'
 import { mod } from '../../fuf'
+import { featureDistribution as removeFeature } from '../distributers/features'
+import { patchFetch } from '../fetches'
+import { replaceCharacterArrayAction } from '../action_creator/character'
 
 
 export const calculateFeaturePercentage = feature => {
@@ -27,8 +30,6 @@ export const calculateMaxUsage = (usage, klassId) => {
 	points += mod(abilityScores[usage.base_limit_modifier])
 	if (classLvl > 1){points += (usage.limit_increase_per_level * (classLvl - 1))}
 
-
-
 	return points
 }
 
@@ -44,4 +45,16 @@ export const remainingUsage = feature => {
 	let timesUsed = calculateCurrentUsage(feature.character_klass_feature_usages)
 
 	return maxUsage - timesUsed
+}
+
+export const incrementFeatureUsage = async feature => {
+	if (remainingUsage(feature) > 0){
+		let usage = feature.character_klass_feature_usages.length === 1 && feature.character_klass_feature_usages[0]
+		await patchFetch("character_klass_feature_usages", {...usage, current_usage: usage.current_usage + 1})
+			.then(data => {
+				replaceCharacterArrayAction("character_klass_feature_usages", data)
+			})
+	} else {
+		removeFeature(feature)
+	}
 }

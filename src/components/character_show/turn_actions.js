@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { endTurn } from '../../helper_functions/distributers/new_turn'
 
 const TurnActions = props => {
 
@@ -33,7 +34,7 @@ const TurnActions = props => {
         </section>
         <section style={{padding: '.15em', paddingTop: '0em', paddingLeft: '0em'}}>
           <span id='free-action' className="free">Free</span>
-          <span id='start-turn' className="start" onClick={() => props.dispatch({type: 'NEW TURN'})}>Start Turn</span>
+          <span id='start-turn' className="start" onClick={endTurn}>Start Turn</span>
         </section>
       </section>
     )
@@ -54,7 +55,7 @@ const TurnActions = props => {
       </section>
       <section style={{padding: '.15em', paddingTop: '0em', paddingLeft: '0em'}}>
         <span id='free-action' className="free">Free Action</span>
-        <span id='start-turn' className="start" onClick={() => props.dispatch({type: 'NEW TURN'})}>Start Turn</span>
+        <span id='start-turn' className="start" onClick={endTurn}>Start Turn</span>
       </section>
     </section>
   )
