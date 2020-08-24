@@ -2,6 +2,7 @@ import React from 'react'
 import _ from 'lodash'
 import { connect } from 'react-redux'
 import localhost from '../../localhost'
+import { abilityScoreMod } from '../../helper_functions/calculations/ability_scores'
 
 class Skills extends React.Component {
 
@@ -68,7 +69,7 @@ class Skills extends React.Component {
       score += age === 'Venerable' ? 1 : 0
 
     }
-    let mod = Math.floor((score - 10) / 2)
+    let mod = abilityScoreMod(_.lowerCase(skill.ability_score))
     let skillRanks = this.renderNumOfRanks(skill)
       mod += skillRanks
     if (this.renderClassSkill(skill) && skillRanks > 0){
