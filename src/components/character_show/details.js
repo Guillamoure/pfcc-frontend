@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 
 import { calculateWeight, carryingCapacity, calculateLoad } from '../../helper_functions/calculations/character'
+import { abilityScore } from '../../helper_functions/calculations/ability_scores'
 
 
 const Details = props => {
@@ -43,8 +44,8 @@ const Details = props => {
 
 	const displayLoad = () => {
 		let weight = calculateWeight(props.character, props.character_info)
-		let cc = carryingCapacity(props.character_info.ability_scores.strength)
-		let load = calculateLoad(weight, props.character_info.ability_scores.strength)
+		let cc = carryingCapacity(abilityScore("strength"))
+		let load = calculateLoad(weight, abilityScore("strength"))
 		return (
 			<>
 				<li><strong>Carrying</strong>: {weight} lbs (<em>{load} Load</em>)</li>
