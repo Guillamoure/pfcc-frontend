@@ -8,12 +8,14 @@ import {
 	removeTemporaryHitPointsAction,
 	adjustStatusConditionsAction
 } from '../action_creator/features'
+import { statusConditionDistribution, removeStatusConditionDistribution } from  './status_conditions'
 
-const defaultCharacterInfo = () => {
+export const defaultCharacterInfo = () => {
 	return {
     bonuses: [],
     effects: [],
     features: [],
+		forbidden: [],
     proficiencies: { weapon: {groups: [], individualIds: []}, armor: {groups: [], individualIds: []} },
     movement: [],
 		statusConditions: []
@@ -102,6 +104,7 @@ export const featureDistribution = (feature) => {
 			let statusConditions = [...store.getState().character_info.statusConditions]
 			statusConditions = statusConditions.filter(c => c.condition !== sc.condition)
 			adjustStatusConditionsAction(statusConditions)
+			removeStatusConditionDistribution(sc)
 		})
 		// AFTER THE MAIN FEATURE HAS ENDED
 		// LOOK FOR ANY AFTER EFFECTS
@@ -126,6 +129,7 @@ export const featureDistribution = (feature) => {
 				}
 				activeFeatureAction(sc.source)
 				adjustStatusConditionsAction(statusConditions)
+				statusConditionDistribution(sc)
 			})
 
 		}
@@ -167,7 +171,7 @@ const skillBonusFeature = (sk, source) => {
   }
 }
 
-const statBonusFeature = (sb, source) => {
+export const statBonusFeature = (sb, source) => {
   const { statistic, bonus, bonus_type, duration, specific_statistic, bonus_multiplier, bonus_multiplier_based_on_feature_level } = sb
   return {
     type: 'stat',
@@ -218,6 +222,13 @@ const weaponArmorProficienciesFeature = (wap, source, obj) => {
 const statusConditionsFeature = (sc, source) => {
 	return {
 		condition: sc.condition,
+		source
+	}
+}
+
+export const forbiddenFeature = (f, source) => {
+	return {
+		forbidden: f,
 		source
 	}
 }

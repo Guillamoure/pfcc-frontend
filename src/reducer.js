@@ -8,6 +8,7 @@ const initialState = {
     hardcode: {},
     bonuses: [],
     features: [],
+		forbidden: [],
     effects: [],
     size: 'Medium',
     actions: {
@@ -550,6 +551,16 @@ const reducer = (state = initialState, action) => {
 			return {...state, character: {...state.character, [action.adjust]: adjustedArray}}
 		case "ADJUST STATUS CONDITION":
 			return {...state, character_info: {...state.character_info, statusConditions: action.conditions}}
+		case 'FORBIDDEN':
+			let forbidden
+			if (action.remove) {
+				forbidden = [...state.character_info.forbidden].filter(f => f.source.featureId !== action.forbidden.source.featureId && f.source.sourceId !== action.forbidden.source.sourceId && f.source.source !== action.forbidden.source.source)
+			} else {
+				forbidden = [...state.character_info.forbidden, action.forbidden]
+			}
+			return { ...state, character_info: { ...state.character_info, forbidden } }
+		case "ADJUST CHARACTER INFO":
+			return {...state, character_info: {...state.character_info, [action.adjust]: action.value}}
     default:
       return state
   }

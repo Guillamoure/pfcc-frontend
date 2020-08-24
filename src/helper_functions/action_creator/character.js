@@ -14,3 +14,9 @@ export const abilityScoreImprovementAction = (ability_score) => dispatch({type: 
 export const endTurnAction = () => dispatch({type: "NEW TURN"})
 
 export const replaceCharacterArrayAction = (adjust, value) => dispatch({type: "ADJUST CHARACTER REPLACE VALUE IN ARRAY", adjust, value})
+
+// export const replaceCharacterInfoArrayAction = (adjust, value) => dispatch({type: "ADJUST CHARACTER INFO REPLACE VALUE IN ARRAY", adjust, value})
+
+export const replaceCharacterInfoAction = (adjust, value) => dispatch({type: 'ADJUST CHARACTER INFO', adjust, value})
+
+export const replaceCharacterAction = (adjust, value) => dispatch({type: 'ADJUST CHARACTER', adjust, value})
