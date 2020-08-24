@@ -73,7 +73,13 @@ const Basics = props => {
       if (cannotRun(details)){
         return 'cannot-cast'
       } else {
-        return action
+				let className = action
+				props.character_info.forbidden.forEach(f => {
+					if (f.forbidden === details){
+						className = "cannot-cast"
+					}
+				})
+        return className
       }
     } else if (props.character_info.actions[action] && action !== 'free'){
       return `cast-${action}`
@@ -204,7 +210,7 @@ const Basics = props => {
             <td>-4 to Attack Rolls, +2 dodge bonus to AC</td>
           </tr>
           <tr>
-            <td><button className={canCast('full', 'charge')} onClick={() => renderDispatch('full', 'charge')}><strong>Attack</strong></button></td>
+            <td><button className={canCast('full', 'Charge')} onClick={() => renderDispatch('full', 'Charge')}><strong>Attack</strong></button></td>
             <td>Charge</td>
             <td>Move up to {speed * 2} ft, make Attack. +2 to attack, -2 to AC{swinging}</td>
           </tr>

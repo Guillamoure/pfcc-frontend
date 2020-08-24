@@ -75,7 +75,13 @@ const Movement = props => {
   }
 
   const canCast = (action, detail) => {
-    return "full"
+		let className = action
+		props.character_info.forbidden.forEach(f => {
+			if (f.forbidden === detail){
+				className = "cannot-cast"
+			}
+		})
+    return className
   }
 
   const mvmt = () => {
@@ -100,7 +106,7 @@ const Movement = props => {
             <td>5 ft</td>
           </tr>
           <tr>
-            <td><button className={canCast('full', 'run')} onClick={() => renderDispatch('full', 'run')}><strong>Move</strong></button></td>
+            <td><button className={canCast('full', 'Run')} onClick={() => renderDispatch('full', 'Run')}><strong>Move</strong></button></td>
             <td>Run</td>
             <td>{baseSpeed * 4} ft</td>
           </tr>
