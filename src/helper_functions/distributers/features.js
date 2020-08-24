@@ -100,7 +100,7 @@ export const featureDistribution = (feature) => {
 		})
 		character_info.statusConditions.forEach(sc => {
 			let statusConditions = [...store.getState().character_info.statusConditions]
-			statusConditions.filter(c => c.condition !== sc.condition)
+			statusConditions = statusConditions.filter(c => c.condition !== sc.condition)
 			adjustStatusConditionsAction(statusConditions)
 		})
 		// AFTER THE MAIN FEATURE HAS ENDED

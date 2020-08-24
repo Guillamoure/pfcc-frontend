@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { featureDistribution as removeFeature } from '../../helper_functions/distributers/features'
 
 const Active = props => {
   const hc = props.character_info.hardcode
@@ -50,11 +51,15 @@ const Active = props => {
 				let foundFeature = foundAbility.features.find(feat => feat.id === f.featureId)
 				let name = !foundFeature.name ? foundAbility.name : foundFeature.name
 
-				return <li>{name}</li>
+				return <li>{name} <button onClick={() => removeActiveFeature({...foundFeature, ...f})}>X</button></li>
 			} else {
 				return null;
 			}
 		})
+	}
+
+	const removeActiveFeature = (feature) => {
+		removeFeature(feature)
 	}
 
   const renderMutagen = () => {
