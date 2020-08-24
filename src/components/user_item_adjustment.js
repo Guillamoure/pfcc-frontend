@@ -301,11 +301,11 @@ const UserItemAdjustment = props => {
     let options = []
     if (itemType === 'weapon'){
       options.push(<option value="">{equipped ? "Unequip" : "Unequipped"}</option>)
-      if (item.category === "Light" || item.category === "One-Handed") {
+      if (item.category === "Light" || item.category === "One-Handed" && !item.weapon_hands.length) {
         options.push(<option value="Primary">Primary Hand</option>)
         options.push(<option value="Off">Off Hand</option>)
       }
-      if (item.category === "One-Handed" || item.category === "Two-Handed"){options.push(<option value="Two">Two-Handed</option>)}
+      if ((item.category === "One-Handed" || item.category === "Two-Handed") && !item.weapon_hands.length){options.push(<option value="Two">Two-Handed</option>)}
       if (item.double_weapon){options.push(<option value="Double">Double</option>)}
 
       if (item.weapon_hands.length){

@@ -37,7 +37,7 @@ export const pluserAB = (characterObj, characterInfoObj, type) => {
      preBAB = parseInt(klass.hit_die) === 6 ? 0.5 : preBAB
      bab += preBAB * cl.level
    })
-	 return bab
+	 return Math.floor(bab)
  }
 
 export const additionalBonuses = (bonuses, type) => {
