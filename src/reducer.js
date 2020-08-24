@@ -23,7 +23,8 @@ const initialState = {
     load: 0,
     equipped: [],
 		activeFeatures: [],
-		temporaryHitPoints: []
+		temporaryHitPoints: [],
+		statusConditions: []
   },
   classes: [],
   races: [],
@@ -547,6 +548,8 @@ const reducer = (state = initialState, action) => {
 				})
 			}
 			return {...state, character: {...state.character, [action.adjust]: adjustedArray}}
+		case "ADJUST STATUS CONDITION":
+			return {...state, character_info: {...state.character_info, statusConditions: action.conditions}}
     default:
       return state
   }

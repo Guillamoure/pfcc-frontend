@@ -5,18 +5,24 @@ import {
 	proficiencyAction,
 	activeFeatureAction,
 	addTemporaryHitPointsAction,
-	removeTemporaryHitPointsAction
+	removeTemporaryHitPointsAction,
+	adjustStatusConditionsAction
 } from '../action_creator/features'
 
-export const initialCharacterDistribution = (character) => {
-	// NEW DATA
-  let character_info = {
+const defaultCharacterInfo = () => {
+	return {
     bonuses: [],
     effects: [],
     features: [],
     proficiencies: { weapon: {groups: [], individualIds: []}, armor: {groups: [], individualIds: []} },
-    movement: []
+    movement: [],
+		statusConditions: []
   }
+}
+
+export const initialCharacterDistribution = (character) => {
+	// NEW DATA
+  let character_info = defaultCharacterInfo()
 
   // racial traits
   // klass features
@@ -53,13 +59,7 @@ export const initialCharacterDistribution = (character) => {
 
 export const featureDistribution = (feature) => {
 	// NEW DATA
-	let character_info = {
-		bonuses: [],
-		effects: [],
-		features: [],
-		proficiencies: { weapon: {groups: [], individualIds: []}, armor: {groups: [], individualIds: []} },
-		movement: []
-	}
+	let character_info = defaultCharacterInfo()
 	let source = {featureId: feature.id, sourceId: feature.sourceId, source: feature.source}
 
 	// STORED DATA
@@ -75,7 +75,6 @@ export const featureDistribution = (feature) => {
 	// check to see if this feature was added or removed
 	activeFeatures = store.getState().character_info.activeFeatures
 
-	console.log(character_info.bonuses)
 	if(activeFeatures.length > oldActiveFeaturesLength){
 		// if added
 		character_info.bonuses.forEach((b) => {
@@ -99,6 +98,38 @@ export const featureDistribution = (feature) => {
 				bonusAction(b, true)
 			}
 		})
+		character_info.statusConditions.forEach(sc => {
+			let statusConditions = [...store.getState().character_info.statusConditions]
+			statusConditions.filter(c => c.condition !== sc.condition)
+			adjustStatusConditionsAction(statusConditions)
+		})
+		// AFTER THE MAIN FEATURE HAS ENDED
+		// LOOK FOR ANY AFTER EFFECTS
+		if (!feature.after){
+			let featureSource = store.getState().character[feature.source].find(ability => ability.id === feature.sourceId)
+			let featureSourceFeaturesAfter = featureSource.features.filter(fs => fs.after)
+
+			character_info = defaultCharacterInfo()
+
+			featureSourceFeaturesAfter.forEach(after => {
+				source = {featureId: after.id, sourceId: feature.sourceId, source: feature.source}
+				klassFeaturesFeatureDistribution(after, character_info, source)
+			})
+
+			character_info.statusConditions.forEach(sc => {
+				let statusConditions = [...store.getState().character_info.statusConditions]
+				let mappedSCs = [...statusConditions].map(c => c.condition)
+				if (mappedSCs.includes(sc.condition)){
+					statusConditions = statusConditions.filter(rsc => rsc.condition !== sc.condition)
+				} else {
+					statusConditions.push(sc)
+				}
+				activeFeatureAction(sc.source)
+				adjustStatusConditionsAction(statusConditions)
+			})
+
+		}
+
 	}
 }
 
@@ -118,6 +149,9 @@ const klassFeaturesFeatureDistribution = (feature, obj, source) => {
 	})
 	feature.weapon_proficiencies.forEach(el => {
 		weaponArmorProficienciesFeature(el, source, obj.proficiencies.weapon)
+	})
+	feature.status_conditions.forEach(el => {
+		obj.statusConditions.push(statusConditionsFeature(el, source))
 	})
 }
 
@@ -179,4 +213,11 @@ const weaponArmorProficienciesFeature = (wap, source, obj) => {
 		obj.individualIds.push({ source, weapon_id: wap.weapon_id, additive: wap.additive })
 	}
 
+}
+
+const statusConditionsFeature = (sc, source) => {
+	return {
+		condition: sc.condition,
+		source
+	}
 }
