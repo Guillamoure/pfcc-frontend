@@ -2,17 +2,21 @@ import store from '../../store'
 import { mod, pluser } from '../../fuf'
 
 
-export const abilityScore = ability => {
+export const abilityScore = (ability, permanent = false) => {
 	let array = abilityScoreArray(ability)
-	return array[0] + array[1]
+	if (permanent){
+		return array[0]
+	} else {
+		return array[0] + array[1]
+	}
 }
 
-export const abilityScoreMod = ability => {
-	return mod(abilityScore(ability))
+export const abilityScoreMod = (ability, permanent = false) => {
+	return mod(abilityScore(ability, permanent))
 }
 
-export const abilityScoreModString = ability => {
-	return pluser(abilityScoreMod(ability))
+export const abilityScoreModString = (ability, permanent =  false) => {
+	return pluser(abilityScoreMod(ability, permanent))
 }
 
 export const abilityScoreArray = ability => {
@@ -21,9 +25,17 @@ export const abilityScoreArray = ability => {
 	let permanentScore = 0
 	let temporary = 0
 	// STORED DATA
-	let ability_scores = store.getState().character_info.ability_scores
+	let ci = store.getState().character_info
+	let ability_scores = ci.ability_scores
 	permanentScore = ability_scores[ability]
 	// CALCULATED DATA
+	ci.bonuses.forEach(b => {
+		if (b.statistic === ability){
+			if (b.duration === "temporary"){
+				temporary += b.bonus
+			}
+		}
+	})
 
 	// 0 index has permanent score
 	// 1 index has bonuses/penalties

@@ -1,17 +1,18 @@
-import { mod } from '../../fuf'
+import { mod, pluser } from '../../fuf'
+import { abilityScoreMod } from './ability_scores'
 
 export const ab = (characterObj, characterInfoObj, type) => {
   let attackBonus = 0
   let bab = baseAttackBonus(characterInfoObj.classes, characterObj.uniq_klasses)
-	let abilityScoreMod
+	let abilityMod
 
-	let str = mod(characterInfoObj.ability_scores.strength)
-	let dex = mod(characterInfoObj.ability_scores.dexterity)
+	let str = abilityScoreMod("strength")
+	let dex = abilityScoreMod("dexterity")
 
   if (type === "melee"){
-    abilityScoreMod = str
+    abilityMod = str
   } else if (type === "range"){
-    abilityScoreMod = dex
+    abilityMod = dex
   }
 
 	let bonuses = additionalBonuses(characterInfoObj.bonuses, type)
@@ -20,7 +21,11 @@ export const ab = (characterObj, characterInfoObj, type) => {
 			return agg + el
 		}, 0)
 
-	return bab + abilityScoreMod + bonuses
+	return bab + abilityMod + bonuses
+}
+
+export const pluserAB = (characterObj, characterInfoObj, type) => {
+	return pluser(ab(characterObj, characterInfoObj, type))
 }
 
  export const baseAttackBonus = (klassLevels, allKlasses) => {

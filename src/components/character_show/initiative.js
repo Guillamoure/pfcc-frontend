@@ -1,5 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { abilityScoreMod } from '../../helper_functions/calculations/ability_scores'
+import { pluser } from '../../fuf'
 
 const Initiative = props => {
 
@@ -69,13 +71,19 @@ const Initiative = props => {
     return modifiers
   }
 
+	const calculateInitiative = () => {
+		let dex = abilityScoreMod("dexterity")
+		let bonuses = 0
+		return pluser(dex + bonuses)
+	}
+
 
   if (localStorage.computer === "true"){
     return (
       <div id='init' className='shadow shrink'>
         <span className='centered'>
           <div className='dull'><strong>Init</strong></div>
-          <div className='enhanced' style={dexMod(true)}>{dexMod()}</div>
+          <div className='enhanced' style={dexMod(true)}>{calculateInitiative()}</div>
         </span>
       </div>
     )
@@ -83,7 +91,7 @@ const Initiative = props => {
     return (
       <div id='init' className='shadow' style={{padding: '2%'}}>
         <span className='centered'>
-          <div className='enhanced' style={dexMod(true)}>{dexMod()}</div>
+          <div className='enhanced' style={dexMod(true)}>{calculateInitiative()}</div>
           <div className='dull'><strong>Init</strong></div>
         </span>
       </div>
