@@ -425,12 +425,10 @@ const reducer = (state = initialState, action) => {
           var altered = {...a}
           altered.equipped = action.equipped
           return altered
-        } else if (a.armor.proficiency === selectedCA.armor.proficiency && a.equipped && action.equipped){
+        } else {
           var altered = {...a}
           altered.equipped = false
           return altered
-        } else {
-          return a
         }
       })
       return {...state, character: {...state.character, character_armors: cas}}

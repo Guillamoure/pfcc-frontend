@@ -51,7 +51,12 @@ const Attacks = props => {
 
 		// add unarmed attack to end
     let unarmed = props.character.character_weapons.find(cw => cw.weapon.name === "Unarmed")
-    onlyEquippedWeapons.push(unarmed)
+		if (!!unarmed){
+			// there seems to be a bug on database reset
+			// unarmed is not attached to the character's weapons
+			// unknown if this is in the frontend or backend
+			onlyEquippedWeapons.push(unarmed)
+		}
 
     let attacks = onlyEquippedWeapons.map(renderTableElement)
     // two weapon fighting
