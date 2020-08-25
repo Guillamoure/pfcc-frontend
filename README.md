@@ -27,3 +27,6 @@ before starting the server up.
 This program is to help users who play the Pathfinder Role Playing Game create their characters, and have a resource where all of their character's information, abilities, features, and statistics are all in one location, on one page. This application allows a user to preview different character options, and create a character through this application.
 
 A user, if they have administrative access, will be able to add character options and details to the backend using forms present within the application.
+
+**Note for Testing Purposes**
+The url for connecting to the backend is saved to a variable in the `src/localhost.js` file, and is using [ngrok](https://ngrok.com/). Update `src/localhost.js` to use the localhost route.
