@@ -1,5 +1,6 @@
 import { mod, pluser } from '../../fuf'
 import { abilityScoreMod } from './ability_scores'
+import { armorCheckPenaltyOnOtherAbilities } from './proficiencies'
 
 export const ab = (characterObj, characterInfoObj, type) => {
   let attackBonus = 0
@@ -20,8 +21,11 @@ export const ab = (characterObj, characterInfoObj, type) => {
 		.reduce((agg, el) => {
 			return agg + el
 		}, 0)
+	// if you aren't proficient with your equipped armor
+	// armor check penalty applies to attack rolls
+	let armorCheckPenalty = armorCheckPenaltyOnOtherAbilities()
 
-	return bab + abilityMod + bonuses
+	return bab + abilityMod + bonuses + armorCheckPenalty
 }
 
 export const pluserAB = (characterObj, characterInfoObj, type) => {

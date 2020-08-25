@@ -3,6 +3,7 @@ import _ from 'lodash'
 import { connect } from 'react-redux'
 import localhost from '../../localhost'
 import { abilityScoreMod } from '../../helper_functions/calculations/ability_scores'
+import { skillBonusPluser } from '../../helper_functions/calculations/skills'
 
 class Skills extends React.Component {
 
@@ -310,6 +311,9 @@ class Skills extends React.Component {
 
   renderSkillTableRow = () => {
     const sortedSkills = this.modifiedSkills()
+		this.props.character.skillset.skills.forEach(skill => {
+			console.log(skill.name, skillBonusPluser(skill))
+		})
     return sortedSkills.map(skill => {
 
       return (

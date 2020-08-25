@@ -160,13 +160,19 @@ const klassFeaturesFeatureDistribution = (feature, obj, source) => {
 }
 
 const skillBonusFeature = (sk, source) => {
-  const { skill_id, bonus, bonus_type, duration } = sk
+  const { skill_id, bonus, bonus_type, duration, bonus_multiplier, bonus_multiplier_based_on_feature_level, custom, minimum_bonus, round_down, specific_statistic } = sk
   return {
     type: 'skill',
     skill_id,
     bonus,
     bonus_type,
     duration,
+		bonus_multiplier,
+		bonus_multiplier_based_on_feature_level,
+		custom,
+		minimum_bonus,
+		round_down,
+		specific_statistic,
     source
   }
 }

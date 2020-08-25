@@ -12,6 +12,10 @@ export const areYouProficientWithThisWeapon = () => {
 
 }
 
+export const proficienctWithCurrentArmor = () => {
+	return areYouProficientWithThisArmor(currentEquippedCharacterArmor())
+}
+
 export const areYouProficientWithThisArmor = (characterArmor) => {
 	const { armor } = store.getState().character_info.proficiencies
 	let isProficient = false
@@ -38,4 +42,13 @@ export const areYouProficientWithThisArmor = (characterArmor) => {
 export const currentEquippedCharacterArmor = () => {
 	const { character_armors } = store.getState().character
 	return character_armors.find(ca => ca.equipped) ||  false
+}
+
+export const armorCheckPenalty = () => {
+	return currentEquippedCharacterArmor().armor?.armor_check_penalty || 0
+}
+
+export const armorCheckPenaltyOnOtherAbilities = () =>{
+	let characterArmor = currentEquippedCharacterArmor()
+	return areYouProficientWithThisArmor(characterArmor) ? 0 : characterArmor.armor.armor_check_penalty
 }
