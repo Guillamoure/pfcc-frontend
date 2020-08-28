@@ -3,7 +3,7 @@ import _ from 'lodash'
 import { connect } from 'react-redux'
 import localhost from '../../localhost'
 import { abilityScoreMod } from '../../helper_functions/calculations/ability_scores'
-import { skillBonusPluser } from '../../helper_functions/calculations/skills'
+import { skillBonusPluser, isThisAClassSkill, skillRanks } from '../../helper_functions/calculations/skills'
 
 class Skills extends React.Component {
 
@@ -310,19 +310,17 @@ class Skills extends React.Component {
   }
 
   renderSkillTableRow = () => {
-    const sortedSkills = this.modifiedSkills()
-		this.props.character.skillset.skills.forEach(skill => {
+    // const sortedSkills = this.modifiedSkills()
+		return this.props.character.skillset.skills.map(skill => {
 			console.log(skill.name, skillBonusPluser(skill))
-		})
-    return sortedSkills.map(skill => {
 
       return (
         <tr key={_.random(1, 2000000)}>
-          <td>{skill.classSkill ? "X" : null}</td>
+          <td>{isThisAClassSkill(skill, this.props.character) ? "X" : null}</td>
           <td onMouseOver={(e) => this.renderTooltip(e, null, skill.ability_score)} onMouseOut={this.props.mouseOut}><strong>{this.renderAbilityScoreAbbreviation(skill)}</strong></td>
-          <td className={this.raging(skill.name)} style={this.renderSkillBonus(skill, true)} onMouseOver={(e) => this.renderTooltip(e, skill)} onMouseOut={this.props.mouseOut}>{this.asterisk(skill)}</td>
-          <td style={this.renderSkillBonus(skill, true)}>{skill.bonus}</td>
-          <td>{skill.ranks}</td>
+          <td className={this.raging(skill.name)} style={this.renderSkillBonus(skill, true)} onMouseOver={(e) => this.renderTooltip(e, skill)} onMouseOut={this.props.mouseOut}>{skill.name}</td>
+          <td style={this.renderSkillBonus(skill, true)}>{skillBonusPluser(skill)}</td>
+          <td>{skillRanks(skill, this.props.character)}</td>
         </tr>
       )}
     )
@@ -331,7 +329,7 @@ class Skills extends React.Component {
   renderMobileSkillsRow = () => {
     const sortedSkills = this.modifiedSkills()
     return sortedSkills.map((skill, i) => {
-      return <p key={i*3-1} style={{fontSize: '14px', textAlign: 'center', marginBottom: '2%'}}><strong style={{fontSize: '11px'}}>{this.asterisk(skill)}</strong> {skill.bonus}</p>
+      return <p key={i*3-1} style={{fontSize: '14px', textAlign: 'center', marginBottom: '2%'}}><strong style={{fontSize: '11px'}}>{skill.name}</strong> {skillBonusPluser(skill)}</p>
     })
   }
 
