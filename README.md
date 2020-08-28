@@ -15,7 +15,7 @@ followed by
 
 ### `npm start`
 
-NOTE: the Rails server runs through localhost:3000, so make sure this React file does not run on that server. Either run the Rails server first, and let the React server go to the alternate port of 3001, or before starting this server, run
+**Note:** the Rails server runs through localhost:3000, so make sure this React file does not run on that server. Either run the Rails server first, and let the React server go to the alternate port of 3001, or before starting this server, run
 
 ### `export PORT=3001`
 
