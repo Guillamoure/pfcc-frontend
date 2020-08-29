@@ -1,16 +1,20 @@
+import React from 'react'
 import store from '../../store'
 import { abilityScoreMod } from './ability_scores'
 import { armorCheckPenalty } from './proficiencies'
 import { pluser } from '../../fuf'
+import { locateAbility, locateFeatureThroughAbility } from '../fuf'
 
 export const skillBonusArray = (skillObj) => {
 	let permanent = 0
 	let temporary = 0
-	// let bonus = 0
+
 	const { character, character_info } = store.getState()
+
 	// are there ranks
 	let ranks = skillRanks(skillObj, character)
 	permanent += ranks
+
 	// is this a class skill?
 	let classSkill = isThisAClassSkill(skillObj, character)
 	permanent += (ranks > 0 && classSkill) ? 3 : 0
@@ -18,14 +22,32 @@ export const skillBonusArray = (skillObj) => {
 	// += ability score
 	let mod = abilityScoreMod(skillObj.ability_score.toLowerCase())
 	permanent += mod
+
 	// any bonuses?
+	let bonuses = calculateBonuses(skillObj, character_info, character)
+	permanent += bonuses.permanent.map(b => b.bonus).reduce((b, agg) => (agg + b), 0)
+	temporary += bonuses.temporary.map(b => b.bonus).reduce((b, agg) => (agg + b), 0)
+
+	// armor check penalty
+	let acp = armorCheckPenalty()
+	if (skillObj.ability_score === "Strength" || skillObj.ability_score === "Dexterity"){
+		permanent += acp
+	}
+
+	return [permanent, temporary]
+}
+
+const calculateBonuses = (skillObj, character_info, character) => {
+	let permanent = []
+	let temporary = []
+
 	character_info.bonuses.forEach(b => {
 		if (b.type === "skill" && b.skill_id === skillObj.id){
-			if (b.duration === "permanent"){
-				permanent += b.bonus
-			} else {
-				temporary += b.bonus
-			}
+			// if (b.duration === "permanent"){
+			// 	permanent += b.bonus
+			// } else {
+			// 	temporary += b.bonus
+			// }
 		} else if (b.type === "skill" && !b.skill_id) {
 			if (b.specific_statistic === "Knowledge" && skillObj.knowledge){
 				let level
@@ -39,20 +61,16 @@ export const skillBonusArray = (skillObj) => {
 				if (b.round_down){specificBonus = Math.floor(specificBonus)}
 				if (specificBonus < b.minimum_bonus){specificBonus = b.minimum_bonus}
 				if (b.duration === "permanent"){
-					permanent += specificBonus
+					permanent.push({bonus: specificBonus, sourceName: renderBonusName(b), source: b.source})
 				} else {
-					temporary += specificBonus
+					temporary.push({bonus: specificBonus, sourceName: renderBonusName(b), source: b.source})
 				}
 			}
 		}
 	})
-	// armor check penalty
-	let acp = armorCheckPenalty()
-	if (skillObj.ability_score === "Strength" || skillObj.ability_score === "Dexterity"){
-		permanent += acp
-	}
 
-	return [permanent, temporary]
+
+	return {permanent, temporary}
 }
 
 export const skillBonus = skillObj => {
@@ -81,4 +99,57 @@ export const isThisAClassSkill = (skillObj, character) => {
 export const skillRanks = (skillObj, character) => {
 	let skillsetSkill = character.character_skillset_skills.find(css => css.skill_id === skillObj.id)?.ranks || 0
 	return skillsetSkill
+}
+
+export const renderBonusName = (bonus) => {
+	let ability = locateAbility(bonus.source)
+	let feature = locateFeatureThroughAbility(ability, bonus.source.featureId)
+	return feature.name || ability.name
+}
+
+export const renderSkillTooltip = (skillObj) => {
+	// NEW DATA
+	let tooltips = []
+
+	// STORED DATA
+	const { character_info, character } = store.getState()
+
+	// CALCULATED DATA
+	let bonuses = calculateBonuses(skillObj, character_info, character)
+
+	for (const category in bonuses) {
+		bonuses[category].forEach(b => {
+			tooltips.push(`${pluser(b.bonus)} from ${b.sourceName}`)
+		})
+	}
+
+	let acp = armorCheckPenalty()
+	if ((skillObj.ability_score === "Strength" || skillObj.ability_score === "Dexterity") && acp < 0){
+		tooltips.push(`${pluser(acp)} from Armor Check Penalty`)
+	}
+
+	if (tooltips.length){
+		return tooltips.join(", ")
+	} else {
+		return null
+	}
+
+}
+
+export const renderSkillName = skillObj => {
+	let hasACP = null
+	let asterisk = null
+	let name = skillObj.name
+
+	let acp = armorCheckPenalty()
+	if ((skillObj.ability_score === "Strength" || skillObj.ability_score === "Dexterity") && acp < 0){
+		hasACP = <sup>acp</sup>
+	}
+	let tooltips = renderSkillTooltip(skillObj)
+	if ((!!hasACP && !!tooltips && tooltips.includes(",")) || (!hasACP && !!tooltips)){
+		asterisk = <sup>*</sup>
+	}
+
+
+	return <>{name}{hasACP}{asterisk}</>
 }

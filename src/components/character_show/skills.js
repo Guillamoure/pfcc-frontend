@@ -3,7 +3,7 @@ import _ from 'lodash'
 import { connect } from 'react-redux'
 import localhost from '../../localhost'
 import { abilityScoreMod } from '../../helper_functions/calculations/ability_scores'
-import { skillBonusPluser, isThisAClassSkill, skillRanks } from '../../helper_functions/calculations/skills'
+import { skillBonusPluser, isThisAClassSkill, skillRanks, renderSkillTooltip, renderSkillName } from '../../helper_functions/calculations/skills'
 
 class Skills extends React.Component {
 
@@ -312,13 +312,13 @@ class Skills extends React.Component {
   renderSkillTableRow = () => {
     // const sortedSkills = this.modifiedSkills()
 		return this.props.character.skillset.skills.map(skill => {
-			console.log(skill.name, skillBonusPluser(skill))
+			// console.log(skill.name, skillBonusPluser(skill))
 
       return (
         <tr key={_.random(1, 2000000)}>
           <td>{isThisAClassSkill(skill, this.props.character) ? "X" : null}</td>
           <td onMouseOver={(e) => this.renderTooltip(e, null, skill.ability_score)} onMouseOut={this.props.mouseOut}><strong>{this.renderAbilityScoreAbbreviation(skill)}</strong></td>
-          <td className={this.raging(skill.name)} style={this.renderSkillBonus(skill, true)} onMouseOver={(e) => this.renderTooltip(e, skill)} onMouseOut={this.props.mouseOut}>{skill.name}</td>
+          <td className={this.raging(skill.name)} style={this.renderSkillBonus(skill, true)} onMouseOver={(e) => this.renderTooltip(e, skill)} onMouseOut={(e) => this.renderTooltip(e, skill)}>{renderSkillName(skill)}</td>
           <td style={this.renderSkillBonus(skill, true)}>{skillBonusPluser(skill)}</td>
           <td>{skillRanks(skill, this.props.character)}</td>
         </tr>
@@ -471,6 +471,13 @@ class Skills extends React.Component {
         comment.push(_.capitalize(b.note))
       }
     })
+
+		if (skillObj) {
+			let tooltipString = renderSkillTooltip(skillObj)
+			if (tooltipString) {
+				this.props.dispatch({type: "TOOLTIP", message: tooltipString, target: e.target})
+			}
+		}
 
 
 
