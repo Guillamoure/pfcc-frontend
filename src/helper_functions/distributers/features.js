@@ -30,7 +30,7 @@ export const initialCharacterDistribution = (character) => {
   // klass features
   character.applicable_klass_features.forEach(akf => {
     akf.features.forEach((feature) => {
-      if (!feature.action){
+      if (!feature.action && !feature.usage){
         klassFeaturesFeatureDistribution(feature, character_info, { sourceId: akf.id, source: "applicable_klass_features", featureId: feature.id })
       }
     })
