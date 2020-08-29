@@ -14,9 +14,24 @@ export const endTurn = async () => {
 	// })
 	character.applicable_klass_features.forEach(akf => {
 		akf.features.forEach(async f => {
-			if (f.usage?.limit || f.usage?.limit_frequency && !f.usage?.destroy_after_use && character_info.activeFeatures.find(af => af.sourceId === akf.id && af.source === "applicable_klass_features" && af.featureId === f.id)){
+
+			if (f.usage?.limit || f.usage?.limit_frequency && !f.usage?.destroy_after_use) {
+
 				let ckfus = character.character_klass_feature_usages.filter(fu => fu.klass_feature_id === akf.id)
-				await incrementFeatureUsage({...f, sourceId: akf.id, klassFeatureName: akf.name, klassId: akf.klass_id, character_klass_feature_usages: ckfus, source: "applicable_klass_features"})
+
+				if (character_info.activeFeatures.find(af => af.sourceId === akf.id && af.source === "applicable_klass_features" && af.featureId === f.id)){
+
+					await incrementFeatureUsage({...f, sourceId: akf.id, klassFeatureName: akf.name, klassId: akf.klass_id, character_klass_feature_usages: ckfus, source: "applicable_klass_features"})
+
+				}
+				let options = f.usage?.all_feature_usage_options || []
+
+				options.forEach(async opt => {
+					if (character_info.activeFeatures.find(af => af.featureId === opt.optionSource.featureId & af.sourceId === opt.optionSource.sourceId && af.source === opt.optionSource.source)) {
+						await incrementFeatureUsage({...f, sourceId: akf.id, klassFeatureName: akf.name, klassId: akf.klass_id, character_klass_feature_usages: ckfus, source: "applicable_klass_features"})
+					}
+				})
+
 			}
 		})
 	})

@@ -3,6 +3,7 @@ import { mod } from '../../fuf'
 import { featureDistribution as removeFeature } from '../distributers/features'
 import { patchFetch } from '../fetches'
 import { replaceCharacterArrayAction } from '../action_creator/character'
+import { locateFeatureFromSource } from '../fuf'
 
 
 export const calculateFeaturePercentage = feature => {
@@ -52,7 +53,19 @@ export const incrementFeatureUsage = async feature => {
 		let usage = feature.character_klass_feature_usages.length === 1 && feature.character_klass_feature_usages[0]
 		await alterCurrentUsage(usage, 1)
 	} else {
-		removeFeature(feature)
+		let options = feature.usage?.all_feature_usage_options || []
+		if (options.length){
+
+			const { character_info } = store.getState()
+
+			options.forEach(opt => {
+				if (character_info.activeFeatures.find(af => af.featureId === opt.optionSource.featureId & af.sourceId === opt.optionSource.sourceId && af.source === opt.optionSource.source)) {
+					removeFeature({...locateFeatureFromSource(opt.optionSource), sourceId: opt.optionSource.sourceId, klassId: opt.optionSource.feature, source: "applicable_klass_features"})
+				}
+			})
+		} else {
+			removeFeature(feature)
+		}
 	}
 }
 
@@ -68,4 +81,23 @@ export const alterCurrentUsage = async (usage, amount) => {
 		.then(data => {
 			replaceCharacterArrayAction("character_klass_feature_usages", data)
 		})
+}
+
+export const isThisFeatureActive = feature => {
+	let active = false
+	const { character_info } = store.getState()
+	character_info.activeFeatures.forEach(af => {
+		if (af.featureId === feature.id && af.sourceId === feature.sourceId && af.source === feature.source){
+			active = true
+		}
+		let options = feature.usage?.all_feature_usage_options || []
+
+		options.forEach(opt => {
+			if (opt.optionSource.featureId === feature.id && opt.optionSource.sourceId === feature.sourceId && opt.optionSource.source === feature.source) {
+				active = true
+			}
+		})
+	})
+
+	return active
 }

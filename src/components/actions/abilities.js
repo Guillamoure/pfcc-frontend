@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 import { isThisActionAvailable } from '../../helper_functions/calculations/round_actions'
-import { calculateFeaturePercentage, remainingUsage, calculateCurrentUsage } from '../../helper_functions/calculations/feature_usage'
+import { calculateFeaturePercentage, remainingUsage, calculateCurrentUsage, isThisFeatureActive } from '../../helper_functions/calculations/feature_usage'
 import { featureDistribution } from '../../helper_functions/distributers/features'
 import { patchFetch } from '../../helper_functions/fetches'
 
@@ -83,17 +83,17 @@ class Abilities extends React.Component {
 		// STORED DATA
 
 		// CALCULATED DATA
+		let areThereEnoughPoints = !!remainingUsage(ability)
+		let isThereAnAction = isThisActionAvailable(ability) !== "cannot-cast" ? true : false
 
-		let isThisFeatureActive = !!this.props.character_info.activeFeatures.find(af => af.featureId === ability.id && af.sourceId === ability.sourceId && af.source === ability.source)
+		if (!areThereEnoughPoints || !isThereAnAction){return null}
 
-		if (isThisFeatureActive){
+		if (isThisFeatureActive(ability)){
 			featureDistribution(ability)
 		} else {
 
-			let areThereEnoughPoints = !!remainingUsage(ability)
-			let isThereAnAction = isThisActionAvailable(ability) !== "cannot-cast" ? true : false
-
-			if (!areThereEnoughPoints || !isThereAnAction){
+			if (ability.usage.all_feature_usage_options.length){
+				this.props.dispatch({type: "MODAL", detail: "featureUsageOptions", obj: ability})
 				return null
 			}
 
@@ -109,6 +109,8 @@ class Abilities extends React.Component {
 					this.props.dispatch({type: "ADJUST CHARACTER REPLACE VALUE IN ARRAY", adjust: "character_klass_feature_usages", value: data})
 					featureDistribution(ability)
 				})
+
+			this.props.dispatch({type: 'TRIGGER ACTION', action: isThisActionAvailable(ability)})
 
 		}
 
