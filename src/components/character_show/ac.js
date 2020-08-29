@@ -152,54 +152,54 @@ const ArmorClass = props => {
     }
   }
 
-  const colorStyle = (type) => {
-    let dex = Math.floor((props.character_info.ability_scores.dexterity-10)/2)
-    let size = 0
-    if (name === 'Cedrick'){
-      size = 1
-      dex += 1
-    } else if (name === 'Nettie'){
-      size = 2
-    }
-    let natural = 0
-    let bonus = 0
-    if (name === 'Cedrick'){
-      bonus = 5
-    }
-    let armorBonus = 0
-    if (armor){
-      armorBonus += armor === 'Wooden' ? 3 : 0
-      dex = armor === 'Wooden' && dex > 3 ? 3 : dex
-      armorBonus += armor === '+1 chain shirt' ? 5 : 0
-      dex = armor === '+1 chain shirt' && dex > 4 ? 4 : dex
-      armorBonus += armor === 'Padded' ? 1 : 0
-      dex = armor === 'Padded' && dex > 8 ? 8 : dex
-    }
-    let defaultAC = 10 + dex + size + armorBonus + natural + bonus
-    defaultAC += name === "Robby" ? 1 : 0 // nimble feature
-    defaultAC += name === "Persephone" ? 1 : 0 // dodge feat
-    defaultAC += name === "Persephone" ? 1 : 0 // natural armor
-    defaultAC += name === "Grackle" ? 1 : 0 // natural armor
-    defaultAC += name === "Merg" ? 2 : 0 // fabric of reality
-    if (type === 't'){
-      defaultAC = 10 + dex + size + bonus
-      defaultAC += name === "Robby" ? 1 : 0 // nimble feature
-      defaultAC += name === "Persephone" ? 1 : 0 // dodge feat
-      defaultAC += name === "Merg" ? 2 : 0 // fabric of reality
-    } else if (type === 'ff'){
-      defaultAC = 10 + size + armorBonus + natural + bonus
-      defaultAC += name === "Persephone" ? 1 : 0 // natural armor
-      defaultAC += name === "Grackle" ? 1 : 0 // natural armor
-      defaultAC += name === "Merg" ? 2 : 0 // fabric of reality
-    }
-    if (defaultAC > acCalc(type)){
-      return {color: 'maroon'}
-    } else if (defaultAC < acCalc(type)){
-      return {color: 'green'}
-    } else {
-      return {color: 'black'}
-    }
-  }
+  // const colorStyle = (type) => {
+  //   let dex = Math.floor((props.character_info.ability_scores.dexterity-10)/2)
+  //   let size = 0
+  //   if (name === 'Cedrick'){
+  //     size = 1
+  //     dex += 1
+  //   } else if (name === 'Nettie'){
+  //     size = 2
+  //   }
+  //   let natural = 0
+  //   let bonus = 0
+  //   if (name === 'Cedrick'){
+  //     bonus = 5
+  //   }
+  //   let armorBonus = 0
+  //   if (armor){
+  //     armorBonus += armor === 'Wooden' ? 3 : 0
+  //     dex = armor === 'Wooden' && dex > 3 ? 3 : dex
+  //     armorBonus += armor === '+1 chain shirt' ? 5 : 0
+  //     dex = armor === '+1 chain shirt' && dex > 4 ? 4 : dex
+  //     armorBonus += armor === 'Padded' ? 1 : 0
+  //     dex = armor === 'Padded' && dex > 8 ? 8 : dex
+  //   }
+  //   let defaultAC = 10 + dex + size + armorBonus + natural + bonus
+  //   defaultAC += name === "Robby" ? 1 : 0 // nimble feature
+  //   defaultAC += name === "Persephone" ? 1 : 0 // dodge feat
+  //   defaultAC += name === "Persephone" ? 1 : 0 // natural armor
+  //   defaultAC += name === "Grackle" ? 1 : 0 // natural armor
+  //   defaultAC += name === "Merg" ? 2 : 0 // fabric of reality
+  //   if (type === 't'){
+  //     defaultAC = 10 + dex + size + bonus
+  //     defaultAC += name === "Robby" ? 1 : 0 // nimble feature
+  //     defaultAC += name === "Persephone" ? 1 : 0 // dodge feat
+  //     defaultAC += name === "Merg" ? 2 : 0 // fabric of reality
+  //   } else if (type === 'ff'){
+  //     defaultAC = 10 + size + armorBonus + natural + bonus
+  //     defaultAC += name === "Persephone" ? 1 : 0 // natural armor
+  //     defaultAC += name === "Grackle" ? 1 : 0 // natural armor
+  //     defaultAC += name === "Merg" ? 2 : 0 // fabric of reality
+  //   }
+  //   if (defaultAC > acCalc(type)){
+  //     return {color: 'maroon'}
+  //   } else if (defaultAC < acCalc(type)){
+  //     return {color: 'green'}
+  //   } else {
+  //     return {color: 'black'}
+  //   }
+  // }
 
 	const dispatchTooltip = e => {
 		let element = e.target
@@ -220,15 +220,15 @@ const ArmorClass = props => {
       <div id='ac' className='shadow shrink' onMouseOver={dispatchTooltip} onMouseOut={dispatchTooltip}>
         <span className='centered container-3'>
           <section>
-            <div className='enhanced' style={colorStyle('ac')}>{acCalc('ac')}</div>
+            <div className='enhanced'>{acCalc('ac')}</div>
             <div><strong>AC</strong></div>
           </section>
           <section>
-            <div className='enhanced' style={colorStyle('t')}>{acCalc('t')}</div>
+            <div className='enhanced'>{acCalc('t')}</div>
             <div className='dull'><strong>T</strong></div>
           </section>
           <section>
-            <div className='enhanced' style={colorStyle('ff')}>{acCalc('ff')}</div>
+            <div className='enhanced'>{acCalc('ff')}</div>
             <div className='dull'><strong>FF</strong></div>
           </section>
         </span>
@@ -238,15 +238,15 @@ const ArmorClass = props => {
     return (
       <div className='shadow mobile-flex-boxes mobile-centering'>
         <span style={{display: 'inline-block', margin: '0.3em', textAlign: 'center'}}>
-          <div className='enhanced' style={colorStyle('ac')}>{acCalc('ac')}</div>
+          <div className='enhanced'>{acCalc('ac')}</div>
           <div><strong>AC</strong></div>
         </span>
         <span style={{display: 'inline-block', margin: '0.3em', textAlign: 'center'}}>
-          <div className='enhanced' style={colorStyle('t')}>{acCalc('t')}</div>
+          <div className='enhanced'>{acCalc('t')}</div>
           <div className='dull'><strong>T</strong></div>
         </span>
         <span style={{display: 'inline-block', margin: '0.3em', textAlign: 'center'}}>
-          <div className='enhanced' style={colorStyle('ff')}>{acCalc('ff')}</div>
+          <div className='enhanced'>{acCalc('ff')}</div>
           <div className='dull'><strong>FF</strong></div>
         </span>
       </div>
