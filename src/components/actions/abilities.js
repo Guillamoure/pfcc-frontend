@@ -5,6 +5,7 @@ import { isThisActionAvailable } from '../../helper_functions/calculations/round
 import { calculateFeaturePercentage, remainingUsage, calculateCurrentUsage, isThisFeatureActive } from '../../helper_functions/calculations/feature_usage'
 import { featureDistribution } from '../../helper_functions/distributers/features'
 import { patchFetch } from '../../helper_functions/fetches'
+import { locateFeatureAndAbilityFromSource } from '../../helper_functions/fuf'
 
 class Abilities extends React.Component {
 
@@ -45,6 +46,12 @@ class Abilities extends React.Component {
 					// so that specific klass_feature, magic_item_feature, etc. can be found by id
 					activatableAbilities.push({...f, sourceId: akf.id, klassFeatureName: akf.name, klassId: akf.klass_id, character_klass_feature_usages: ckfus, source: "applicable_klass_features"})
 				}
+
+				if (f.usage?.feature_usage_base) {
+					let baseFeatureAndAbility = locateFeatureAndAbilityFromSource(f.usage.feature_usage_base.baseSource)
+					let ckfus = this.props.character.character_klass_feature_usages.filter(fu => fu.klass_feature_id === baseFeatureAndAbility.ability.id)
+					activatableAbilities.push({...f, sourceId: akf.id, klassFeatureName: akf.name, klassId: akf.klass_id, character_klass_feature_usages: ckfus, source: "applicable_klass_features", baseFeatureAndAbility, action: baseFeatureAndAbility.feature.action})
+				}
 			})
       // only display the feature, but the text should be from the akf
     })
@@ -52,13 +59,21 @@ class Abilities extends React.Component {
     return activatableAbilities.map((ability, idx) => {
 			return (
 				<tr key={idx * 3 - 1}>
-					<td><button className={isThisActionAvailable(ability)} onClick={() => this.newRenderClick(ability)}><strong>Click</strong></button></td>
+					<td><button className={this.canThisAbilityBeUsed(ability)} onClick={() => this.newRenderClick(ability)}><strong>Click</strong></button></td>
 					<td>{ability.klassFeatureName} {calculateFeaturePercentage(ability)}</td>
 					<td className='table-details'>Nothin'</td>
 				</tr>
 			)
 		})
   }
+
+	canThisAbilityBeUsed = ability => {
+		let actionClass = isThisActionAvailable(ability)
+
+
+
+		return actionClass
+	}
 
   dispatchManager = (action, pointsDirection, specific, points) => {
     if (typeof points !== 'number' || points){
@@ -102,6 +117,12 @@ class Abilities extends React.Component {
 				klass_feature_id: ability.sourceId,
 				feature_usage_id: ability.usage.id,
 				current_usage: calculateCurrentUsage(ability.character_klass_feature_usages) + 1
+			}
+			if (ability.baseFeatureAndAbility){
+				if (ability.character_klass_feature_usages.length === 1){
+					let ckfu = ability.character_klass_feature_usages[0]
+					body = {...ckfu, current_usage: ckfu.current_usage + 1}
+				}
 			}
 
 			patchFetch("character_klass_feature_usages", body)
