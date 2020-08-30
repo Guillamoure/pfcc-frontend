@@ -50,5 +50,5 @@ export const armorCheckPenalty = () => {
 
 export const armorCheckPenaltyOnOtherAbilities = () =>{
 	let characterArmor = currentEquippedCharacterArmor()
-	return areYouProficientWithThisArmor(characterArmor) ? 0 : characterArmor.armor.armor_check_penalty
+	return (!characterArmor || areYouProficientWithThisArmor(characterArmor)) ? 0 : characterArmor.armor.armor_check_penalty
 }

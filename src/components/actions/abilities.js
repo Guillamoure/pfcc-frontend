@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 import { isThisActionAvailable } from '../../helper_functions/calculations/round_actions'
+import { abilityScoreMod } from '../../helper_functions/calculations/ability_scores'
 import { calculateFeaturePercentage, remainingUsage, calculateCurrentUsage, isThisFeatureActive } from '../../helper_functions/calculations/feature_usage'
 import { featureDistribution } from '../../helper_functions/distributers/features'
 import { patchFetch } from '../../helper_functions/fetches'
@@ -19,6 +20,7 @@ class Abilities extends React.Component {
     switch(this.props.character.name){
       case 'Nettie':
         return this.nettie()
+      case 'Merg':
       case 'Merg':
         return this.merg()
       case 'Cedrick':
@@ -61,6 +63,7 @@ class Abilities extends React.Component {
 				<tr key={idx * 3 - 1}>
 					<td><button className={this.canThisAbilityBeUsed(ability)} onClick={() => this.newRenderClick(ability)}><strong>Click</strong></button></td>
 					<td>{ability.klassFeatureName} {calculateFeaturePercentage(ability)}</td>
+					<td>{this.renderDC(ability)}</td>
 					<td className='table-details'>Nothin'</td>
 				</tr>
 			)
@@ -73,6 +76,19 @@ class Abilities extends React.Component {
 
 
 		return actionClass
+	}
+
+	renderDC = ability => {
+		let st = ability.saving_throws[0]
+		if (st){
+			let save = _.capitalize(st.saving_throw)
+			let asMod = abilityScoreMod(st.ability_score_modifier, true)
+			let klassId = ability.klassId
+			let lvl = this.props.character_info.classes.find(cl => cl.id === klassId).level
+
+			let dc = st.base + asMod + (Math.floor(lvl * st.level_modifier))
+			return `${save} ${dc}`
+		} else {return "-"}
 	}
 
   dispatchManager = (action, pointsDirection, specific, points) => {
@@ -871,6 +887,7 @@ class Abilities extends React.Component {
             <tr>
               <th>Action</th>
               <th>Name</th>
+              <th>DC</th>
               <th>Details</th>
             </tr>
           </thead>
