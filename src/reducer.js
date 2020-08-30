@@ -31,7 +31,8 @@ const initialState = {
   races: [],
   spells: [],
   tooltip: {},
-  modal: {}
+  modal: {},
+	websocket: {}
 }
 
 
@@ -63,6 +64,9 @@ const reducer = (state = initialState, action) => {
         staticStats.crew = state.character_info.hardcode.crew
       // hardcoded new data end
       return {...state, character: action.character, character_info: {...state.character_info, classes: clearedCopy, size: size, hardcode: staticStats}};
+		case "START WEBSOCKET":
+			console.log("initialized websocket")
+			return {...state, websocket: action.websocket}
     case "ABILITY SCORE":
       return {...state, character_info: {...state.character_info, ability_scores: {...state.character_info.ability_scores, [action.ability]: action.score, }, hardcode: {} }};
     case "CHARACTER_CLASSES":

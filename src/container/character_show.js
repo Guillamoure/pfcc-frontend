@@ -5,6 +5,7 @@ import localhost from '../localhost'
 import { mod } from '../fuf'
 import { fetchCharacter } from '../dispatch'
 import { characterDistributer } from '../helper_functions/distributers/character'
+import { initializeCampaignWebsocket } from '../helper_functions/websocket/campaign'
 
 import AbilityScores from '../components/character_show/ability_scores'
 import CharacterName from '../components/character_show/character_name'
@@ -118,6 +119,7 @@ class Character extends React.Component {
       // IF YOU WANT THE PAGE TO BE PRIVATE
       // if (this.props.currentUser.id === data.character.user.id){
         characterDistributer(data.character)
+				initializeCampaignWebsocket(data.character)
 
         // this.dispatchAbilityScores()
         // this.dispatchClassLevels()
@@ -562,7 +564,8 @@ class Character extends React.Component {
 const mapStatetoProps = (state) => {
   return {
     character: state.character,
-    character_info: state.character_info
+    character_info: state.character_info,
+		websocket: state.websocket
   }
 }
 
