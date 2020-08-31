@@ -56,12 +56,9 @@ const parseSentCampaignData = data => {
 		if (sender_id === character.id) {return null}
 		let sender = character.campaign.characters.find(ch => ch.id === sender_id)
 
-		if (options.remove){
-			websocketFeatureDistribution(payload, {...source, senderName: sender.name, senderId: sender_id}, options)
-		} else {
-			// distribute feature
-			websocketFeatureDistribution(payload, {...source, senderName: sender.name, senderId: sender_id}, options)
-		}
+
+		// distribute feature
+		websocketFeatureDistribution(payload, {...source, senderName: sender.name, senderId: sender_id}, options)
 
 		// craft message for notification
 		// don't distribute inherently if there is a togglable attribute

@@ -520,8 +520,8 @@ const reducer = (state = initialState, action) => {
 			var activeFeatures = [...state.character_info.activeFeatures]
 			var oldActiveFeaturesLength = activeFeatures.length
 			activeFeatures = activeFeatures.filter(af => af.featureId !== action.featureSource.featureId && af.sourceId !== action.featureSource.sourceId && (af.source !== action.featureSource.source || af.senderId !== action.featureSource.senderId))
-			
-			if (activeFeatures.length === oldActiveFeaturesLength){
+
+			if (activeFeatures.length === oldActiveFeaturesLength && (action.options?.additive ?? true)){
 				activeFeatures.push(action.featureSource)
 			}
 			return {...state, character_info: {...state.character_info, activeFeatures}}

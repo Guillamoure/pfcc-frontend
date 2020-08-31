@@ -108,7 +108,7 @@ export const featureDistribution = (feature, options) => {
 				featureName: feature.name,
 				featureId: feature.id
 			}
-			let options = {}
+			let options = { additive: true }
 			if (ability.klass_id){featureSource.klassId = ability.klass_id}
 			sendCampaignWebsocket(payload, featureSource, options)
 		}
@@ -132,7 +132,8 @@ export const featureDistribution = (feature, options) => {
 				featureId: feature.id
 			}
 			let options = {
-				remove: true
+				remove: true,
+				additive: false
 			}
 			if (ability.klass_id){featureSource.klassId = ability.klass_id}
 			sendCampaignWebsocket(payload, featureSource, options)
@@ -177,7 +178,7 @@ export const featureDistribution = (feature, options) => {
 export const websocketFeatureDistribution = (payload, source, options) => {
 	let character_info = payload
 
-	activeFeatureAction(source)
+	activeFeatureAction(source, options)
 
 	if (options.remove){
 		character_info.bonuses.forEach(b => {
