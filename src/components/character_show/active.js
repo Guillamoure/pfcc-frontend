@@ -46,6 +46,9 @@ const Active = props => {
 
 	const renderActiveFeatures = (features) => {
 		return features.map(f => {
+			// if sent through websockets
+			if (f.senderName) {return <li>{f.sourceName} ({f.senderName})</li>}
+			// else
 			let foundAbility = props.character[f.source].find(ability => ability.id === f.sourceId)
 			if (foundAbility){
 				let foundFeature = foundAbility.features.find(feat => feat.id === f.featureId)

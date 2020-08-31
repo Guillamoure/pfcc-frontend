@@ -9,6 +9,8 @@ import {
 	adjustStatusConditionsAction
 } from '../action_creator/features'
 import { statusConditionDistribution, removeStatusConditionDistribution } from  './status_conditions'
+import { sendCampaignWebsocket } from '../websocket/campaign'
+import { locateAbility } from '../fuf'
 
 export const defaultCharacterInfo = () => {
 	return {
@@ -26,12 +28,15 @@ export const initialCharacterDistribution = (character) => {
 	// NEW DATA
   let character_info = defaultCharacterInfo()
 
+	let characterLevel = store.getState().character_info?.classes?.reduce((agg, el) => (agg + el.level), 0)
+
+
   // racial traits
   // klass features
   character.applicable_klass_features.forEach(akf => {
     akf.features.forEach((feature) => {
       if (!feature.action && !feature.usage){
-        klassFeaturesFeatureDistribution(feature, character_info, { sourceId: akf.id, source: "applicable_klass_features", featureId: feature.id })
+        klassFeaturesFeatureDistribution(feature, character_info, { sourceId: akf.id, source: "applicable_klass_features", featureId: feature.id }, characterLevel)
       }
     })
   })
@@ -42,7 +47,7 @@ export const initialCharacterDistribution = (character) => {
   character.character_magic_items.forEach(cmi => {
     cmi.magic_item.features.forEach((feature) => {
       if (!feature.action){
-        klassFeaturesFeatureDistribution(feature, character_info, { sourceId: cmi.id, source: "character_magic_items", featureId: feature.id })
+        klassFeaturesFeatureDistribution(feature, character_info, { sourceId: cmi.id, source: "character_magic_items", featureId: feature.id }, characterLevel)
       }
     })
   })
@@ -59,17 +64,18 @@ export const initialCharacterDistribution = (character) => {
 }
 
 
-export const featureDistribution = (feature) => {
+export const featureDistribution = (feature, options) => {
 	// NEW DATA
 	let character_info = defaultCharacterInfo()
 	let source = {featureId: feature.id, sourceId: feature.sourceId, source: feature.source}
 
 	// STORED DATA
-	let activeFeatures = store.getState().character_info.activeFeatures
+	let { activeFeatures, classes } = store.getState().character_info
 	let oldActiveFeaturesLength = activeFeatures.length
+	let characterLevel = classes.reduce((agg, el) => (agg + el.level), 0)
 
 	// go through the feature, and add it to character_info
-	klassFeaturesFeatureDistribution(feature, character_info, source)
+	klassFeaturesFeatureDistribution(feature, character_info, source, characterLevel)
 
 	// add/remove this feature to the list of active features in character_info.activeFeatures (redux)
 	activeFeatureAction(source)
@@ -85,12 +91,27 @@ export const featureDistribution = (feature) => {
 				let tempHP = { source: {...b.source} }
 				let ability = redux.character[b.source.source].find(a => a.id === b.source.sourceId)
 				let multiplier = redux.character_info.classes.find(cl => cl.id === ability.klass_id).level
+
 				tempHP.bonus = b.bonus * multiplier
 				addTemporaryHitPointsAction(tempHP)
 			} else {
 				bonusAction(b)
 			}
 		})
+		// v websockets! v
+		if (feature.applications.find(app => app.affects_allies)){
+			let payload = {...character_info}
+			let ability = locateAbility(source)
+			let featureSource = {
+				sourceName: ability.name,
+				sourceId: ability.id,
+				featureName: feature.name,
+				featureId: feature.id
+			}
+			let options = {}
+			if (ability.klass_id){featureSource.klassId = ability.klass_id}
+			sendCampaignWebsocket(payload, featureSource, options)
+		}
 	} else {
 		// if removed
 		character_info.bonuses.forEach((b) => {
@@ -100,6 +121,22 @@ export const featureDistribution = (feature) => {
 				bonusAction(b, true)
 			}
 		})
+		// v websockets! v
+		if (feature.applications.find(app => app.affects_allies)){
+			let payload = {...character_info}
+			let ability = locateAbility(source)
+			let featureSource = {
+				sourceName: ability.name,
+				sourceId: ability.id,
+				featureName: feature.name,
+				featureId: feature.id
+			}
+			let options = {
+				remove: true
+			}
+			if (ability.klass_id){featureSource.klassId = ability.klass_id}
+			sendCampaignWebsocket(payload, featureSource, options)
+		}
 		character_info.statusConditions.forEach(sc => {
 			let statusConditions = [...store.getState().character_info.statusConditions]
 			statusConditions = statusConditions.filter(c => c.condition !== sc.condition)
@@ -137,13 +174,32 @@ export const featureDistribution = (feature) => {
 	}
 }
 
+export const websocketFeatureDistribution = (payload, source, options) => {
+	let character_info = payload
 
-const klassFeaturesFeatureDistribution = (feature, obj, source) => {
+	activeFeatureAction(source)
+
+	if (options.remove){
+		character_info.bonuses.forEach(b => {
+			bonusAction(b, true)
+		})
+	} else {
+		character_info.bonuses.forEach(b => {
+			bonusAction(b)
+		})
+	}
+
+}
+
+
+const klassFeaturesFeatureDistribution = (feature, obj, source, characterLevel) => {
   feature.skill_bonuses.forEach((el) => {
     obj.bonuses.push(skillBonusFeature(el, source))
   })
   feature.stat_bonuses.forEach((el) => {
-    obj.bonuses.push(statBonusFeature(el, source))
+		if (!el.applicable_level || el.applicable_level <= characterLevel){
+			obj.bonuses.push(statBonusFeature(el, source))
+		}
   })
   feature.movements.forEach((el) => {
     obj.movement.push(movementsFeature(el, source, feature.usage, feature.applications, feature.conditions))

@@ -73,6 +73,7 @@ class Abilities extends React.Component {
 	canThisAbilityBeUsed = ability => {
 		let actionClass = isThisActionAvailable(ability)
 
+		actionClass = !!remainingUsage(ability) ? actionClass : 'cannot-cast'
 
 
 		return actionClass

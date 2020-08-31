@@ -67,6 +67,9 @@ const reducer = (state = initialState, action) => {
 		case "START WEBSOCKET":
 			console.log("initialized websocket")
 			return {...state, websocket: action.websocket}
+		case "SUBSCRIBE WEBSOCKET":
+			console.log("Subscibed to channel")
+			return {...state, websocket: action.websocket}
     case "ABILITY SCORE":
       return {...state, character_info: {...state.character_info, ability_scores: {...state.character_info.ability_scores, [action.ability]: action.score, }, hardcode: {} }};
     case "CHARACTER_CLASSES":
@@ -516,8 +519,8 @@ const reducer = (state = initialState, action) => {
 		case "ACTIVE FEATURE":
 			var activeFeatures = [...state.character_info.activeFeatures]
 			var oldActiveFeaturesLength = activeFeatures.length
-			activeFeatures = activeFeatures.filter(af => af.featureId !== action.featureSource.featureId && af.sourceId !== action.featureSource.sourceId && af.source !== action.featureSource.source)
-
+			activeFeatures = activeFeatures.filter(af => af.featureId !== action.featureSource.featureId && af.sourceId !== action.featureSource.sourceId && (af.source !== action.featureSource.source || af.senderId !== action.featureSource.senderId))
+			
 			if (activeFeatures.length === oldActiveFeaturesLength){
 				activeFeatures.push(action.featureSource)
 			}
