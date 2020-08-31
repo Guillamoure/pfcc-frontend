@@ -30,7 +30,7 @@ export const calculateSave = (save, ability) => {
 	})
 	let classSavesTotal = _.sum(classSaves)
 	let bonusObjs = characterInfo.bonuses.filter(b => {
-		return (b.statistic === "Save" || b.statistic === "Fortitude" || b.statistic === "Reflex" || b.statistic === "Will")
+		return (b.statistic === "Saving Throw" || b.statistic === "Fortitude" || b.statistic === "Reflex" || b.statistic === "Will")
 	})
 
 
@@ -38,7 +38,7 @@ export const calculateSave = (save, ability) => {
 	permanent += classSavesTotal
 
 	bonusObjs.forEach(bo => {
-		if (bo.statistic === "Save" || bo.statistic === _.capitalize(save)) {
+		if (bo.statistic === "Saving Throw" || bo.statistic === _.capitalize(save)) {
 			if (bo.duration === "temporary"){
 				temporary += bo.bonus
 			} else if (bo.duration === "permanent"){
