@@ -834,7 +834,7 @@ const Attacks = props => {
 		bonuses.forEach(b => {
 			if (b.statistic === "Damage" && _.capitalize(b.specific_statistic) === weaponType){
 				bonusModifiers.push(b)
-			}
+			} else if (b.statistic === "Damage" && b.specific_statistic === "weapon"){bonusModifiers.push(b)}
 		})
 
     if (weaponType === "Melee" || weaponType === "Thrown") {
