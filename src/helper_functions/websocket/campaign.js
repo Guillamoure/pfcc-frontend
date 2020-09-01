@@ -1,7 +1,7 @@
 import store from '../../store'
 import * as WebsocketAction from '../action_creator/websocket'
 import { websocketFeatureDistribution } from '../distributers/features'
-import { updateNotificationsAction } from '../action_creator/popups'
+import { updateNotificationsAction, updateStoredNotificationsAction } from '../action_creator/popups'
 // 	this.props.cableApp.room =
 // 		this.props.cableApp.cable.subscriptions.create({
 // 			channel: "RoomChannel",
@@ -53,7 +53,7 @@ export const sendCampaignWebsocket = (payload, source, options) => {
 const parseSentCampaignData = data => {
 	let { sender_id, payload, source, options } = data
 	if (sender_id){
-		const { character, notifications } = store.getState()
+		const { character, notifications, storedNotifications } = store.getState()
 		if (sender_id === character.id) {return null}
 		let sender = character.campaign.characters.find(ch => ch.id === sender_id)
 
@@ -65,6 +65,21 @@ const parseSentCampaignData = data => {
 
 		// craft message for notification
 		if (options.remove){
+			// remove active notification
+			// remove stored notification
+			// display new notification
+			let updatedNotifications = [...notifications]
+			updatedNotifications = updatedNotifications.filter(n => !n.message.includes(sender.name) && !n.message.includes(source.sourceName))
+			let message = `${sender.name} revoked the abilities of ${source.sourceName}.`
+			let notification = {message}
+
+			updatedNotifications.push(notification)
+			updateNotificationsAction(updatedNotifications)
+
+			let updatedStoredNotifications = [...storedNotifications]
+			updatedStoredNotifications = updatedStoredNotifications.filter(usn => usn.source.sourceName !== source.sourceName && usn.source.senderName !== sender.name)
+
+			updateStoredNotificationsAction(updatedStoredNotifications)
 
 		} else {
 			let updatedNotifications = [...notifications]
