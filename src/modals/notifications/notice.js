@@ -1,6 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import localhost from '../../localhost'
+import { websocketFeatureDistribution } from '../../helper_functions/distributers/features'
+import { updateStoredNotificationsAction } from '../../helper_functions/action_creator/popups'
+
 
 class Notice extends React.Component {
 
@@ -102,14 +105,32 @@ class Notice extends React.Component {
   tempFeatures = () => {
     let temp = this.props.character_info.features.filter(f => f.duration === 'temporary')
     return temp.map(t => <button style={{display: 'block', margin: 'auto'}} onClick={() => this.props.dispatch({type: 'ACTIVATED FEATURE', feature:{source: t.source, remove: true}})}>Cancel {t.source}'s Effect</button>
-)
+		)
   }
+
+	renderStoredNotifications = () => {
+		return this.props.storedNotifications.map(sn => {
+			const { payload, source, options } = sn
+			const renderSNClick = () => {
+				websocketFeatureDistribution(payload, source, options)
+
+				let updateStoredNotifications = [...this.props.storedNotifications]
+				updateStoredNotifications = updateStoredNotifications.filter(usn => usn.source.sourceName !== source.sourceName && usn.source.senderName !== source.senderName)
+				updateStoredNotificationsAction(updateStoredNotifications)
+			}
+
+			return (
+				<button onClick={renderSNClick}>{source.sourceName} ({source.senderName})</button>
+			)
+		})
+	}
 
 
   render(){
     return(
       <span style={{padding: '1em'}}>
         {this.newItems()}
+				{this.renderStoredNotifications()}
         {this.tempFeatures()}
         <h3>Active Conditions</h3>
         {this.renderConditions()}
@@ -143,7 +164,8 @@ class Notice extends React.Component {
 const mapStatetoProps = (state) => {
   return {
     character: state.character,
-    character_info: state.character_info
+    character_info: state.character_info,
+		storedNotifications: state.storedNotifications
   }
 }
 

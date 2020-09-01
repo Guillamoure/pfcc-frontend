@@ -59,14 +59,20 @@ const parseSentCampaignData = data => {
 
 
 		// distribute feature
-		websocketFeatureDistribution(payload, {...source, senderName: sender.name, senderId: sender_id}, options)
+		if (!options.toggleable){
+			websocketFeatureDistribution(payload, {...source, senderName: sender.name, senderId: sender_id}, options)
+		}
 
 		// craft message for notification
 		if (options.remove){
 
 		} else {
 			let updatedNotifications = [...notifications]
-			let notification = {message: `${sender.name} gave you the abilities of ${source.sourceName}`}
+			let message = `${sender.name} gave you the abilities of ${source.sourceName}.`
+			if (options.toggleable){message += " Are you able to accept it?"}
+			let notification = {message}
+			if (options.toggleable){notification.toggleable = {payload, source:{...source, senderName: sender.name, senderId: sender_id}, options}}
+
 			updatedNotifications.push(notification)
 			updateNotificationsAction(updatedNotifications)
 		}

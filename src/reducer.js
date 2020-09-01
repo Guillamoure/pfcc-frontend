@@ -33,7 +33,8 @@ const initialState = {
   tooltip: {},
   modal: {},
 	websocket: {},
-	notifications: [{message: "Rhubarb rhubarb"}, {message: "More data. If I add more content, will the box increase?"}]
+	notifications: [],
+	storedNotifications: []
 }
 
 
@@ -569,6 +570,8 @@ const reducer = (state = initialState, action) => {
 			return {...state, character_info: {...state.character_info, [action.adjust]: action.value}}
 		case "UPDATE NOTIFICATIONS":
 			return {...state, notifications: action.notifications}
+		case "UPDATE STORED NOTIFICATIONS":
+			return {...state, storedNotifications: action.notifications}
     default:
       return state
   }

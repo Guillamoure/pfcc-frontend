@@ -108,7 +108,7 @@ export const featureDistribution = (feature, options) => {
 				featureName: feature.name,
 				featureId: feature.id
 			}
-			let options = { additive: true }
+			let options = { additive: true, toggleable: !!feature.applications.find(app => app.toggleable) }
 			if (ability.klass_id){featureSource.klassId = ability.klass_id}
 			sendCampaignWebsocket(payload, featureSource, options)
 		}
