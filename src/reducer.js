@@ -32,7 +32,8 @@ const initialState = {
   spells: [],
   tooltip: {},
   modal: {},
-	websocket: {}
+	websocket: {},
+	notifications: [{message: "Rhubarb rhubarb"}, {message: "More data. If I add more content, will the box increase?"}]
 }
 
 
@@ -566,6 +567,8 @@ const reducer = (state = initialState, action) => {
 			return { ...state, character_info: { ...state.character_info, forbidden } }
 		case "ADJUST CHARACTER INFO":
 			return {...state, character_info: {...state.character_info, [action.adjust]: action.value}}
+		case "UPDATE NOTIFICATIONS":
+			return {...state, notifications: action.notifications}
     default:
       return state
   }

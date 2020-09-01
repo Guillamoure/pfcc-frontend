@@ -7,6 +7,7 @@ import './css/container.css';
 import './css/animations.css';
 import './css/form.scss';
 import './css/mobile.scss';
+import './css/popups.scss';
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { connect } from 'react-redux'
@@ -15,6 +16,7 @@ import localhost from './localhost'
 import NavBar from './container/navbar'
 import Tooltip from './modals/tooltip'
 import ModalSkeleton from './modals/skeleton'
+import Notifications from './components/modals/notifications'
 
 import Home from './container/home'
 import Classes from './container/classes'
@@ -69,6 +71,7 @@ class App extends React.Component {
             <NavBar />
             {this.props.tooltip.message && <Tooltip />}
             {this.props.modal.detail && <ModalSkeleton />}
+            {!!this.props.notifications.length && <Notifications />}
             <Switch>
               <Route exact path="/" component={Home} />
               <Route exact path="/classes" component={Classes} />
@@ -100,7 +103,8 @@ const mapStatetoProps = (state) => {
     currentUser: state.currentUser,
     admin: state.admin,
     tooltip: state.tooltip,
-    modal: state.modal
+    modal: state.modal,
+		notifications: state.notifications
   }
 }
 

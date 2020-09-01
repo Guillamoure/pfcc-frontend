@@ -1,6 +1,7 @@
 import store from '../../store'
 import * as WebsocketAction from '../action_creator/websocket'
 import { websocketFeatureDistribution } from '../distributers/features'
+import { updateNotificationsAction } from '../action_creator/popups'
 // 	this.props.cableApp.room =
 // 		this.props.cableApp.cable.subscriptions.create({
 // 			channel: "RoomChannel",
@@ -52,7 +53,7 @@ export const sendCampaignWebsocket = (payload, source, options) => {
 const parseSentCampaignData = data => {
 	let { sender_id, payload, source, options } = data
 	if (sender_id){
-		const { character } = store.getState()
+		const { character, notifications } = store.getState()
 		if (sender_id === character.id) {return null}
 		let sender = character.campaign.characters.find(ch => ch.id === sender_id)
 
@@ -61,6 +62,14 @@ const parseSentCampaignData = data => {
 		websocketFeatureDistribution(payload, {...source, senderName: sender.name, senderId: sender_id}, options)
 
 		// craft message for notification
+		if (options.remove){
+
+		} else {
+			let updatedNotifications = [...notifications]
+			let notification = {message: `${sender.name} gave you the abilities of ${source.sourceName}`}
+			updatedNotifications.push(notification)
+			updateNotificationsAction(updatedNotifications)
+		}
 		// don't distribute inherently if there is a togglable attribute
 	}
 }

@@ -1,0 +1,45 @@
+#popup-notifications-container {
+	z-index: 3;
+	position: fixed;
+	text-align: center;
+	bottom: 0;
+	right: 0;
+	display: flex;
+	flex-direction: column;
+}
+
+.popup-notification {
+	background: white;
+	border: 1px solid black;
+	width: 15vw;
+	padding: 1vh;
+	list-style: none;
+	vertical-align: middle;
+	bottom: 0;
+	transform: translateY(100%);
+	animation: slide-up 2.5s forwards 1;
+	margin: 0.08vh 1vw;
+}
+
+@keyframes slide-up {
+	100% { transform: translateY(0%); }
+}
+
+.popup-notification-close-button {
+	position: absolute;
+	padding: 1px;
+	text-align: center;
+	font-size: 10px;
+	font-weight: bold;
+	line-height: normal;
+	top: 3px;
+	right: 3px;
+	background: red;
+	color: white;
+	border: 1px solid black;
+	border-radius: 2px;
+}
+.popup-notification-close-button:hover {
+	color: red;
+	background: white;
+}
