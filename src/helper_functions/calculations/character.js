@@ -15,28 +15,30 @@ export const dispatchClassLevels = (character) => {
 
       // changing fetch data, this part is not applicable with starting fetch
 
-      let spellsFeature = klass.klass_features.find(f => f.name === 'Spells' || f.name === 'Alchemy')
-      let spellcasting = spellsFeature ? spellsFeature.spellcasting : null
-
-      // look to see if there are any cast spells for the given class
-      const castSpellsForThisClass = character.cast_spells.filter(cs => cs.klass_id === id)
-      // if (castSpellsForThisClass[0]){
-      const castSpells = {}
-      const transformedCastSpellsToLevelCast = castSpellsForThisClass.map(cs => cs.spell_level)
-      transformedCastSpellsToLevelCast.forEach(lvl => {
-        castSpells[lvl] ? castSpells[lvl] = castSpells[lvl] + 1 : castSpells[lvl] = 1
-      })
-      classInfo.castSpells = castSpells
-      classInfo.spellcasting = spellcasting
-      // hardcoded start
-      let name = character.name
-        if (name === "Nettie" || name === "Persephone" || name === "Maddox"){
-          classInfo.spellcastingAbility = 'intelligence'
-        } else if (name === "Sylvester"){
-          classInfo.spellcastingAbility = 'charisma'
-        }
+			// DELETE BELOW CODE ONCE REFACTORING OF SPELLS IS COMPLETE
+      // let spellsFeature = klass.klass_features.find(f => f.name === 'Spells' || f.name === 'Alchemy')
+      // let spellcasting = spellsFeature ? spellsFeature.spellcasting : null
+			//
+      // // look to see if there are any cast spells for the given class
+      // const castSpellsForThisClass = character.cast_spells.filter(cs => cs.klass_id === id)
+      // // if (castSpellsForThisClass[0]){
+      // const castSpells = {}
+      // const transformedCastSpellsToLevelCast = castSpellsForThisClass.map(cs => cs.spell_level)
+      // transformedCastSpellsToLevelCast.forEach(lvl => {
+      //   castSpells[lvl] ? castSpells[lvl] = castSpells[lvl] + 1 : castSpells[lvl] = 1
+      // })
+      // classInfo.castSpells = castSpells
+      // classInfo.spellcasting = spellcasting
+      // // hardcoded start
+      // let name = character.name
+      //   if (name === "Nettie" || name === "Persephone" || name === "Maddox"){
+      //     classInfo.spellcastingAbility = 'intelligence'
+      //   } else if (name === "Sylvester"){
+      //     classInfo.spellcastingAbility = 'charisma'
+      //   }
       // hardcoded end
       // }
+			// DELETE ABOVE CODE ONCE REFACTORING OF SPELLS IS COMPLETE
 
       // relocate to a new function when data is applcable
 

@@ -1,7 +1,7 @@
 import React from 'react'
 
 import ActionTabs from './action_tabs'
-import Spells from '../components/actions/spells'
+import Spellcasting from '../components/actions/spellcasting'
 import Abilities from '../components/actions/abilities'
 import Attacks from '../components/actions/attacks'
 import Basics from '../components/actions/basics'
@@ -56,7 +56,7 @@ class Actions extends React.Component {
           <div style={{height: '100%'}}>
           {this.state.activeTab === "Attacks" && <Attacks editModal={this.props.editModal} renderTooltip={this.props.renderTooltip} mouseOut={this.props.mouseOut}/>}
           {this.state.activeTab === "Basics" && <Basics renderTooltip={this.props.renderTooltip} mouseOut={this.props.mouseOut}/>}
-          {this.state.activeTab === "Spells" && <Spells character={this.props.character} editModal={this.props.editModal} clickOut={this.props.clickOut}/>}
+          {this.state.activeTab === "Spells" && <Spellcasting />}
           {this.state.activeTab === "Abilities" && <Abilities editModal={this.props.editModal}/>}
           {this.state.activeTab === "Equipment" && <Equipment editModal={this.props.editModal} renderTooltip={this.props.renderTooltip} mouseOut={this.props.mouseOut}/>}
           {this.state.activeTab === "Misc" && <Misc editModal={this.props.editModal} renderTooltip={this.props.renderTooltip} mouseOut={this.props.mouseOut}/>}
@@ -71,7 +71,7 @@ class Actions extends React.Component {
           <div className={this.renderMobileTabClassNames("Basics")} onClick={() => this.renderTabClick("Basics")}>Basics {this.state.activeTab === "Basics" ? <FontAwesomeIcon icon={faCircle}/> : <FontAwesomeIcon icon={faSortDown}/>}</div>
           {this.state.activeTab === "Basics" && <Basics renderTooltip={this.props.renderTooltip} mouseOut={this.props.mouseOut}/>}
           <div className={this.renderMobileTabClassNames("Spells")} onClick={() => this.renderTabClick("Spells")}>Spells {this.state.activeTab === "Spells" ? <FontAwesomeIcon icon={faCircle}/> : <FontAwesomeIcon icon={faSortDown}/>}</div>
-          {this.state.activeTab === "Spells" && <Spells editModal={this.props.editModal} clickOut={this.props.clickOut}/>}
+          {this.state.activeTab === "Spells" && <Spellcasting editModal={this.props.editModal} clickOut={this.props.clickOut}/>}
           <div className={this.renderMobileTabClassNames("Abilities")} onClick={() => this.renderTabClick("Abilities")}>Abilities {this.state.activeTab === "Abilities" ? <FontAwesomeIcon icon={faCircle}/> : <FontAwesomeIcon icon={faSortDown}/>}</div>
           {this.state.activeTab === "Abilities" && <Abilities editModal={this.props.editModal}/>}
           <div className={this.renderMobileTabClassNames("Equipment")} onClick={() => this.renderTabClick("Equipment")}>Equipment {this.state.activeTab === "Equipment" ? <FontAwesomeIcon icon={faCircle}/> : <FontAwesomeIcon icon={faSortDown}/>}</div>

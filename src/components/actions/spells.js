@@ -15,7 +15,7 @@ class Spells extends React.Component {
   }
 
   componentDidMount(){
-    this.remainingSpells()
+    // this.remainingSpells()
   }
 
   spellcasting = (klass) => {
@@ -128,16 +128,16 @@ class Spells extends React.Component {
   }
 
   renderSpellsPerDay = () => {
-    return this.state.spellsPerDay.map(spd => {
-      return (
-        <div key={spd.id*3-2}>
-          <span>{spd.name}</span>
-          {spd.spd.map(this.extrapolateSPD)}
-          {this.additionalSpellStats(spd.name)}
-          {this.availableSpellsToCastTable(spd.id)}
-        </div>
-      )
-    })
+    // return this.state.spellsPerDay.map(spd => {
+    //   return (
+    //     <div key={spd.id*3-2}>
+    //       <span>{spd.name}</span>
+    //       {spd.spd.map(this.extrapolateSPD)}
+    //       {this.additionalSpellStats(spd.name)}
+    //       {this.availableSpellsToCastTable(spd.id)}
+    //     </div>
+    //   )
+    // })
   }
 
   extrapolateSPD = (spd) => {
@@ -324,66 +324,65 @@ class Spells extends React.Component {
     return <span> | <strong>SR check</strong>: +{cl} | <strong>Concentration</strong>: +{concentration}</span>
   }
 
-  renderMISpells = () => {
-    let mi = this.props.character.character_magic_items
-    // let allSpells = _.flatten(mi.map(i => i.magic_item.magic_item_spell_references))
-    let magicItemObject = []
-    mi.forEach(i => {
-      i.character_magic_item_feature_usages.forEach(fu => {
-
-        let cmifuFeature = i.magic_item.features.find(f => f.usage.id === fu.feature_usage_id)
-
-        cmifuFeature.feature_usage_spell_options.forEach(fuso => {
-
-          let obj = {cmifu: fu, magicItem: i.magic_item, spell_id: fuso.spell_id, castable: fuso.castable}
-
-          magicItemObject.push(obj)
-        })
-        // cmifuFeature.magic_item_feature_usage_spell_options.forEach(spO => {
-        //
-        // })
-      })
-
-        // let obj = {cmifu: i.character_magic_item_feature_usages, magicItem: i.magic_item, spell: sp}
-
-        // WTF
-
-        // go through all cmifus, see if there is a spell option associated with it,
-        // match that spell option with magic item spell reference
-        // see if that spell is castable
-        // obj.cmifu.forEach(fu => {
-        // })
-
-        // v nested
-
-        // magicItemObject.push(obj)
-    })
-    let castableMagicItemObject = magicItemObject.filter(mio => mio.castable)
-    return (
-      <table>
-        <thead>
-          <tr >
-            <th>Action</th>
-            <th>Name</th>
-            <th>Range</th>
-            <th>Duration</th>
-            <th>Hit / DC</th>
-            <th>SR</th>
-          </tr>
-        </thead>
-        <tbody>
-          {castableMagicItemObject.map((cmio, idx) => <tr className={this.renderTableStyling(idx)} key={cmio.id*idx*3-1}><NonClassSpellSummary spellId={cmio.spell_id} magicItem={cmio.magicItem} cmifu={cmio.cmifu} renderCast={this.renderCast} editModal={this.props.editModal} clickOut={this.props.clickOut}/></tr>)}
-        </tbody>
-      </table>
-    )
-
-  }
+  // renderMISpells = () => {
+	// 	// MI = magic item
+  //   let mi = this.props.character.character_magic_items
+  //   // let allSpells = _.flatten(mi.map(i => i.magic_item.magic_item_spell_references))
+  //   let magicItemObject = []
+  //   mi.forEach(i => {
+  //     i.character_magic_item_feature_usages.forEach(fu => {
+	//
+  //       let cmifuFeature = i.magic_item.features.find(f => f.usage.id === fu.feature_usage_id)
+	//
+  //       cmifuFeature.feature_usage_spell_options.forEach(fuso => {
+	//
+  //         let obj = {cmifu: fu, magicItem: i.magic_item, spell_id: fuso.spell_id, castable: fuso.castable}
+	//
+  //         magicItemObject.push(obj)
+  //       })
+  //       // cmifuFeature.magic_item_feature_usage_spell_options.forEach(spO => {
+  //       //
+  //       // })
+  //     })
+	//
+  //       // let obj = {cmifu: i.character_magic_item_feature_usages, magicItem: i.magic_item, spell: sp}
+	//
+  //       // WTF
+	//
+  //       // go through all cmifus, see if there is a spell option associated with it,
+  //       // match that spell option with magic item spell reference
+  //       // see if that spell is castable
+  //       // obj.cmifu.forEach(fu => {
+  //       // })
+	//
+  //       // v nested
+	//
+  //       // magicItemObject.push(obj)
+  //   })
+  //   let castableMagicItemObject = magicItemObject.filter(mio => mio.castable)
+  //   return (
+  //     <table>
+  //       <thead>
+  //         <tr >
+  //           <th>Action</th>
+  //           <th>Name</th>
+  //           <th>Range</th>
+  //           <th>Duration</th>
+  //           <th>Hit / DC</th>
+  //           <th>SR</th>
+  //         </tr>
+  //       </thead>
+  //       <tbody>
+  //         {castableMagicItemObject.map((cmio, idx) => <tr className={this.renderTableStyling(idx)} key={cmio.id*idx*3-1}><NonClassSpellSummary spellId={cmio.spell_id} magicItem={cmio.magicItem} cmifu={cmio.cmifu} renderCast={this.renderCast} editModal={this.props.editModal} clickOut={this.props.clickOut}/></tr>)}
+  //       </tbody>
+  //     </table>
+  //   )
+	//
+  // }
 
   render(){
     return(
       <div style={{padding: '1em'}}>
-        {this.hardcodedSpells()}
-        {this.renderMISpells()}
         {!!this.state.spellsPerDay.length && this.renderSpellsPerDay()}
       </div>
     )
