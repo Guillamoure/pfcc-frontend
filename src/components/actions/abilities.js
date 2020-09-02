@@ -139,6 +139,10 @@ class Abilities extends React.Component {
 				if (ability.character_klass_feature_usages.length === 1){
 					let ckfu = ability.character_klass_feature_usages[0]
 					body = {...ckfu, current_usage: ckfu.current_usage + 1}
+				} else if (ability.character_klass_feature_usages.length === 0){
+					body.feature_usage_id = ability.baseFeatureAndAbility.feature.usage.id
+					body.klass_feature_id = ability.baseFeatureAndAbility.ability.id
+					body.current_usage = 1
 				}
 			}
 
