@@ -107,3 +107,30 @@
     display: none;
   }
 }
+
+.attention-button-animation {
+	border: 1px solid transparent;
+	border-radius: 3px;
+	animation: pulsing-colors 3.5s infinite;
+	&:hover {
+		border: 1px solid black;
+	}
+}
+
+@keyframes pulsing-colors {
+	10% {
+		box-shadow: 1px 1px 3px transparent, 1px -1px 3px transparent, -1px -1px 3px transparent, -1px 1px 3px transparent
+	}
+	/* 25% {
+		box-shadow: 2px 2px 4px maroon, 2px -2px 4px maroon, -2px -2px 4px maroon, -2px 2px 4px maroon
+	} */
+	50% {
+		box-shadow: 3px 3px 5px blue, 3px -3px 5px blue, -3px -3px 5px blue, -3px 3px 5px blue
+	}
+	/* 75% {
+		box-shadow: 2px 2px 4px maroon, 2px -2px 4px maroon, -2px -2px 4px maroon, -2px 2px 4px maroon
+	} */
+	90% {
+		box-shadow: 1px 1px 3px transparent, 1px -1px 3px transparent, -1px -1px 3px transparent, -1px 1px 3px transparent
+	}
+}

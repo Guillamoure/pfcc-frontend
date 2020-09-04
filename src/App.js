@@ -4,7 +4,7 @@ import './css/character.css';
 import './css/combat.css';
 import './css/card.css';
 import './css/container.css';
-import './css/animations.css';
+import './css/animations.scss';
 import './css/form.scss';
 import './css/mobile.scss';
 import './css/popups.scss';

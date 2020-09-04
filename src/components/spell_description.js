@@ -41,12 +41,13 @@ const SpellDescription = props => {
     console.log("scroll?")
   }
 
+	console.log(spell)
 
     return (
       <ul id='description-container' onScroll={start}>
         <li><strong>{spell.name}</strong></li>
         <li>School | {spell.magic_school.name} [{spell.subschools.map(ss => ss.name).join(", ")}]</li>
-        <li>Level | {spell.klass_spells.map(ks => `${ks.klass.name} ${ks.spell_level}`).join(", ")}</li>
+        <li>Level | {spell.spell_list_spells.map(sls => `${sls.spell_list.name.split(" ")[0]} ${sls.spell_level}`).join(", ")}</li>
         <li><strong><u>Casting</u></strong></li>
         <li>Casting Time | {spell.action.name}</li>
         <li>Components | {spell.spell_components.map(sc => sc.component.abbreviation).join(", ")}{renderComponentItems()}</li>
