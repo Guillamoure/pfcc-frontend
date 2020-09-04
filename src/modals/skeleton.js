@@ -7,6 +7,7 @@ import HPChanges from '../components/hp_changes'
 import Armor from '../components/armor_summary'
 import Points from '../components/modals/points'
 import FeatureUsageOptions from '../components/modals/feature_usage_options'
+import KnownSpellManager from '../components/modals/known_spell_manager'
 
 const ModalSkeleton = (props) => {
 
@@ -22,6 +23,8 @@ const ModalSkeleton = (props) => {
         return <Points feature={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
 			case 'featureUsageOptions':
 				return <FeatureUsageOptions feature={props.modal.obj} exitModal={exitModal} clickOut={clickOut} />
+			case 'manageKnownSpells':
+				return <KnownSpellManager spellcastingData={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
       default:
         break
     }
