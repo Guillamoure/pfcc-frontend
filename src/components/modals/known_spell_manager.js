@@ -9,6 +9,7 @@ const KnownSpellManager = props => {
 
 	const [displayButton, toggleDisplayButton] = React.useState("All")
 	const [spells, updateSpells] = React.useState([])
+	const [filterInput, updateFilter] = React.useState("")
 
 	React.useEffect(() => {
 		let spellcasting
@@ -35,23 +36,62 @@ const KnownSpellManager = props => {
 		const { klassFeature, level } = props.spellcastingData
 		console.log(props)
 		console.log(character_known_spells)
-		let remainingKnownSpells = remainingKnownSpellsArray(klassFeature, level)
-		let buttons = remainingKnownSpells.map(ks => {
+		let knownSpells = knownSpellsArray(klassFeature, level)
+		let buttons = knownSpells.map(ks => {
 			return <button>{ks.spell_level}</button>
 		})
+		let allKnownSpells = []
+		knownSpells.forEach(ks => {
+			let num = ks.spells
+			let thisLevelKnownSpells = character_known_spells.filter(cks => cks.spell_list_spell.spell_level === ks.spell_level)
+			num -= thisLevelKnownSpells.length
+			thisLevelKnownSpells.forEach(tlks => allKnownSpells.push({spellLevel: ks.spell_level, spellName: tlks.spell.name, spellId: tlks.spell.id}))
+			for(let i = 0; i < num; i++){
+				allKnownSpells.push({spellLevel: ks.spell_level, spellName: "", spellId: 0})
+			}
+		})
 		buttons.unshift(<button>All</button>)
+
+		let knownSpellsListItems = allKnownSpells.map(sp => {
+			return (
+				<tr>
+					<td>{sp.spellLevel}</td>
+					<td><em>{sp.spellName}</em></td>
+				</tr>
+			)
+		})
+
+		// display all known spells by spell level
+		// if there is a spell missing, have a gap
 		return (
 			<aside>
 				{buttons}
+				<table>
+					<tr>
+						<th>Lvl</th>
+						<th>Name</th>
+					</tr>
+					{knownSpellsListItems}
+				</table>
 			</aside>
 		)
 	}
 
 	const renderSpellOptions = () => {
-		const { level } = props.spellcastingData
-		console.log(spells)
-		let nodeSpells = spells.map(sp => {
+		const { klassFeature, level } = props.spellcastingData
+
+		let filteredSpells = spells.filter(sp => {
+			let input = filterInput.toLowerCase()
+			let spellName = sp.name.toLowerCase()
+			return spellName.includes(input)
+		})
+
+		let knownSpellsIDs = character_known_spells.map(ks => ks.spell.id)
+
+
+		let nodeSpells = filteredSpells.map(sp => {
 			let className = sp.spell_level > level ? "mobile-active-tab" : ""
+			if (knownSpellsIDs.includes(sp.id)){className = "mobile-active-tab"}
 			return (
 				<tr className={className}>
 					<td>{sp.spell_level}</td>
@@ -60,13 +100,17 @@ const KnownSpellManager = props => {
 			)
 		})
 		return (
-			<table>
-				<tr>
-					<th>Lvl</th>
-					<th>Name</th>
-				</tr>
-				{nodeSpells}
-			</table>
+			<aside>
+				<label for="spell-filter">Filter Spells</label>
+				<input name="spell-filter" id="spell-filter" type="text" value={filterInput} onChange={e => updateFilter(e.target.value)}/>
+				<table>
+					<tr>
+						<th>Lvl</th>
+						<th>Name</th>
+					</tr>
+					{nodeSpells}
+				</table>
+			</aside>
 		)
 	}
 
