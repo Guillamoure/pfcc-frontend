@@ -38,7 +38,7 @@ const KnownSpellManager = props => {
 		console.log(character_known_spells)
 		let knownSpells = knownSpellsArray(klassFeature, level)
 		let buttons = knownSpells.map(ks => {
-			return <button>{ks.spell_level}</button>
+			return <button onClick={() => toggleDisplayButton(ks.spell_level)}>{ks.spell_level}</button>
 		})
 		let allKnownSpells = []
 		knownSpells.forEach(ks => {
@@ -50,8 +50,11 @@ const KnownSpellManager = props => {
 				allKnownSpells.push({spellLevel: ks.spell_level, spellName: "", spellId: 0})
 			}
 		})
-		buttons.unshift(<button>All</button>)
+		buttons.unshift(<button onClick={() => toggleDisplayButton("All")}>All</button>)
 
+		if (displayButton !== "All"){
+			allKnownSpells = allKnownSpells.filter(ks => parseInt(displayButton) === ks.spellLevel)
+		}
 		let knownSpellsListItems = allKnownSpells.map(sp => {
 			return (
 				<tr>
