@@ -6,7 +6,15 @@ export const getFetch = url => {
 }
 
 export const postFetch = (url, body) => {
-
+	return fetch(`${localhost}/api/v1/${url}`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			'Response': 'application/json',
+			'Authenticate': localStorage.token
+		},
+		body: JSON.stringify(body)
+	}).then(r => r.json())
 }
 
 export const patchFetch = (url, body) => {

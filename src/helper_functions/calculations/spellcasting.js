@@ -82,8 +82,8 @@ export const areAllKnownSpellsFilled = (klassFeature, level) => {
 	let areThereKnownSpellsMissing = false
 	let i = 0
 
-	while (!areThereKnownSpellsMissing || i+1 === remainingKnownSpells.length){
-		if (remainingKnownSpells[i].spells > 1){
+	while (i <= remainingKnownSpells.length){
+		if (remainingKnownSpells[i]?.spells > 0){
 			areThereKnownSpellsMissing = true
 		}
 		i++
