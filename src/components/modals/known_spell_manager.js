@@ -1,5 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import SpellDescription from '../spell_description'
 import { remainingKnownSpellsArray, knownSpellsArray } from '../../helper_functions/calculations/spellcasting'
 import { getFetch } from '../../helper_functions/fetches'
 
@@ -10,6 +11,7 @@ const KnownSpellManager = props => {
 	const [displayButton, toggleDisplayButton] = React.useState("All")
 	const [spells, updateSpells] = React.useState([])
 	const [filterInput, updateFilter] = React.useState("")
+	const [spellId, updateSpellId] = React.useState(0)
 
 	React.useEffect(() => {
 		let spellcasting
@@ -34,11 +36,14 @@ const KnownSpellManager = props => {
 		// render buttons, that flash
 		// render known spells, and missing spells
 		const { klassFeature, level } = props.spellcastingData
-		console.log(props)
-		console.log(character_known_spells)
+
 		let knownSpells = knownSpellsArray(klassFeature, level)
-		let buttons = knownSpells.map(ks => {
-			return <button onClick={() => toggleDisplayButton(ks.spell_level)}>{ks.spell_level}</button>
+		let remainingKnownSpells = remainingKnownSpellsArray(klassFeature, level)
+		let buttons = remainingKnownSpells.map(ks => {
+			let className = ""
+			if (ks.spells > 0){className='attention-button-animation'}
+			
+			return <button className={className} onClick={() => toggleDisplayButton(ks.spell_level)}>{ks.spell_level}</button>
 		})
 		let allKnownSpells = []
 		knownSpells.forEach(ks => {
@@ -59,7 +64,7 @@ const KnownSpellManager = props => {
 			return (
 				<tr>
 					<td>{sp.spellLevel}</td>
-					<td><em>{sp.spellName}</em></td>
+					<td><em className='underline-hover' onClick={() => updateSpellId(sp.spellId)}>{sp.spellName}</em></td>
 				</tr>
 			)
 		})
@@ -67,7 +72,7 @@ const KnownSpellManager = props => {
 		// display all known spells by spell level
 		// if there is a spell missing, have a gap
 		return (
-			<aside>
+			<aside style={{gridArea: "known", overflowY: "scroll"}}>
 				{buttons}
 				<table>
 					<tr>
@@ -98,30 +103,48 @@ const KnownSpellManager = props => {
 			return (
 				<tr className={className}>
 					<td>{sp.spell_level}</td>
-					<td><em>{sp.name}</em></td>
+					<td><em className='underline-hover' onClick={() => updateSpellId(sp.id)}>{sp.name}</em></td>
 				</tr>
 			)
 		})
 		return (
-			<aside>
+			<aside style={{gridArea: "all-spells", maxHeight: '100%', overflowY: 'scroll'}}>
 				<label for="spell-filter">Filter Spells</label>
 				<input name="spell-filter" id="spell-filter" type="text" value={filterInput} onChange={e => updateFilter(e.target.value)}/>
 				<table>
-					<tr>
-						<th>Lvl</th>
-						<th>Name</th>
-					</tr>
-					{nodeSpells}
+					<thead>
+						<tr>
+							<th>Lvl</th>
+							<th>Name</th>
+						</tr>
+					</thead>
+					<tbody>
+						{nodeSpells}
+					</tbody>
 				</table>
+			</aside>
+		)
+	}
+
+	const renderSpellDescription = () => {
+		if (!spellId || !spells.length){
+			return null
+		}
+		let spell = spells.find(sp => sp.id === spellId)
+
+		return (
+			<aside style={{gridArea: "spell-description", textAlign: "left", overflowY: "scroll"}}>
+				<SpellDescription spell={spell} />
 			</aside>
 		)
 	}
 
 
 	return (
-		<section className="container-2">
+		<section id="known-spells-popup">
 			{renderKnownSpells()}
 			{renderSpellOptions()}
+			{renderSpellDescription()}
 		</section>
 	)
 }
