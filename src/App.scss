@@ -858,4 +858,18 @@ $tan: #cfb997;
 		"spell-description spell-description all-spells";
 	text-align: left;
 	height: 100%;
+	table {
+		border: 1px solid black;
+		border-collapse: collapse;
+		width: 100%;
+		th {
+			border-bottom: 1px solid black;
+		}
+		td {
+			border-bottom: 1px solid black;
+		}
+		tr:hover {
+			background: #a0a0a0;
+		}
+	}
 }

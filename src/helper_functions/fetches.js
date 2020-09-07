@@ -29,5 +29,7 @@ export const patchFetch = (url, body) => {
 }
 
 export const deleteFetch = url => {
-
+	return fetch(`${localhost}/api/v1/${url}`, {
+		method: 'DELETE'
+	}).then(r => r.json())
 }

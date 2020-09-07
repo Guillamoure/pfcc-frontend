@@ -2,18 +2,19 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import SpellDescription from '../spell_description'
 import { remainingKnownSpellsArray, knownSpellsArray } from '../../helper_functions/calculations/spellcasting'
-import { getFetch, postFetch } from '../../helper_functions/fetches'
+import { getFetch, postFetch, deleteFetch } from '../../helper_functions/fetches'
 import { replaceCharacterAction } from '../../helper_functions/action_creator/character'
 
 const KnownSpellManager = props => {
 
-	const { character_known_spells, id } = useSelector(state => state.character)
+	let { character_known_spells, id } = useSelector(state => state.character)
 
 	const [displayButton, toggleDisplayButton] = React.useState("All")
 	const [spells, updateSpells] = React.useState([])
 	const [filterInput, updateFilter] = React.useState("")
 	const [spellId, updateSpellId] = React.useState(0)
 	const [dragInfo, updateDragInfo] = React.useState({
+		characterKlassSpellId: 0,
 		spellListSpellId: 0,
 		spellId: 0,
 		dragging: false
@@ -49,7 +50,7 @@ const KnownSpellManager = props => {
 
 	const updateDrop = e => {
 		e.preventDefault()
-		console.log("first")
+
 		let body = {
 			spell_list_spell_id: dragInfo.spellListSpellId,
 			feature_spellcasting_id: featureSpellcasting.id,
@@ -63,18 +64,22 @@ const KnownSpellManager = props => {
 			// if spell is not known
 			postFetch('known_spells', body)
 			.then(data => {
-				let spell = spells.find(sp => sp.id === dragInfo.spellId)
-				let spellListSpell = spell.spell_list_spells.find(sls => sls.id === dragInfo.spellListSpellId)
-				let characterKnownSpell = {
-					id: null,
-					spell,
-					spell_list_spell: spellListSpell,
-					spellcasting: featureSpellcasting
+				if (data.errors) {
+					updateWarning(data.errors[0])
+				} else {
+					let spell = spells.find(sp => sp.id === dragInfo.spellId)
+					let spellListSpell = spell.spell_list_spells.find(sls => sls.id === dragInfo.spellListSpellId)
+					let characterKnownSpell = {
+						id: data.id,
+						spell,
+						spell_list_spell: spellListSpell,
+						spellcasting: featureSpellcasting
+					}
+					let replaceCharacterKnownSpells = [...character_known_spells]
+					replaceCharacterKnownSpells.push(characterKnownSpell)
+					character_known_spells.push(characterKnownSpell)
+					replaceCharacterAction('character_known_spells', replaceCharacterKnownSpells)
 				}
-				let replaceCharacterKnownSpells = [...character_known_spells]
-				replaceCharacterKnownSpells.push(characterKnownSpell)
-				character_known_spells.push(characterKnownSpell)
-				replaceCharacterAction('character_known_spells', replaceCharacterKnownSpells)
 			})
 		}
 		updateDragInfo({
@@ -91,6 +96,15 @@ const KnownSpellManager = props => {
 			spellId: 0,
 			dragging: false
 		})
+	}
+
+	const removeCharacterKnownSpell = characterKnownSpellId => {
+		deleteFetch(`known_spells/${characterKnownSpellId}`)
+			.then(data => {
+				let replaceCharacterKnownSpells = [...character_known_spells].filter(ks => ks.id !== characterKnownSpellId)
+				character_known_spells = character_known_spells.filter(ks => ks.id !== characterKnownSpellId)
+				replaceCharacterAction('character_known_spells', replaceCharacterKnownSpells)
+			})
 	}
 
 
@@ -112,9 +126,9 @@ const KnownSpellManager = props => {
 			let num = ks.spells
 			let thisLevelKnownSpells = character_known_spells.filter(cks => cks.spell_list_spell.spell_level === ks.spell_level)
 			num -= thisLevelKnownSpells.length
-			thisLevelKnownSpells.forEach(tlks => allKnownSpells.push({spellLevel: ks.spell_level, spellName: tlks.spell.name, spellId: tlks.spell.id}))
+			thisLevelKnownSpells.forEach(tlks => allKnownSpells.push({spellLevel: ks.spell_level, spellName: tlks.spell.name, spellId: tlks.spell.id, characterKnownSpellId: tlks.id}))
 			for (let i = 0; i < num; i++){
-				allKnownSpells.push({spellLevel: ks.spell_level, spellName: "", spellId: 0})
+				allKnownSpells.push({spellLevel: ks.spell_level, spellName: "", spellId: 0, characterKnownSpellId: 0})
 			}
 		})
 		buttons.unshift(<button onClick={() => toggleDisplayButton("All")}>All</button>)
@@ -127,24 +141,31 @@ const KnownSpellManager = props => {
 				<tr>
 					<td>{sp.spellLevel}</td>
 					<td><em className='underline-hover' onClick={() => updateSpellId(sp.spellId)}>{sp.spellName}</em></td>
+					<td>{!!sp.characterKnownSpellId && <button style={{color: "white", background: "red", fontSize: "0.9rem", border: "1px solid black", textAlign: "right", borderRadius: "6px"}} onClick={() => removeCharacterKnownSpell(sp.characterKnownSpellId)}>Remove</button>}</td>
 				</tr>
 			)
 		})
 
 		// display all known spells by spell level
 		// if there is a spell missing, have a gap
-		let style = {gridArea: "known", overflowY: "scroll"}
+
+		// UI if adding a spell
+		let style = {gridArea: "known", overflowY: "scroll", position: "relative"}
+		let plusIcon = null
 		if (dragInfo.dragging){
 			style.border = "1px dashed black"
 		}
+
 		return (
 			<aside style={style} onDrop={updateDrop} onDragOver={e => e.preventDefault()}>
 				{buttons}
+				{plusIcon}
 				<table>
 					<thead>
 						<tr>
 							<th>Lvl</th>
 							<th>Name</th>
+							<th>Remove</th>
 						</tr>
 					</thead>
 					<tbody>
