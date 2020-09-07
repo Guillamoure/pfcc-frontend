@@ -6,14 +6,15 @@ import { useSelector } from 'react-redux'
 
 const Spellcasting = props => {
 
-	const [spellcastingData, updateSpellcastingData] = React.useState([])
+	const [, updateSpellcastingData] = React.useState([])
 
 	React.useEffect(() => {
-		updateSpellcastingData(SpellcastingCalculations.allRemainingSpellsPerDay())
+		updateSpellcastingData()
 	}, [])
 
 
 	const renderAllSpellcasting = () => {
+		let spellcastingData = SpellcastingCalculations.allRemainingSpellsPerDay()
 		return spellcastingData.map((scData, i) => {
 			return (
 				<>
@@ -84,11 +85,11 @@ const Spellcasting = props => {
 		let knownSpells = SpellcastingCalculations.characterKnownSpells(scData.klassFeature)
 
 		return knownSpells.map((ks, i) => {
-			let ksData = SpellcastingCalculations.spellData(ks, scData.klassFeature.klass_id)
+			let ksData = SpellcastingCalculations.spellData({...ks, spellcasting: scData.spellcasting}, scData.klassFeature.klass_id)
 			return (
 				<tr>
 					<td>{ksData.spellLevel}</td>
-					<td><button className={ksData.action}>Cast</button></td>
+					<td><button className={ksData.action} onClick={() => SpellcastingCalculations.castSpell(ksData, scData.spellsPerDay)}><strong>Cast</strong></button></td>
 					<td><em className='underline-hover' onClick={() => modalAction("spellDescription", ks.spell)}>{ksData.name}</em></td>
 					<td>{ksData.range}</td>
 					<td>{ksData.duration}</td>

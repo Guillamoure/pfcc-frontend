@@ -1,8 +1,9 @@
 import store from '../../store'
 import { remainingUsage } from './feature_usage'
+import { remainingSpellsPerDayFromSpellcasting } from './spellcasting'
 import _ from 'lodash'
 
-export const isThisActionAvailable = (feature) => {
+export const isThisActionAvailable = (feature, options = {}) => {
 	// 	STORED DATA
 	let action = feature.action
 	let actions = store.getState().character_info.actions
@@ -24,12 +25,16 @@ export const isThisActionAvailable = (feature) => {
 		return 'cannot-cast'
 	// if there are no points left
 	// cannot use the action
-	} else if (!remainingUsage(feature)) {
+	} else if (!options.spell && !remainingUsage(feature)) {
 		return 'cannot-cast'
-	} else if (sharingConditions(feature)) {
+		// if the cost of this feature is higher than the remaining points
+		// cannot use the action
+	} else if (!options.spell && sharingConditions(feature)) {
 		return 'cannot-cast'
-	// if the cost of this feature is higher than the remaining points
+	// if you are out of spells per day from a spell at this level
 	// cannot use the action
+} else if (options.spell && remainingSpellsPerDayFromSpellcasting(options.spellcasting, options.spellLevel)[0]?.spells === 0) {
+		return 'cannot-cast'
 	}	else {
 		return action
 	}
@@ -51,7 +56,7 @@ export const actionClass = a => {
     case 'Free Action':
       return 'free'
     default:
-      return a
+      return 'long'
   }
 }
 

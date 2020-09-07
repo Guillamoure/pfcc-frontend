@@ -20,3 +20,5 @@ export const replaceCharacterArrayAction = (adjust, value) => dispatch({type: "A
 export const replaceCharacterInfoAction = (adjust, value) => dispatch({type: 'ADJUST CHARACTER INFO', adjust, value})
 
 export const replaceCharacterAction = (adjust, value) => dispatch({type: 'ADJUST CHARACTER', adjust, value})
+
+export const triggerTurnActionAction = action => dispatch({type: 'TRIGGER ACTION', action})

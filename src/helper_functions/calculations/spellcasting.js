@@ -1,6 +1,9 @@
 import store from '../../store'
 import { abilityScoreMod } from './ability_scores'
+import { isThisActionAvailable } from './round_actions'
 import { actionClass } from '../fuf'
+import { postFetch } from '../fetches'
+import { replaceCharacterAction, triggerTurnActionAction } from '../action_creator/character'
 
 export const allSpellcastingKlassFeatures = () => {
 	const { character } = {...store.getState()}
@@ -14,6 +17,16 @@ export const allSpellcastingKlassFeatures = () => {
 	})
 }
 
+export const locateSpellcastingFeatureThroughId = id => {
+	let spellcasting
+	allSpellcastingKlassFeatures.forEach(sckf => {
+		sckf.feature.forEach(f => {
+			if (f.spellcasting.id === id){spellcasting = f.spellcasting}
+		})
+	})
+	return spellcasting
+}
+
 export const allRemainingSpellsPerDay = () => {
 	let spellcastingKlassFeatures = allSpellcastingKlassFeatures()
 	return spellcastingKlassFeatures.map(remainingSpellsPerDay)
@@ -25,24 +38,49 @@ export const remainingSpellsPerDay = (klassFeature) => {
 	let level = character_info.classes.find(cl => cl.id === klassFeature.klass_id).level
 	let abilityScoreModifier
 	let klassName = character.uniq_klasses.find(uk => uk.id === klassFeature.klass_id).name
+	let spellcasting
 
 	klassFeature.features.forEach(f => {
 		if (f.spellcasting){
+			spellcasting = f.spellcasting
 			abilityScoreModifier = abilityScoreMod(f.spellcasting.ability_score)
 			let applicableSPD = [...f.spellcasting.spells_per_day_per_level].filter(spd => spd.klass_level === level)
 			applicableSPD = [...applicableSPD].map(spd => {
 				let increase = 0
+				let decrease = 0
 				if (spd.spell_level <= abilityScoreModifier){
 					increase = 1
 				}
-				return {...spd, spells: spd.spells + increase, klassId: klassFeature.klass_id, klassName}
+				character.cast_spells.forEach(cs => {
+					if (spd.spell_level === cs.spell_level){decrease++}
+				})
+				return {...spd, spells: (spd.spells + increase - decrease)}
 			})
 			array = applicableSPD
 		}
 	})
 	// here, you'd remove spells per level, as well
 
-	return {spellsPerDay: array, klassFeature, klassName, abilityScoreModifier, level}
+	return {spellsPerDay: array, klassFeature, klassName, abilityScoreModifier, level, spellcasting}
+}
+
+export const remainingSpellsPerDayFromSpellcasting = (spellcasting, level) => {
+	const { character, character_info } = store.getState()
+	let abilityScoreModifier = abilityScoreMod(spellcasting.ability_score)
+
+	let applicableSPD = [...spellcasting.spells_per_day_per_level].filter(spd => spd.klass_level === level)
+
+	return applicableSPD = [...applicableSPD].map(spd => {
+		let increase = 0
+		if (spd.spell_level <= abilityScoreModifier){increase = 1}
+
+		let decrease = 0
+		character.cast_spells.forEach(cs => {
+			if (spd.spell_level === cs.spell_level){decrease++}
+		})
+
+		return {...spd, spells: (spd.spells + increase - decrease)}
+	})
 }
 
 export const additionalSpellStats = (klassFeature, abilityScoreModifier) => {
@@ -100,7 +138,15 @@ export const characterKnownSpells = (klassFeature) => {
 
 	klassFeature.features.forEach(f => spellcasting = f.spellcasting || spellcasting)
 
-	return character_known_spells.filter(cks => cks.spellcasting.id === spellcasting.id)
+	let data = character_known_spells.filter(cks => cks.spellcasting.id === spellcasting.id)
+	let sortedData = []
+	for(let i = 0; i < 10; i++){
+		let thisLvl = data.filter(sp => sp.spell_list_spell.spell_level === i)
+		sortedData.push(thisLvl.sort((a,b) => a.spell.name.localeCompare(b.spell.name)))
+	}
+	sortedData = sortedData.flat()
+
+	return sortedData
 }
 
 export const spellData = (spellData, klassId) => {
@@ -108,9 +154,8 @@ export const spellData = (spellData, klassId) => {
 	let { spell, spell_list_spell: sls, spellcasting } = spellData
 	let level = character_info.classes.find(cl => cl.id === klassId).level
 
-
 	let spellLevel = sls.spell_level
-	let action = actionClass(spell.action.name)
+	let action = isThisActionAvailable(spell, {spell: true, spellcasting, klassId, spellLevel: sls.spell_level})
 	let name = spell.name
 	let range = renderSpellRange(spell, level)
 	let duration = renderSpellDuration(spell, level)
@@ -119,7 +164,7 @@ export const spellData = (spellData, klassId) => {
 	let spellResistance = spell.spell_resistance ? "Y" : "N"
 	let spellId = spell.id
 
-	return { spellLevel, action, name, range, duration, difficultyClass, hitModifier, spellResistance, spellId }
+	return { spellLevel, action, name, range, duration, difficultyClass, hitModifier, spellResistance, spellId, spellcasting }
 }
 
 export const renderSpellRange = (spell, level) => {
@@ -127,7 +172,10 @@ export const renderSpellRange = (spell, level) => {
 	if (rangeIncrease % 1 !== 0){
 		rangeIncrease -= spell.spell_range.increase_per_level
 	}
-	if (spell.spell_range.feet + rangeIncrease === 0){return "-"}
+	if (spell.spell_range.feet + rangeIncrease === 0){
+		if (spell.spell_range.name === "Touch"){return "Touch"}
+		return "-"
+	}
 	return Math.floor(spell.spell_range.feet + rangeIncrease) + " ft"
 }
 
@@ -151,4 +199,35 @@ export const renderSpellDC = (spellData) => {
 	if (save === "Fortitude"){save = "Fort"}
 	if (save === "Reflex"){save = "Ref"}
 	return save + " " + (10 + abilityScoreMod(spellData.spellcasting.ability_score) + spellData.spell_list_spell.spell_level)
+}
+
+export const castSpell = (ksData, spellsPerDay) => {
+	if (ksData.action !== "cannot-cast"){
+		triggerTurnActionAction(ksData.action)
+		if (ksData.spellcasting.infinite_zero_level && ksData.spellLevel === 0){
+
+		} else {
+			let spellPerDay = spellsPerDay.find(spd => spd.spell_level === ksData.spellLevel)
+			const { character } = store.getState()
+			if (spellPerDay.spells > 0){
+				if (ksData.spellcasting.expend_prepared_spells){
+
+				} else {
+					let body = {
+						character_id: character.id,
+						feature_spellcasting_id: ksData.spellcasting.id,
+						spell_level: ksData.spellLevel
+					}
+					postFetch("cast_spells", body)
+						.then(data => {
+							let replaceCastSpells = [...character.cast_spells]
+							replaceCastSpells.push(body)
+							replaceCharacterAction('cast_spells', replaceCastSpells)
+							// update redux
+						})
+				}
+
+			}
+		}
+	}
 }
