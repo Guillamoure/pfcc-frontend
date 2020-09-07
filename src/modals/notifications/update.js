@@ -1,5 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import * as SpellcastingCalculations from '../../helper_functions/calculations/spellcasting'
+import { modalAction } from '../../helper_functions/action_creator/popups'
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
 
@@ -71,11 +74,27 @@ class Update extends React.Component {
     }
   }
 
+	manageKnownSpells = () => {
+		let spellcastingData = SpellcastingCalculations.allRemainingSpellsPerDay()
+		return spellcastingData.map((scData, i) => {
+			return this.renderManageKnownSpells(scData)
+		})
+	}
+
+	renderManageKnownSpells = (spellcastingData) => {
+		const renderClick = () => {
+			modalAction("manageKnownSpells", spellcastingData)
+		}
+
+		return <button onClick={renderClick}>Manage Your Spells - {spellcastingData.klassName}</button>
+	}
+
   render(){
     return(
       <span style={{padding: '1em'}}>
         <p>Things to update</p>
         {this.addSkillRanks()}
+				{this.manageKnownSpells()}
         {this.prepareSpells()}
       </span>
     )

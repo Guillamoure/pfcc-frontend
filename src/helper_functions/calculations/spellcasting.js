@@ -2,9 +2,9 @@ import store from '../../store'
 import { abilityScoreMod } from './ability_scores'
 
 export const allSpellcastingKlassFeatures = () => {
-	const { character } = store.getState()
+	const { character } = {...store.getState()}
 
-	return character.applicable_klass_features.filter(akf => {
+	return [...character.applicable_klass_features].filter(akf => {
 		let spellcasting = false
 		akf.features.forEach(f => {
 			if (f.spellcasting){spellcasting = true}
@@ -28,12 +28,13 @@ export const remainingSpellsPerDay = (klassFeature) => {
 	klassFeature.features.forEach(f => {
 		if (f.spellcasting){
 			abilityScoreModifier = abilityScoreMod(f.spellcasting.ability_score)
-			let applicableSPD = f.spellcasting.spells_per_day_per_level.filter(spd => spd.klass_level === level)
-			applicableSPD = applicableSPD.map(spd => {
+			let applicableSPD = [...f.spellcasting.spells_per_day_per_level].filter(spd => spd.klass_level === level)
+			applicableSPD = [...applicableSPD].map(spd => {
+				let increase = 0
 				if (spd.spell_level <= abilityScoreModifier){
-					spd.spells++
+					increase = 1
 				}
-				return {...spd, klassId: klassFeature.klass_id, klassName}
+				return {...spd, spells: spd.spells + increase, klassId: klassFeature.klass_id, klassName}
 			})
 			array = applicableSPD
 		}

@@ -6,9 +6,14 @@ import { useSelector } from 'react-redux'
 
 const Spellcasting = props => {
 
+	const [spellcastingData, updateSpellcastingData] = React.useState([])
+
+	React.useEffect(() => {
+		updateSpellcastingData(SpellcastingCalculations.allRemainingSpellsPerDay())
+	}, [])
+
 
 	const renderAllSpellcasting = () => {
-		const spellcastingData = SpellcastingCalculations.allRemainingSpellsPerDay()
 		return spellcastingData.map((scData, i) => {
 			return (
 				<>
@@ -21,6 +26,9 @@ const Spellcasting = props => {
 			)
 		})
 	}
+
+
+
 
 	const renderSPD = (spds, klassName, i) => {
 		let interpolatedSPD = spds.map((spd, ind) => {
