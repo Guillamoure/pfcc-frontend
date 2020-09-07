@@ -20,8 +20,8 @@ const Spellcasting = props => {
 				<>
 					{renderSPD(scData.spellsPerDay, scData.klassName, i)}
 					<br/>
-					{renderAddionalSpellcastingStats(scData.klassFeature, scData.abilityScoreModifier)}
-					{SpellcastingCalculations.areAllKnownSpellsFilled(scData.klassFeature, scData.level) && renderManageKnownSpells(scData)}
+					{renderAddionalSpellcastingStats(scData.level, scData.abilityScoreModifier)}
+					{SpellcastingCalculations.areAllKnownSpellsFilled(scData.spellcasting, scData.level) && renderManageKnownSpells(scData)}
 					{renderSpellTable(scData, i)}
 				</>
 			)
@@ -47,8 +47,8 @@ const Spellcasting = props => {
 		)
 	}
 
-	const renderAddionalSpellcastingStats = (klassFeature, abilityScoreModifier) => {
-		const { casterLevel, concentration } = SpellcastingCalculations.additionalSpellStats(klassFeature, abilityScoreModifier)
+	const renderAddionalSpellcastingStats = (level, abilityScoreModifier) => {
+		const { casterLevel, concentration } = SpellcastingCalculations.additionalSpellStats(level, abilityScoreModifier)
 		return <span> SR check: <strong>+{casterLevel} |</strong> Concentration: <strong>+{concentration}</strong></span>
 	}
 
@@ -82,7 +82,7 @@ const Spellcasting = props => {
 	}
 
 	const renderSpellTableRows = (scData) => {
-		let knownSpells = SpellcastingCalculations.characterKnownSpells(scData.klassFeature)
+		let knownSpells = SpellcastingCalculations.characterKnownSpells(scData.spellcasting)
 
 		return knownSpells.map((ks, i) => {
 			let ksData = SpellcastingCalculations.spellData({...ks, spellcasting: scData.spellcasting}, scData.klassFeature.klass_id)

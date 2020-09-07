@@ -36,27 +36,16 @@ export const remainingSpellsPerDay = (klassFeature) => {
 	let array = []
 	const { character, character_info } = store.getState()
 	let level = character_info.classes.find(cl => cl.id === klassFeature.klass_id).level
-	let abilityScoreModifier
 	let klassName = character.uniq_klasses.find(uk => uk.id === klassFeature.klass_id).name
+	let abilityScoreModifier
 	let spellcasting
 
 	klassFeature.features.forEach(f => {
 		if (f.spellcasting){
 			spellcasting = f.spellcasting
-			abilityScoreModifier = abilityScoreMod(f.spellcasting.ability_score)
-			let applicableSPD = [...f.spellcasting.spells_per_day_per_level].filter(spd => spd.klass_level === level)
-			applicableSPD = [...applicableSPD].map(spd => {
-				let increase = 0
-				let decrease = 0
-				if (spd.spell_level <= abilityScoreModifier){
-					increase = 1
-				}
-				character.cast_spells.forEach(cs => {
-					if (spd.spell_level === cs.spell_level){decrease++}
-				})
-				return {...spd, spells: (spd.spells + increase - decrease)}
-			})
-			array = applicableSPD
+			abilityScoreModifier = abilityScoreMod(spellcasting.ability_score)
+
+			array = remainingSpellsPerDayFromSpellcasting(spellcasting, level, abilityScoreModifier)
 		}
 	})
 	// here, you'd remove spells per level, as well
@@ -83,19 +72,14 @@ export const remainingSpellsPerDayFromSpellcasting = (spellcasting, level) => {
 	})
 }
 
-export const additionalSpellStats = (klassFeature, abilityScoreModifier) => {
-	const { character_info } = store.getState()
-	let lvl = character_info.classes.find(cl => cl.id === klassFeature.klass_id).level
-
+export const additionalSpellStats = (lvl, abilityScoreModifier) => {
 	return {casterLevel: lvl, concentration: lvl + abilityScoreModifier}
 }
 
-export const remainingKnownSpellsArray = (klassFeature, level) => {
+export const remainingKnownSpellsArray = (spellcasting, level) => {
 	const { character } = store.getState()
-	let spellcasting
-	klassFeature.features.forEach(f => spellcasting = f.spellcasting || spellcasting)
 
-	let knownSpellsThisLevel = knownSpellsArray(klassFeature, level)
+	let knownSpellsThisLevel = knownSpellsArray(spellcasting, level)
 	let characterKnownSpells = character.character_known_spells
 
 	knownSpellsThisLevel = knownSpellsThisLevel.map(kspl => {
@@ -109,15 +93,12 @@ export const remainingKnownSpellsArray = (klassFeature, level) => {
 	return knownSpellsThisLevel
 }
 
-export const knownSpellsArray = (klassFeature, level) => {
-	let spellcasting
-	klassFeature.features.forEach(f => spellcasting = f.spellcasting || spellcasting)
-
+export const knownSpellsArray = (spellcasting, level) => {
 	return spellcasting.known_spells_per_level.filter(kspl => kspl.klass_level === level)
 }
 
-export const areAllKnownSpellsFilled = (klassFeature, level) => {
-	let remainingKnownSpells = remainingKnownSpellsArray(klassFeature, level)
+export const areAllKnownSpellsFilled = (spellcasting, level) => {
+	let remainingKnownSpells = remainingKnownSpellsArray(spellcasting, level)
 
 	let areThereKnownSpellsMissing = false
 	let i = 0
@@ -132,11 +113,8 @@ export const areAllKnownSpellsFilled = (klassFeature, level) => {
 	return areThereKnownSpellsMissing
 }
 
-export const characterKnownSpells = (klassFeature) => {
-	let spellcasting
+export const characterKnownSpells = (spellcasting) => {
 	const { character_known_spells } = {...store.getState().character}
-
-	klassFeature.features.forEach(f => spellcasting = f.spellcasting || spellcasting)
 
 	let data = character_known_spells.filter(cks => cks.spellcasting.id === spellcasting.id)
 	let sortedData = []

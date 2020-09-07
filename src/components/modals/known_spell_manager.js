@@ -24,8 +24,7 @@ const KnownSpellManager = props => {
 	const [warning, updateWarning] = React.useState(null)
 
 	React.useEffect(() => {
-		let spellcasting
-		props.spellcastingData.klassFeature.features.forEach(f => spellcasting = f.spellcasting || spellcasting)
+		const { spellcasting } = props.spellcastingData
 
 		getFetch(`spells?spell_list_id=${spellcasting.spell_list.id}`)
 			.then(data => {
@@ -111,10 +110,10 @@ const KnownSpellManager = props => {
 	const renderKnownSpells = () => {
 		// render buttons, that flash
 		// render known spells, and missing spells
-		const { klassFeature, level } = props.spellcastingData
+		const { level, spellcasting } = props.spellcastingData
 
-		let knownSpells = knownSpellsArray(klassFeature, level)
-		let remainingKnownSpells = remainingKnownSpellsArray(klassFeature, level)
+		let knownSpells = knownSpellsArray(spellcasting, level)
+		let remainingKnownSpells = remainingKnownSpellsArray(spellcasting, level)
 		let buttons = remainingKnownSpells.map(ks => {
 			let className = ""
 			if (ks.spells > 0){className='attention-button-animation'}
@@ -150,10 +149,10 @@ const KnownSpellManager = props => {
 		// if there is a spell missing, have a gap
 
 		// UI if adding a spell
-		let style = {gridArea: "known", overflowY: "scroll", position: "relative"}
+		let style = {gridArea: "known", overflowY: "scroll", position: "relative", border: "2px solid transparent"}
 		let plusIcon = null
 		if (dragInfo.dragging){
-			style.border = "1px dashed black"
+			style.border = "2px dashed black"
 		}
 
 		return (
@@ -177,7 +176,7 @@ const KnownSpellManager = props => {
 	}
 
 	const renderSpellOptions = () => {
-		const { klassFeature, level } = props.spellcastingData
+		const { level } = props.spellcastingData
 
 		let filteredSpells = spells.filter(sp => {
 			let input = filterInput.toLowerCase()
