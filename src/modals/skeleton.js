@@ -8,6 +8,7 @@ import Armor from '../components/armor_summary'
 import Points from '../components/modals/points'
 import FeatureUsageOptions from '../components/modals/feature_usage_options'
 import KnownSpellManager from '../components/modals/known_spell_manager'
+import SpellDescription from '../components/spell_description'
 
 const ModalSkeleton = (props) => {
 
@@ -25,6 +26,8 @@ const ModalSkeleton = (props) => {
 				return <FeatureUsageOptions feature={props.modal.obj} exitModal={exitModal} clickOut={clickOut} />
 			case 'manageKnownSpells':
 				return <KnownSpellManager spellcastingData={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
+			case 'spellDescription':
+				return <SpellDescription spell={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
       default:
         break
     }

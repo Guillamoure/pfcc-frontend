@@ -1,5 +1,6 @@
 import store from '../../store'
 import { abilityScoreMod } from './ability_scores'
+import { actionClass } from '../fuf'
 
 export const allSpellcastingKlassFeatures = () => {
 	const { character } = {...store.getState()}
@@ -91,4 +92,63 @@ export const areAllKnownSpellsFilled = (klassFeature, level) => {
 	}
 
 	return areThereKnownSpellsMissing
+}
+
+export const characterKnownSpells = (klassFeature) => {
+	let spellcasting
+	const { character_known_spells } = {...store.getState().character}
+
+	klassFeature.features.forEach(f => spellcasting = f.spellcasting || spellcasting)
+
+	return character_known_spells.filter(cks => cks.spellcasting.id === spellcasting.id)
+}
+
+export const spellData = (spellData, klassId) => {
+	const { character_info } = store.getState()
+	let { spell, spell_list_spell: sls, spellcasting } = spellData
+	let level = character_info.classes.find(cl => cl.id === klassId).level
+
+
+	let spellLevel = sls.spell_level
+	let action = actionClass(spell.action.name)
+	let name = spell.name
+	let range = renderSpellRange(spell, level)
+	let duration = renderSpellDuration(spell, level)
+	let difficultyClass = renderSpellDC(spellData)
+	let hitModifier = ""
+	let spellResistance = spell.spell_resistance ? "Y" : "N"
+	let spellId = spell.id
+
+	return { spellLevel, action, name, range, duration, difficultyClass, hitModifier, spellResistance, spellId }
+}
+
+export const renderSpellRange = (spell, level) => {
+	let rangeIncrease = spell.spell_range.increase_per_level * level
+	if (rangeIncrease % 1 !== 0){
+		rangeIncrease -= spell.spell_range.increase_per_level
+	}
+	if (spell.spell_range.feet + rangeIncrease === 0){return "-"}
+	return Math.floor(spell.spell_range.feet + rangeIncrease) + " ft"
+}
+
+export const renderSpellDuration = (spell, level) => {
+	let duration = spell.time + (spell.increase_per_level * (level - 1))
+	let unitOfTime = spell.unit_of_time
+	if (duration !== 1){unitOfTime += "s"}
+	if (duration === 0){
+		if (spell.duration === "instantaneous"){return "instant."}
+		if (spell.duration === "concentration"){return "concent."}
+	}
+	let time = duration + " " + unitOfTime
+	let concentration = spell.concentration ? "con./" : ""
+	let dismissible = spell.dismissible ? " (D)" : ""
+	return concentration + time + dismissible
+}
+
+export const renderSpellDC = (spellData) => {
+	if (spellData.spell.saving_throw === "none"){return "-"}
+	let save = spellData.spell.saving_throw
+	if (save === "Fortitude"){save = "Fort"}
+	if (save === "Reflex"){save = "Ref"}
+	return save + " " + (10 + abilityScoreMod(spellData.spellcasting.ability_score) + spellData.spell_list_spell.spell_level)
 }

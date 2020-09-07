@@ -21,14 +21,11 @@ const Spellcasting = props => {
 					<br/>
 					{renderAddionalSpellcastingStats(scData.klassFeature, scData.abilityScoreModifier)}
 					{SpellcastingCalculations.areAllKnownSpellsFilled(scData.klassFeature, scData.level) && renderManageKnownSpells(scData)}
-					{renderSpellTable(i)}
+					{renderSpellTable(scData, i)}
 				</>
 			)
 		})
 	}
-
-
-
 
 	const renderSPD = (spds, klassName, i) => {
 		let interpolatedSPD = spds.map((spd, ind) => {
@@ -62,7 +59,7 @@ const Spellcasting = props => {
 		return <button className="attention-button-animation" onClick={renderClick}>Learn New Spells</button>
 	}
 
-	const renderSpellTable = (index) => {
+	const renderSpellTable = (scData, index) => {
 		return (
       <table key={index*3+1}>
         <thead>
@@ -77,10 +74,29 @@ const Spellcasting = props => {
           </tr>
         </thead>
         <tbody>
-
+					{renderSpellTableRows(scData)}
         </tbody>
       </table>
     )
+	}
+
+	const renderSpellTableRows = (scData) => {
+		let knownSpells = SpellcastingCalculations.characterKnownSpells(scData.klassFeature)
+
+		return knownSpells.map((ks, i) => {
+			let ksData = SpellcastingCalculations.spellData(ks, scData.klassFeature.klass_id)
+			return (
+				<tr>
+					<td>{ksData.spellLevel}</td>
+					<td><button className={ksData.action}>Cast</button></td>
+					<td><em className='underline-hover' onClick={() => modalAction("spellDescription", ks.spell)}>{ksData.name}</em></td>
+					<td>{ksData.range}</td>
+					<td>{ksData.duration}</td>
+					<td>{ksData.difficultyClass}</td>
+					<td>{ksData.spellResistance}</td>
+				</tr>
+			)
+		})
 	}
 
 	return (
