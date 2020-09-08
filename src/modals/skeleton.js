@@ -9,6 +9,7 @@ import Points from '../components/modals/points'
 import FeatureUsageOptions from '../components/modals/feature_usage_options'
 import KnownSpellManager from '../components/modals/known_spell_manager'
 import SpellDescription from '../components/spell_description'
+import PreparedSpellManager from '../components/modals/prepared_spell_manager'
 
 const ModalSkeleton = (props) => {
 
@@ -28,6 +29,8 @@ const ModalSkeleton = (props) => {
 				return <KnownSpellManager spellcastingData={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
 			case 'spellDescription':
 				return <SpellDescription spell={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
+			case 'managePreparedSpells':
+				return <PreparedSpellManager spellcastingData={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
       default:
         break
     }

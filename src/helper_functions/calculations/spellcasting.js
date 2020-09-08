@@ -147,8 +147,6 @@ export const areAllPreparedSpellsFilled = (spellcasting, level) => {
 		i++
 	}
 
-	debugger
-
 	return areTherePreparedSpellsMissing
 }
 

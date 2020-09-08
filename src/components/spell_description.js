@@ -13,7 +13,7 @@ const SpellDescription = props => {
 		} else {
 			updateSpell(props.spell)
 		}
-	}, [])
+	}, [props.spell])
 
   const renderComponentItems = () => {
     // if any of the spell components have an item
