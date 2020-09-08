@@ -93,8 +93,29 @@ export const remainingKnownSpellsArray = (spellcasting, level) => {
 	return knownSpellsThisLevel
 }
 
+export const remainingPreparedSpellsArray = (spellcasting, level) => {
+	const { character } = store.getState()
+
+	let preparedSpellsThisLevel = remainingSpellsPerDayFromSpellcasting(spellcasting, level)
+	let characterPreparedSpells = character.prepared_spells
+
+	preparedSpellsThisLevel = preparedSpellsThisLevel.map(pspl => {
+		let cpsThisSpellLevel = characterPreparedSpells.filter(cps => cps.feature_spellcasting_id === pspl.feature_spellcasting_id && cps.spell_level === pspl.spell_level)
+
+		let remainingSpells = pspl.spells - cpsThisSpellLevel.length
+		remainingSpells = remainingSpells < 0 ? 0 : remainingSpells
+		return {...pspl, spells: remainingSpells}
+	})
+
+	return preparedSpellsThisLevel
+}
+
 export const knownSpellsArray = (spellcasting, level) => {
 	return spellcasting.known_spells_per_level.filter(kspl => kspl.klass_level === level)
+}
+
+export const spellsPerDayArray = (spellcasting, level) => {
+	return spellcasting.spells_per_day_per_level.filter(spdpl => spdpl.klass_level === level)
 }
 
 export const areAllKnownSpellsFilled = (spellcasting, level) => {
@@ -111,6 +132,24 @@ export const areAllKnownSpellsFilled = (spellcasting, level) => {
 	}
 
 	return areThereKnownSpellsMissing
+}
+
+export const areAllPreparedSpellsFilled = (spellcasting, level) => {
+	let remainingPreparedSpells = remainingPreparedSpellsArray(spellcasting, level)
+
+	let areTherePreparedSpellsMissing = false
+	let i = 0
+
+	while (i <= remainingPreparedSpells.length){
+		if (remainingPreparedSpells[i]?.spells > 0){
+			areTherePreparedSpellsMissing = true
+		}
+		i++
+	}
+
+	debugger
+
+	return areTherePreparedSpellsMissing
 }
 
 export const characterKnownSpells = (spellcasting) => {

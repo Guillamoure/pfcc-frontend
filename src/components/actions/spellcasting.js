@@ -6,13 +6,6 @@ import { useSelector } from 'react-redux'
 
 const Spellcasting = props => {
 
-	const [, updateSpellcastingData] = React.useState([])
-
-	React.useEffect(() => {
-		updateSpellcastingData()
-	}, [])
-
-
 	const renderAllSpellcasting = () => {
 		let spellcastingData = SpellcastingCalculations.allRemainingSpellsPerDay()
 		return spellcastingData.map((scData, i) => {
@@ -22,6 +15,7 @@ const Spellcasting = props => {
 					<br/>
 					{renderAddionalSpellcastingStats(scData.level, scData.abilityScoreModifier)}
 					{SpellcastingCalculations.areAllKnownSpellsFilled(scData.spellcasting, scData.level) && renderManageKnownSpells(scData)}
+					{SpellcastingCalculations.areAllPreparedSpellsFilled(scData.spellcasting, scData.level) && renderManagePreparedSpells(scData)}
 					{renderSpellTable(scData, i)}
 				</>
 			)
@@ -58,6 +52,14 @@ const Spellcasting = props => {
 		}
 
 		return <button className="attention-button-animation" onClick={renderClick}>Learn New Spells</button>
+	}
+
+	const renderManagePreparedSpells = spellcastingData => {
+		const renderClick = () => {
+			modalAction("managePreparedSpells", spellcastingData)
+		}
+
+		return <button className="attention-button-animation" onClick={renderClick}>Prepare Spells</button>
 	}
 
 	const renderSpellTable = (scData, index) => {
