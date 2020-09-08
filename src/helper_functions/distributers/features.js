@@ -8,6 +8,7 @@ import {
 	removeTemporaryHitPointsAction,
 	adjustStatusConditionsAction
 } from '../action_creator/features'
+import { replaceCharacterInfoAction } from '../action_creator/character'
 import { statusConditionDistribution, removeStatusConditionDistribution } from  './status_conditions'
 import { sendCampaignWebsocket } from '../websocket/campaign'
 import { locateAbility } from '../fuf'
@@ -15,6 +16,7 @@ import { locateAbility } from '../fuf'
 export const defaultCharacterInfo = () => {
 	return {
     bonuses: [],
+		displayDescriptions: [],
     effects: [],
     features: [],
 		forbidden: [],
@@ -30,13 +32,12 @@ export const initialCharacterDistribution = (character) => {
 
 	let characterLevel = store.getState().character_info?.classes?.reduce((agg, el) => (agg + el.level), 0)
 
-
   // racial traits
   // klass features
   character.applicable_klass_features.forEach(akf => {
     akf.features.forEach((feature) => {
       if (!feature.action && !feature.usage){
-        klassFeaturesFeatureDistribution(feature, character_info, { sourceId: akf.id, source: "applicable_klass_features", featureId: feature.id }, characterLevel)
+        klassFeaturesFeatureDistribution(feature, character_info, { sourceId: akf.id, source: "applicable_klass_features", featureId: feature.id }, {characterLevel, klassId: akf.klass_id})
       }
     })
   })
@@ -47,10 +48,11 @@ export const initialCharacterDistribution = (character) => {
   character.character_magic_items.forEach(cmi => {
     cmi.magic_item.features.forEach((feature) => {
       if (!feature.action){
-        klassFeaturesFeatureDistribution(feature, character_info, { sourceId: cmi.id, source: "character_magic_items", featureId: feature.id }, characterLevel)
+        klassFeaturesFeatureDistribution(feature, character_info, { sourceId: cmi.id, source: "character_magic_items", featureId: feature.id }, {characterLevel})
       }
     })
   })
+
 
   character_info.bonuses.forEach(b => {
     bonusAction(b)
@@ -61,6 +63,8 @@ export const initialCharacterDistribution = (character) => {
   character_info.movement.forEach(addMovementAction)
 
 	proficiencyAction(character_info.proficiencies)
+
+	replaceCharacterInfoAction("displayDescriptions", character_info.displayDescriptions)
 }
 
 
@@ -193,7 +197,10 @@ export const websocketFeatureDistribution = (payload, source, options) => {
 }
 
 
-const klassFeaturesFeatureDistribution = (feature, obj, source, characterLevel) => {
+const klassFeaturesFeatureDistribution = (feature, obj, source, options) => {
+	const { characterLevel, klassId } = options
+	let classLevel = store.getState().character_info.classes?.find(cl => cl.id === klassId)?.level
+
   feature.skill_bonuses.forEach((el) => {
     obj.bonuses.push(skillBonusFeature(el, source))
   })
@@ -213,6 +220,11 @@ const klassFeaturesFeatureDistribution = (feature, obj, source, characterLevel) 
 	})
 	feature.status_conditions.forEach(el => {
 		obj.statusConditions.push(statusConditionsFeature(el, source))
+	})
+	feature.display_descriptions.forEach(el => {
+		if (!el.applicable_level || el.applicable_level <= classLevel){
+			obj.displayDescriptions.push(displayDescriptionsFeature(el, source))
+		}
 	})
 }
 
@@ -292,6 +304,15 @@ const statusConditionsFeature = (sc, source) => {
 export const forbiddenFeature = (f, source) => {
 	return {
 		forbidden: f,
+		source
+	}
+}
+
+export const displayDescriptionsFeature = (dd, source) => {
+	return {
+		access_alignment: dd.access_alignment,
+		description: dd.description,
+		title: dd.title,
 		source
 	}
 }

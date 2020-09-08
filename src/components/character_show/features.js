@@ -1,6 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
 import { connect } from 'react-redux'
+import { modalAction } from '../../helper_functions/action_creator/popups'
 
 class Features extends React.Component {
 
@@ -41,10 +42,28 @@ class Features extends React.Component {
         if (klass && feature.name === "Weapon and Armor Proficiency"){
           name = `${feature.name} - ${klass.name}`
         }
+				let description = feature.description
+				if (feature.associated_spells.length) {
+					let domDescArray = []
+					feature.associated_spells.forEach(sp => {
+						let name = sp.name.toLowerCase()
+						let descArray = description.split(name)
+						for (let i = 0; i < descArray.length; i++){
+							domDescArray.push(descArray[i])
+							if (i + 1 < descArray.length){
+								domDescArray.push(" ")
+								domDescArray.push(<em className="underline-hover" onClick={() => modalAction("spellDescription", sp)}>{name}</em>)
+								domDescArray.push(" ")
+							}
+						}
+					})
+					description = <span>{domDescArray}</span>
+				}
+
         return (
           <li key={(feature.id * 3) -1} onClick={() => this.changeActiveFeature(feature.id)} className='highlight mobile-selected-tab-content' style={{maxHeight: window.outerHeight * 0.4}}>
             <strong>{name}</strong>
-            {this.state.activeFeature === feature.id && <div style={{color: '#000'}}>{feature.description}</div>}
+            {this.state.activeFeature === feature.id && <div style={{color: '#000'}}>{description}</div>}
           </li>
         )
       // } else {

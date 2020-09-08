@@ -1,9 +1,19 @@
 import React from 'react'
 import _ from 'lodash'
+import { getFetch } from '../helper_functions/fetches'
 
 const SpellDescription = props => {
 
-  const { spell } = props
+	const [spell, updateSpell] = React.useState({})
+
+	React.useEffect(() => {
+		if (!props.spell.magic_school) {
+			getFetch(`spells/${props.spell.id}`)
+				.then(data => updateSpell(data.spell))
+		} else {
+			updateSpell(props.spell)
+		}
+	}, [])
 
   const renderComponentItems = () => {
     // if any of the spell components have an item
@@ -43,23 +53,27 @@ const SpellDescription = props => {
 
 	console.log(spell)
 
-    return (
-      <ul id='description-container' onScroll={start}>
-        <li><strong>{spell.name}</strong></li>
-        <li>School | {spell.magic_school.name} [{spell.subschools.map(ss => ss.name).join(", ")}]</li>
-        <li>Level | {spell.spell_list_spells.map(sls => `${sls.spell_list.name.split(" ")[0]} ${sls.spell_level}`).join(", ")}</li>
-        <li><strong><u>Casting</u></strong></li>
-        <li>Casting Time | {spell.action.name}</li>
-        <li>Components | {spell.spell_components.map(sc => sc.component.abbreviation).join(", ")}{renderComponentItems()}</li>
-        <li><strong><u>Effect</u></strong></li>
-        <li>Range | {renderFeet()}</li>
-        <li>Target | {spell.target}</li>
-        <li>Duration | {spell.duration}{spell.dismissible ? " (D)" : null}</li>
-        <li>Saving Throw | {spell.saving_throw} | Spell Resistance | {spell.spell_resistance ? "Yes" : "No"}</li>
-        <li><strong><u>Description</u></strong></li>
-        <li>{renderDescription()}</li>
-      </ul>
-    )
+	if (!spell.id){
+		return null
+	}
+
+  return (
+    <ul id='description-container' onScroll={start}>
+      <li><strong>{spell.name}</strong></li>
+      <li>School | {spell.magic_school.name} [{spell.subschools.map(ss => ss.name).join(", ")}]</li>
+      <li>Level | {spell.spell_list_spells.map(sls => `${sls.spell_list.name.split(" ")[0]} ${sls.spell_level}`).join(", ")}</li>
+      <li><strong><u>Casting</u></strong></li>
+      <li>Casting Time | {spell.action.name}</li>
+      <li>Components | {spell.spell_components.map(sc => sc.component.abbreviation).join(", ")}{renderComponentItems()}</li>
+      <li><strong><u>Effect</u></strong></li>
+      <li>Range | {renderFeet()}</li>
+      <li>Target | {spell.target}</li>
+      <li>Duration | {spell.duration}{spell.dismissible ? " (D)" : null}</li>
+      <li>Saving Throw | {spell.saving_throw} | Spell Resistance | {spell.spell_resistance ? "Yes" : "No"}</li>
+      <li><strong><u>Description</u></strong></li>
+      <li>{renderDescription()}</li>
+    </ul>
+  )
 }
 
 export default SpellDescription

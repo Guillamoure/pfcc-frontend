@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
+import _ from 'lodash'
 
 import { calculateWeight, carryingCapacity, calculateLoad } from '../../helper_functions/calculations/character'
 import { abilityScore } from '../../helper_functions/calculations/ability_scores'
@@ -69,6 +70,18 @@ const Details = props => {
 		)
 	}
 
+	const renderDisplayDescription = () => {
+		const { displayDescriptions } = props.character_info
+
+		return displayDescriptions.map(dd => {
+			let description = dd.description
+			if (dd.access_alignment){
+				description += ` ${_.startCase(props.character.alignment)}`
+			}
+			return <li><strong>{dd.title}</strong>: {description}</li>
+		})
+	}
+
   if (localStorage.computer === "true"){
     return(
       <>
@@ -98,6 +111,7 @@ const Details = props => {
           </div>
 				<div className='header'>Statistics</div>
 					<div className='nested'>
+						{renderDisplayDescription()}
 						{displayLoad()}
 					</div>
       </>

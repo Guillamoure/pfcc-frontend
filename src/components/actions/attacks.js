@@ -857,7 +857,7 @@ const Attacks = props => {
 
 			let tempBonuses = bonusModifiers.reduce((agg, el) => (agg + el.bonus), 0)
 
-			return pluser(str + handedStrengthModifier + tempBonuses)
+			return `${pluser(str + handedStrengthModifier + tempBonuses)}`
     }
     if (characterWeapon.weapon.weapon_type === "Range"){
       return ""

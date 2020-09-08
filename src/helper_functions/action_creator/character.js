@@ -17,7 +17,7 @@ export const replaceCharacterArrayAction = (adjust, value) => dispatch({type: "A
 
 // export const replaceCharacterInfoArrayAction = (adjust, value) => dispatch({type: "ADJUST CHARACTER INFO REPLACE VALUE IN ARRAY", adjust, value})
 
-export const replaceCharacterInfoAction = (adjust, value) => dispatch({type: 'ADJUST CHARACTER INFO', adjust, value})
+export const replaceCharacterInfoAction = (adjust, value, options) => dispatch({type: 'ADJUST CHARACTER INFO', adjust, value})
 
 export const replaceCharacterAction = (adjust, value) => dispatch({type: 'ADJUST CHARACTER', adjust, value})
 

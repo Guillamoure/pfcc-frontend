@@ -25,7 +25,8 @@ const initialState = {
     equipped: [],
 		activeFeatures: [],
 		temporaryHitPoints: [],
-		statusConditions: []
+		statusConditions: [],
+		displayDescriptions: []
   },
   classes: [],
   races: [],
