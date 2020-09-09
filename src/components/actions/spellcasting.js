@@ -88,10 +88,11 @@ const Spellcasting = props => {
 
 		return spells.map((spell, i) => {
 			let spellData = SpellcastingCalculations.spellData({...spell, spellcasting: scData.spellcasting}, scData.klassFeature.klass_id)
+			let buttonName = spell.cast ? "Spent" : "Cast"
 			return (
 				<tr>
 					<td>{spellData.spellLevel}</td>
-					<td><button className={spellData.action} onClick={() => SpellcastingCalculations.castSpell(spellData, scData.spellsPerDay)}><strong>Cast</strong></button></td>
+					<td><button className={spellData.action} onClick={() => SpellcastingCalculations.castSpell(spellData, scData.spellsPerDay)}><strong>{buttonName}</strong></button></td>
 					<td><em className='underline-hover' onClick={() => modalAction("spellDescription", spell.spell)}>{spellData.name}</em></td>
 					<td>{spellData.range}</td>
 					<td>{spellData.duration}</td>

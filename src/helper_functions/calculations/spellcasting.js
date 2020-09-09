@@ -2,7 +2,7 @@ import store from '../../store'
 import { abilityScoreMod } from './ability_scores'
 import { isThisActionAvailable } from './round_actions'
 import { actionClass } from '../fuf'
-import { postFetch } from '../fetches'
+import { postFetch, patchFetch } from '../fetches'
 import { replaceCharacterAction, triggerTurnActionAction } from '../action_creator/character'
 
 export const allSpellcastingKlassFeatures = () => {
@@ -66,6 +66,9 @@ export const remainingSpellsPerDayFromSpellcasting = (spellcasting, level) => {
 		let decrease = 0
 		character.cast_spells.forEach(cs => {
 			if (spd.spell_level === cs.spell_level){decrease++}
+		})
+		character.prepared_spells.forEach(ps => {
+			if (spd.spell_level === ps.spell_level && ps.cast){decrease++}
 		})
 
 		return {...spd, spells: (spd.spells + increase - decrease)}
@@ -140,8 +143,11 @@ export const areAllPreparedSpellsFilled = (spellcasting, level) => {
 	let areTherePreparedSpellsMissing = false
 	let i = 0
 
+	let preparedSpells = store.getState().character.prepared_spells
+
 	while (i <= remainingPreparedSpells.length){
-		if (remainingPreparedSpells[i]?.spells > 0){
+		let preparedSpellsThisLevel = preparedSpells.filter(ps => ps.spell_level === i)
+		if (remainingPreparedSpells[i]?.spells > preparedSpellsThisLevel.length){
 			areTherePreparedSpellsMissing = true
 		}
 		i++
@@ -171,7 +177,7 @@ export const spellData = (spellData, klassId) => {
 	let level = character_info.classes.find(cl => cl.id === klassId).level
 
 	let spellLevel = sls.spell_level
-	let action = isThisActionAvailable(spell, {spell: true, spellcasting, klassId, spellLevel: sls.spell_level})
+	let action = spellData.cast ? "cannot-cast" : isThisActionAvailable(spell, {spell: true, spellcasting, klassId, spellLevel: sls.spell_level})
 	let name = spell.name
 	let range = renderSpellRange(spell, level)
 	let duration = renderSpellDuration(spell, level)
@@ -180,7 +186,10 @@ export const spellData = (spellData, klassId) => {
 	let spellResistance = spell.spell_resistance ? "Y" : "N"
 	let spellId = spell.id
 
-	return { spellLevel, action, name, range, duration, difficultyClass, hitModifier, spellResistance, spellId, spellcasting }
+	let preparedSpellId
+	if (spellcasting.prepare_spells) preparedSpellId = spellData.id
+
+	return { spellLevel, action, name, range, duration, difficultyClass, hitModifier, spellResistance, spellId, spellcasting, preparedSpellId }
 }
 
 export const renderSpellRange = (spell, level) => {
@@ -227,7 +236,17 @@ export const castSpell = (ksData, spellsPerDay) => {
 			const { character } = store.getState()
 			if (spellPerDay.spells > 0){
 				if (ksData.spellcasting.expend_prepared_spells){
-
+					postFetch(`cast_spells`, {id: ksData.preparedSpellId, expend: true})
+						.then(data => {
+							let replacePreparedSpells = [...character.prepared_spells]
+							replacePreparedSpells = replacePreparedSpells.map(ps => {
+								if (ps.id === ksData.preparedSpellId){
+									return {...ps, cast: true}
+								}
+								return ps
+							})
+							replaceCharacterAction('prepared_spells', replacePreparedSpells)
+						})
 				} else {
 					let body = {
 						character_id: character.id,
@@ -239,7 +258,6 @@ export const castSpell = (ksData, spellsPerDay) => {
 							let replaceCastSpells = [...character.cast_spells]
 							replaceCastSpells.push(body)
 							replaceCharacterAction('cast_spells', replaceCastSpells)
-							// update redux
 						})
 				}
 
