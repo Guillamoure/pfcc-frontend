@@ -77,7 +77,11 @@ class Update extends React.Component {
 	manageKnownSpells = () => {
 		let spellcastingData = SpellcastingCalculations.allRemainingSpellsPerDay()
 		return spellcastingData.map((scData, i) => {
-			return this.renderManageKnownSpells(scData)
+			if (scData.spellcasting.known_spell_list){
+				return this.renderManageKnownSpells(scData)
+			} else {
+				return null
+			}
 		})
 	}
 
@@ -86,7 +90,26 @@ class Update extends React.Component {
 			modalAction("manageKnownSpells", spellcastingData)
 		}
 
-		return <button onClick={renderClick}>Manage Your Spells - {spellcastingData.klassName}</button>
+		return <button onClick={renderClick}>Manage Known Spells - {spellcastingData.klassName}</button>
+	}
+
+	managePreparedSpells = () => {
+		let spellcastingData = SpellcastingCalculations.allRemainingSpellsPerDay()
+		return spellcastingData.map((scData, i) => {
+			if (scData.spellcasting.prepare_spells){
+				return this.renderManagePreparedSpells(scData)
+			} else {
+				return null
+			}
+		})
+	}
+
+	renderManagePreparedSpells = (spellcastingData) => {
+		const renderClick = () => {
+			modalAction("managePreparedSpells", spellcastingData)
+		}
+
+		return <button onClick={renderClick}>Manage Prepared Spells - {spellcastingData.klassName}</button>
 	}
 
   render(){
@@ -95,6 +118,7 @@ class Update extends React.Component {
         <p>Things to update</p>
         {this.addSkillRanks()}
 				{this.manageKnownSpells()}
+				{this.managePreparedSpells()}
         {this.prepareSpells()}
       </span>
     )

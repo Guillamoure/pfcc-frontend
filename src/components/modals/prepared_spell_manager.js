@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import SpellDescription from '../spell_description'
 import { remainingPreparedSpellsArray, spellsPerDayArray } from '../../helper_functions/calculations/spellcasting'
 import { abilityScoreMod } from '../../helper_functions/calculations/ability_scores'
-import { getFetch, postFetch, deleteFetch } from '../../helper_functions/fetches'
+import { getFetch, postFetch, deleteFetch, patchFetch } from '../../helper_functions/fetches'
 import { replaceCharacterAction } from '../../helper_functions/action_creator/character'
 
 const PreparedSpellManager = props => {
@@ -117,6 +117,20 @@ const PreparedSpellManager = props => {
 			})
 	}
 
+	const togglePreparedSpellCastStatus = (preparedSpellId, cast) => {
+		patchFetch(`cast_spells/toggle_cast/${preparedSpellId}`, {cast: !cast})
+			.then(data => {
+				let replacePreparedSpells = [...preparedSpells]
+				replacePreparedSpells = replacePreparedSpells.map(ps => {
+					if (ps.id === preparedSpellId){
+						return {...ps, cast: !cast}
+					}
+					return ps
+				})
+				replaceCharacterAction('prepared_spells', replacePreparedSpells)
+			})
+	}
+
 	const renderPreparedSpells = () => {
 		// render buttons, that flash
 		// render known spells, and missing spells
@@ -144,7 +158,7 @@ const PreparedSpellManager = props => {
 			let num = ps.spells
 			let thisLevelPreparedSpells = preparedSpells.filter(cps => cps.spell_level === ps.spell_level)
 			num -= thisLevelPreparedSpells.length
-			thisLevelPreparedSpells.forEach(tlps => allPreparedSpells.push({spellLevel: ps.spell_level, spellName: tlps.spell.name, spellId: tlps.spell.id, preparedSpellId: tlps.id}))
+			thisLevelPreparedSpells.forEach(tlps => allPreparedSpells.push({spellLevel: ps.spell_level, spellName: tlps.spell.name, spellId: tlps.spell.id, preparedSpellId: tlps.id, cast: tlps.cast}))
 
 			for (let i = 0; i < num; i++){
 				allPreparedSpells.push({spellLevel: ps.spell_level, spellName: "", spellId: 0, preparedSpellId: 0})
@@ -159,7 +173,8 @@ const PreparedSpellManager = props => {
 				<tr>
 					<td>{sp.spellLevel}</td>
 					<td><em className='underline-hover' onClick={() => updateSpellId(sp.spellId)}>{sp.spellName}</em></td>
-					<td>{!!sp.preparedSpellId && <button style={{color: "white", background: "red", fontSize: "0.9rem", border: "1px solid black", textAlign: "right", borderRadius: "6px"}} onClick={() => removeCharacterPreparedSpell(sp.preparedSpellId)}>Remove</button>}</td>
+					<td>{!!sp.preparedSpellId && <button style={{color: "white", background: "red", fontSize: "0.9rem", border: "1px solid black", textAlign: "right", borderRadius: "6px"}} onClick={() => removeCharacterPreparedSpell(sp.preparedSpellId)}>Forget</button>}</td>
+					<td>{sp.cast && <button onClick={() => togglePreparedSpellCastStatus(sp.preparedSpellId, sp.cast)}>Restore</button>}</td>
 				</tr>
 			)
 		})
@@ -177,7 +192,8 @@ const PreparedSpellManager = props => {
 						<tr>
 							<th>Lvl</th>
 							<th>Name</th>
-							<th>Remove</th>
+							<th>Forget Prepared Spell</th>
+							<th>UnCast</th>
 						</tr>
 					</thead>
 					<tbody>

@@ -230,7 +230,7 @@ export const castSpell = (ksData, spellsPerDay) => {
 	if (ksData.action !== "cannot-cast"){
 		triggerTurnActionAction(ksData.action)
 		if (ksData.spellcasting.infinite_zero_level && ksData.spellLevel === 0){
-
+			console.log("Zero-th level spell cast!")
 		} else {
 			let spellPerDay = spellsPerDay.find(spd => spd.spell_level === ksData.spellLevel)
 			const { character } = store.getState()
