@@ -8,19 +8,22 @@ import { replaceCharacterAction } from '../../helper_functions/action_creator/ch
 
 const PreparedSpellManager = props => {
 
+	const { prepared_spells: preparedSpells, id } = useSelector(state => state.character)
+
 	const [displayButton, toggleDisplayButton] = React.useState("All")
 	const [filterInput, updateFilter] = React.useState("")
 	const [spells, updateSpells] = React.useState([])
 	const [spellId, updateSpellId] = React.useState(0)
 	const [spellListId, updateSpellListId] = React.useState(0)
+	const [featureSpellcasting, updateFeatureSpellcasting] = React.useState({})
 	const [dragInfo, updateDragInfo] = React.useState({
 		preparedSpellId: 0,
 		spellListSpellId: 0,
 		spellId: 0,
+		spellLevel: null,
 		dragging: false
 	})
 
-	let preparedSpells = useSelector(state => state.character.prepared_spells)
 
 
 	React.useEffect(() => {
@@ -38,15 +41,16 @@ const PreparedSpellManager = props => {
 					sortedData.push(thisLvl.sort((a,b) => a.name.localeCompare(b.name)))
 				}
 				sortedData = sortedData.flat()
+				console.log(sortedData)
 				updateSpells(sortedData)
 				updateSpellListId(spellcasting.spell_list.id)
-				// updateFeatureSpellcasting(spellcasting)
+				updateFeatureSpellcasting(spellcasting)
 			})
 		}
 	}, [])
 
-	const updateDrag = (spellListSpellId, spellId) => {
-		updateDragInfo({...dragInfo, spellListSpellId, spellId, dragging: true})
+	const updateDrag = (spellListSpellId, spellId, spellLevel) => {
+		updateDragInfo({...dragInfo, spellListSpellId, spellId, spellLevel, dragging: true})
 	}
 
 	const resetDrag = e => {
@@ -54,6 +58,7 @@ const PreparedSpellManager = props => {
 		updateDragInfo({
 			spellListSpellId: 0,
 			spellId: 0,
+			spellLevel: null,
 			dragging: false
 		})
 	}
@@ -61,40 +66,44 @@ const PreparedSpellManager = props => {
 	const updateDrop = e => {
 		e.preventDefault()
 
-		// let body = {
-		// 	spell_list_spell_id: dragInfo.spellListSpellId,
-		// 	feature_spellcasting_id: featureSpellcasting.id,
-		// 	character_id: id
-		// }
+		console.log(dragInfo)
+		let body = {
+			spell_list_spell_id: dragInfo.spellListSpellId,
+			feature_spellcasting_id: featureSpellcasting.id,
+			character_id: id,
+			spell_level: dragInfo.spellLevel
+		}
 		// if (character_known_spells.find(ks => ks.spell.id === dragInfo.spellId)){
 		// 	// if spell is already known
 		// 	let spellName = character_known_spells.find(ks => ks.spell.id === dragInfo.spellId).spell.name
 		// 	updateWarning(`You already know ${spellName}`)
 		// } else {
 		// 	// if spell is not known
-		// 	postFetch('known_spells', body)
-		// 	.then(data => {
-		// 		if (data.errors) {
-		// 			updateWarning(data.errors[0])
-		// 		} else {
-		// 			let spell = spells.find(sp => sp.id === dragInfo.spellId)
-		// 			let spellListSpell = spell.spell_list_spells.find(sls => sls.id === dragInfo.spellListSpellId)
-		// 			let characterKnownSpell = {
-		// 				id: data.id,
-		// 				spell,
-		// 				spell_list_spell: spellListSpell,
-		// 				spellcasting: featureSpellcasting
-		// 			}
-		// 			let replaceCharacterKnownSpells = [...character_known_spells]
-		// 			replaceCharacterKnownSpells.push(characterKnownSpell)
-		// 			character_known_spells.push(characterKnownSpell)
-		// 			replaceCharacterAction('character_known_spells', replaceCharacterKnownSpells)
-		// 		}
-		// 	})
-		// }
+		postFetch('prepared_spells', body)
+		.then(data => {
+			if (data.errors) {
+				// updateWarning(data.errors[0])
+			} else {
+				let spell = spells.find(sp => sp.id === dragInfo.spellId)
+				let spellListSpell = spell.spell_list_spells.find(sls => sls.id === dragInfo.spellListSpellId)
+				let characterPreparedSpell = {
+					id: data.id,
+					spell,
+					spell_list_spell: spellListSpell,
+					feature_spellcasting_id: featureSpellcasting.id,
+					spell_level: dragInfo.spellLevel,
+					cast: false
+				}
+				let replacePreparedSpells = [...preparedSpells]
+				replacePreparedSpells.push(characterPreparedSpell)
+				preparedSpells.push(characterPreparedSpell)
+				replaceCharacterAction('prepared_spells', replacePreparedSpells)
+			}
+		})
 		updateDragInfo({
 			spellListSpellId: 0,
 			spellId: 0,
+			spellLevel: null,
 			dragging: false
 		})
 	}
@@ -198,7 +207,7 @@ const PreparedSpellManager = props => {
 			return (
 				<tr className={className}>
 					<td>{sp.spell_level}</td>
-					<td draggable="true" onDragStart={() => updateDrag(spellListSpellId, sp.id)} onDragEnd={resetDrag}><em className='underline-hover' onClick={() => updateSpellId(sp.id)}>{sp.name}</em></td>
+					<td draggable="true" onDragStart={() => updateDrag(spellListSpellId, sp.id, sp.spell_level)} onDragEnd={resetDrag}><em className='underline-hover' onClick={() => updateSpellId(sp.id)}>{sp.name}</em></td>
 				</tr>
 			)
 		})
@@ -226,7 +235,7 @@ const PreparedSpellManager = props => {
 			return <aside style={{gridArea: "spell-description", display: "flex", justifyContent: "center", margin: "auto"}}><strong>Click on a spell to see details</strong></aside>
 		}
 		let spell = spells.find(sp => sp.id === spellId)
-		
+
 		return (
 			<aside style={{gridArea: "spell-description", textAlign: "left", overflowY: "scroll"}}>
 				<SpellDescription spell={spell} />
