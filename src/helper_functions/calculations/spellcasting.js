@@ -150,10 +150,11 @@ export const areAllPreparedSpellsFilled = (spellcasting, level) => {
 	return areTherePreparedSpellsMissing
 }
 
-export const characterKnownSpells = (spellcasting) => {
-	const { character_known_spells } = {...store.getState().character}
+export const characterSpells = (spellcasting) => {
+	let keyword = spellcasting.prepare_spells ? "prepared_spells" : "character_known_spells"
+	const spells = [...store.getState().character[keyword]]
 
-	let data = character_known_spells.filter(cks => cks.spellcasting.id === spellcasting.id)
+	let data = spells.filter(cks => cks.spellcasting.id === spellcasting.id)
 	let sortedData = []
 	for(let i = 0; i < 10; i++){
 		let thisLvl = data.filter(sp => sp.spell_list_spell.spell_level === i)

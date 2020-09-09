@@ -84,19 +84,19 @@ const Spellcasting = props => {
 	}
 
 	const renderSpellTableRows = (scData) => {
-		let knownSpells = SpellcastingCalculations.characterKnownSpells(scData.spellcasting)
+		let spells = SpellcastingCalculations.characterSpells(scData.spellcasting)
 
-		return knownSpells.map((ks, i) => {
-			let ksData = SpellcastingCalculations.spellData({...ks, spellcasting: scData.spellcasting}, scData.klassFeature.klass_id)
+		return spells.map((spell, i) => {
+			let spellData = SpellcastingCalculations.spellData({...spell, spellcasting: scData.spellcasting}, scData.klassFeature.klass_id)
 			return (
 				<tr>
-					<td>{ksData.spellLevel}</td>
-					<td><button className={ksData.action} onClick={() => SpellcastingCalculations.castSpell(ksData, scData.spellsPerDay)}><strong>Cast</strong></button></td>
-					<td><em className='underline-hover' onClick={() => modalAction("spellDescription", ks.spell)}>{ksData.name}</em></td>
-					<td>{ksData.range}</td>
-					<td>{ksData.duration}</td>
-					<td>{ksData.difficultyClass}</td>
-					<td>{ksData.spellResistance}</td>
+					<td>{spellData.spellLevel}</td>
+					<td><button className={spellData.action} onClick={() => SpellcastingCalculations.castSpell(spellData, scData.spellsPerDay)}><strong>Cast</strong></button></td>
+					<td><em className='underline-hover' onClick={() => modalAction("spellDescription", spell.spell)}>{spellData.name}</em></td>
+					<td>{spellData.range}</td>
+					<td>{spellData.duration}</td>
+					<td>{spellData.difficultyClass}</td>
+					<td>{spellData.spellResistance}</td>
 				</tr>
 			)
 		})

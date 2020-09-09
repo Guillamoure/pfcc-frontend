@@ -90,7 +90,7 @@ const PreparedSpellManager = props => {
 					id: data.id,
 					spell,
 					spell_list_spell: spellListSpell,
-					feature_spellcasting_id: featureSpellcasting.id,
+					spellcasting: featureSpellcasting,
 					spell_level: dragInfo.spellLevel,
 					cast: false
 				}
