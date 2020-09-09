@@ -8,7 +8,7 @@ import { replaceCharacterAction } from '../../helper_functions/action_creator/ch
 
 const PreparedSpellManager = props => {
 
-	const { prepared_spells: preparedSpells, id } = useSelector(state => state.character)
+	let { prepared_spells: preparedSpells, id } = useSelector(state => state.character)
 
 	const [displayButton, toggleDisplayButton] = React.useState("All")
 	const [filterInput, updateFilter] = React.useState("")
@@ -108,13 +108,13 @@ const PreparedSpellManager = props => {
 		})
 	}
 
-	const removeCharacterPreparedSpell = characterKnownSpellId => {
-		// deleteFetch(`known_spells/${characterKnownSpellId}`)
-		// 	.then(data => {
-		// 		let replaceCharacterKnownSpells = [...character_known_spells].filter(ks => ks.id !== characterKnownSpellId)
-		// 		character_known_spells = character_known_spells.filter(ks => ks.id !== characterKnownSpellId)
-		// 		replaceCharacterAction('character_known_spells', replaceCharacterKnownSpells)
-		// 	})
+	const removeCharacterPreparedSpell = preparedSpellId => {
+		deleteFetch(`prepared_spells/${preparedSpellId}`)
+			.then(data => {
+				let replacePreparedSpells = [...preparedSpells].filter(ps => ps.id !== preparedSpellId)
+				preparedSpells = preparedSpells.filter(ps => ps.id !== preparedSpellId)
+				replaceCharacterAction('prepared_spells', replacePreparedSpells)
+			})
 	}
 
 	const renderPreparedSpells = () => {
