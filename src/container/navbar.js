@@ -68,7 +68,7 @@ class NavBar extends React.Component {
         <Menu>
           <Menu.Item className='project-name'>CharacterFinder</Menu.Item>
           <Menu.Item onClick={() => this.props.history.push('/classes')}>Classes</Menu.Item>
-          <Menu.Item onClick={() => this.props.history.push('/races')}>Races</Menu.Item>
+          <Menu.Item onClick={() => this.props.history.push('/ancestries')}>Ancestries</Menu.Item>
           <Menu.Item onClick={() => this.props.history.push('/skills')}>Skills</Menu.Item>
           <Menu.Item onClick={() => this.props.history.push('/spells')}>Spells</Menu.Item>
           {this.state.currentUser ? <Menu.Item onClick={() => this.props.history.push('/')}>{this.state.currentUser.username}</Menu.Item>: <Menu.Item onClick={() => this.props.history.push('/login')}>Login</Menu.Item>}

@@ -3,55 +3,36 @@ import React from 'react'
 import { connect } from 'react-redux'
 import localhost from '../localhost'
 
-class Races extends React.Component {
+const Races = props => {
 
-  state = {
-    races: {}
-  }
-
-  componentDidMount() {
-    fetch(`${localhost}/api/v1/races`)
-    .then(r => r.json())
-    .then(data => {
-      this.setState({races: data})
-    })
-  }
-
-  // renderRaces = () => {
-  //   return this.state.races.map(race => <Link to={`/races/${race.name}`} key={race.id} >{race.name}< br /></Link>)
-  // }
-
-  renderRaces = () => {
-    const sortedRaces = this.state.races.sort((a,b) => a.id - b.id)
+  const renderRaces = () => {
+    const sortedRaces = props.races.sort((a,b) => a.name.localeCompare(b.name))
     return sortedRaces.map(race => {return (
-      <div className='card' onClick={() => this.props.history.push(`/races/${race.name}`)} key={race.id} >
+      <div className='card' onClick={() => props.history.push(`/ancestries/${race.name}`)} key={race.id} >
         <div className='fill'></div>
         <span className='card-content'>
-        {race.name}
+        	{race.name}
         </span>
         <div className="fade"></div>
-        <img className='card-img' alt={race.name} src={race.img_url}>
-        </img>
+        <img className='card-img' alt={race.name} src={race.img_url}></img>
       </div>
     )})
   }
 
 
-  // <button onClick={this.renderNewClass}>Create New Class</button>
-  render() {
-    return (
-      <div className='container-4'>
-        {this.state.races[0] ? this.renderRaces() : null}
-        {this.props.admin ? <div className='card' onClick={() => this.props.history.push('/races-form')}><span className='card-content'>Create a Fantasy Race!</span></div> : null}
-      </div>
-    )
-  }
+  return (
+    <div className='container-4'>
+      {renderRaces()}
+      {props.admin ? <div className='card' onClick={() => props.history.push('/ancestries-form')}><span className='card-content'>Create a Fantasy Ancestry!</span></div> : null}
+    </div>
+  )
 }
 
 const mapStateToProps = (state) => {
   return {
     currentUser: state.currentUser,
-    admin: state.admin
+    admin: state.admin,
+		races: state.races
   }
 }
 

@@ -65,7 +65,7 @@ class NewRace extends React.Component {
     return (
       <form onSubmit={(e) => this.renderFormSubmit(e)} >
         <label>
-          Race Name:
+          Ancestry Name:
           <input type="text" name="name" value={this.state.name} onChange={this.renderChange}/>
         </label>
         <br /><br />
@@ -190,8 +190,8 @@ class NewRace extends React.Component {
     console.log("the props", this.props.race)
     return (
       <span>
-        {(this.props.toggleRaceForm || this.props.location.pathname === "/races-form") ? this.renderForm() : null}
-        {this.props.race ? <button onClick={this.deleteRace}>Delete Race</button> : null}
+        {(this.props.toggleRaceForm || this.props.location.pathname === "/ancestries-form") ? this.renderForm() : null}
+        {this.props.race ? <button onClick={this.deleteRace}>Delete Ancestry</button> : null}
         {this.state.deleteRaceButton ? <span><br/>Are you sure about that?<br/> <button onClick={(e) => this.deleteRaceConfirm(e, "no")}>No</button><button onClick={(e) => this.deleteRaceConfirm(e, "yes")}>Yes</button><br/><br/></span> : null}
 
       </span>

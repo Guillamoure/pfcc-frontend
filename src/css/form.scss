@@ -11,8 +11,9 @@ $tan: #cfb997;
 #new-campaign-form {
   margin: 1%;
   display: grid;
+	height: 80vh;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 20vh 20vh 20vh 20vh;
   grid-template-areas:
     "setting details calendar calendar"
     "races races classes classes"
@@ -82,6 +83,7 @@ $tan: #cfb997;
 #new-campaign-form-races {
   grid-area: races;
   margin: 1%;
+	overflow: scroll;
 }
 
 #new-campaign-form-all-races h4 {
@@ -95,6 +97,7 @@ $tan: #cfb997;
 #new-campaign-form-classes {
   grid-area: classes;
   margin: 1%;
+	overflow: scroll;
 }
 
 #new-campaign-form-all-classes h4 {
@@ -152,12 +155,12 @@ $tan: #cfb997;
   /* grid-template-rows: repeat(2, 1fr); */
   text-align: center;
   input[type=number] {
-    width: 3em;
-    text-align: center;
+    width: 4em;
+    text-align: left;
   }
   input[type=text] {
-    width: 5em;
-    text-align: center;
+    width: 7em;
+    text-align: left;
   }
 }
 
@@ -174,6 +177,7 @@ $tan: #cfb997;
       "name name"
       "alignment age-gender"
       "description description";
+		display: inline-block;
     #new-character-details-name {
       grid-area: name;
     }
@@ -254,4 +258,57 @@ $tan: #cfb997;
 
 .inactive-button {
 	background-color: darkgrey;
+}
+
+#creation-form{
+	margin: 1%;
+	padding: 1%;
+}
+#new-character-details{
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-template-areas:
+		"name name"
+		"alignment age-gender"
+		"description description";
+	text-align: left;
+	.new-character-label {
+		font-size: 1.2rem;
+		font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
+		color: grey;
+	}
+	.new-character-text-input {
+		background: transparent;
+		resize: none;
+		border: 1px solid transparent;
+		font-weight: bold;
+		color: $sapphire;
+		text-align: left;
+	}
+	textarea {
+		width: 100%;
+		height: 90%;
+	}
+	#new-character-details-name {
+		grid-area: name;
+	}
+	#new-character-details-alignment {
+		grid-area: alignment;
+	}
+	#new-character-details-age-gender {
+		grid-area: age-gender;
+	}
+	#new-character-details-description {
+		grid-area: description;
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+		grid-template-rows: 1fr 1fr;
+		grid-template-areas:
+			"description description background background visuals"
+			"description description background background extras";
+		// #new-character-details-description-misc{
+		// 	display: grid;
+		// 	grid-template-columns: 1fr 2fr 1fr 2fr;
+		// }
+	}
 }

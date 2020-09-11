@@ -108,10 +108,11 @@ class Feature extends React.Component {
   }
 
   render () {
+		let slug = this.props.feature.name.toLowerCase().split(" ").join("-")
     return (
       <span>
         <ul>
-          <span><strong>{this.props.feature.name}</strong></span>
+          <span id={slug}><strong>{this.props.feature.name}</strong></span>
 
           {this.state.deleteFeatureButton ? <span><br/>Are you sure about that?<br/> <button onClick={(e) => this.deleteFeatureConfirm(e, "no")}>No</button><button onClick={(e) => this.deleteFeatureConfirm(e, "yes")}>Yes</button><br/><br/></span> : null}
           {!this.state.deleteFeatureButton && this.props.admin ? <button onClick={this.renderClick}>Edit</button> : null}

@@ -24,7 +24,7 @@ const Characters = props => {
     //   classesLevels.push(`${klass[0]} ${klass[1]}`)
     // })
     let mappedClasses = character.uniq_klasses.map(kl => {
-      const level = character.character_klasses.filter(ck => ck.klass_id === kl.id).length
+      const level = character.class_obj.find(clo => clo.klass_id === kl.id).level
       return `${kl.name} ${level}`
     })
     return mappedClasses.join(", ")

@@ -26,12 +26,17 @@ class Introduction extends React.Component {
 
   render () {
     return (
-      <div className='show'>
-        <h2>{this.props.race ? this.props.race.name : null}</h2>
-        {this.renderDescription()}
-        <p><strong>Size</strong>: {this.props.race ? this.props.race.size : null}</p>
-        <p><strong>Speed</strong>: {this.props.race ? this.props.race.speed : null} ft</p>
-        <p><strong>Ability Score Modifiers</strong>: {this.renderAbilityScoreModifiers()}</p>
+      <div className='show' id='class-intro'>
+				<span>
+					<h2>{this.props.race ? this.props.race.name : null}</h2>
+					{this.renderDescription()}
+					<p><strong>Size</strong>: {this.props.race ? this.props.race.size : null}</p>
+					<p><strong>Speed</strong>: {this.props.race ? this.props.race.speed : null} ft</p>
+					<p><strong>Ability Score Modifiers</strong>: {this.renderAbilityScoreModifiers()}</p>
+				</span>
+				<span>
+					<img id='class-img' alt={this.props.race.name} src={this.props.race.img_url}/>
+				</span>
       </div>
     )
   }

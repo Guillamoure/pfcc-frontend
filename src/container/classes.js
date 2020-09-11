@@ -4,54 +4,40 @@ import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import localhost from '../localhost'
 
-class Classes extends React.Component {
+const Classes = props => {
 
-  state = {
-    classes: {}
-  }
-
-  componentDidMount() {
-    fetch(`${localhost}/api/v1/klasses`)
-    .then(r => r.json())
-    .then(data => {
-      this.setState({classes: data})
-    })
-  }
-
-  renderClasses = () => {
-    const sortedClasses = this.state.classes.sort((a,b) => a.id - b.id)
+  const renderClasses = () => {
+    const sortedClasses = props.classes.sort((a,b) => a.name.localeCompare(b.name))
     return sortedClasses.map(klass => {return (
-      <div className='card' onClick={() => this.props.history.push(`/classes/${klass.name}`)} key={klass.id} >
+      <div className='card' onClick={() => props.history.push(`/classes/${klass.name}`)} key={klass.id} >
         <div className='fill'></div>
         <span className='card-content'>
-        {klass.name}
+        	{klass.name}
         </span>
         <div className="fade"></div>
-        <img className='card-img' alt={klass.name} src={klass.img_url}>
-        </img>
+        <img className='card-img' alt={klass.name} src={klass.img_url}></img>
       </div>
     )})
   }
 
 
   // <button onClick={this.renderNewClass}>Create New Class</button>
-  render() {
-    return (
-      <div>
-        <div className='container-4'>
-          {this.state.classes[0] ? this.renderClasses() : null}
-          {this.props.admin ? <div className='card' onClick={() => this.props.history.push('/classes-form')}><span className='card-content'>Create a new Class!</span></div> : null}
-        </div>
+  return (
+    <div>
+      <div className='container-4'>
+        {renderClasses()}
+        {props.admin ? <div className='card' onClick={() => props.history.push('/classes-form')}><span className='card-content'>Create a new Class!</span></div> : null}
       </div>
-    )
-  }
+    </div>
+  )
 
 }
 
 const mapStateToProps = (state) => {
   return {
     currentUser: state.currentUser,
-    admin: state.admin
+    admin: state.admin,
+		classes: state.classes
   }
 }
 

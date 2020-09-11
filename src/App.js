@@ -79,9 +79,9 @@ class App extends React.Component {
               <Route exact path="/signup" component={SignUp} />
               <Route exact path="/classes-form" component={ClassForm} />
               <Route exact path="/classes/:slug" component={Class} />
-              <Route exact path="/races" component={Races} />
-              <Route exact path="/races-form" component={RaceForm} />
-              <Route exact path="/races/:slug" component={Race} />
+              <Route exact path="/ancestries" component={Races} />
+              <Route exact path="/ancestries-form" component={RaceForm} />
+              <Route exact path="/ancestries/:slug" component={Race} />
               <Route exact path="/skills" component={Skills} />
               <Route exact path="/skills-form" component={SkillForm} />
               <Route exact path="/skills/:slug" component={Skill} />

@@ -66,22 +66,65 @@ const Details = props => {
   const renderDescription = () => {
     return (
       <section id="new-character-details-description" className="standard-container-bubble">
-        <label>Description</label>
-        <br />
-        <textarea style={{width: '15em'}} type="textfield" className="desc-box" rows="6" name="description" value={props.description} onChange={props.renderChange}/>
-        <section id="new-character-details-description-misc">
-          <label>Hair</label>
-          <input type="text" name="hair" value={props.hair} onChange={props.renderChange}/>
-          <label>Eye Color</label>
-          <input type="text" name="eyes" value={props.eyes} onChange={props.renderChange}/>
-          <label>Height</label>
-          <input type="text" name="height" value={props.height} onChange={props.renderChange}/>
-          <label>Weight</label>
-          <input type="text" name="weight" value={props.weight} onChange={props.renderChange}/>
-        </section>
+				<span style={{gridArea: "description"}}>
+        	<label htmlFor="new-character-description" className="new-character-label"><strong>Description</strong></label>:
+        	<textarea className="new-character-text-input" type="textfield" rows="6" id="new-character-description" name="description" value={props.description} onChange={props.renderChange}/>
+				</span>
+
+				<span style={{gridArea: "background"}}>
+        	<label htmlFor="new-character-background" className="new-character-label"><strong>Background</strong></label>:
+        	<textarea className="new-character-text-input" type="textfield" rows="6" id="new-character-background" name="background" value={props.background} onChange={props.renderChange}/>
+				</span>
+
+				<span style={{gridArea: "visuals"}}>
+					<div>
+	        	<label htmlFor="new-character-hair" className="new-character-label"><strong>Hair</strong></label>:
+	        	<input className="new-character-text-input" type="text" id="new-character-hair" name="hair" value={props.hair} onChange={props.renderChange}/>
+					</div>
+
+					<div>
+	        	<label htmlFor="new-character-eyes" className="new-character-label"><strong>Eye Color</strong></label>:
+	        	<input className="new-character-text-input" type="text" id="new-character-eyes" name="eyes" value={props.eyes} onChange={props.renderChange}/>
+					</div>
+
+					<div>
+	        	<label htmlFor="new-character-height" className="new-character-label"><strong>Height</strong></label>:
+	        	<input className="new-character-text-input" type="text" id="new-character-height" name="height" value={props.height} onChange={props.renderChange}/>
+					</div>
+
+					<div>
+	        	<label htmlFor="new-character-weight" className="new-character-label"><strong>Weight</strong></label>:
+	        	<input className="new-character-text-input" type="text" id="new-character-weight" name="weight" value={props.weight} onChange={props.renderChange}/>
+					</div>
+				</span>
+
+				<span style={{gridArea: "extras"}}>
+					<div>
+	        	<label htmlFor="new-character-homeland" className="new-character-label"><strong>Homeland</strong></label>:
+	        	<input className="new-character-text-input" type="text" id="new-character-homeland" name="homeland" value={props.homeland} onChange={props.renderChange}/>
+					</div>
+
+					<div>
+	        	<label htmlFor="new-character-deity" className="new-character-label"><strong>Deity</strong></label>:
+	        	<input className="new-character-text-input" type="text" id="new-character-deity" name="deity" value={props.deity} onChange={props.renderChange}/>
+					</div>
+				</span>
+
       </section>
     )
   }
+
+	// 	<label>Eye Color</label>
+	// 	<input type="text" name="eyes" value={props.eyes} onChange={props.renderChange}/>
+	// 	<label>Height</label>
+	// 	<input type="text" name="height" value={props.height} onChange={props.renderChange}/>
+	// 	<label>Weight</label>
+	// 	<input type="text" name="weight" value={props.weight} onChange={props.renderChange}/>
+	// 	<label>Homeland</label>
+	// 	<input style={{width: '10em'}} type="text" name="homeland" value={props.homeland} onChange={props.renderChange}/>
+	// 	<label>Deity</label>
+	// 	<input style={{width: '10em'}} type="text" name="deity" value={props.deity} onChange={props.renderChange}/>
+	// </section>
 
 
   return (
@@ -90,21 +133,7 @@ const Details = props => {
       {renderAlignment()}
       {renderAgeGender()}
       {renderDescription()}
-      <span>
-        <label>Background</label>
-        <br />
-        <textarea style={{width: '15em'}} type="textfield" className="desc-box" rows="6" name="background" value={props.background} onChange={props.renderChange}/>
-        <br />
-        <label>Homeland</label>
-        <br />
-        <input style={{width: '10em'}} type="text" name="homeland" value={props.homeland} onChange={props.renderChange}/>
-        <br />
-        <label>Deity</label>
-        <br />
-        <input style={{width: '10em'}} type="text" name="deity" value={props.deity} onChange={props.renderChange}/>
-      </span>
-
-    </section>
+        </section>
   )
 }
 

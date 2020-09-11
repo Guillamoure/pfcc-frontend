@@ -820,24 +820,28 @@ $tan: #cfb997;
 }
 
 .home-btn-create-links {
-  background: $ruby;
+  // background: $ruby;
+	background: linear-gradient(to right, white, black);
   font-size: 3em;
   font-weight: 700;
   display: inline-block;
   margin: 0 1%;
   padding: 0.5em;
   border-radius: .8em;
-  width: 30%;
+  width: 48%;
   text-align: center;
   color: $tan;
   text-shadow: -2px -2px 0 $sapphire, 2px -2px 0 $sapphire, -2px 2px 0 $sapphire, 2px 2px 0 $sapphire;
   /* text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff; */
-  border: 3px solid $sapphire;
+  // border: 3px solid $sapphire;
+  border: 3px solid $ruby;
 }
 
 .home-btn-create-links:hover{
+  // color: $ruby;
+  // background-color: $sapphire;
   color: $ruby;
-  background-color: $sapphire;
+  border: 3px solid $sapphire;
   text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 

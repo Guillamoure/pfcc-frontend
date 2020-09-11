@@ -17,7 +17,7 @@ const Campaigns = props => {
           <div className='card' onClick={() => props.history.push(`/campaigns/${camp.id}`)} key={camp.id} >
           <span className='card-char'>
           <div style={{padding: '.5em', lineHeight: '1.2', fontSize: '1.5em'}}>{camp.name}</div>
-          <div style={{padding: '.5em', lineHeight: '1.2'}}>{camp.name}</div>
+          <div style={{padding: '.5em', lineHeight: '1.2'}}>Campaign</div>
           </span>
           <div className="fade"></div>
           </div>

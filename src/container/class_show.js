@@ -150,7 +150,6 @@ class Class extends React.Component {
     })
     .then(r => r.json())
     .then(data => {
-      debugger
       this.setState({klass: data.klass, toggleSpellsForm: false})
     })
   }
@@ -179,7 +178,6 @@ class Class extends React.Component {
   }
 
   fetchClassFeatureEffect = (state, effect) => {
-    debugger
     fetch(`${localhost}/api/v1/${effect}`, {
       method: 'POST',
       headers: {
@@ -218,13 +216,13 @@ class Class extends React.Component {
     let featureOptions = false
     let feature = ""
     let featureOptionsArray = []
-    this.state.klass.klass_features.forEach(kf => {
-      if (kf.feature_options.length){
-        featureOptions = true
-        feature = kf.name
-        featureOptionsArray = kf.feature_options
-      }
-    })
+    // this.state.klass.klass_features.forEach(kf => {
+    //   if (kf.feature_options.length){
+    //     featureOptions = true
+    //     feature = kf.name
+    //     featureOptionsArray = kf.feature_options
+    //   }
+    // })
     if (!featureOptions){
       return <Features klass={this.state.klass} renderClassFeature={this.renderClassFeature} modal={this.state.modal} toggleModal={this.toggleModal}/>
     } else {

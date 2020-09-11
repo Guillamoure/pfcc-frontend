@@ -8,56 +8,53 @@ import Settings from './settings'
 import Campaigns from '../components/campaigns'
 
 
-class Home extends React.Component {
+const Home = props => {
 
-  state = {
-    showCharacters: false,
-    characters: []
-  }
+	const [characters, updateCharacters] = React.useState([])
 
-  componentDidMount() {
-    if (this.props.currentUser){
+	React.useEffect(() => {
+		if (props.currentUser){
 
-        fetch(`${localhost}/api/v1/characters`, {
-          headers: {
-            User: this.props.currentUser.id
-          }
-        })
-        .then(r => r.json())
-        .then(data => {
-          this.setState({characters: data})
-      })
-      }
-  }
+			fetch(`${localhost}/api/v1/characters`, {
+				headers: {
+					User: props.currentUser.id
+				}
+			})
+			.then(r => r.json())
+			.then(data => {
+				updateCharacters(data)
+			})
+		}
+
+	}, [props.currentUser])
 
   // COMMENTED OUT FOR TESTING PURPOSES
-  renderSignUp = () => {
-  //   if (!this.props.currentUser){
-  //     this.props.history.push("/signup")
+  const renderSignUp = () => {
+  //   if (!props.currentUser){
+  //     props.history.push("/signup")
   //   }
   }
   // COMMENTED OUT FOR TESTING PURPOSES
 
 
-  render() {
-    this.renderSignUp()
-    let className = localStorage.computer === 'true' ? 'container-4' : 'phone-container'
-    return (
-      <span className='background'>
-        <button className='home-btn-create-links' onClick={() => this.props.history.push("/creation")} >Create Character</button>
-        <button className='home-btn-create-links' onClick={() => this.props.history.push("/campaigns/new")}>Create Campaign</button>
-        <br/><br/>
-        <div className={className} style={{margin: '0 2em'}} >
-          <Settings />
-          <Campaigns />
-          <Characters characters={this.state.characters}/>
-        </div>
-      </span>
-    )
-  }
+  renderSignUp()
+  let className = localStorage.computer === 'true' ? 'container-4' : 'phone-container'
+
+
+  return (
+    <span className='background'>
+      <button className='home-btn-create-links' onClick={() => props.history.push("/creation")} >Create Character</button>
+      <button className='home-btn-create-links' onClick={() => props.history.push("/campaigns/new")}>Create Campaign</button>
+      <br/><br/>
+      <div className={className} style={{margin: '0 2em'}} >
+        <Settings />
+        <Campaigns />
+        <Characters characters={characters}/>
+      </div>
+    </span>
+  )
 
 }
-// {this.state.showCharacters ? <Characters />}
 
 const mapStatetoProps = (state) => {
   return {

@@ -27,12 +27,27 @@ class Table extends React.Component {
   }
 
   renderLevelFeatures = (lvl) => {
-    let onlyFeatures = _.flatten(this.props.klass.klass_features.map(kf => kf.feature_levels))
+    let onlyFeatures = _.flatten(this.props.klass.klass_features.map(kf => {
+			let slug = kf.name.toLowerCase().split(" ").join("-")
+			return kf.feature_levels.map(fl => {
+				return {slug, featureLevel: fl}
+			})
+		}))
     const levelFeatures = onlyFeatures.filter(feature => {
-      return feature.level === lvl
+      return feature.featureLevel.level === lvl && feature.featureLevel.table_description !== "none"
     })
-    const nameOfFeatures = levelFeatures.map(feature => feature.table_description)
-    return nameOfFeatures.filter(feat => feat !== "none").join(", ")
+    const nameOfFeatures = levelFeatures.map(feature => {
+			// return feature.featureLevel.table_description
+			return <a style={{color: "black"}} href={`#${feature.slug}`}>{feature.featureLevel.table_description}</a>
+		})
+		const domFeatures = []
+		for (let i = 0; i < nameOfFeatures.length; i++){
+			domFeatures.push(nameOfFeatures[i])
+			if (i < nameOfFeatures.length -1){
+				domFeatures.push(", ")
+			}
+		}
+    return domFeatures
   }
 
   renderClassTableRow = () => {

@@ -65,7 +65,7 @@ const Races = props => {
       return (
         <>
           <input type="checkbox" id="all-races" name="all-races" value="All" checked={!displayAvailableRaces} onChange={changeDisplay}/>
-          <label htmlFor="all-races"> All Races</label><br/>
+          <label htmlFor="all-races"> All Ancestries</label><br/>
           {displayAllRaces}
         </>
       )
@@ -74,7 +74,7 @@ const Races = props => {
 
   return (
     <section id="new-campaign-form-races" className="standard-container-bubble">
-      <h3 style={{marginBottom: '0'}}>Available Races</h3>
+      <h3 style={{marginBottom: '0'}}>Available Ancestries</h3>
       {display()}
     </section>
   )
