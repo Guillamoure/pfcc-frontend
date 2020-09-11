@@ -4,7 +4,6 @@ import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import localhost from '../localhost'
 
-import AbilityForm from '../components/character_forms/ability_scores'
 import Race from '../components/character_forms/race'
 import Class from '../components/character_forms/class'
 import Details from '../components/character_forms/details'
@@ -178,13 +177,7 @@ class CharacterCreation extends React.Component{
       case "Details":
         return (
           <>
-            <Details renderChange={this.renderChange} name={this.state.name} description={this.state.description} alignment={this.state.alignment} background={this.state.background} age={this.state.age} gender={this.state.gender} hair={this.state.hair} eyes={this.state.eyes} height={this.state.height} weight={this.state.weight} homeland={this.state.homeland} deity={this.state.deity}/>
-          </>
-        )
-      case "Ability Scores":
-        return (
-          <>
-            <AbilityForm renderChange={this.renderChange} strength={this.state.strength}  dexterity={this.state.dexterity} constitution={this.state.constitution} intelligence={this.state.intelligence} wisdom={this.state.wisdom} charisma={this.state.charisma} mapAbilityScores={this.mapAbilityScores}/>
+            <Details renderChange={this.renderChange} name={this.state.name} description={this.state.description} alignment={this.state.alignment} background={this.state.background} age={this.state.age} gender={this.state.gender} hair={this.state.hair} eyes={this.state.eyes} height={this.state.height} weight={this.state.weight} homeland={this.state.homeland} deity={this.state.deity} strength={this.state.strength}  dexterity={this.state.dexterity} constitution={this.state.constitution} intelligence={this.state.intelligence} wisdom={this.state.wisdom} charisma={this.state.charisma} mapAbilityScores={this.mapAbilityScores}/>
           </>
         )
       case "Race":

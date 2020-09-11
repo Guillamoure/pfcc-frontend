@@ -1,23 +1,8 @@
 import React from 'react'
+import AbilityForm from './ability_scores'
 // import _ from 'lodash'
 
 const Details = props => {
-
-
-  // <label>Alignment</label>
-  // <br />
-  // <select value={props.alignment} onChange={props.renderChange} name='alignment'>
-  //   <option value= "" > </option>
-  //   <option value= "Lawful Good" >Lawful Good</option>
-  //   <option value= "Neutral Good" >Neutral Good</option>
-  //   <option value= "Chaotic Good" >Chaotic Good</option>
-  //   <option value= "Lawful Neutral" >Lawful Neutral</option>
-  //   <option value= "Neutral" >Neutral</option>
-  //   <option value= "Chaotic Neutral" >Chaotic Neutral</option>
-  //   <option value= "Lawful Evil" >Lawful Evil</option>
-  //   <option value= "Neutral Evil" >Neutral Evil</option>
-  //   <option value= "Chaotic Evil" >Chaotic Evil</option>
-  // </select>
 
   const renderAlignment = () => {
     return (
@@ -45,68 +30,70 @@ const Details = props => {
   const renderName = () => {
     return (
       <section id="new-character-details-name" className="standard-container-bubble">
-        <label>Character Name</label>
-        <input style={{width: '10em'}} type="text" name="name" value={props.name} onChange={props.renderChange}/>
+				<label htmlFor="new-character-name" className="new-character-label"><strong>Character Name</strong></label>:
+				<input className="new-character-text-input" type="text"id="new-character-name" name="name" value={props.name} onChange={props.renderChange} autocomplete="off"/>
       </section>
     )
   }
 
-  const renderAgeGender = () => {
-    return (
-      <section id="new-character-details-age-gender" className="standard-container-bubble">
-      <label>Age</label>
-      <input type="number" name="age" value={props.age} onChange={props.renderChange}/>
-      <br/>
-      <label>Gender</label>
-      <input type="text" name="gender" value={props.gender} onChange={props.renderChange}/>
-      </section>
-    )
-  }
+	const renderAbilityForm = () => {
+		return (
+				<AbilityForm renderChange={props.renderChange} strength={props.strength}  dexterity={props.dexterity} constitution={props.constitution} intelligence={props.intelligence} wisdom={props.wisdom} charisma={props.charisma} mapAbilityScores={props.mapAbilityScores}/>
+		)
+	}
 
   const renderDescription = () => {
     return (
       <section id="new-character-details-description" className="standard-container-bubble">
 				<span style={{gridArea: "description"}}>
         	<label htmlFor="new-character-description" className="new-character-label"><strong>Description</strong></label>:
-        	<textarea className="new-character-text-input" type="textfield" rows="6" id="new-character-description" name="description" value={props.description} onChange={props.renderChange}/>
+        	<textarea className="new-character-text-input" type="textfield" rows="6" id="new-character-description" name="description" value={props.description} onChange={props.renderChange} placeholder="Appearance, outfit, aesthetic, attitude, etc." autocomplete="off"/>
 				</span>
 
 				<span style={{gridArea: "background"}}>
         	<label htmlFor="new-character-background" className="new-character-label"><strong>Background</strong></label>:
-        	<textarea className="new-character-text-input" type="textfield" rows="6" id="new-character-background" name="background" value={props.background} onChange={props.renderChange}/>
-				</span>
-
-				<span style={{gridArea: "visuals"}}>
-					<div>
-	        	<label htmlFor="new-character-hair" className="new-character-label"><strong>Hair</strong></label>:
-	        	<input className="new-character-text-input" type="text" id="new-character-hair" name="hair" value={props.hair} onChange={props.renderChange}/>
-					</div>
-
-					<div>
-	        	<label htmlFor="new-character-eyes" className="new-character-label"><strong>Eye Color</strong></label>:
-	        	<input className="new-character-text-input" type="text" id="new-character-eyes" name="eyes" value={props.eyes} onChange={props.renderChange}/>
-					</div>
-
-					<div>
-	        	<label htmlFor="new-character-height" className="new-character-label"><strong>Height</strong></label>:
-	        	<input className="new-character-text-input" type="text" id="new-character-height" name="height" value={props.height} onChange={props.renderChange}/>
-					</div>
-
-					<div>
-	        	<label htmlFor="new-character-weight" className="new-character-label"><strong>Weight</strong></label>:
-	        	<input className="new-character-text-input" type="text" id="new-character-weight" name="weight" value={props.weight} onChange={props.renderChange}/>
-					</div>
+        	<textarea className="new-character-text-input" type="textfield" rows="6" id="new-character-background" name="background" value={props.background} onChange={props.renderChange} placeholder="Family, motivation, goals, experiences, education, career, training, upbringing, etc." autocomplete="off"/>
 				</span>
 
 				<span style={{gridArea: "extras"}}>
 					<div>
-	        	<label htmlFor="new-character-homeland" className="new-character-label"><strong>Homeland</strong></label>:
-	        	<input className="new-character-text-input" type="text" id="new-character-homeland" name="homeland" value={props.homeland} onChange={props.renderChange}/>
+	        	<label htmlFor="new-character-age" className="new-character-label"><strong>Age</strong></label>:
+	        	<input className="new-character-text-input" type="number" id="new-character-age" name="age" value={props.age} onChange={props.renderChange} placeholder="25" autocomplete="off"/>
 					</div>
 
 					<div>
-	        	<label htmlFor="new-character-deity" className="new-character-label"><strong>Deity</strong></label>:
-	        	<input className="new-character-text-input" type="text" id="new-character-deity" name="deity" value={props.deity} onChange={props.renderChange}/>
+	        	<label htmlFor="new-character-gender" className="new-character-label"><strong>Gender</strong></label>:
+	        	<input className="new-character-text-input" type="text" id="new-character-gender" name="gender" value={props.gender} onChange={props.renderChange} placeholder="Non-Binary" autocomplete="off"/>
+					</div>
+
+					<div>
+	        	<label htmlFor="new-character-hair" className="new-character-label"><strong>Hair</strong></label>:
+	        	<input className="new-character-text-input" type="text" id="new-character-hair" name="hair" value={props.hair} onChange={props.renderChange} placeholder="too much" autocomplete="off"/>
+					</div>
+
+					<div>
+	        	<label htmlFor="new-character-eyes" className="new-character-label"><strong>Eye Color</strong></label>:
+	        	<input className="new-character-text-input" type="text" id="new-character-eyes" name="eyes" value={props.eyes} onChange={props.renderChange} placeholder="piercing" autocomplete="off"/>
+					</div>
+
+					<div>
+	        	<label htmlFor="new-character-height" className="new-character-label"><strong>Height</strong></label>:
+	        	<input className="new-character-text-input" type="text" id="new-character-height" name="height" value={props.height} onChange={props.renderChange} placeholder="just so" autocomplete="off"/>
+					</div>
+
+					<div>
+	        	<label htmlFor="new-character-weight" className="new-character-label"><strong>Weight</strong></label>:
+	        	<input className="new-character-text-input" type="text" id="new-character-weight" name="weight" value={props.weight} onChange={props.renderChange} placeholder="just right" autocomplete="off"/>
+					</div>
+
+					<div>
+						<label htmlFor="new-character-homeland" className="new-character-label"><strong>Homeland</strong></label>:
+						<input className="new-character-text-input" type="text" id="new-character-homeland" name="homeland" value={props.homeland} onChange={props.renderChange} placeholder="Arcadia" autocomplete="off"/>
+					</div>
+
+					<div>
+						<label htmlFor="new-character-deity" className="new-character-label"><strong>Deity</strong></label>:
+						<input className="new-character-text-input" type="text" id="new-character-deity" name="deity" value={props.deity} onChange={props.renderChange} placeholder="Pharasma" autocomplete="off"/>
 					</div>
 				</span>
 
@@ -114,26 +101,13 @@ const Details = props => {
     )
   }
 
-	// 	<label>Eye Color</label>
-	// 	<input type="text" name="eyes" value={props.eyes} onChange={props.renderChange}/>
-	// 	<label>Height</label>
-	// 	<input type="text" name="height" value={props.height} onChange={props.renderChange}/>
-	// 	<label>Weight</label>
-	// 	<input type="text" name="weight" value={props.weight} onChange={props.renderChange}/>
-	// 	<label>Homeland</label>
-	// 	<input style={{width: '10em'}} type="text" name="homeland" value={props.homeland} onChange={props.renderChange}/>
-	// 	<label>Deity</label>
-	// 	<input style={{width: '10em'}} type="text" name="deity" value={props.deity} onChange={props.renderChange}/>
-	// </section>
-
-
   return (
     <section id="new-character-details">
       {renderName()}
       {renderAlignment()}
-      {renderAgeGender()}
+			{renderAbilityForm()}
       {renderDescription()}
-        </section>
+    </section>
   )
 }
 

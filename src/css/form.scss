@@ -269,7 +269,7 @@ $tan: #cfb997;
 	grid-template-columns: 1fr 1fr;
 	grid-template-areas:
 		"name name"
-		"alignment age-gender"
+		"alignment ability-scores"
 		"description description";
 	text-align: left;
 	.new-character-label {
@@ -295,8 +295,8 @@ $tan: #cfb997;
 	#new-character-details-alignment {
 		grid-area: alignment;
 	}
-	#new-character-details-age-gender {
-		grid-area: age-gender;
+	#new-character-details-ability-scores {
+		grid-area: ability-scores;
 	}
 	#new-character-details-description {
 		grid-area: description;
@@ -304,7 +304,7 @@ $tan: #cfb997;
 		grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
 		grid-template-rows: 1fr 1fr;
 		grid-template-areas:
-			"description description background background visuals"
+			"description description background background extras"
 			"description description background background extras";
 		// #new-character-details-description-misc{
 		// 	display: grid;

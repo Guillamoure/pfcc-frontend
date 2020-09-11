@@ -30,37 +30,32 @@ class AbilityForm extends React.Component{
     })
   }
 
-  renderCSSClasses = () => {
-    let style = 'first-col centered'
-    if (this.props.strength && this.props.constitution && this.props.dexterity && this.props.intelligence && this.props.wisdom && this.props.charisma) {
-      style += ' tinted'
-    }
-    return style
-  }
-
-
-
   render () {
     return (
-      <div className='first-col centered'>
-        {this.state.numbers.length === 6 ? <p>{this.state.numbers.join(", ")}</p>: <p> You can roll your own numbers, or you can generate some sample scores with the button below! </p>}
+      <div id="new-character-details-ability-scores" className="standard-container-bubble">
+        <p> You can roll your own numbers, or you can generate some sample scores with the button below! Place the numbers to whatever score you'd like, or map them directly to the ability scores in order!{this.state.numbers.length === 6 ? <p style={{textAlign: "center"}}>{this.state.numbers.join(", ")}</p> : <p  style={{textAlign: "center"}}>0, 0, 0, 0, 0, 0</p>}</p>
 
         <button onClick={this.generateRandomAbilityScores}>Generate 6 numbers!</button>
         {this.state.numbers.length === 6 && <button onClick={() => this.props.mapAbilityScores(this.state.numbers)}>Map directly to Abilities!</button>}
         <br /><br />
         <div className='container-2' style={{marginLeft: '20%'}}>
-          <label>Strength</label>
-            <input type="number" name="strength" value={this.props.strength} onChange={this.props.renderChange}/>
-          <label>Dexterity</label>
-            <input type="number" name="dexterity" value={this.props.dexterity} onChange={this.props.renderChange}/>
-          <label>Constitution</label>
-            <input type="number" name="constitution" value={this.props.constitution} onChange={this.props.renderChange}/>
-          <label>Intelligence</label>
-            <input type="number" name="intelligence" value={this.props.intelligence} onChange={this.props.renderChange}/>
-          <label>Wisdom</label>
-            <input type="number" name="wisdom" value={this.props.wisdom} onChange={this.props.renderChange}/>
-          <label>Charisma</label>
-            <input type="number" name="charisma" value={this.props.charisma} onChange={this.props.renderChange}/>
+          <label className="new-character-label"><strong>Strength</strong></label>
+            <input type="number" name="strength" className="new-character-text-input" value={this.props.strength} onChange={this.props.renderChange}/>
+
+          <label className="new-character-label"><strong>Dexterity</strong></label>
+            <input type="number" name="dexterity" className="new-character-text-input" value={this.props.dexterity} onChange={this.props.renderChange}/>
+
+          <label className="new-character-label"><strong>Constitution</strong></label>
+            <input type="number" name="constitution" className="new-character-text-input" value={this.props.constitution} onChange={this.props.renderChange}/>
+
+          <label className="new-character-label"><strong>Intelligence</strong></label>
+            <input type="number" name="intelligence" className="new-character-text-input" value={this.props.intelligence} onChange={this.props.renderChange}/>
+
+          <label className="new-character-label"><strong>Wisdom</strong></label>
+            <input type="number" name="wisdom" className="new-character-text-input" value={this.props.wisdom} onChange={this.props.renderChange}/>
+
+          <label className="new-character-label"><strong>Charisma</strong></label>
+            <input type="number" name="charisma" className="new-character-text-input" value={this.props.charisma} onChange={this.props.renderChange}/>
         </div>
       </div>
 
