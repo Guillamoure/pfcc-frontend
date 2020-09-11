@@ -66,17 +66,49 @@ class Race extends React.Component{
     return modStrings.join(", ")
   }
 
+	renderAncestryCard = ancestry => {
+		let style = {border: "4px solid transparent"}
+		if (parseInt(this.props.chosenRaceId) === ancestry.id){style.border = "4px solid black"}
+		return (
+			<div className="dynamic-card" style={style} >
+				<button className='dynamic-card-content-button' name="race" value={ancestry.id} onClick={this.props.renderChange}>
+					Select {ancestry.name}
+				</button>
+				<img className='dynamic-card-img' alt={ancestry.name} src={ancestry.img_url}></img>
+			</div>
+		)
+	}
+
+	renderAncestryOptions = () => {
+
+		let ancestryCards = this.props.races.map(this.renderAncestryCard)
+
+		return (
+			<>
+				<section style={{display: "flex", flexWrap: "wrap"}}>
+					{ancestryCards}
+				</section>
+			</>
+		)
+
+		// return (
+		// 	<>
+		// 		<label>Race Options </label>
+		// 			<select name="race" value={this.props.chosenRaceId} onChange={(e) => this.props.renderChange(e)}>
+		// 			<option value= "" >Select One</option>
+		// 			{this.props.races[0] ? this.renderRaces() : null}
+		// 		</select>
+		// 		{this.props.races[0] && this.props.chosenRaceId ? this.renderChosenRace() : null}
+		// 		{this.props.races[0] && this.props.chosenRaceId ? this.renderRacialAbilityModifiers() : null}
+		// 		{this.state.raceAnyModifier ? this.renderAnyChoiceField() : null}
+		// 	</>
+		// )
+	}
+
   render () {
     return (
       <div>
-      <label>Race Options </label>
-        <select name="race" value={this.props.chosenRaceId} onChange={(e) => this.props.renderChange(e)}>
-          <option value= "" >Select One</option>
-          {this.props.races[0] ? this.renderRaces() : null}
-        </select>
-      {this.props.races[0] && this.props.chosenRaceId ? this.renderChosenRace() : null}
-      {this.props.races[0] && this.props.chosenRaceId ? this.renderRacialAbilityModifiers() : null}
-      {this.state.raceAnyModifier ? this.renderAnyChoiceField() : null}
+			{this.renderAncestryOptions()}
       </div>
     )
   }
