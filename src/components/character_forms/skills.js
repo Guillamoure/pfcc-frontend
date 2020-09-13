@@ -42,8 +42,8 @@ class Skills extends React.Component {
   }
 
   renderSkillTableRow = () => {
-    const skillset = this.state.skillsets.find(ss => ss.id === this.props.activeSkillset)
-    const sortedSkills = skillset.skills.sort((a,b) => a.name > b.name ? 1 : -1)
+    const skillset = this.state.skillsets.find(ss => ss.id === this.props.activeSkillset) ?? {}
+    const sortedSkills = skillset?.skills?.sort((a,b) => a.name > b.name ? 1 : -1) ?? []
     return sortedSkills.map(skill => {
       return (
         <tr key={_.random(1, 2000000)}>

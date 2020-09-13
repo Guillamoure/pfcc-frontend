@@ -64,11 +64,11 @@ class Login extends React.Component {
         <Form onSubmit={this.renderSubmit} style={{margin: '0 20%'}}>
           <Form.Field>
             <label>Username</label>
-            <input type="text" name="username" value={this.state.username} placeholder='Username' onChange={this.renderChange}/>
+            <input type="text" name="username" value={this.state.username} placeholder='Username' onChange={this.renderChange} autocomplete="off"/>
           </Form.Field>
           <Form.Field>
             <label>Password</label>
-            <input type="text" name="password" value={this.state.password} placeholder='Password' onChange={this.renderChange}/>
+            <input type="text" name="password" value={this.state.password} placeholder='Password' onChange={this.renderChange} autocomplete="off"/>
           </Form.Field>
           <Button type="submit"> Login </Button>
         </Form>

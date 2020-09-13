@@ -36,7 +36,7 @@ class CharacterCreation extends React.Component{
     alignment: "",
     anyBonus: "",
     doesRacehaveAnyBonus: false,
-    activeSkillset: 0,
+    activeSkillset: 2,
     activeTab: "Details"
   }
 

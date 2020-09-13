@@ -18,11 +18,17 @@ export const initializeCampaignWebsocket = async (character) => {
 
 	// STORED DATA
 	let websocket = {...store.getState().websocket}
-	const websocketCode = character.campaign.websocket_code
+	const websocketCode = character.campaign?.websocket_code
 
 	// CALCULATED DATA
 
 	// let addedSubscriptionWebsocket =
+
+	if (websocket.cable === undefined){
+		return null
+	}
+
+
 	websocket.campaign =
 		await {...websocket}.cable.subscriptions.create({
 			channel: "CampaignsChannel",

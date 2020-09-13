@@ -79,7 +79,7 @@ export const featureDistribution = (feature, options) => {
 	let characterLevel = classes.reduce((agg, el) => (agg + el.level), 0)
 
 	// go through the feature, and add it to character_info
-	klassFeaturesFeatureDistribution(feature, character_info, source, characterLevel)
+	klassFeaturesFeatureDistribution(feature, character_info, source, {characterLevel})
 
 	// add/remove this feature to the list of active features in character_info.activeFeatures (redux)
 	activeFeatureAction(source)
@@ -158,7 +158,7 @@ export const featureDistribution = (feature, options) => {
 
 			featureSourceFeaturesAfter.forEach(after => {
 				source = {featureId: after.id, sourceId: feature.sourceId, source: feature.source}
-				klassFeaturesFeatureDistribution(after, character_info, source)
+				klassFeaturesFeatureDistribution(after, character_info, source, {characterLevel})
 			})
 
 			character_info.statusConditions.forEach(sc => {
