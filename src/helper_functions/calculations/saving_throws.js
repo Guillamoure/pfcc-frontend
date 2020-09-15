@@ -69,6 +69,6 @@ export const bonusPenaltySave = (save, ability) => {
 	let temp = calculateSave(save, ability)[1]
 	let color = "black"
 	if (temp > 0){color = "green"}
-	if (temp < 0){color = "red"}
+	if (temp < 0){color = "maroon"}
 	return color
 }

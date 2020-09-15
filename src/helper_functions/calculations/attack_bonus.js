@@ -3,17 +3,29 @@ import { abilityScoreMod } from './ability_scores'
 import { armorCheckPenaltyOnOtherAbilities } from './proficiencies'
 
 export const ab = (characterObj, characterInfoObj, type) => {
+	// NEW DATA
+	let array = []
+	let permanent = 0
+	let temporary = 0
   let attackBonus = 0
   let bab = baseAttackBonus(characterInfoObj.classes, characterObj.uniq_klasses)
 	let abilityMod
+	let permAbilityMod
 
 	let str = abilityScoreMod("strength")
 	let dex = abilityScoreMod("dexterity")
 
+	let permSTR = abilityScoreMod("strength", true)
+	let permDEX = abilityScoreMod("dexterity", true)
+
+
+
   if (type === "melee"){
     abilityMod = str
+		permAbilityMod = permSTR
   } else if (type === "range"){
     abilityMod = dex
+		permAbilityMod = permDEX
   }
 
 	let bonuses = additionalBonuses(characterInfoObj.bonuses, type)
@@ -25,11 +37,30 @@ export const ab = (characterObj, characterInfoObj, type) => {
 	// armor check penalty applies to attack rolls
 	let armorCheckPenalty = armorCheckPenaltyOnOtherAbilities()
 
-	return bab + abilityMod + bonuses + armorCheckPenalty
+	permanent += bab
+	permanent += armorCheckPenalty
+
+	if (permAbilityMod !== abilityMod) {
+		temporary += abilityMod - permAbilityMod
+		permanent += permAbilityMod
+	} else {
+		permanent += abilityMod
+	}
+
+	temporary += bonuses
+
+	array.push(permanent)
+	array.push(temporary)
+	return array
+}
+
+export const renderAB = (characterObj, characterInfoObj, type) => {
+	let abArray = ab(characterObj, characterInfoObj, type)
+	return (abArray[0] + abArray[1])
 }
 
 export const pluserAB = (characterObj, characterInfoObj, type) => {
-	return pluser(ab(characterObj, characterInfoObj, type))
+	return pluser(renderAB(characterObj, characterInfoObj, type))
 }
 
  export const baseAttackBonus = (klassLevels, allKlasses) => {
@@ -54,4 +85,12 @@ export const additionalBonuses = (bonuses, type) => {
 	})
 
 	return applicableBonuses
+}
+
+export const bonusPenaltyAB = (characterObj, characterInfoObj, type) => {
+	let temp = ab(characterObj, characterInfoObj, type)[1]
+	let color = "black"
+	if (temp > 0){color = "green"}
+	if (temp < 0){color = "maroon"}
+	return color
 }

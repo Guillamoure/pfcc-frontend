@@ -1,7 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
 import { connect } from 'react-redux'
-import { pluserAB } from '../../helper_functions/calculations/attack_bonus'
+import { pluserAB, bonusPenaltyAB } from '../../helper_functions/calculations/attack_bonus'
 
 
 class AttackBonus extends React.Component {
@@ -157,8 +157,8 @@ class AttackBonus extends React.Component {
         <span className='centered'>
           <div className='duller'><strong>Attack Bonus</strong></div>
           <div className='container-2'>
-            {!!this.props.classes.length && <span className='enhanced' style={this.renderAB('strength', true)}>{pluserAB(this.props.character, this.props.character_info, "melee")}</span>}
-            {!!this.props.classes.length && <span className='enhanced' style={this.renderAB('dexterity', true)}>{pluserAB(this.props.character, this.props.character_info, 'range')}</span>}
+            {!!this.props.classes.length && <span className='enhanced' style={{color: bonusPenaltyAB(this.props.character, this.props.character_info, "melee")}}>{pluserAB(this.props.character, this.props.character_info, "melee")}</span>}
+            {!!this.props.classes.length && <span className='enhanced' style={{color: bonusPenaltyAB(this.props.character, this.props.character_info, 'range')}}>{pluserAB(this.props.character, this.props.character_info, 'range')}</span>}
             <span>Melee</span>
             <span>Ranged</span>
           </div>
