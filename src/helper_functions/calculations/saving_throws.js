@@ -24,6 +24,7 @@ export const calculateSave = (save, ability) => {
 
 	// CALCULATED DATA
 	let abilityMod = abilityScoreMod(ability)
+	let permAbilityMod = abilityScoreMod(ability, true)
 	let classSaves = characterInfo.classes.map((cl) => {
 		let classInfo = klasses.find(kl => kl.id === cl.id)
 		return renderBaseClassSave(cl.level, classInfo[save])
@@ -33,8 +34,13 @@ export const calculateSave = (save, ability) => {
 		return (b.statistic === "Saving Throw" || b.statistic === "Fortitude" || b.statistic === "Reflex" || b.statistic === "Will")
 	})
 
+	if (permAbilityMod !== abilityMod) {
+		temporary += abilityMod - permAbilityMod
+		permanent += permAbilityMod
+	} else {
+		permanent += abilityMod
+	}
 
-	permanent += abilityMod
 	permanent += classSavesTotal
 
 	bonusObjs.forEach(bo => {
@@ -47,6 +53,7 @@ export const calculateSave = (save, ability) => {
 		}
 	})
 
+
 	array.push(permanent)
 	array.push(temporary)
 	return array
@@ -56,4 +63,12 @@ export const renderBaseClassSave = (num, save) => {
 	let base = num * save
 	if (save === 0.5){base +=2}
 	return _.floor(base)
+}
+
+export const bonusPenaltySave = (save, ability) => {
+	let temp = calculateSave(save, ability)[1]
+	let color = "black"
+	if (temp > 0){color = "green"}
+	if (temp < 0){color = "red"}
+	return color
 }

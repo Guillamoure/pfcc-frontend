@@ -1,7 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
 import { connect } from 'react-redux'
-import { renderSave } from '../../helper_functions/calculations/saving_throws'
+import { renderSave, bonusPenaltySave } from '../../helper_functions/calculations/saving_throws'
 
 const Saves = props => {
 
@@ -178,10 +178,10 @@ const Saves = props => {
 
 		return saveDetails.map(saveDetail => {
 			let capitalizedSave = _.capitalize(saveDetail.save)
-
+			let color = bonusPenaltySave(saveDetail.save, saveDetail.ability)
 			return (
 	      <span className='centered' >
-	        <div className='enhanced'>{renderSave(saveDetail.save, saveDetail.ability)}</div>
+	        <div className='enhanced' style={{color}}>{renderSave(saveDetail.save, saveDetail.ability)}</div>
 	        <div className='muted'><strong>{capitalizedSave}</strong></div>
 	      </span>
 			)
