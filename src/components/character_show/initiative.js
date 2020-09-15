@@ -71,19 +71,49 @@ const Initiative = props => {
     return modifiers
   }
 
-	const calculateInitiative = () => {
-		let dex = abilityScoreMod("dexterity")
-		let bonuses = 0
-		return pluser(dex + bonuses)
+	const initiativeArray = () => {
+		// NEW DATA
+		let array = []
+		let permanent = 0
+		let temporary = 0
+
+		let abilityMod = abilityScoreMod("dexterity")
+		let permAbilityMod = abilityScoreMod("dexterity", true)
+
+		if (permAbilityMod !== abilityMod) {
+			temporary += abilityMod - permAbilityMod
+			permanent += permAbilityMod
+		} else {
+			permanent += abilityMod
+		}
+
+		array.push(permanent)
+		array.push(temporary)
+		return array
 	}
 
+
+	const bonusPenaltyInit = () => {
+		let temp = initiativeArray()[1]
+		let color = "black"
+		if (temp > 0){color = "green"}
+		if (temp < 0){color = "maroon"}
+		return color
+	}
+
+	const calculateInitiative = () => {
+		let initArray = initiativeArray()
+		return pluser(initArray[0] + initArray[1])
+	}
+
+	let color = bonusPenaltyInit()
 
   if (localStorage.computer === "true"){
     return (
       <div id='init' className='shadow shrink'>
         <span className='centered'>
           <div className='dull'><strong>Init</strong></div>
-          <div className='enhanced' style={dexMod(true)}>{calculateInitiative()}</div>
+          <div className='enhanced' style={{color}}>{calculateInitiative()}</div>
         </span>
       </div>
     )
@@ -91,7 +121,7 @@ const Initiative = props => {
     return (
       <div id='init' className='shadow' style={{padding: '2%'}}>
         <span className='centered'>
-          <div className='enhanced' style={dexMod(true)}>{calculateInitiative()}</div>
+          <div className='enhanced' style={{color}}>{calculateInitiative()}</div>
           <div className='dull'><strong>Init</strong></div>
         </span>
       </div>

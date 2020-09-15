@@ -58,6 +58,7 @@ export const armorClassModifiers = () => {
 			sourceName = sourceName.toLowerCase()
 			acModifiers.push({
 				bonus: "untyped",
+				duration: bonus.duration,
 				source: sourceName,
 				mod: bonus.bonus
 			})
