@@ -3,6 +3,7 @@ import React from 'react'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import localhost from '../localhost'
+import { getFetch } from '../helper_functions/fetches'
 
 import Race from '../components/character_forms/race'
 import Class from '../components/character_forms/class'
@@ -37,7 +38,9 @@ class CharacterCreation extends React.Component{
     anyBonus: "",
     doesRacehaveAnyBonus: false,
     activeSkillset: 2,
-    activeTab: "Details"
+    activeTab: "Details",
+		campaign_id: null,
+		campaignDetails: null
   }
 
   componentDidMount() {
@@ -49,6 +52,15 @@ class CharacterCreation extends React.Component{
     // }
     // COMMENTED OUT FOR TESTING PURPOSES
   }
+
+	componentWillUpdate() {
+		if ((this.state.campaignDetails === null && !!this.state.campaign_id) || parseInt(this.state.campaign_id) !== this.state.campaignDetails?.id && !!this.state.campaign_id){
+			getFetch(`campaigns/${this.state.campaign_id}`)
+				.then(data => {
+					this.setState({campaignDetails: data})
+				})
+		}
+	}
 
   renderButtonClick = (field) => {
     if (this.state.activeField === field){
@@ -62,7 +74,18 @@ class CharacterCreation extends React.Component{
 		console.log(e.target.name)
 		console.log(e.target.value)
     this.setState({[e.target.name]: e.target.value})
+		if (e.target.name === "campaign_id"){
+			this.setState({campaignDetails: null})
+		}
   }
+
+	renderAncestryChange = (id) => {
+		this.setState({race: id})
+	}
+
+	renderClassChange = (id) => {
+		this.setState({classes: [id]})
+	}
 
   renderTabClick = (choice) => {
     this.setState({activeTab: choice})
@@ -142,7 +165,7 @@ class CharacterCreation extends React.Component{
     .then(res => res.json())
     .then(data => {
       console.log(data)
-      this.props.history.push('/')
+      this.props.history.push('/characters/'+ characterId)
     })
   }
 
@@ -179,19 +202,19 @@ class CharacterCreation extends React.Component{
       case "Details":
         return (
           <>
-            <Details renderChange={this.renderChange} name={this.state.name} description={this.state.description} alignment={this.state.alignment} background={this.state.background} age={this.state.age} gender={this.state.gender} hair={this.state.hair} eyes={this.state.eyes} height={this.state.height} weight={this.state.weight} homeland={this.state.homeland} deity={this.state.deity} strength={this.state.strength}  dexterity={this.state.dexterity} constitution={this.state.constitution} intelligence={this.state.intelligence} wisdom={this.state.wisdom} charisma={this.state.charisma} mapAbilityScores={this.mapAbilityScores}/>
+            <Details renderChange={this.renderChange} name={this.state.name} description={this.state.description} alignment={this.state.alignment} background={this.state.background} age={this.state.age} gender={this.state.gender} hair={this.state.hair} eyes={this.state.eyes} height={this.state.height} weight={this.state.weight} homeland={this.state.homeland} deity={this.state.deity} strength={this.state.strength}  dexterity={this.state.dexterity} constitution={this.state.constitution} intelligence={this.state.intelligence} wisdom={this.state.wisdom} charisma={this.state.charisma} mapAbilityScores={this.mapAbilityScores} campaign_id={this.state.campaign_id} campaignDetails={this.state.campaignDetails}/>
           </>
         )
-      case "Race":
+      case "Ancestry":
         return (
           <>
-            <Race renderChange={this.renderChange} chosenRaceId={this.state.race} anyBonus={this.state.anyBonus} doesRacehaveAnyBonus={this.state.doesRacehaveAnyBonus} renderdoesHaveAnyBonus={this.renderdoesHaveAnyBonus}/>
+            <Race renderAncestryChange={this.renderAncestryChange} chosenRaceId={this.state.race} anyBonus={this.state.anyBonus} doesRacehaveAnyBonus={this.state.doesRacehaveAnyBonus} renderdoesHaveAnyBonus={this.renderdoesHaveAnyBonus} campaignDetails={this.state.campaignDetails}/>
           </>
         )
       case "Class":
         return (
           <>
-            <Class renderChange={this.renderChange} renderDynamicChanges={this.renderDynamicChanges} addClassField={this.addClassField} classes={this.state.classes} />
+            <Class renderChange={this.renderChange} renderDynamicChanges={this.renderDynamicChanges} addClassField={this.addClassField} chosenClasses={this.state.classes} renderClassChange={this.renderClassChange} campaignDetails={this.state.campaignDetails}/>
           </>
         )
       case "Skills":
@@ -206,6 +229,7 @@ class CharacterCreation extends React.Component{
   }
 
   render () {
+		console.log("character creation state", this.state)
     return (
       <>
 
@@ -221,7 +245,7 @@ class CharacterCreation extends React.Component{
           {(this.state.strength && this.state.constitution && this.state.dexterity && this.state.intelligence && this.state.wisdom && this.state.charisma) ? <span className='complete'>Ability Scores</span> : <span className='incomplete'>Ability Scores</span>}
           {(this.state.name) ? <span className='complete'>Character Name</span> : <span className='incomplete' >Character Name</span>}
           {(this.validClasses()) ? <span className='complete' >Character Class(es)</span> : <span className='incomplete' >Character Class(es)</span>}
-          {(this.state.race) ? <span className='complete' >Character Race</span> : <span className='incomplete' >Character Race</span>}
+          {(this.state.race) ? <span className='complete' >Character Ancestry</span> : <span className='incomplete' >Character Ancestry</span>}
         </div>
         <div className='confirmation centered'>
           {this.renderSubmit()}

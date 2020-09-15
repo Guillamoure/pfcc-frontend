@@ -216,6 +216,12 @@ $tan: #cfb997;
 	overflow: hidden;
 	border-radius: 1rem;
 	box-shadow: 0 3px 5px 0 #777;
+	&:hover {
+		.dynamic-card-content-button {
+			text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+			color: #000;
+		}
+	}
 	.dynamic-card-content {
 		position: absolute;
 		width: 100%;
@@ -235,8 +241,8 @@ $tan: #cfb997;
 		font-family: 'Righteous', cursive;
 		font-size: 2em;
 		text-align: center;
-		text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 		color: #fff;
+		text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 		line-height: 1em;
 		background: transparent;
 		border: transparent;

@@ -70,8 +70,8 @@ class Race extends React.Component{
 		let style = {border: "4px solid transparent"}
 		if (parseInt(this.props.chosenRaceId) === ancestry.id){style.border = "4px solid black"}
 		return (
-			<div className="dynamic-card" style={style} >
-				<button className='dynamic-card-content-button' name="race" value={ancestry.id} onClick={this.props.renderChange}>
+			<div className="dynamic-card" style={style} onClick={() => this.props.renderAncestryChange(ancestry.id)}>
+				<button className='dynamic-card-content-button'>
 					Select {ancestry.name}
 				</button>
 				<img className='dynamic-card-img' alt={ancestry.name} src={ancestry.img_url}></img>
@@ -80,8 +80,11 @@ class Race extends React.Component{
 	}
 
 	renderAncestryOptions = () => {
-
-		let ancestryCards = this.props.races.map(this.renderAncestryCard)
+		let ancestries = this.props.races
+		if (this.props.campaignDetails) {
+			ancestries = this.props.campaignDetails.races
+		}
+		let ancestryCards = ancestries.sort((a, b) => a.name.localeCompare(b.name)).map(this.renderAncestryCard)
 
 		return (
 			<>

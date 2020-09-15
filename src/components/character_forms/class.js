@@ -11,23 +11,23 @@ class Class extends React.Component{
     activeSkillset: 0,
     skillsets: {}
   }
-
-  componentDidMount = () => {
-    fetch(`${localhost}/api/v1/klasses`)
-    .then(r => r.json())
-    .then(data => {
-      this.setState({classes: data})
-    })
-  }
+	//
+  // componentDidMount = () => {
+  //   fetch(`${localhost}/api/v1/klasses`)
+  //   .then(r => r.json())
+  //   .then(data => {
+  //     this.setState({classes: data})
+  //   })
+  // }
 
   renderClasses = () => {
-    return this.state.classes.map(klass => {
+    return this.props.classes.map(klass => {
       return <option key={klass.id} value={klass.id}>{klass.name}</option>
     })
   }
 
   renderChosenClass = () => {
-    let chosen = this.state.classes.find(el => el.id === _.toNumber(this.props.chosenClassId))
+    let chosen = this.props.classes.find(el => el.id === _.toNumber(this.props.chosenClassId))
     return <Link to={`/classes/${chosen.name}`} >{chosen.name}< br /></Link>
   }
 
@@ -43,7 +43,7 @@ class Class extends React.Component{
               onChange={(e) => this.props.renderDynamicChanges(e, idx)}
             >
               <option value= "" >Choose One</option>
-              {this.state.classes && this.renderClasses()}
+              {this.props.classes && this.renderClasses()}
             </select>
             {`Level ${idx + 1}`}
         </div>
@@ -68,22 +68,48 @@ class Class extends React.Component{
   //   Class Options:
   //   <select name="class" value={this.props.chosenClassId} onChange={(e) => this.props.renderChange(e)}>
   //     <option value= "" >Select One</option>
-  //     {this.state.classes[0] ? this.renderClasses() : null}
+  //     {this.props.classes[0] ? this.renderClasses() : null}
   //   </select>
   // </label>
 
+	renderClassCard = klass => {
+		let style = {border: "4px solid transparent"}
+		if (parseInt(this.props.chosenClasses[0]) === klass.id){style.border = "4px solid black"}
+		return (
+			<div className="dynamic-card" style={style} onClick={() => this.props.renderClassChange(klass.id)}>
+				<button className='dynamic-card-content-button'>
+					Select {klass.name}
+				</button>
+				<img className='dynamic-card-img' alt={klass.name} src={klass.img_url}></img>
+			</div>
+		)
+	}
+
+	renderClassOptions = () => {
+		let classes = this.props.classes
+		if (this.props.campaignDetails) {
+			classes = this.props.campaignDetails.klasses
+		}
+		let classCards = classes.sort((a,b) => a.name.localeCompare(b.name)).map(this.renderClassCard)
+		return (
+			<section style={{display: "flex", flexWrap: "wrap"}}>
+				{classCards}
+			</section>
+		)
+	}
+
+	// <span>Class Options </span>
+	// <br/>
+	// <button onClick={(e) => this.props.addClassField(e, "plus", this.props.classes.length-1)}>{`Level ${this.props.classes.length + 1}`}</button>
+	// {this.mapClassDynamicFields()}
+	// {this.props.classes.length > 1 ? <button onClick={(e) => this.props.addClassField(e, "minus")}>Delevel</button> : null}
+	// {this.checkForValidLevels()}
+	// {this.props.classes[0] && this.props.chosenClassId ? this.renderChosenClass() : null}
 
   render () {
     return (
       <div>
-
-      <span>Class Options </span>
-      <br/>
-      <button onClick={(e) => this.props.addClassField(e, "plus", this.props.classes.length-1)}>{`Level ${this.props.classes.length + 1}`}</button>
-      {this.mapClassDynamicFields()}
-      {this.props.classes.length > 1 ? <button onClick={(e) => this.props.addClassField(e, "minus")}>Delevel</button> : null}
-      {this.checkForValidLevels()}
-      {this.state.classes[0] && this.props.chosenClassId ? this.renderChosenClass() : null}
+				{this.renderClassOptions()}
       </div>
     )
   }
@@ -92,7 +118,8 @@ class Class extends React.Component{
 const mapStateToProps = (state) => {
   return {
     currentUser: state.currentUser,
-    admin: state.admin
+    admin: state.admin,
+		classes: state.classes
   }
 }
 

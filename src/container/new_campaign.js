@@ -86,9 +86,9 @@ const NewCampaign = props => {
           age: selectedAge
         })
       })
-        .then(r => r.json)
+        .then(r => r.json())
         .then(data => {
-          props.history.push(`/campaigns/${data.id}`)
+           props.history.push(`/campaigns/${data.id}`)
         })
     } else {
       validateStartingLvl(0)

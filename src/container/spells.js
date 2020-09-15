@@ -58,15 +58,11 @@ class Spells extends React.Component {
   render() {
     return (
       <div id='spells-container'>
-        <span>
+        <span style={{height: "90vh", overflowY: "scroll"}}>
           <SpellsContainer spells={this.state.alphabetizedSpells} renderEdit={this.renderEdit}/>
         </span>
         <span>
-          { this.state.activeSpell ?
-            <SpellDescription spell={this.oneSpell(this.state.activeSpell)}/>
-            :
-            <p>{"<3 Click on a Spell <3"}</p>
-          }
+          { this.state.activeSpell && <SpellDescription spell={this.oneSpell(this.state.activeSpell)}/>}
         </span>
       </div>
     )

@@ -36,6 +36,16 @@ const Details = props => {
     )
   }
 
+  const renderCampaign = () => {
+    return (
+      <section id="new-character-details-campaign" className="standard-container-bubble">
+				<label htmlFor="new-character-campaign" className="new-character-label"><strong>Campaign Code</strong></label>:
+				<input className="new-character-text-input" type="number"id="new-character-campaign" name="campaign_id" value={props.campaign_id} onChange={props.renderChange} autocomplete="off"/>
+				{props.campaignDetails && <span>{props.campaignDetails.name}</span>}
+      </section>
+    )
+  }
+
 	const renderAbilityForm = () => {
 		return (
 				<AbilityForm renderChange={props.renderChange} strength={props.strength}  dexterity={props.dexterity} constitution={props.constitution} intelligence={props.intelligence} wisdom={props.wisdom} charisma={props.charisma} mapAbilityScores={props.mapAbilityScores}/>
@@ -104,6 +114,7 @@ const Details = props => {
   return (
     <section id="new-character-details">
       {renderName()}
+			{renderCampaign()}
       {renderAlignment()}
 			{renderAbilityForm()}
       {renderDescription()}

@@ -7,7 +7,7 @@ const CharacterContainer = props => {
 
   const renderCharacters = () => {
     console.log(props)
-    return props.campaign.characters.map((ch, idx) => {
+    return props.campaign.characters?.map((ch, idx) => {
         return <CharacterShow character={ch}/>
     })
   }
