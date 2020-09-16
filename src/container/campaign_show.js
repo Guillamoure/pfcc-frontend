@@ -18,6 +18,12 @@ const CampaignShow = props => {
   }
   return (
     <section>
+			<article>
+				<h1>{campaign.name}</h1>
+				<span><p>Setting: {campaign.setting}</p></span>
+				<span><p>Theme: {campaign.theme}</p></span>
+				<span><p>notes: {campaign.custom_notes}</p></span>
+			</article>
       <CharacterContainer campaign={campaign}/>
       <ItemSearch />
       <SetDate campaign={campaign}/>

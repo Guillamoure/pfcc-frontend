@@ -70,8 +70,14 @@ export const th = (num) => {
 }
 
 export const consolidateDate = (date) => {
-  const { weekday, month, day, age, year } = date
-  return `${weekday}, ${month} ${th(day)}, ${th(age)} Age, ${year}`
+  const { current_weekday, current_month, current_day, current_age, current_year } = date
+	let array = []
+	if (current_weekday) array.push(`${current_weekday},`)
+	if (current_month) array.push(`${current_month}`)
+	if (current_day) array.push(`${th(current_day)},`)
+	if (current_age) array.push(`${th(current_age)},`)
+	if (current_year) array.push(`${current_year}`)
+  return array.join(" ")
 }
 
 export const truncatedDate = (date) => {
