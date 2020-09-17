@@ -138,6 +138,9 @@ export const areAllKnownSpellsFilled = (spellcasting, level) => {
 }
 
 export const areAllPreparedSpellsFilled = (spellcasting, level) => {
+	if (!spellcasting.prepare_spells){
+		return false
+	}
 	let remainingPreparedSpells = remainingPreparedSpellsArray(spellcasting, level)
 
 	let areTherePreparedSpellsMissing = false
