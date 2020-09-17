@@ -92,8 +92,18 @@ class Table extends React.Component {
     )
   }
 
+	findSpellcasting = klassFeatures => {
+		let spellcasting = null
+		klassFeatures.forEach(kf => {
+			kf.features.forEach(f => {
+				spellcasting = f.spellcasting ?? spellcasting
+			})
+		})
+		return spellcasting
+	}
+
   spells = () => {
-    if (this.props.klass.spells_per_days && this.props.klass.spells_per_days.length > 0){
+    if (this.findSpellcasting(this.props.klass.klass_features ?? [])){
       console.log("Has spells per day!")
       return (
         <React.Fragment>
@@ -113,7 +123,7 @@ class Table extends React.Component {
   }
 
   spellsPerDay = (lvl) => {
-    if (this.props.klass.spells_per_days && this.props.klass.spells_per_days.length > 0){
+    if (this.findSpellcasting(this.props.klass.klass_features ?? [])){
       return (
         <React.Fragment>
           <th >{this.renderSpellsPerDayPerLevel(lvl, 0)}</th>
@@ -132,7 +142,8 @@ class Table extends React.Component {
   }
 
   renderSpellsPerDayPerLevel = (lvl, sp_lvl) => {
-    const spd =  this.props.klass.spells_per_days.find(spd => {
+		let spellcasting = this.findSpellcasting(this.props.klass.klass_features ?? [])
+    const spd = spellcasting.spells_per_day_per_level.find(spd => {
       return spd.klass_level === lvl && spd.spell_level === sp_lvl
     })
     return spd ? spd.spells : "-"
