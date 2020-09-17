@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect, useDispatch } from 'react-redux'
 import { pluser, mod } from '../../fuf'
-import { ab } from '../../helper_functions/calculations/attack_bonus'
+import { renderAB } from '../../helper_functions/calculations/attack_bonus'
 // import { tooltip } from '../../dispatches/tooltip'
 import { expendAmmo, reloadAmmo } from '../../dispatch'
 import _ from 'lodash'
@@ -136,10 +136,10 @@ const Attacks = props => {
     let meleeAttackBonus = null
     let rangeAttackBonus = null
     if (cw.weapon.weapon_type === "Melee"){
-      meleeAttackBonus = ab(props.character, props.character_info, "melee")
+      meleeAttackBonus = renderAB(props.character, props.character_info, "melee")
     }
     if (cw.weapon.weapon_type === "Range" || cw.weapon.thrown){
-      rangeAttackBonus = ab(props.character, props.character_info, "range")
+      rangeAttackBonus = renderAB(props.character, props.character_info, "range")
     }
     // is the character proficient with this weapon
     // if it's proficiencyGroup can't be found, or if it's id isn't specifically found
