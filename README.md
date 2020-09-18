@@ -6,6 +6,8 @@ A user, if they have administrative access, will be able to add character option
 
 ## [Video Demo](https://youtu.be/0fllOlI-XsM)
 
+[![Alt text](https://img.youtube.com/vi/0fllOlI-XsM/0.jpg)](https://www.youtube.com/watch?v=0fllOlI-XsM)
+
 ## Installation
 
 This is React/frontend half of the code. For the Rails/backend of the code, go to https://github.com/Guillamoure/pfcc-backend. Clone or Download this file and copy into a new file on your terminal using
