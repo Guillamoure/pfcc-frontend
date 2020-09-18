@@ -4,7 +4,7 @@ This program is to help users who play the Pathfinder Role Playing Game create a
 
 A user, if they have administrative access, will be able to add character options and details to the backend using forms present within the application.
 
-## [Video Demo](https://youtu.be/0fllOlI-XsM)
+
 
 ## Installation
 
