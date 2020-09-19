@@ -1,6 +1,7 @@
 import React from 'react'
 import store from '../../store'
 import _ from 'lodash'
+import { modalAction } from '../action_creator/popups'
 
 export const allCharacterChoices = () => {
 	// NEW DATA
@@ -35,10 +36,16 @@ export const allCharacterChoices = () => {
 export const renderCharacterChoices = () => {
 	let characterChoicesArray = allCharacterChoices()
 	return characterChoicesArray.map(cc => {
-		let specifics = _.capitalize(_.upperCase(cc.specifics))
+		let specifics = _.startCase(cc.specifics)
 		let verb = cc.isNew ? "Choose" : "Alter"
+		let className = cc.isNew ? "attention-button-animation" : ""
+
+		let renderClick = () => {
+			modalAction("characterChoice", cc)
+		}
+
 		return (
-			<button>
+			<button className={className} onClick={renderClick}>
 				{cc.klassName} - {cc.featureName}: {verb} {specifics}
 			</button>
 		)

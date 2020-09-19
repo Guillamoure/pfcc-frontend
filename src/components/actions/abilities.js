@@ -112,8 +112,9 @@ class Abilities extends React.Component {
 
 			let damageType = abbreviateDamageType(damage.damage_type)
 
-			if (ability.character_choices){
-				debugger
+			if (ability.character_choices && ability.character_choices[0].sub_feature === "damage" && ability.character_choices[0].column === "damage_type"){
+				let characterChoice = this.props.character.character_choices.find(ccc => ccc.feature_id === ability.id)
+				if (characterChoice){damageType = abbreviateDamageType(characterChoice.choice)}
 			}
 
 			let string = renderDamage(damage)
