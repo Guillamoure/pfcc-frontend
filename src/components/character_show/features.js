@@ -52,7 +52,7 @@ class Features extends React.Component {
 							domDescArray.push(descArray[i])
 							if (i + 1 < descArray.length){
 								domDescArray.push(" ")
-								domDescArray.push(<em className="underline-hover" onClick={() => modalAction("spellDescription", sp)}>{name}</em>)
+								domDescArray.push(<em key={i*3+1} className="underline-hover" onClick={() => modalAction("spellDescription", sp)}>{name}</em>)
 								domDescArray.push(" ")
 							}
 						}

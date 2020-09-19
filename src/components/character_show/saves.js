@@ -176,11 +176,11 @@ const Saves = props => {
 		// STORED DATA
 		// CALCULATED DATA
 
-		return saveDetails.map(saveDetail => {
+		return saveDetails.map((saveDetail, i) => {
 			let capitalizedSave = _.capitalize(saveDetail.save)
 			let color = bonusPenaltySave(saveDetail.save, saveDetail.ability)
 			return (
-	      <span className='centered' >
+	      <span key={i*3+1} className='centered' >
 	        <div className='enhanced' style={{color}}>{renderSave(saveDetail.save, saveDetail.ability)}</div>
 	        <div className='muted'><strong>{capitalizedSave}</strong></div>
 	      </span>
