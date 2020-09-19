@@ -56,3 +56,13 @@ export const renderTH = (num) => {
 			return `${num}th`
 	}
 }
+
+export const classLevel = (klassId) => {
+	let classes = store.getState().character_info.classes
+	let klass = classes.find(cl => cl.id === klassId)
+	return klass?.level ?? null
+}
+
+export const renderDamage = damage => {
+	return `${damage.num_of_dice}d${damage.damage_dice}`
+}

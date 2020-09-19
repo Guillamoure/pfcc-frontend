@@ -6,7 +6,7 @@ import { abilityScoreMod } from '../../helper_functions/calculations/ability_sco
 import { calculateFeaturePercentage, remainingUsage, calculateCurrentUsage, isThisFeatureActive } from '../../helper_functions/calculations/feature_usage'
 import { featureDistribution } from '../../helper_functions/distributers/features'
 import { patchFetch } from '../../helper_functions/fetches'
-import { locateFeatureAndAbilityFromSource } from '../../helper_functions/fuf'
+import { locateFeatureAndAbilityFromSource, classLevel, renderDamage } from '../../helper_functions/fuf'
 
 class Abilities extends React.Component {
 
@@ -63,6 +63,7 @@ class Abilities extends React.Component {
 				<tr key={idx * 3 - 1}>
 					<td><button className={this.canThisAbilityBeUsed(ability)} onClick={() => this.newRenderClick(ability)}><strong>Click</strong></button></td>
 					<td>{ability.klassFeatureName} {calculateFeaturePercentage(ability)}</td>
+					<td>{this.renderDice(ability)}</td>
 					<td>{this.renderDC(ability)}</td>
 					<td>Nothin'</td>
 				</tr>
@@ -77,6 +78,18 @@ class Abilities extends React.Component {
 
 
 		return actionClass
+	}
+
+	renderDice = (ability) => {
+		if (ability.damages.length){
+			let level = classLevel(ability.klassId)
+			let damage = ability.damages.find(d => d.applicable_level === level)
+			if (!damage){
+				let step = ability.steps.find(st => st.applicable_level === level).step
+				damage = ability.damages.find(d => d.applicable_step === step)
+			}
+			return renderDamage(damage)
+		}
 	}
 
 	renderDC = ability => {
@@ -892,6 +905,7 @@ class Abilities extends React.Component {
             <tr>
               <th>Action</th>
               <th>Name</th>
+							<th>Dice</th>
               <th>DC</th>
               <th>Details</th>
             </tr>
