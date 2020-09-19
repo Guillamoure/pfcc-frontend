@@ -1,4 +1,5 @@
 import store from '../store'
+import _ from 'lodash'
 
 export const locateAbility = (source) => {
 	const { character } = store.getState()
@@ -65,4 +66,13 @@ export const classLevel = (klassId) => {
 
 export const renderDamage = damage => {
 	return `${damage.num_of_dice}d${damage.damage_dice}`
+}
+
+export const abbreviateDamageType = damageType => {
+	if (!damageType){return null}
+	if (damageType === "positive" || damageType === "negative"){
+		return _.capitalize(damageType.substring(0,3))
+	} else {
+		return _.capitalize(damageType[0])
+	}
 }

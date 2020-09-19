@@ -6,7 +6,7 @@ import { abilityScoreMod } from '../../helper_functions/calculations/ability_sco
 import { calculateFeaturePercentage, remainingUsage, calculateCurrentUsage, isThisFeatureActive } from '../../helper_functions/calculations/feature_usage'
 import { featureDistribution } from '../../helper_functions/distributers/features'
 import { patchFetch } from '../../helper_functions/fetches'
-import { locateFeatureAndAbilityFromSource, classLevel, renderDamage } from '../../helper_functions/fuf'
+import { locateFeatureAndAbilityFromSource, classLevel, renderDamage, abbreviateDamageType } from '../../helper_functions/fuf'
 
 class Abilities extends React.Component {
 
@@ -83,12 +83,44 @@ class Abilities extends React.Component {
 	renderDice = (ability) => {
 		if (ability.damages.length){
 			let level = classLevel(ability.klassId)
-			let damage = ability.damages.find(d => d.applicable_level === level)
+
+
+			let damage = null
+			// find the greatest value without going over the specified level
+			// i.e., if you get a bonus at odd levels, and you are level 12
+			// you will get the level 11 bonus
+			for (let i = 0; i < ability.damages.length; i++) {
+				if (ability.damages[i].applicable_level <= level){
+					if (ability.damages[i+1].applicable_level > level || i+1 >= ability.damages.length){
+						damage = ability.damages[i]
+						break
+					}
+				}
+			}
 			if (!damage){
-				let step = ability.steps.find(st => st.applicable_level === level).step
+				let step = null
+				for (let i = 0; i < ability.steps.length; i++) {
+					if (ability.steps[i].applicable_level <= level){
+						if (ability.steps[i+1].applicable_level > level || i+1 >= ability.steps.length){
+							step = ability.steps[i].step
+							break
+						}
+					}
+				}
 				damage = ability.damages.find(d => d.applicable_step === step)
 			}
-			return renderDamage(damage)
+
+			let damageType = abbreviateDamageType(damage.damage_type)
+
+			if (ability.character_choices){
+				debugger
+			}
+
+			let string = renderDamage(damage)
+			if(damageType){
+				string += " " + damageType
+			}
+			return string
 		}
 	}
 

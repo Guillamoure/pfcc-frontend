@@ -112,6 +112,10 @@ class Update extends React.Component {
 		return <button onClick={renderClick}>Manage Prepared Spells - {spellcastingData.klassName}</button>
 	}
 
+	characterChoices = () => {
+
+	}
+
   render(){
     return(
       <span style={{padding: '1em'}}>
@@ -120,6 +124,7 @@ class Update extends React.Component {
 				{this.manageKnownSpells()}
 				{this.managePreparedSpells()}
         {this.prepareSpells()}
+				{this.characterChoices()}
       </span>
     )
   }
