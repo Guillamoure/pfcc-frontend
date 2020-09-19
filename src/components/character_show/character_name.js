@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import { faDiceD20 } from '@fortawesome/free-solid-svg-icons'
+import { doWeNeedAYellowNotification } from '../../helper_functions/notifications/yellow_notification'
 // import { faDungeon } from '@fortawesome/free-solid-svg-icons'
 
 class CharacterName extends React.Component {
@@ -107,16 +108,17 @@ class CharacterName extends React.Component {
   }
 
   yellowBadge = () => {
-    let badge = false
-
-    let prepared = false
-    this.props.character_info.classes.forEach(cl => {
-      if (cl.spellcasting && cl.spellcasting.prepared){
-        prepared = true
-      }
-    })
-    badge = prepared ? (!this.props.character.is_done_preparing_spells ? true : badge) : badge
-    return badge
+    // let badge = false
+		//
+    // let prepared = false
+    // this.props.character_info.classes.forEach(cl => {
+    //   if (cl.spellcasting && cl.spellcasting.prepared){
+    //     prepared = true
+    //   }
+    // })
+    // badge = prepared ? (!this.props.character.is_done_preparing_spells ? true : badge) : badge
+    // return badge
+		return doWeNeedAYellowNotification()
   }
 
   redBadge = () => {
