@@ -38,7 +38,7 @@ const EquipmentItem = props => {
 	}
 
 	let keyWord = group
-	keyWord = group === 'Wondrous Item' ? 'magic_item' : keyWord
+	keyWord = group === 'Wondrous Item' || group === "Potion" ? 'magic_item' : keyWord
 
 	let known = group === 'unknown' ? false : true
 	let actions = known && item[keyWord].features ? item[keyWord].features.map(f => f.action ? f.action.name : null) : []
@@ -53,7 +53,7 @@ const EquipmentItem = props => {
 	const renderTitle = () => {
 		return (
 			<>
-				{name} 
+				{name}
 				{percentages}
 				{equipped ? <span className='equipped'>{equipped === true ? "E" : equipped[0]}</span> : null}
 				{stored ? <span className='equipped'>S</span> : null}

@@ -178,6 +178,9 @@ const Saves = props => {
 
 		return saveDetails.map(saveDetail => {
 			let capitalizedSave = _.capitalize(saveDetail.save)
+      if (!isAComputer){
+        capitalizedSave = capitalizedSave.substring(0, 3)
+      }
 			let color = bonusPenaltySave(saveDetail.save, saveDetail.ability)
 			return (
 	      <span className='centered' >
