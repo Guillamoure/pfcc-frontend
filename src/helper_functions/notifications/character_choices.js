@@ -23,7 +23,9 @@ export const allCharacterChoices = () => {
 					feature: f,
 					klassName,
 					featureName: akf.name,
+					sourceId: akf.id,
 					specifics: f.character_choices[0].column,
+					sub_feature: f.character_choices[0].sub_feature,
 					isNew
 				})
 			}
@@ -37,6 +39,10 @@ export const renderCharacterChoices = () => {
 	let characterChoicesArray = allCharacterChoices()
 	return characterChoicesArray.map(cc => {
 		let specifics = _.startCase(cc.specifics)
+		if (_.endsWith(specifics, " Id")){
+			specifics = specifics.substring(0, specifics.length-3)
+		}
+
 		let verb = cc.isNew ? "Choose" : "Alter"
 		let className = cc.isNew ? "attention-button-animation" : ""
 

@@ -26,18 +26,26 @@ export const defaultCharacterInfo = () => {
   }
 }
 
-export const initialCharacterDistribution = (character) => {
+export const initialCharacterDistribution = (character, options) => {
 	// NEW DATA
   let character_info = defaultCharacterInfo()
 
 	let characterLevel = store.getState().character_info?.classes?.reduce((agg, el) => (agg + el.level), 0)
 
+	let { specific_feature_id_to_be_updated } = options ?? {}
+
   // racial traits
   // klass features
   character.applicable_klass_features.forEach(akf => {
     akf.features.forEach((feature) => {
-      if (!feature.action && !feature.usage){
-        klassFeaturesFeatureDistribution(feature, character_info, { sourceId: akf.id, source: "applicable_klass_features", featureId: feature.id }, {characterLevel, klassId: akf.klass_id})
+      if (!feature.action && !feature.usage && (!specific_feature_id_to_be_updated || (specific_feature_id_to_be_updated && feature.id !== specific_feature_id_to_be_updated))) {
+				let characterChoice = character.character_choices.find(ccc => ccc.feature_id === feature.id)
+				if (characterChoice){
+					let featureCC = feature.character_choices[0]
+					characterChoice.column = featureCC.column
+					characterChoice.sub_feature = featureCC.sub_feature
+				}
+        klassFeaturesFeatureDistribution(feature, character_info, { sourceId: akf.id, source: "applicable_klass_features", featureId: feature.id }, {characterLevel, klassId: akf.klass_id, characterChoice})
       }
     })
   })
@@ -197,8 +205,8 @@ export const websocketFeatureDistribution = (payload, source, options) => {
 }
 
 
-const klassFeaturesFeatureDistribution = (feature, obj, source, options) => {
-	const { characterLevel, klassId } = options
+export const klassFeaturesFeatureDistribution = (feature, obj, source, options) => {
+	const { characterLevel, klassId, characterChoice } = options
 	let classLevel = store.getState().character_info.classes?.find(cl => cl.id === klassId)?.level
 
   feature.skill_bonuses.forEach((el) => {
@@ -213,10 +221,10 @@ const klassFeaturesFeatureDistribution = (feature, obj, source, options) => {
     obj.movement.push(movementsFeature(el, source, feature.usage, feature.applications, feature.conditions))
   })
 	feature.armor_proficiencies.forEach(el => {
-		weaponArmorProficienciesFeature(el, source, obj.proficiencies.armor)
+		weaponArmorProficienciesFeature(el, source, obj.proficiencies.armor, { characterChoice })
 	})
 	feature.weapon_proficiencies.forEach(el => {
-		weaponArmorProficienciesFeature(el, source, obj.proficiencies.weapon)
+		weaponArmorProficienciesFeature(el, source, obj.proficiencies.weapon, { characterChoice })
 	})
 	feature.status_conditions.forEach(el => {
 		obj.statusConditions.push(statusConditionsFeature(el, source))
@@ -280,7 +288,13 @@ const movementsFeature = (m, source, usage, applications, conditions) => {
   }
 }
 
-const weaponArmorProficienciesFeature = (wap, source, obj) => {
+const weaponArmorProficienciesFeature = (wap, source, obj, options) => {
+	if (options.characterChoice){
+		if (wap.player_choice && wap[options.characterChoice.column] === null){
+			wap[options.characterChoice.column] = parseInt(options.characterChoice.choice)
+			source = {...source, characterChoiceId: options.characterChoice.id}
+		}
+	}
 
 	if (wap.proficiency_group){
 		obj.groups.push({ source, proficiency_group: wap.proficiency_group, additive: wap.additive })
