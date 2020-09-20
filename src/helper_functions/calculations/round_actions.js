@@ -55,6 +55,8 @@ export const actionClass = a => {
       return 'immediate'
     case 'Free Action':
       return 'free'
+		case 'no-action':
+			return 'no-action'
     default:
       return 'long'
   }

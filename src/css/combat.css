@@ -154,6 +154,14 @@
   box-shadow: 1px 1px #777;
 }
 
+.no-action {
+  border-color: #666;
+  border-radius: 1em;
+  background-color: #313C48;
+  color: #fff;
+  box-shadow: 1px 1px #777;
+}
+
 .start {
   border-color: #666;
   border-radius: 1em;

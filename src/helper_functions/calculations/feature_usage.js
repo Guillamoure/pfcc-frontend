@@ -7,6 +7,7 @@ import { locateFeatureFromSource } from '../fuf'
 
 
 export const calculateFeaturePercentage = feature => {
+	if (!feature.usage){return null}
 	// CALCULATED DATA
 	let maxUsage = calculateMaxUsage(feature.baseFeatureAndAbility?.feature.usage ?? feature.usage, feature.klassId)
 	let timesUsed = calculateCurrentUsage(feature.character_klass_feature_usages)
@@ -45,6 +46,7 @@ export const calculateCurrentUsage = used => {
 }
 
 export const remainingUsage = feature => {
+	if (!feature.usage){return 1000}
 	// CALCULATED DATA
 	let maxUsage = calculateMaxUsage(feature.baseFeatureAndAbility?.feature.usage ?? feature.usage, feature.klassId)
 	let timesUsed = calculateCurrentUsage(feature.character_klass_feature_usages)

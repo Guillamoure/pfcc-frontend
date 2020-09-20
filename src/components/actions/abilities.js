@@ -7,6 +7,7 @@ import { calculateFeaturePercentage, remainingUsage, calculateCurrentUsage, isTh
 import { featureDistribution } from '../../helper_functions/distributers/features'
 import { patchFetch } from '../../helper_functions/fetches'
 import { locateFeatureAndAbilityFromSource, classLevel, renderDamage, abbreviateDamageType } from '../../helper_functions/fuf'
+import { modalAction } from '../../helper_functions/action_creator/popups'
 
 class Abilities extends React.Component {
 
@@ -49,10 +50,15 @@ class Abilities extends React.Component {
 					activatableAbilities.push({...f, sourceId: akf.id, klassFeatureName: akf.name, klassId: akf.klass_id, character_klass_feature_usages: ckfus, source: "applicable_klass_features"})
 				}
 
+				// if a feature is a choice of another action (i.e. Bardic Performances)
 				if (f.usage?.feature_usage_base) {
 					let baseFeatureAndAbility = locateFeatureAndAbilityFromSource(f.usage.feature_usage_base.baseSource)
 					let ckfus = this.props.character.character_klass_feature_usages.filter(fu => fu.klass_feature_id === baseFeatureAndAbility.ability.id)
 					activatableAbilities.push({...f, sourceId: akf.id, klassFeatureName: akf.name, klassId: akf.klass_id, character_klass_feature_usages: ckfus, source: "applicable_klass_features", baseFeatureAndAbility, action: baseFeatureAndAbility.feature.action})
+				}
+				// if a feature is spontaneous casting, like Cleric or Druid
+				if (akf.name === "Spontaneous Casting" && f.spontaneous_castings.length){
+					activatableAbilities.push({...f, sourceId: akf.id, klassFeatureName: akf.name, klassId: akf.klass_id, action: {name: "no-action"}, source: "applicable_klass_features", options: {spontaneous_casting: true}})
 				}
 			})
       // only display the feature, but the text should be from the akf
@@ -170,8 +176,11 @@ class Abilities extends React.Component {
 			featureDistribution(ability)
 		} else {
 
-			if (ability.usage.all_feature_usage_options.length){
+			if (ability.usage?.all_feature_usage_options.length){
 				this.props.dispatch({type: "MODAL", detail: "featureUsageOptions", obj: ability})
+				return null
+			} else if (ability.klassFeatureName === "Spontaneous Casting" && ability.spontaneous_castings.length){
+				modalAction('spontaneousCasting', ability)
 				return null
 			}
 
