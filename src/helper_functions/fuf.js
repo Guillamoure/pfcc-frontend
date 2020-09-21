@@ -1,6 +1,8 @@
 import store from '../store'
 import _ from 'lodash'
 
+// FREQUENTLY USED FUNCTIONS
+
 export const locateAbility = (source) => {
 	const { character } = store.getState()
 	return character[source.source].find(ability => ability.id === source.sourceId)

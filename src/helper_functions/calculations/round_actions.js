@@ -64,6 +64,6 @@ export const actionClass = a => {
 
 export const sharingConditions = feature => {
 	let statusConditions = store.getState().character_info.statusConditions.map(c => c.condition.toLowerCase())
-	let preventativeConditions = feature.conditions.filter(c => c.if_affected_by_condition).map(c => c.if_affected_by_condition.toLowerCase())
+	let preventativeConditions = feature.conditions?.filter(c => c.if_affected_by_condition).map(c => c.if_affected_by_condition.toLowerCase()) ?? []
 	return _.intersection(statusConditions, preventativeConditions).length ? true : false
 }

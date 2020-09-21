@@ -1,7 +1,7 @@
 import store from '../../store'
 import { abilityScoreMod } from './ability_scores'
 import { isThisActionAvailable } from './round_actions'
-import { actionClass } from '../fuf'
+import { actionClass, classLevel } from '../fuf'
 import { postFetch, patchFetch } from '../fetches'
 import { replaceCharacterAction, triggerTurnActionAction } from '../action_creator/character'
 
@@ -25,6 +25,13 @@ export const locateSpellcastingFeatureThroughId = id => {
 		})
 	})
 	return spellcasting
+}
+
+export const availableCastableSpellLevelsThroughKlassId = id => {
+	let spellcastingKlassFeatures = allSpellcastingKlassFeatures()
+	let spellcasting = spellcastingKlassFeatures.find(kf => kf.klass_id === id && kf.features.find(f => f.spellcasting))?.features.find(f => f.spellcasting)?.spellcasting
+	let level = classLevel(id)
+	return spellcasting.spells_per_day_per_level.filter(spdpl => spdpl.klass_level === level).map(spd => spd.spell_level)
 }
 
 export const allRemainingSpellsPerDay = () => {
