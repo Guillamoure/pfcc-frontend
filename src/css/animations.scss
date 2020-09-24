@@ -15,10 +15,25 @@
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
 }
+.minus-one {
+  color: red;
+  font-weight: bold;
+
+  -webkit-animation-name: translation; /* Safari 4.0 - 8.0 */
+  -webkit-animation-duration: 1s; /* Safari 4.0 - 8.0 */
+  -webkit-animation-timing-function: ease-in;
+  -webkit-animation-iteration-count: 1;
+  -webkit-animation-fill-mode: forwards;
+
+  animation-name: translation;
+  animation-duration: 1s;
+  animation-timing-function: ease-in;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
 @-webkit-keyframes translation {
   from {
     opacity: 100%;
-    top: 0;
   }
   to {
     opacity: 0%;
@@ -28,7 +43,6 @@
 @keyframes translation {
   from {
     opacity: 100%;
-    top: 0;
   }
   to {
     opacity: 0%;

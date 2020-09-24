@@ -26,6 +26,15 @@ export const defaultCharacterInfo = () => {
   }
 }
 
+export const doesThisFeatureNeedToBeDistributed = (ability) => {
+	let hasFeatures = false
+	let array = ["skill_bonuses", "stat_bonuses", "display_descriptions", "conditions", "languages", "movements", "weapon_proficiencies", "armor_proficiencies"]
+	array.forEach(feature => {
+		if (ability[feature].length){hasFeatures = true}
+	})
+	return hasFeatures
+}
+
 export const initialCharacterDistribution = (character, options) => {
 	// NEW DATA
   let character_info = defaultCharacterInfo()

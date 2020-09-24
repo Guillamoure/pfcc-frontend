@@ -4,7 +4,7 @@ import _ from 'lodash'
 import { isThisActionAvailable } from '../../helper_functions/calculations/round_actions'
 import { abilityScoreMod } from '../../helper_functions/calculations/ability_scores'
 import { calculateFeaturePercentage, remainingUsage, calculateCurrentUsage, isThisFeatureActive } from '../../helper_functions/calculations/feature_usage'
-import { featureDistribution } from '../../helper_functions/distributers/features'
+import { featureDistribution, doesThisFeatureNeedToBeDistributed } from '../../helper_functions/distributers/features'
 import { patchFetch } from '../../helper_functions/fetches'
 import { locateFeatureAndAbilityFromSource, classLevel, renderDamage, abbreviateDamageType } from '../../helper_functions/fuf'
 import { modalAction } from '../../helper_functions/action_creator/popups'
@@ -40,7 +40,7 @@ class Abilities extends React.Component {
         break
     }
     let activatableAbilities = []
-    this.props.character.applicable_klass_features.map(akf => {
+    this.props.character.applicable_klass_features.forEach(akf => {
       // if an akf has a feature with an action, display it
 			akf.features.forEach(f => {
 				if (f.action){
@@ -63,6 +63,15 @@ class Abilities extends React.Component {
 			})
       // only display the feature, but the text should be from the akf
     })
+		this.props.character.klass_specializations.forEach(cKSpec => {
+			cKSpec.klass_specialization_features.forEach(kspecFeature => {
+				kspecFeature.features.forEach(f => {
+					// if (f.action){
+					// 	activatableAbilities.push(...f, source: 'klass_specializations')
+					// }
+				})
+			})
+		})
 
     return activatableAbilities.map((ability, idx) => {
 			return (
@@ -204,7 +213,9 @@ class Abilities extends React.Component {
 			patchFetch("character_klass_feature_usages", body)
 				.then(data => {
 					this.props.dispatch({type: "ADJUST CHARACTER REPLACE VALUE IN ARRAY", adjust: "character_klass_feature_usages", value: data})
-					featureDistribution(ability)
+					 if (doesThisFeatureNeedToBeDistributed(ability)){
+						 featureDistribution(ability)
+					 }
 				})
 
 			this.props.dispatch({type: 'TRIGGER ACTION', action: isThisActionAvailable(ability)})
