@@ -1,5 +1,8 @@
+import React from 'react'
 import store from '../store'
 import _ from 'lodash'
+import { modalAction } from './action_creator/popups'
+
 
 // FREQUENTLY USED FUNCTIONS
 
@@ -77,4 +80,28 @@ export const abbreviateDamageType = damageType => {
 	} else {
 		return _.capitalize(damageType[0])
 	}
+}
+
+export const injectSpellIntoDescription = (description, spells, onClickFunction, functionOptions) => {
+	let domDescArray = [description]
+	spells.forEach(sp => {
+		let name = sp.name.toLowerCase()
+		for (let i = 0; i < domDescArray.length; i++){
+			if (typeof domDescArray[i] === "string" && domDescArray[i].includes(name)){
+				let splitDesc = domDescArray[i].split(name)
+				let onClick = () => onClickFunction(sp)
+				splitDesc.splice(1, 0, <em key={i*3+1} className="underline-hover" onClick={onClick}>{name}</em>)
+				domDescArray[i] = splitDesc
+				domDescArray = domDescArray.flat()
+			}
+		// let descArray = description.split(name)
+		// 	domDescArray.push(descArray[i])
+		// 	if (i + 1 < descArray.length){
+		// 		domDescArray.push(" ")
+		// 		domDescArray.push(<em key={i*3+1} className="underline-hover" onClick={onClick}>{name}</em>)
+		// 		domDescArray.push(" ")
+		// 	}
+		}
+	})
+	return <span>{domDescArray}</span>
 }

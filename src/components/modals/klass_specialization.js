@@ -1,6 +1,9 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { getFetch, postFetch } from '../../helper_functions/fetches'
+import { getFetch, postFetch, deleteFetch } from '../../helper_functions/fetches'
+import { replaceCharacterAction } from '../../helper_functions/action_creator/character'
+import { injectSpellIntoDescription } from '../../helper_functions/fuf'
+import SpellDescription from '../spell_description'
 
 const KlassSpecialization = props => {
 
@@ -8,6 +11,7 @@ const KlassSpecialization = props => {
 	const [specializationOptions, setSpecializationOptions] = React.useState([])
 	const [specificSpecializationId, setSpecificSpecializationId] = React.useState(0)
 	const [knownKSpecs, setKnownKSpecs] = React.useState([])
+	const [spell, setSpell] = React.useState({})
 	const { klassFeature, klassName } = props.klassFeature
 
 	React.useEffect(() => {
@@ -27,7 +31,7 @@ const KlassSpecialization = props => {
 			)
 		})
 		return (
-			<table style={{width: "30%", margin: "1%", overflowY: "scroll"}}>
+			<table className="klass-specialization-options">
 				<thead>
 					<tr>
 						<th>{klassFeature.name} Options</th>
@@ -45,15 +49,37 @@ const KlassSpecialization = props => {
 		let kspec = specializationOptions.find(spec => spec.id === specificSpecializationId)
 		let { name, description, klass_specialization_features: features } = kspec
 		let featureNodes = features.map(f => {
+			let spells = []
+			f.features.forEach(feature => {
+				feature.castable_spells.forEach(cs => {
+					spells.push(cs.spell)
+				})
+			})
+			let desc = f.description
+			if (spells.length){desc = injectSpellIntoDescription(desc, spells, renderSpellClick, {})}
 			return (
-				<p><strong>{f.name}:</strong> {f.description}</p>
+				<p><strong>{f.name}:</strong> {desc}</p>
 			)
 		})
 		return (
-			<aside style={{width: "68%", margin: "1%", overflowY: "scroll", textAlign: "left"}}>
+			<aside className="klass-specialization-details">
 				<h3>{name}</h3>
 				<p><em>{description}</em></p>
 				{featureNodes}
+			</aside>
+		)
+	}
+
+	const renderSpellClick = (incomingSpell) => {
+		if (spell.id === incomingSpell.id){setSpell({})}
+		else {setSpell(incomingSpell)}
+	}
+
+	const renderSpell = () => {
+		if (!spell.id){return null}
+		return (
+			<aside className="klass-specialization-spell-description">
+				<SpellDescription spell={spell} />
 			</aside>
 		)
 	}
@@ -67,7 +93,19 @@ const KlassSpecialization = props => {
 		})
 		postFetch('character_klass_specializations', {character_id: character.id, klass_feature_klass_specialization_id: klassFeatureKSpec.id})
 			.then(data => {
-				debugger
+				let replacementKSpecs = [...character.klass_specializations]
+				replacementKSpecs.push(data)
+				replaceCharacterAction('klass_specializations', replacementKSpecs)
+				props.exitModal()
+			})
+	}
+
+	const removeSpec = () => {
+		let character_klass_specialization_id = character.klass_specializations.find(ckspec => ckspec.id === specificSpecializationId).character_klass_specialization_id
+		deleteFetch(`character_klass_specializations/${character_klass_specialization_id}`)
+			.then(data => {
+				let replacementKSpecs = character.klass_specializations.filter(ckspec => ckspec.id !== specificSpecializationId)
+				replaceCharacterAction('klass_specializations', replacementKSpecs)
 				props.exitModal()
 			})
 	}
@@ -76,6 +114,14 @@ const KlassSpecialization = props => {
 		if (!specificSpecializationId){return null}
 		let kspec = specializationOptions.find(spec => spec.id === specificSpecializationId)
 		let specTitle = klassFeature.choice_amount > 1 ? `one of your ${klassFeature.name}` : `your ${klassFeature.name}`
+		if (character.klass_specializations.find(ckspec => ckspec.id === specificSpecializationId)){
+			return (
+				<>
+					<p><strong>{kspec.name}</strong> is already {specTitle}.</p>
+					<button onClick={removeSpec}>Remove</button>
+				</>
+			)
+		}
 		return (
 			<>
 				<p>You are choosing <strong>{kspec.name}</strong> as {specTitle}.</p>
@@ -86,9 +132,11 @@ const KlassSpecialization = props => {
 
 	return (
 		<>
-			<section style={{display: "flex"}}>
+			<h2>{klassName} {klassFeature.name} - Please Select {klassFeature.choice_amount}</h2>
+			<section id="klass-specialization-container">
 				{renderOptions()}
 				{renderDetails()}
+				{renderSpell()}
 			</section>
 			{renderSpecializationSelection()}
 		</>
