@@ -10,7 +10,7 @@ export const calculateFeaturePercentage = feature => {
 	if (!feature.usage){return null}
 	// CALCULATED DATA
 	let maxUsage = calculateMaxUsage(feature.baseFeatureAndAbility?.feature.usage ?? feature.usage, feature.klassId)
-	let timesUsed = calculateCurrentUsage(feature.character_klass_feature_usages)
+	let timesUsed = calculateCurrentUsage(feature.usageSources)
 
 	return `${maxUsage - timesUsed}/${maxUsage}`
 }
@@ -49,14 +49,14 @@ export const remainingUsage = feature => {
 	if (!feature.usage){return 1000}
 	// CALCULATED DATA
 	let maxUsage = calculateMaxUsage(feature.baseFeatureAndAbility?.feature.usage ?? feature.usage, feature.klassId)
-	let timesUsed = calculateCurrentUsage(feature.character_klass_feature_usages)
+	let timesUsed = calculateCurrentUsage(feature.usageSources)
 
 	return maxUsage - timesUsed
 }
 
 export const incrementFeatureUsage = async feature => {
 	if (remainingUsage(feature) > 0){
-		let usage = feature.character_klass_feature_usages.length === 1 && feature.character_klass_feature_usages[0]
+		let usage = feature.usageSources.length === 1 && feature.usageSources[0]
 		await alterCurrentUsage(usage, 1)
 	} else {
 		let options = feature.usage?.all_feature_usage_options || []
@@ -76,7 +76,7 @@ export const incrementFeatureUsage = async feature => {
 }
 
 export const decrementFeatureUsage = async feature => {
-	let usage = feature.character_klass_feature_usages.length === 1 && feature.character_klass_feature_usages[0]
+	let usage = feature.usageSources.length === 1 && feature.usageSources[0]
 	if (!!usage.current_usage){
 		await alterCurrentUsage(usage, -1)
 	}

@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { renderKlassSpecializations } from '../../helper_functions/notifications/character_choices'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
@@ -37,6 +38,7 @@ class Creation extends React.Component {
       <span style={{padding: '1em'}}>
         <p>Creation Problems</p>
         {this.addHP()}
+				{renderKlassSpecializations()}
       </span>
     )
   }

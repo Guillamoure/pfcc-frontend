@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import { faDiceD20 } from '@fortawesome/free-solid-svg-icons'
 import { doWeNeedAYellowNotification } from '../../helper_functions/notifications/yellow_notification'
+import { doWeNeedARedNotification } from '../../helper_functions/notifications/red_notification'
 // import { faDungeon } from '@fortawesome/free-solid-svg-icons'
 
 class CharacterName extends React.Component {
@@ -122,8 +123,7 @@ class CharacterName extends React.Component {
   }
 
   redBadge = () => {
-    let badge = false
-    return badge
+    return doWeNeedARedNotification()
   }
 
   render(){

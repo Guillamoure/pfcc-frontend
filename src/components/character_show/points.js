@@ -73,7 +73,7 @@ const Points = props => {
 					akf.features.forEach(f => {
 						if (f.usage?.limit || f.usage?.limit_frequency && !f.usage?.destroy_after_use){
 							let ckfus = props.character.character_klass_feature_usages.filter(fu => fu.klass_feature_id === akf.id)
-							pointsFeatures.push({...f, sourceId: akf.id, klassFeatureName: akf.name, klassId: akf.klass_id, character_klass_feature_usages: ckfus, source: "applicable_klass_features"})
+							pointsFeatures.push({...f, sourceId: akf.id, klassFeatureName: akf.name, klassId: akf.klass_id, usageSources: ckfus, source: "applicable_klass_features"})
 						}
 					})
 				})

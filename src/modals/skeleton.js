@@ -12,6 +12,7 @@ import SpellDescription from '../components/spell_description'
 import PreparedSpellManager from '../components/modals/prepared_spell_manager'
 import CharacterChoice from '../components/modals/character_choice'
 import SpontaneousCasting from '../components/modals/spontaneous_casting'
+import KlassSpecialization from '../components/modals/klass_specialization'
 
 const ModalSkeleton = (props) => {
 
@@ -37,6 +38,8 @@ const ModalSkeleton = (props) => {
 				return <CharacterChoice choiceObj={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
 			case 'spontaneousCasting':
 				return <SpontaneousCasting feature={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
+			case 'klassSpecialization':
+				return <KlassSpecialization klassFeature={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
       default:
         break
     }

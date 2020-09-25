@@ -26,7 +26,12 @@ class Features extends React.Component {
     let klasses = [...this.props.character.uniq_klasses]
     let justFeatures = klasses.map(kl => kl.klass_features)
     // let features = _.flatten(justFeatures)
-    let features = [...this.props.character.applicable_klass_features]
+		let kspecFeatures = this.props.character.klass_specializations.map(ckspec => {
+			return ckspec.klass_specialization_features.map(kspecFeature => {
+				return {...kspecFeature, name: `${ckspec.name} - ${kspecFeature.name}`}
+			})
+		}).flat()
+    let features = [...this.props.character.applicable_klass_features, ...kspecFeatures]
     features = this.circumventFeatures(this.props.character.name, features)
     return features.map(feature => {
       // let level = this.props.character_info.classes.find(cl => cl.id === feature.klass_id).level
@@ -43,7 +48,7 @@ class Features extends React.Component {
           name = `${feature.name} - ${klass.name}`
         }
 				let description = feature.description
-				if (feature.associated_spells.length) {
+				if (feature.associated_spells?.length) {
 					let domDescArray = []
 					feature.associated_spells.forEach(sp => {
 						let name = sp.name.toLowerCase()

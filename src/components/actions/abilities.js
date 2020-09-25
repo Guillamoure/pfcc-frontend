@@ -47,14 +47,14 @@ class Abilities extends React.Component {
 					let ckfus = this.props.character.character_klass_feature_usages.filter(fu => fu.klass_feature_id === akf.id)
 					// the id value in the below object refers to the id of the character[type]
 					// so that specific klass_feature, magic_item_feature, etc. can be found by id
-					activatableAbilities.push({...f, sourceId: akf.id, klassFeatureName: akf.name, klassId: akf.klass_id, character_klass_feature_usages: ckfus, source: "applicable_klass_features"})
+					activatableAbilities.push({...f, sourceId: akf.id, klassFeatureName: akf.name, klassId: akf.klass_id, usageSources: ckfus, source: "applicable_klass_features"})
 				}
 
 				// if a feature is a choice of another action (i.e. Bardic Performances)
 				if (f.usage?.feature_usage_base) {
 					let baseFeatureAndAbility = locateFeatureAndAbilityFromSource(f.usage.feature_usage_base.baseSource)
 					let ckfus = this.props.character.character_klass_feature_usages.filter(fu => fu.klass_feature_id === baseFeatureAndAbility.ability.id)
-					activatableAbilities.push({...f, sourceId: akf.id, klassFeatureName: akf.name, klassId: akf.klass_id, character_klass_feature_usages: ckfus, source: "applicable_klass_features", baseFeatureAndAbility, action: baseFeatureAndAbility.feature.action})
+					activatableAbilities.push({...f, sourceId: akf.id, klassFeatureName: akf.name, klassId: akf.klass_id, usageSources: ckfus, source: "applicable_klass_features", baseFeatureAndAbility, action: baseFeatureAndAbility.feature.action})
 				}
 				// if a feature is spontaneous casting, like Cleric or Druid
 				if (akf.name === "Spontaneous Casting" && f.spontaneous_castings.length){
@@ -65,19 +65,24 @@ class Abilities extends React.Component {
     })
 		this.props.character.klass_specializations.forEach(cKSpec => {
 			cKSpec.klass_specialization_features.forEach(kspecFeature => {
-				kspecFeature.features.forEach(f => {
-					// if (f.action){
-					// 	activatableAbilities.push(...f, source: 'klass_specializations')
-					// }
-				})
+				if (classLevel(cKSpec.klass_feature.klass_id) >= kspecFeature.level){
+					kspecFeature.features.forEach(f => {
+						if (f.action){
+							let cksfus = this.props.character.character_klass_specialization_feature_usages.filter(fu => fu.klass_specialization_feature_id === kspecFeature.id)
+							activatableAbilities.push({...f, source: 'klass_specializations', sourceId: cKSpec.id, subSourceId: kspecFeature.id, kspecFeatureName: kspecFeature.name, klassId: cKSpec.klass_feature.klass_id, usageSources: cksfus})
+						}
+					})
+				}
 			})
 		})
 
     return activatableAbilities.map((ability, idx) => {
+			let name = ability.klassFeatureName
+			if (!name){name = ability.kspecFeatureName}
 			return (
 				<tr key={idx * 3 - 1}>
 					<td><button className={this.canThisAbilityBeUsed(ability)} onClick={() => this.newRenderClick(ability)}><strong>Click</strong></button></td>
-					<td>{ability.klassFeatureName} {calculateFeaturePercentage(ability)}</td>
+					<td>{name} {calculateFeaturePercentage(ability)}</td>
 					<td>{this.renderDice(ability)}</td>
 					<td>{this.renderDC(ability)}</td>
 					<td>Nothin'</td>
@@ -106,7 +111,7 @@ class Abilities extends React.Component {
 			// you will get the level 11 bonus
 			for (let i = 0; i < ability.damages.length; i++) {
 				if (ability.damages[i].applicable_level <= level){
-					if (ability.damages[i+1].applicable_level > level || i+1 >= ability.damages.length){
+					if (i+1 >= ability.damages.length || ability.damages[i+1].applicable_level > level){
 						damage = ability.damages[i]
 						break
 					}
@@ -116,7 +121,7 @@ class Abilities extends React.Component {
 				let step = null
 				for (let i = 0; i < ability.steps.length; i++) {
 					if (ability.steps[i].applicable_level <= level){
-						if (ability.steps[i+1].applicable_level > level || i+1 >= ability.steps.length){
+						if (i+1 >= ability.steps.length || ability.steps[i+1].applicable_level > level){
 							step = ability.steps[i].step
 							break
 						}
@@ -127,7 +132,7 @@ class Abilities extends React.Component {
 
 			let damageType = abbreviateDamageType(damage.damage_type)
 
-			if (ability.character_choices && ability.character_choices[0].sub_feature === "damage" && ability.character_choices[0].column === "damage_type"){
+			if (ability.character_choices.length && ability.character_choices[0].sub_feature === "damage" && ability.character_choices[0].column === "damage_type"){
 				let characterChoice = this.props.character.character_choices.find(ccc => ccc.feature_id === ability.id)
 				if (characterChoice){damageType = abbreviateDamageType(characterChoice.choice)}
 			}
@@ -197,22 +202,37 @@ class Abilities extends React.Component {
 				character_id: this.props.character.id,
 				klass_feature_id: ability.sourceId,
 				feature_usage_id: ability.usage.id,
-				current_usage: calculateCurrentUsage(ability.character_klass_feature_usages) + 1
+				current_usage: calculateCurrentUsage(ability.usageSources) + 1
 			}
 			if (ability.baseFeatureAndAbility){
-				if (ability.character_klass_feature_usages.length === 1){
-					let ckfu = ability.character_klass_feature_usages[0]
+				if (ability.usageSources.length === 1){
+					let ckfu = ability.usageSources[0]
 					body = {...ckfu, current_usage: ckfu.current_usage + 1}
-				} else if (ability.character_klass_feature_usages.length === 0){
+				} else if (ability.usageSources.length === 0){
 					body.feature_usage_id = ability.baseFeatureAndAbility.feature.usage.id
 					body.klass_feature_id = ability.baseFeatureAndAbility.ability.id
 					body.current_usage = 1
 				}
+			} else if (ability.kspecFeatureName){
+				delete body.klass_feature_id
+				body.klass_specialization_feature_id = ability.subSourceId
 			}
 
-			patchFetch("character_klass_feature_usages", body)
+			let url
+			switch(ability.source){
+				case "applicable_klass_features":
+					url = "character_klass_feature_usages"
+					break
+				case "klass_specializations":
+					url = "character_klass_specialization_feature_usages"
+					break
+				default:
+					url = "character_klass_feature_usages"
+			}
+
+			patchFetch(url, body)
 				.then(data => {
-					this.props.dispatch({type: "ADJUST CHARACTER REPLACE VALUE IN ARRAY", adjust: "character_klass_feature_usages", value: data})
+					this.props.dispatch({type: "ADJUST CHARACTER REPLACE VALUE IN ARRAY", adjust: url, value: data})
 					 if (doesThisFeatureNeedToBeDistributed(ability)){
 						 featureDistribution(ability)
 					 }
