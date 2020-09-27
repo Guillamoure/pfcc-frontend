@@ -2,6 +2,7 @@ import React from 'react'
 import _ from 'lodash'
 import { connect } from 'react-redux'
 import { modalAction } from '../../helper_functions/action_creator/popups'
+import { injectSpellIntoDescription } from '../../helper_functions/fuf'
 
 class Features extends React.Component {
 
@@ -49,20 +50,18 @@ class Features extends React.Component {
         }
 				let description = feature.description
 				if (feature.associated_spells?.length) {
-					let domDescArray = []
-					feature.associated_spells.forEach(sp => {
-						let name = sp.name.toLowerCase()
-						let descArray = description.split(name)
-						for (let i = 0; i < descArray.length; i++){
-							domDescArray.push(descArray[i])
-							if (i + 1 < descArray.length){
-								domDescArray.push(" ")
-								domDescArray.push(<em key={i*3+1} className="underline-hover" onClick={() => modalAction("spellDescription", sp)}>{name}</em>)
-								domDescArray.push(" ")
-							}
-						}
+					let spells = feature.associated_spells
+					if (spells.length){description = injectSpellIntoDescription(description, spells, this.renderSpellClick, {})}
+				}
+				if (feature.features.find(f => f.castable_spells.length)) {
+					let spells = []
+					feature.features.forEach(f => {
+						f.castable_spells.forEach(cs => {
+							spells.push(cs.spell)
+						})
 					})
-					description = <span>{domDescArray}</span>
+
+					if (spells.length){description = injectSpellIntoDescription(description, spells, this.renderSpellClick, {})}
 				}
 
         return (
@@ -77,6 +76,10 @@ class Features extends React.Component {
 
     })
   }
+
+	renderSpellClick = (incomingSpell) => {
+		modalAction("spellDescription", incomingSpell)
+	}
 
   circumventFeatures = (name, features) => {
     let newFeatures = []
