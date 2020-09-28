@@ -156,7 +156,7 @@ const PreparedSpellManager = props => {
 		let allPreparedSpells = []
 		preparedSpellsPerDay.forEach(ps => {
 			let num = ps.spells
-			let thisLevelPreparedSpells = preparedSpells.filter(cps => cps.spell_level === ps.spell_level)
+			let thisLevelPreparedSpells = preparedSpells.filter(cps => cps.spell_level === ps.spell_level && !cps.bonus_spell)
 			num -= thisLevelPreparedSpells.length
 			thisLevelPreparedSpells.forEach(tlps => allPreparedSpells.push({spellLevel: ps.spell_level, spellName: tlps.spell.name, spellId: tlps.spell.id, preparedSpellId: tlps.id, cast: tlps.cast}))
 

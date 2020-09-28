@@ -1,10 +1,12 @@
 import React from 'react'
 import * as SpellcastingCalculations from '../../helper_functions/calculations/spellcasting'
-import { modalAction } from '../../helper_functions/action_creator/popups'
+import { modalAction, tooltipAction } from '../../helper_functions/action_creator/popups'
 import { renderTH } from '../../helper_functions/fuf'
 import { useSelector } from 'react-redux'
 
 const Spellcasting = props => {
+
+	const { character } = useSelector(store => store)
 
 	const renderAllSpellcasting = () => {
 		let spellcastingData = SpellcastingCalculations.allRemainingSpellsPerDay()
@@ -25,11 +27,13 @@ const Spellcasting = props => {
 
 	const renderSPD = (spds, klassName, i) => {
 		let interpolatedSPD = spds.map((spd, ind) => {
+			let bonusSpell = null
+			if (spd.bonusSpell === true){bonusSpell = "+1"}
 			return (
 				<React.Fragment key={ind*3+1}>
 					<strong> | </strong>
 					<i>{renderTH(spd.spell_level)}</i>
-					: <strong>{spd.spells}</strong>
+					: <strong>{spd.spells}{bonusSpell}</strong>
 				</React.Fragment>
 			)
 		})
@@ -97,10 +101,12 @@ const Spellcasting = props => {
 
 		return spells.map((spell, i) => {
 			let spellData = SpellcastingCalculations.spellData({...spell, spellcasting: scData.spellcasting}, scData.klassFeature.klass_id)
+			spellData.castableBonusSpell = !!spell.bonus_spell === true
 			let buttonName = spell.cast ? "Spent" : "Cast"
+			let isBonus = spell.bonus_spell ? renderBonusSpellSlotTooltip(spell) : null
 			return (
 				<tr>
-					<td>{spellData.spellLevel}</td>
+					<td>{spellData.spellLevel}{isBonus}</td>
 					<td><button className={spellData.action} onClick={() => SpellcastingCalculations.castSpell(spellData, scData.spellsPerDay)}><strong>{buttonName}</strong></button></td>
 					<td><em className='underline-hover' onClick={() => modalAction("spellDescription", spell.spell)}>{spellData.name}</em></td>
 					<td>{spellData.range}</td>
@@ -110,6 +116,16 @@ const Spellcasting = props => {
 				</tr>
 			)
 		})
+	}
+
+	const renderBonusSpellSlotTooltip = (spell) => {
+		let message
+		if (spell.alternate_source.klass_specialization_id){
+			let kSpec = character.klass_specializations.find(kspec => kspec.id === spell.alternate_source.klass_specialization_id)
+			message = kSpec.name + " Bonus Spell Slot"
+		}
+		let callback = (e) => tooltipAction(message, e.target)
+		return <sup onMouseOver={callback} onMouseOut={callback}><em>B</em></sup>
 	}
 
 	return (

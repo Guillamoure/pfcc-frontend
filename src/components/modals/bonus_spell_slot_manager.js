@@ -1,7 +1,9 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import SpellDescription from '../spell_description'
-import { bonusSpellSlotOptions, knownSpellsArray } from '../../helper_functions/calculations/spellcasting'
+import { bonusSpellSlotOptions, knownSpellsArray, spellsPerDayArray } from '../../helper_functions/calculations/spellcasting'
+import { postFetch, deleteFetch, patchFetch } from '../../helper_functions/fetches'
+import { replaceCharacterAction } from '../../helper_functions/action_creator/character'
 
 
 const BonusSpellSlotManager = props => {
@@ -12,7 +14,6 @@ const BonusSpellSlotManager = props => {
 	const [filterInput, updateFilter] = React.useState("")
 	const [spellId, updateSpellId] = React.useState(0)
 	const [dragInfo, updateDragInfo] = React.useState({
-		characterKlassSpellId: 0,
 		spellId: 0,
 		dragging: false
 	})
@@ -30,40 +31,38 @@ const BonusSpellSlotManager = props => {
 
 	const updateDrop = e => {
 		e.preventDefault()
-
+		let spell = spells.find(sp => sp.id === dragInfo.spellId)
 		let body = {
-			spell_list_spell_id: dragInfo.spellListSpellId,
-			feature_spellcasting_id: featureSpellcasting.id,
-			character_id: id
+			feature_spellcasting_id: props.spellcastingData.spellcasting.id,
+			character_id: id,
+			spell_level: spell.spell_level,
+			direct_spell_id: spell.id,
+			bonus_spell: true,
+			alternate_source_id: spell.sourceId,
+			alternate_source_ability: spell.sourceAbility
 		}
-		if (prepared_spells.find(ks => ks.spell.id === dragInfo.spellId)){
-			// if spell is already known
-			let spellName = prepared_spells.find(ks => ks.spell.id === dragInfo.spellId).spell.name
-			// updateWarning(`You already know ${spellName}`)
-		} else {
-			// if spell is not known
-			// postFetch('known_spells', body)
-			// .then(data => {
-			// 	if (data.errors) {
-			// 		updateWarning(data.errors[0])
-			// 	} else {
-			// 		let spell = spells.find(sp => sp.id === dragInfo.spellId)
-			// 		let spellListSpell = spell.spell_list_spells.find(sls => sls.id === dragInfo.spellListSpellId)
-			// 		let characterKnownSpell = {
-			// 			id: data.id,
-			// 			spell,
-			// 			spell_list_spell: spellListSpell,
-			// 			spellcasting: featureSpellcasting
-			// 		}
-			// 		let replaceCharacterKnownSpells = [...character_known_spells]
-			// 		replaceCharacterKnownSpells.push(characterKnownSpell)
-			// 		character_known_spells.push(characterKnownSpell)
-			// 		replaceCharacterAction('character_known_spells', replaceCharacterKnownSpells)
-			// 	}
-			// })
-		}
+		postFetch('prepared_spells', body)
+		.then(data => {
+			if (data.errors) {
+				// updateWarning(data.errors[0])
+			} else {
+				let preparedSpell = {
+					id: data.id,
+					spell,
+					spell_list_spell: null,
+					spellcasting: props.spellcastingData.spellcasting,
+					bonus_spell: true,
+					spell_level: spell.spell_level,
+					character_id: id,
+					alternate_source: data.alternate_source
+				}
+				let replacePreparedSpells = [...prepared_spells]
+				replacePreparedSpells.push(preparedSpell)
+				prepared_spells.push(preparedSpell)
+				replaceCharacterAction('prepared_spells', replacePreparedSpells)
+			}
+		})
 		updateDragInfo({
-			spellListSpellId: 0,
 			spellId: 0,
 			dragging: false
 		})
@@ -72,45 +71,69 @@ const BonusSpellSlotManager = props => {
 	const resetDrag = e => {
 		e.preventDefault()
 		updateDragInfo({
-			spellListSpellId: 0,
 			spellId: 0,
 			dragging: false
 		})
 	}
 
 
-	const removeCharacterKnownSpell = characterKnownSpellId => {
-		// deleteFetch(`known_spells/${characterKnownSpellId}`)
-		// 	.then(data => {
-		// 		let replaceCharacterKnownSpells = [...character_known_spells].filter(ks => ks.id !== characterKnownSpellId)
-		// 		character_known_spells = character_known_spells.filter(ks => ks.id !== characterKnownSpellId)
-		// 		replaceCharacterAction('character_known_spells', replaceCharacterKnownSpells)
-		// 	})
+	const removePreparedSpell = preparedSpellId => {
+		deleteFetch(`prepared_spells/${preparedSpellId}`)
+			.then(data => {
+				let replacePreparedSpells = [...prepared_spells].filter(psp => psp.id !== preparedSpellId)
+				prepared_spells = prepared_spells.filter(ks => ks.id !== preparedSpellId)
+				replaceCharacterAction('prepared_spells', replacePreparedSpells)
+			})
 	}
 
-	const renderKnownSpells = () => {
+	const togglePreparedSpellCastStatus = (preparedSpellId, cast) => {
+		patchFetch(`cast_spells/toggle_cast/${preparedSpellId}`, {cast: !cast})
+			.then(data => {
+				let replacePreparedSpells = [...prepared_spells]
+				replacePreparedSpells = replacePreparedSpells.map(ps => {
+					if (ps.id === preparedSpellId){
+						return {...ps, cast: !cast}
+					}
+					return ps
+				})
+				replaceCharacterAction('prepared_spells', replacePreparedSpells)
+			})
+	}
+
+	const renderPreparedBonusSpells = () => {
 		// render buttons, that flash
 		// render known spells, and missing spells
 		const { level, spellcasting } = props.spellcastingData
 
-		let knownSpells = knownSpellsArray(spellcasting, level)
-		let allKnownSpells = []
-		knownSpells.forEach(ks => {
-			let num = ks.spells
-			let thisLevelKnownSpells = prepared_spells.filter(cks => cks.spell_list_spell.spell_level === ks.spell_level)
-			num -= thisLevelKnownSpells.length
-			thisLevelKnownSpells.forEach(tlks => allKnownSpells.push({spellLevel: ks.spell_level, spellName: tlks.spell.name, spellId: tlks.spell.id, characterKnownSpellId: tlks.id}))
-			for (let i = 0; i < num; i++){
-				allKnownSpells.push({spellLevel: ks.spell_level, spellName: "", spellId: 0, characterKnownSpellId: 0})
+		let spellLevels = spellsPerDayArray(spellcasting, level).map(spd => spd.spell_level)
+		const index = spellLevels.indexOf(0)
+		if (index !== -1){spellLevels.splice(index, 1)}
+
+		let allPreparedBonusSpellSlotSpells = []
+		spellLevels.forEach(spLvl => {
+			let preparedSpellThisLevel = prepared_spells.find(psp => psp.spell_level === spLvl && psp.bonus_spell)
+			if (preparedSpellThisLevel){
+				allPreparedBonusSpellSlotSpells.push({spellLevel: spLvl, spellName: preparedSpellThisLevel.spell.name, spellId: preparedSpellThisLevel.spell.id, preparedSpellId: preparedSpellThisLevel.id, cast: preparedSpellThisLevel.cast})
+			} else {
+				allPreparedBonusSpellSlotSpells.push({spellLevel: spLvl, spellName: "", preparedSpellId: 0, spellId: 0})
 			}
+			// let num = ks.spells
+			// let thisLevelKnownSpells = prepared_spells.filter(cks => cks.spell_list_spell.spell_level === ks.spell_level)
+			// num -= thisLevelKnownSpells.length
+			// thisLevelKnownSpells.forEach(tlks => allKnownSpells.push({spellLevel: ks.spell_level, spellName: tlks.spell.name, spellId: tlks.spell.id, characterKnownSpellId: tlks.id}))
+			// for (let i = 0; i < num; i++){
+			// 	allKnownSpells.push({spellLevel: ks.spell_level, spellName: "", spellId: 0, characterKnownSpellId: 0})
+			// }
 		})
 
-		let knownSpellsListItems = allKnownSpells.map(sp => {
+		let knownSpellsListItems = allPreparedBonusSpellSlotSpells.map(sp => {
 			return (
 				<tr>
 					<td>{sp.spellLevel}</td>
 					<td><em className='underline-hover' onClick={() => updateSpellId(sp.spellId)}>{sp.spellName}</em></td>
-					<td>{!!sp.characterKnownSpellId && <button style={{color: "white", background: "red", fontSize: "0.9rem", border: "1px solid black", textAlign: "right", borderRadius: "6px"}} onClick={() => removeCharacterKnownSpell(sp.characterKnownSpellId)}>Remove</button>}</td>
+					<td>{!!sp.preparedSpellId && <button style={{color: "white", background: "red", fontSize: "0.9rem", border: "1px solid black", textAlign: "right", borderRadius: "6px"}} onClick={() => removePreparedSpell(sp.preparedSpellId)}>Remove</button>}</td>
+					<td>{sp.cast && <button onClick={() => togglePreparedSpellCastStatus(sp.preparedSpellId, sp.cast)}>Restore</button>}</td>
+
 				</tr>
 			)
 		})
@@ -133,7 +156,8 @@ const BonusSpellSlotManager = props => {
 						<tr>
 							<th>Lvl</th>
 							<th>Name</th>
-							<th>Remove</th>
+							<th>Forget Prepared Spell</th>
+							<th>UnCast</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -201,7 +225,7 @@ const BonusSpellSlotManager = props => {
 
 	return (
 		<section id="known-spells-popup">
-			{renderKnownSpells()}
+			{renderPreparedBonusSpells()}
 			{renderSpellOptions()}
 			{renderSpellDescription()}
 		</section>

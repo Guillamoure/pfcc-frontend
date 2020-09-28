@@ -68,7 +68,6 @@ export const remainingSpellsPerDay = (klassFeature) => {
 		}
 	})
 	// here, you'd remove spells per level, as well
-
 	return {spellsPerDay: array, klassFeature, klassName, abilityScoreModifier, level, spellcasting}
 }
 
@@ -79,6 +78,7 @@ export const remainingSpellsPerDayFromSpellcasting = (spellcasting, level) => {
 	let applicableSPD = [...spellcasting.spells_per_day_per_level].filter(spd => spd.klass_level === level)
 
 	return applicableSPD = [...applicableSPD].map(spd => {
+		let bonusSpell = null
 		let increase = 0
 		if (spd.spell_level <= abilityScoreModifier){increase = 1}
 
@@ -87,10 +87,12 @@ export const remainingSpellsPerDayFromSpellcasting = (spellcasting, level) => {
 			if (spd.spell_level === cs.spell_level){decrease++}
 		})
 		character.prepared_spells.forEach(ps => {
-			if (spd.spell_level === ps.spell_level && ps.cast){decrease++}
+			if (spd.spell_level === ps.spell_level && ps.cast && !ps.bonus_spell){decrease++}
+			if (spd.spell_level === ps.spell_level && ps.bonus_spell){bonusSpell = true}
+			if (spd.spell_level === ps.spell_level && ps.bonus_spell && ps.cast){bonusSpell = "cast"}
 		})
 
-		return {...spd, spells: (spd.spells + increase - decrease)}
+		return {...spd, spells: (spd.spells + increase - decrease), bonusSpell}
 	})
 }
 
@@ -212,7 +214,7 @@ export const bonusSpellSlotOptions = (spellcasting, level) => {
 					ksFeature.features.forEach(f => {
 						f.castable_spells.forEach(cs => {
 							if (cs.bonus_spell_slot_option && spellLevels.includes(cs.applicable_spell_level)) {
-								spellOptions.push({...cs.spell, spell_level: cs.applicable_spell_level})
+								spellOptions.push({...cs.spell, spell_level: cs.applicable_spell_level, sourceId: ksFeature.id, sourceAbility: "klass_specialization_feature"})
 							}
 						})
 					})
@@ -230,7 +232,7 @@ export const characterSpells = (spellcasting) => {
 	let data = spells.filter(cks => cks.spellcasting.id === spellcasting.id)
 	let sortedData = []
 	for(let i = 0; i < 10; i++){
-		let thisLvl = data.filter(sp => sp.spell_list_spell.spell_level === i)
+		let thisLvl = data.filter(sp => sp.spell_level === i)
 		sortedData.push(thisLvl.sort((a,b) => a.spell.name.localeCompare(b.spell.name)))
 	}
 	sortedData = sortedData.flat()
@@ -243,8 +245,8 @@ export const spellData = (spellData, klassId) => {
 	let { spell, spell_list_spell: sls, spellcasting } = spellData
 	let level = character_info.classes.find(cl => cl.id === klassId).level
 
-	let spellLevel = sls.spell_level
-	let action = spellData.cast ? "cannot-cast" : isThisActionAvailable(spell, {spell: true, spellcasting, klassId, spellLevel: sls.spell_level})
+	let spellLevel = sls?.spell_level ?? spellData.spell_level
+	let action = spellData.cast ? "cannot-cast" : isThisActionAvailable(spell, {spell: true, spellcasting, klassId, spellLevel})
 	let name = spell.name
 	let range = renderSpellRange(spell, level)
 	let duration = renderSpellDuration(spell, level)
@@ -255,6 +257,7 @@ export const spellData = (spellData, klassId) => {
 
 	let preparedSpellId
 	if (spellcasting.prepare_spells) preparedSpellId = spellData.id
+	if (spellData.bonus_spell && !spellData.cast){action = actionClass(spell.action.name)}
 
 	return { spellLevel, action, name, range, duration, difficultyClass, hitModifier, spellResistance, spellId, spellcasting, preparedSpellId }
 }
@@ -290,7 +293,7 @@ export const renderSpellDC = (spellData) => {
 	let save = spellData.spell.saving_throw
 	if (save === "Fortitude"){save = "Fort"}
 	if (save === "Reflex"){save = "Ref"}
-	return save + " " + (10 + abilityScoreMod(spellData.spellcasting.ability_score) + spellData.spell_list_spell.spell_level)
+	return save + " " + (10 + abilityScoreMod(spellData.spellcasting.ability_score) + spellData.spell_level)
 }
 
 export const castSpell = (ksData, spellsPerDay) => {
@@ -301,7 +304,7 @@ export const castSpell = (ksData, spellsPerDay) => {
 		} else {
 			let spellPerDay = spellsPerDay.find(spd => spd.spell_level === ksData.spellLevel)
 			const { character } = store.getState()
-			if (spellPerDay.spells > 0){
+			if (spellPerDay.spells > 0 || ksData.castableBonusSpell){
 				if (ksData.spellcasting.expend_prepared_spells){
 					postFetch(`cast_spells`, {id: ksData.preparedSpellId, expend: true})
 						.then(data => {
