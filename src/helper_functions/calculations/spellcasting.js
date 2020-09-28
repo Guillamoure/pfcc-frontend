@@ -27,6 +27,18 @@ export const locateSpellcastingFeatureThroughId = id => {
 	return spellcasting
 }
 
+export const locateBonusSpellSlotsKlassFeature = () => {
+	const { character } = {...store.getState()}
+
+	return [...character.applicable_klass_features].filter(akf => {
+		let bonusSpellSlot = false
+		akf.features.forEach(f => {
+			if (f.bonus_spell_slot){bonusSpellSlot = true}
+		})
+		return bonusSpellSlot
+	})
+}
+
 export const availableCastableSpellLevelsThroughKlassId = id => {
 	let spellcastingKlassFeatures = allSpellcastingKlassFeatures()
 	let spellcasting = spellcastingKlassFeatures.find(kf => kf.klass_id === id && kf.features.find(f => f.spellcasting))?.features.find(f => f.spellcasting)?.spellcasting
@@ -164,6 +176,51 @@ export const areAllPreparedSpellsFilled = (spellcasting, level) => {
 	}
 
 	return areTherePreparedSpellsMissing
+}
+
+export const areAllBonusSpellSlotsFilled = (spellcasting, level) => {
+	let spellLevels = spellsPerDayArray(spellcasting, level).map(spd => spd.spell_level)
+	let bssAbilities = locateBonusSpellSlotsKlassFeature()
+	if (bssAbilities.length === 1) {
+		let featureBonusSpellSlot = bssAbilities[0].features.find(f => f.bonus_spell_slot).bonus_spell_slot
+		// if (featureBonusSpellSlot.list_of_available_spells === "klass specialization"){
+			//
+			// 	store.getState().character.klass_specializations
+			// }
+			let preparedSpells = store.getState().character.prepared_spells
+
+			// iterate through the preparedSpells, if you find a prepared spell, remove that spell level from the spellLevels array
+
+			// if the array is empty, all spells have been prepared
+
+			return !!spellLevels.length
+	}
+
+}
+
+export const bonusSpellSlotOptions = (spellcasting, level) => {
+	let bssAbilities = locateBonusSpellSlotsKlassFeature()
+	let spellLevels = spellsPerDayArray(spellcasting, level).map(spd => spd.spell_level)
+	let spellOptions = []
+
+	if (bssAbilities.length === 1) {
+		let featureBonusSpellSlot = bssAbilities[0].features.find(f => f.bonus_spell_slot).bonus_spell_slot
+		if (featureBonusSpellSlot.list_of_available_spells === "klass_specialization"){
+			let characterKlassSpecializations = store.getState().character.klass_specializations
+			characterKlassSpecializations.forEach(kspec => {
+				kspec.klass_specialization_features.forEach(ksFeature => {
+					ksFeature.features.forEach(f => {
+						f.castable_spells.forEach(cs => {
+							if (cs.bonus_spell_slot_option && spellLevels.includes(cs.applicable_spell_level)) {
+								spellOptions.push({...cs.spell, spell_level: cs.applicable_spell_level})
+							}
+						})
+					})
+				})
+			})
+		}
+	}
+	return spellOptions
 }
 
 export const characterSpells = (spellcasting) => {

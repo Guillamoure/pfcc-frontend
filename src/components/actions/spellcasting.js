@@ -16,6 +16,7 @@ const Spellcasting = props => {
 					{renderAddionalSpellcastingStats(scData.level, scData.abilityScoreModifier)}
 					{SpellcastingCalculations.areAllKnownSpellsFilled(scData.spellcasting, scData.level) && renderManageKnownSpells(scData)}
 					{SpellcastingCalculations.areAllPreparedSpellsFilled(scData.spellcasting, scData.level) && renderManagePreparedSpells(scData)}
+					{SpellcastingCalculations.areAllBonusSpellSlotsFilled(scData.spellcasting, scData.level) && renderManageBonusSpellSlots(scData)}
 					{renderSpellTable(scData, i)}
 				</>
 			)
@@ -60,6 +61,14 @@ const Spellcasting = props => {
 		}
 
 		return <button className="attention-button-animation" onClick={renderClick}>Prepare Spells</button>
+	}
+
+	const renderManageBonusSpellSlots = spellcastingData => {
+		const renderClick = () => {
+			modalAction("manageBonusSpellSlots", spellcastingData)
+		}
+
+		return <button className="attention-button-animation" onClick={renderClick}>Prepare Bonus Spells</button>
 	}
 
 	const renderSpellTable = (scData, index) => {
