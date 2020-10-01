@@ -29,7 +29,7 @@ export const calculateMaxUsage = (usage, klassId) => {
 
 	// otherwise, calculate the limit
 	points += usage.base_limit
-	points += mod(abilityScores[usage.base_limit_modifier])
+	if (usage.base_limit_modifier){points += mod(abilityScores[usage.base_limit_modifier])}
 	if (classLvl > 1){points += (usage.limit_increase_per_level * (classLvl - 1))}
 
 	return points
@@ -57,12 +57,18 @@ export const remainingUsage = feature => {
 export const incrementFeatureUsage = async feature => {
 	if (remainingUsage(feature) > 0){
 		let usage = feature.usageSources.length === 1 && feature.usageSources[0]
-		await alterCurrentUsage(usage, 1)
+		await alterCurrentUsage(usage, 1, usageArrayBasedOnSource(feature.source))
 	} else {
 		let options = feature.usage?.all_feature_usage_options || []
 		if (options.length){
 
 			const { character_info } = store.getState()
+
+			// this is used when a feature expends every round
+			// once that feature runs out of points, it goes to here
+			// the below code only works for klass features, not klass_specializations or other future features
+			debugger
+			// placing a debugger here for future use, to make universal in the future
 
 			options.forEach(opt => {
 				if (character_info.activeFeatures.find(af => af.featureId === opt.optionSource.featureId & af.sourceId === opt.optionSource.sourceId && af.source === opt.optionSource.source)) {
@@ -78,14 +84,14 @@ export const incrementFeatureUsage = async feature => {
 export const decrementFeatureUsage = async feature => {
 	let usage = feature.usageSources.length === 1 && feature.usageSources[0]
 	if (!!usage.current_usage){
-		await alterCurrentUsage(usage, -1)
+		await alterCurrentUsage(usage, -1, usageArrayBasedOnSource(feature.source))
 	}
 }
 
-export const alterCurrentUsage = async (usage, amount) => {
-	await patchFetch("character_klass_feature_usages", {...usage, current_usage: usage.current_usage + amount})
+export const alterCurrentUsage = async (usage, amount, url) => {
+	await patchFetch(url, {...usage, current_usage: usage.current_usage + amount})
 		.then(data => {
-			replaceCharacterArrayAction("character_klass_feature_usages", data)
+			replaceCharacterArrayAction(url, data)
 		})
 }
 
@@ -106,4 +112,15 @@ export const isThisFeatureActive = feature => {
 	})
 
 	return active
+}
+
+const usageArrayBasedOnSource = (source) => {
+	switch(source){
+		case "applicable_klass_features":
+			return "character_klass_feature_usages"
+		case "klass_specializations":
+			return "character_klass_specialization_feature_usages"
+		default:
+			return null
+	}
 }

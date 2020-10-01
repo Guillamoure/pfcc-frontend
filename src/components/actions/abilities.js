@@ -22,7 +22,6 @@ class Abilities extends React.Component {
       case 'Nettie':
         return this.nettie()
       case 'Merg':
-      case 'Merg':
         return this.merg()
       case 'Cedrick':
         return this.cedrick()
@@ -67,9 +66,10 @@ class Abilities extends React.Component {
 			cKSpec.klass_specialization_features.forEach(kspecFeature => {
 				if (classLevel(cKSpec.klass_feature.klass_id) >= kspecFeature.level){
 					kspecFeature.features.forEach(f => {
-						if (f.action){
+						if (f.usage){
+							let action = f.action || {name: "no-action"}
 							let cksfus = this.props.character.character_klass_specialization_feature_usages.filter(fu => fu.klass_specialization_feature_id === kspecFeature.id)
-							activatableAbilities.push({...f, source: 'klass_specializations', sourceId: cKSpec.id, subSourceId: kspecFeature.id, kspecFeatureName: kspecFeature.name, klassId: cKSpec.klass_feature.klass_id, usageSources: cksfus})
+							activatableAbilities.push({...f, action, source: 'klass_specializations', sourceId: cKSpec.id, subSourceId: kspecFeature.id, kspecFeatureName: kspecFeature.name, klassId: cKSpec.klass_feature.klass_id, usageSources: cksfus})
 						}
 					})
 				}
@@ -82,7 +82,8 @@ class Abilities extends React.Component {
 			return (
 				<tr key={idx * 3 - 1}>
 					<td><button className={this.canThisAbilityBeUsed(ability)} onClick={() => this.newRenderClick(ability)}><strong>Click</strong></button></td>
-					<td>{name} {calculateFeaturePercentage(ability)}</td>
+					<td>{name}</td>
+					<td>{this.renderUsage(ability)}</td>
 					<td>{this.renderDice(ability)}</td>
 					<td>{this.renderDC(ability)}</td>
 					<td>Nothin'</td>
@@ -98,6 +99,19 @@ class Abilities extends React.Component {
 
 
 		return actionClass
+	}
+
+	renderUsage = (ability) => {
+		let display = calculateFeaturePercentage(ability)
+		if (display){
+			return (
+				<button onClick={() => {modalAction("adjust points", ability)}}>
+					{display}
+				</button>
+			)
+		} else {
+			return null
+		}
 	}
 
 	renderDice = (ability) => {
@@ -978,6 +992,7 @@ class Abilities extends React.Component {
             <tr>
               <th>Action</th>
               <th>Name</th>
+              <th>Usage</th>
 							<th>Dice</th>
               <th>DC</th>
               <th>Details</th>

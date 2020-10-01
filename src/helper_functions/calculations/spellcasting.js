@@ -207,7 +207,7 @@ export const bonusSpellSlotOptions = (spellcasting, level) => {
 
 	if (bssAbilities.length === 1) {
 		let featureBonusSpellSlot = bssAbilities[0].features.find(f => f.bonus_spell_slot).bonus_spell_slot
-		if (featureBonusSpellSlot.list_of_available_spells === "klass_specialization"){
+		if (featureBonusSpellSlot.list_of_available_spells === "klass_specializations"){
 			let characterKlassSpecializations = store.getState().character.klass_specializations
 			characterKlassSpecializations.forEach(kspec => {
 				kspec.klass_specialization_features.forEach(ksFeature => {

@@ -11,23 +11,23 @@ const Points = props => {
 	})
 
 	const renderClick = (operation) => {
-		if (!feature.character_klass_feature_usages.length){
-			feature.character_klass_feature_usages.push({
+		if (!feature.usageSources.length){
+			feature.usageSources.push({
 				character_id: props.character.id,
 				klass_feature_id: feature.sourceId,
 				feature_usage_id: feature.usage.id,
 				current_usage: 0
 			})
 		}
-		if (operation === "+" && feature.character_klass_feature_usages[0].current_usage) {
+		if (operation === "+" && feature.usageSources[0].current_usage) {
 			decrementFeatureUsage(feature)
 			let adjustedFeature = {...feature}
-			adjustedFeature.character_klass_feature_usages[0].current_usage -= 1
+			adjustedFeature.usageSources[0].current_usage -= 1
 			setFeature(adjustedFeature)
 		} else if (operation === "-" && !!remainingUsage(feature)) {
 			incrementFeatureUsage(feature)
 			let adjustedFeature = {...feature}
-			adjustedFeature.character_klass_feature_usages[0].current_usage += 1
+			adjustedFeature.usageSources[0].current_usage += 1
 			setFeature(adjustedFeature)
 		}
 	}
@@ -55,7 +55,7 @@ const Points = props => {
     <>
       <h3>Remaining: {feature && remainingUsage(feature)}</h3>
       {additionalContent()}
-      <button className={feature && !feature.character_klass_feature_usages[0]?.current_usage ? "inactive-button" : ""} onClick={() => renderClick("+")}>+</button>
+      <button className={feature && !feature.usageSources[0]?.current_usage ? "inactive-button" : ""} onClick={() => renderClick("+")}>+</button>
       <button className={feature && !remainingUsage(feature) ? "inactive-button" : ""} onClick={() => renderClick("-")}>-</button>
     </>
   )
