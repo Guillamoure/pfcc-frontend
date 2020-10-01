@@ -105,7 +105,7 @@ class Abilities extends React.Component {
 		let display = calculateFeaturePercentage(ability)
 		if (display){
 			return (
-				<button onClick={() => {modalAction("adjust points", ability)}}>
+				<button className="ability-usage-buttons" onClick={() => {modalAction("adjust points", ability)}}>
 					{display}
 				</button>
 			)

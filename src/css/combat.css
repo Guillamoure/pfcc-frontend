@@ -246,8 +246,13 @@
 
 .action-container {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 3fr 3fr 3fr 2fr;
   grid-template-rows: 1fr 1fr;
+	grid-gap: 4px;
+	grid-template-areas:
+		"full-round full-round immediate free"
+		"standard move swift start-turn";
+	list-style: none;
 }
 
 #actions {
@@ -258,52 +263,52 @@
 }
 
 #full-action {
-  padding: .2em;
   width: 100%;
   display: inline-block;
   text-align: center;
+	grid-area: full-round;
 }
 
 #immediate-action {
-  padding: .2em;
   width: 100%;
   display: inline-block;
   text-align: center;
+	grid-area: immediate;
 }
 
 #standard-action {
-  padding: .2em;
-  width: 39%;
+  width: 100%;
   display: inline-block;
   text-align: center;
+	grid-area: standard;
 }
 
 #move-action {
-  padding: .2em;
-  width: 35%;
+  width: 100%;
   display: inline-block;
   text-align: center;
+	grid-area: move;
 }
 
 #swift-action {
-  padding: .2em;
-  width: 26%;
+  width: 100%;
   display: inline-block;
   text-align: center;
+	grid-area: swift;
 }
 
 #free-action {
-  padding: .2em;
-  width: 60%;
+  width: 100%;
   display: inline-block;
   text-align: center;
+	grid-area: free;
 }
 
 #start-turn {
-  padding: .2em;
-  width: 40%;
+  width: 100%;
   display: inline-block;
   text-align: center;
+	grid-area: start-turn;
 }
 
 #spell-desc {
@@ -365,4 +370,12 @@
 #mobile-combat{
   display: flex;
   background-color: hotpink;
+}
+
+.ability-usage-buttons {
+  border-color: #666;
+  border-radius: 1em;
+  background-color: #800020;
+  color: #fff;
+  box-shadow: 1px 1px #777;
 }

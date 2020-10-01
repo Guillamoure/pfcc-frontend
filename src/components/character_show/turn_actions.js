@@ -42,21 +42,13 @@ const TurnActions = props => {
 
   return (
     <section id='actions' className='character-show shadow action-container'>
-      <section style={{padding: '.15em'}}>
-        <span id='full-action' className={used("full")} onClick={() => dispatch("full")}>Full-Round Action</span>
-      </section>
-      <section style={{padding: '.15em', paddingLeft: '0em'}}>
-        <span id='immediate-action' className={used("immediate")} onClick={() => dispatch("immediate")}>Immediate Action</span>
-      </section>
-      <section style={{padding: '.15em', paddingTop: '0em'}}>
-        <span id='standard-action' className={used("standard")} onClick={() => dispatch("standard")}>Standard Action</span>
-        <span id='move-action' className={used("move")} onClick={() => dispatch("move")}>Move Action</span>
-        <span id='swift-action' className={used("swift")} onClick={() => dispatch("swift")}>Swift Action</span>
-      </section>
-      <section style={{padding: '.15em', paddingTop: '0em', paddingLeft: '0em'}}>
-        <span id='free-action' className="free">Free Action</span>
-        <span id='start-turn' className="start" onClick={endTurn}>Start Turn</span>
-      </section>
+      <li id='full-action' className={used("full")} onClick={() => dispatch("full")}>Full-Round Action</li>
+      <li id='immediate-action' className={used("immediate")} onClick={() => dispatch("immediate")}>Immediate Action</li>
+      <li id='standard-action' className={used("standard")} onClick={() => dispatch("standard")}>Standard Action</li>
+      <li id='move-action' className={used("move")} onClick={() => dispatch("move")}>Move Action</li>
+      <li id='swift-action' className={used("swift")} onClick={() => dispatch("swift")}>Swift Action</li>
+      <li id='free-action' className="free">Free Action</li>
+      <li id='start-turn' className="start" onClick={endTurn}>Start Turn</li>
     </section>
   )
 }

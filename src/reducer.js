@@ -114,10 +114,18 @@ const reducer = (state = initialState, action) => {
     case "TRIGGER ACTION":
       let actionDupe = state.character_info.actions
       if(action.action === 'full' && actionDupe.full === false){
-        actionDupe = {full: true, standard: true, move: true, swift: true, immediate: false}
+        actionDupe = {full: true, standard: true, move: true}
       } else if(action.action === 'full' && actionDupe.full === true) {
-        actionDupe = {full: false, standard: false, move: false, swift: false, immediate: false}
-      } else {
+        actionDupe = {full: false, standard: false, move: false}
+      } else if (action.action === "standard" && actionDupe.standard === false && actionDupe.full === false) {
+				actionDupe = {full: true, standard: true}
+			} else if (action.action === "standard" && actionDupe.standard === true && actionDupe.full === true) {
+				actionDupe = {full: false, standard: false}
+			} else if (action.action === "move" && actionDupe.move === false && actionDupe.full === false) {
+				actionDupe = {full: true, move: true}
+			} else if (action.action === "move" && actionDupe.move === true && actionDupe.full === true) {
+				actionDupe = {full: false, move: false}
+			} else {
         actionDupe[action.action] = !actionDupe[action.action]
       }
       return {...state, character_info: {...state.character_info, actions: actionDupe}}

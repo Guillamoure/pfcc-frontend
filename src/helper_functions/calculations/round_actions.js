@@ -11,13 +11,13 @@ export const isThisActionAvailable = (feature, options = {}) => {
 	// CALCULATED DATA
 	action = actionClass(action.name)
 
-	// if you are trying to do a standard, move, or swift, and you've already used your full
+	// if you are trying to do a standard or move, and you've already used your full
 	// cannot use the action
-	if ((action === 'standard' || action  === 'move' || action === 'swift') && actions.full){
+	if ((action === 'standard' || action  === 'move') && actions.full){
 		return 'cannot-cast'
-	// if you are trying to do a full, and you've already used your standard, move, or swift
+	// if you are trying to do a full, and you've already used your standard or move
 	// cannot use the action
-	} else if (action === 'full' && (actions.standard || actions.move || actions.swift)){
+	} else if (action === 'full' && (actions.standard || actions.move)){
 		return 'cannot-cast'
 	// if you've already used the action
 	// cannot use the action
