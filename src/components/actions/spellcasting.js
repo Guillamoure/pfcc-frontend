@@ -10,10 +10,11 @@ const Spellcasting = props => {
 
 	const renderAllSpellcasting = () => {
 		let spellcastingData = SpellcastingCalculations.allRemainingSpellsPerDay()
-		return spellcastingData.map((scData, i) => {
+		let spellcastingArray = []
+		spellcastingArray.push(spellcastingData.map((scData, i) => {
 			return (
 				<>
-					{renderSPD(scData.spellsPerDay, scData.klassName, i)}
+					{renderSPD(scData.spellsPerDay, scData.klassName, scData.level, i)}
 					<br/>
 					{renderAddionalSpellcastingStats(scData.level, scData.abilityScoreModifier)}
 					{SpellcastingCalculations.areAllKnownSpellsFilled(scData.spellcasting, scData.level) && renderManageKnownSpells(scData)}
@@ -22,10 +23,20 @@ const Spellcasting = props => {
 					{renderSpellTable(scData, i)}
 				</>
 			)
+		}))
+		let castAtWill = SpellcastingCalculations.spellsCastAtWill()
+		let castAtWillSpells = castAtWill.map((el) => {
+			return renderSpell(el.spellInfo, {spellcasting: el.spellcasting, klassFeature: el.klassFeature, abilityName: el.abilityName})
 		})
+		spellcastingArray.push(
+			<>
+				{renderSpellTable({}, 0, castAtWillSpells)}
+			</>
+		)
+		return spellcastingArray.flat()
 	}
 
-	const renderSPD = (spds, klassName, i) => {
+	const renderSPD = (spds, klassName, level, i) => {
 		let interpolatedSPD = spds.map((spd, ind) => {
 			let bonusSpell = null
 			if (spd.bonusSpell === true){bonusSpell = "+1"}
@@ -40,7 +51,7 @@ const Spellcasting = props => {
 
 		return (
 			<span key={i*3-1}>
-				{klassName}
+				{klassName} Lvl <strong>{level}</strong>
 				{interpolatedSPD}
 			</span>
 		)
@@ -75,7 +86,7 @@ const Spellcasting = props => {
 		return <button className="attention-button-animation" onClick={renderClick}>Prepare Bonus Spells</button>
 	}
 
-	const renderSpellTable = (scData, index) => {
+	const renderSpellTable = (scData, index, spells) => {
 		return (
       <table key={index*3+1}>
         <thead>
@@ -87,10 +98,11 @@ const Spellcasting = props => {
             <th>Duration</th>
             <th>Hit / DC</th>
             <th>SR</th>
+						<th>Source</th>
           </tr>
         </thead>
         <tbody>
-					{renderSpellTableRows(scData)}
+					{spells || renderSpellTableRows(scData)}
         </tbody>
       </table>
     )
@@ -99,23 +111,28 @@ const Spellcasting = props => {
 	const renderSpellTableRows = (scData) => {
 		let spells = SpellcastingCalculations.characterSpells(scData.spellcasting)
 
-		return spells.map((spell, i) => {
-			let spellData = SpellcastingCalculations.spellData({...spell, spellcasting: scData.spellcasting}, scData.klassFeature.klass_id)
-			spellData.castableBonusSpell = !!spell.bonus_spell === true
-			let buttonName = spell.cast ? "Spent" : "Cast"
-			let isBonus = spell.bonus_spell ? renderBonusSpellSlotTooltip(spell) : null
-			return (
-				<tr>
-					<td>{spellData.spellLevel}{isBonus}</td>
-					<td><button className={spellData.action} onClick={() => SpellcastingCalculations.castSpell(spellData, scData.spellsPerDay)}><strong>{buttonName}</strong></button></td>
-					<td><em className='underline-hover' onClick={() => modalAction("spellDescription", spell.spell)}>{spellData.name}</em></td>
-					<td>{spellData.range}</td>
-					<td>{spellData.duration}</td>
-					<td>{spellData.difficultyClass}</td>
-					<td>{spellData.spellResistance}</td>
-				</tr>
-			)
-		})
+		return spells.map((spell) => renderSpell(spell, scData))
+	}
+
+	const renderSpell = (spell, scData) => {
+		let source = scData.abilityName ? `${scData.abilityName}` : `${scData.klassName} - ${scData.klassFeature.name}`
+
+		let spellData = SpellcastingCalculations.spellData({...spell, spellcasting: scData.spellcasting, source}, scData.klassFeature.klass_id)
+		spellData.castableBonusSpell = !!spell.bonus_spell === true
+		let buttonName = spell.cast ? "Spent" : "Cast"
+		let isBonus = spell.bonus_spell ? renderBonusSpellSlotTooltip(spell) : null
+		return (
+			<tr>
+				<td>{spellData.spellLevel}{isBonus}</td>
+				<td><button className={spellData.action} onClick={() => SpellcastingCalculations.castSpell(spellData, scData.spellsPerDay)}><strong>{buttonName}</strong></button></td>
+				<td><em className='underline-hover' onClick={() => modalAction("spellDescription", spell.spell)}>{spellData.name}</em></td>
+				<td>{spellData.range}</td>
+				<td>{spellData.duration}</td>
+				<td>{spellData.difficultyClass}</td>
+				<td>{spellData.spellResistance}</td>
+				<td>{spellData.source}</td>
+			</tr>
+		)
 	}
 
 	const renderBonusSpellSlotTooltip = (spell) => {
