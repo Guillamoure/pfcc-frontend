@@ -1,6 +1,8 @@
+import React from 'react'
 import _ from 'lodash'
 import { mod, pluser } from '../fuf'
 import { specialSizeMod, sizeMod } from './size'
+import { modalAction } from '../action_creator/popups'
 
 export const crCalc = (cr) => {
 	if (cr < 1){return `1/${1/cr}`}
@@ -118,4 +120,15 @@ export const armorClassTotal = (creature) => {
 	ac.flatFooted += _.sum(flatFootedModifiers.map(m => m.mod))
 
 	return ac
+}
+
+export const renderFeats = (feats) => {
+	let featNodes = []
+	for (let i = 0; i < feats.length; i++) {
+		featNodes.push(<span className="underline-hover" onClick={() => modalAction("feat", feats[i])}>{feats[i].name}</span>)
+		if (i + 1 < feats.length){
+			featNodes.push(", ")
+		}
+	}
+	return featNodes
 }

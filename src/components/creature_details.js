@@ -43,7 +43,7 @@ const CreatureDetails = props => {
 
 					<p><strong>Str</strong> {creature.strength}, <strong>Dex</strong> {creature.dexterity}, <strong>Con</strong> {creature.constitution}, <strong>Int</strong> {creature.intelligence}, <strong>Wis</strong> {creature.wisdom}, <strong>Cha</strong> {creature.charisma}</p>
 					<p><strong>Base Atk</strong> {CreatureCalc.babString(hitDice, creature.creature_type.hit_die)}; <strong>CMB</strong> {CreatureCalc.cmbString(creature)}; <strong>CMD</strong> {CreatureCalc.cmd(creature)}</p>
-					<p><strong>Feats</strong> INSERT FEATS</p>
+					<p><strong>Feats</strong> {CreatureCalc.renderFeats(creature.feats)}</p>
 					<p><strong>Skills</strong> INSERT SKILLS; <strong>Racial Modifiers</strong> INSERT RACIAL MODIFIERS</p>
 
 					<p className="creature-header"><strong>OFFENSE</strong></p>
