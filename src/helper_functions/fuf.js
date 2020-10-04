@@ -105,3 +105,11 @@ export const injectSpellIntoDescription = (description, spells, onClickFunction,
 	})
 	return <span>{domDescArray}</span>
 }
+
+export const mod = (score) => {
+  return Math.floor( (score - 10) / 2 )
+}
+
+export const pluser = (num) => {
+  return num < 0 ? num : `+${num}`
+}

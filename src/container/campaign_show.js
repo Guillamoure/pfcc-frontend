@@ -7,6 +7,7 @@ import ItemSearch from '../components/campaign/item_search'
 import CharacterContainer from '../components/campaign/characters'
 import SetDate from '../components/campaign/set_date'
 import Ideas from '../components/campaign/ideas'
+import CreatureContainer from '../components/campaign/creatures/creature_container'
 
 
 const CampaignShow = props => {
@@ -42,10 +43,7 @@ const CampaignShow = props => {
 				)
 				break
 			case "Creatures":
-				content = (
-					<>
-					</>
-				)
+				content = <CreatureContainer />
 				break
 			default:
 				break
