@@ -1,13 +1,17 @@
 import React from 'react'
 import * as CreatureCalc from '../helper_functions/calculations/creatures'
 import * as SizeCalc from '../helper_functions/calculations/size'
+import * as CreatureFeaturesCalc from '../helper_functions/calculations/creature_features'
 
 const CreatureDetails = props => {
 
 	const [creature, setCreature] = React.useState(null)
 
 	React.useEffect(() => {
-		if (props.creature){setCreature(props.creature)}
+		if (props.creature){
+			let parsedCreature = CreatureFeaturesCalc.calculateCreatureInfo(props.creature)
+			setCreature(parsedCreature)
+		}
 	}, [])
 
 	const renderCreature = () => {
@@ -24,7 +28,7 @@ const CreatureDetails = props => {
 					<h3><span>{creature.name}</span>CR {CreatureCalc.crCalc(creature.challenge_rating)}</h3>
 					<h4>XP {CreatureCalc.crXPCalc(creature.challenge_rating)}</h4>
 					<p>{creature.alignment[0].toUpperCase()} {creature.size} {creature.creature_type.name}</p>
-					<p>INSERT INITIATIVE AND SENSES</p>
+					<p><strong>Init:</strong> {CreatureCalc.renderInitiative(creature)}; <strong>Senses</strong> INSERT SENSES; Perception INSERT PERCEPTION</p>
 
 					<p className="creature-header"><strong>DEFENSE</strong></p>
 
@@ -35,7 +39,7 @@ const CreatureDetails = props => {
 					<p className="creature-header"><strong>OFFENSE</strong></p>
 
 					<p>INSERT SPEED</p>
-					<p>INSERT MELEE</p>
+					{CreatureCalc.renderAttacks(creature, "Melee")}
 					<p>INSERT RANGED</p>
 					<p><strong>Space</strong> {SizeCalc.sizeSpaceReach(creature.size)[0]}; <strong>Reach</strong> {SizeCalc.sizeSpaceReach(creature.size)[1]}</p>
 

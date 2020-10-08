@@ -1,7 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
 import { mod, pluser } from '../fuf'
-import { specialSizeMod, sizeMod } from './size'
+import { specialSizeMod, sizeMod, sizeDamage } from './size'
 import { modalAction } from '../action_creator/popups'
 
 export const crCalc = (cr) => {
@@ -131,4 +131,43 @@ export const renderFeats = (feats) => {
 		}
 	}
 	return featNodes
+}
+
+export const renderInitiative = (creature) => {
+	let dexMod = mod(creature.dexterity)
+
+	return pluser(dexMod)
+}
+
+export const renderAttacks = (creature, attackType) => {
+	let typedAttacks = creature.weapons.filter(cw => cw.weapon.weapon_type === attackType)
+	if (typedAttacks.length) {
+		let abilityModifier = attackType === "Melee" ? mod(creature.strength) : mod(creature.dexterity)
+		let totalAttackBonus = renderAttackBonus(creature, attackType)
+
+		let attackNodes = typedAttacks.map(cw => {
+			let dice = cw.weapon.num_of_dice + "d" + cw.weapon.damage_dice
+			dice = sizeDamage(creature.size, dice)
+
+			return `${cw.weapon.name} ${pluser(totalAttackBonus)} (${dice}${pluser(abilityModifier)})`
+		})
+
+		return <p><strong>Melee</strong> {attackNodes.join(", ")}</p>
+	} else {
+		return null
+	}
+}
+
+export const renderAttackBonus = (creature, attackType) => {
+	let sizeModifier = sizeMod(creature.size)
+	let abilityModifier = attackType === "Melee" ? mod(creature.strength) : mod(creature.dexterity)
+
+	creature.creatureInfo.effects.forEach(ef => {
+		if (ef.could_apply_dex_for_attack_rolls === true && attackType === "Melee"){
+			let greaterAbilityScore = creature.strength > creature.dexterity ? creature.strength : creature.dexterity
+			abilityModifier = mod(greaterAbilityScore)
+		}
+	})
+
+	return sizeModifier + abilityModifier + bab(creature.hit_dice, creature.creature_type.hit_die)
 }

@@ -113,3 +113,20 @@ export const sizeSpaceReach = (string) => {
       return ["5 ft.", "5 ft."];
   }
 }
+
+export const sizeStepsFromMedium = (size) => {
+	let sizes = ["Fine", "Diminutive", "Tiny", "Small", "Medium", "Large", "Huge", "Gargantuan", "Colossal"]
+	let mediumIndex = 4
+	let incomingSizeIndex = sizes.indexOf(size)
+	return incomingSizeIndex - mediumIndex
+}
+
+export const sizeDamage = (size, damage) => {
+	let sizeAdjustment = sizeStepsFromMedium(size)
+	let diceSteps = ["1", "1d2", "1d3", "1d4", "1d6", "1d8", "2d6", "2d8", "4d6"]
+	let currentDamageIndex = diceSteps.indexOf(damage)
+	let newIndex = currentDamageIndex + sizeAdjustment
+	if (newIndex < 0){newIndex = 0}
+	if (newIndex > diceSteps.length - 1){newIndex = diceSteps.length - 1}
+	return diceSteps[newIndex]
+}
