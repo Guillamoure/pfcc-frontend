@@ -5,7 +5,7 @@ import { specialSizeMod, sizeMod, sizeDamage } from './size'
 import { modalAction } from '../action_creator/popups'
 
 export const crCalc = (cr) => {
-	if (cr < 1){return `1/${1/cr}`}
+	if (cr < 1){return `1/${Math.ceil(1/cr)}`}
 	return cr
 }
 
@@ -16,7 +16,7 @@ export const crXPCalc = cr => {
 		let mult = Math.pow(2, exp)
 		return starting * mult
 	} else {
-		switch(1/cr){
+		switch(Math.ceil(1/cr)){
 			case 2:
 				return 200
 			case 3:

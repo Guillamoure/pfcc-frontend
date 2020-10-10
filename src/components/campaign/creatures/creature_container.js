@@ -1,7 +1,7 @@
 import React from 'react'
 
 import CreatureSearch from './creature_search'
-import CreatureDetails from '../../creature_details'
+import CreatureStatBlock from '../../creature_stat_block'
 
 const CreatureContainer = props => {
 
@@ -9,13 +9,23 @@ const CreatureContainer = props => {
 
 	const displayCreature = creature => {
 		if (selectedCreature?.id === creature.id){setSelectedCreature(null)}
-		else {setSelectedCreature(creature)}
+		else {
+			console.log("creature changed")
+			setSelectedCreature(creature)
+		}
+	}
+
+	const displayStatBlock = () => {
+		if (selectedCreature){
+			console.log(selectedCreature)
+			return <CreatureStatBlock creature={selectedCreature}/>
+		}
 	}
 
 	return (
 		<main id="campaign-show-creatures">
 			<CreatureSearch displayCreature={displayCreature}/>
-			{selectedCreature && <CreatureDetails creature={selectedCreature}/>}
+			{displayStatBlock()}
 		</main>
 	)
 }

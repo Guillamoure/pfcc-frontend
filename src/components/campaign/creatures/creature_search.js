@@ -27,7 +27,7 @@ const CreatureSearch = props => {
 	const displayCreatures = () => {
 		let creatureNodes = creatures.map(c => {
 			let challengeRating = c.challenge_rating
-			if (challengeRating < 1){challengeRating = `1/${1/challengeRating}`}
+			if (challengeRating < 1){challengeRating = `1/${Math.ceil(1/challengeRating)}`}
 			return (
 				<li onClick={() => props.displayCreature(c)}>
 					CR {challengeRating} | <strong>{c.name}</strong> | {c.size} {c.creature_type.name}

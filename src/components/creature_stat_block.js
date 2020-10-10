@@ -3,7 +3,7 @@ import * as CreatureCalc from '../helper_functions/calculations/creatures'
 import * as SizeCalc from '../helper_functions/calculations/size'
 import * as CreatureFeaturesCalc from '../helper_functions/calculations/creature_features'
 
-const CreatureDetails = props => {
+const CreatureStatBlock = props => {
 
 	const [creature, setCreature] = React.useState(null)
 
@@ -12,7 +12,7 @@ const CreatureDetails = props => {
 			let parsedCreature = CreatureFeaturesCalc.calculateCreatureInfo(props.creature)
 			setCreature(parsedCreature)
 		}
-	}, [])
+	}, [props.creature])
 
 	const renderCreature = () => {
 		if (creature){
@@ -40,17 +40,17 @@ const CreatureDetails = props => {
 
 					<p>INSERT SPEED</p>
 					{CreatureCalc.renderAttacks(creature, "Melee")}
-					<p>INSERT RANGED</p>
+					{CreatureCalc.renderAttacks(creature, "Ranged")}
 					<p><strong>Space</strong> {SizeCalc.sizeSpaceReach(creature.size)[0]}; <strong>Reach</strong> {SizeCalc.sizeSpaceReach(creature.size)[1]}</p>
 
-					<p className="creature-header"><strong>OFFENSE</strong></p>
+					<p className="creature-header"><strong>STATISTICS</strong></p>
 
 					<p><strong>Str</strong> {creature.strength}, <strong>Dex</strong> {creature.dexterity}, <strong>Con</strong> {creature.constitution}, <strong>Int</strong> {creature.intelligence}, <strong>Wis</strong> {creature.wisdom}, <strong>Cha</strong> {creature.charisma}</p>
 					<p><strong>Base Atk</strong> {CreatureCalc.babString(hitDice, creature.creature_type.hit_die)}; <strong>CMB</strong> {CreatureCalc.cmbString(creature)}; <strong>CMD</strong> {CreatureCalc.cmd(creature)}</p>
 					<p><strong>Feats</strong> {CreatureCalc.renderFeats(creature.feats)}</p>
 					<p><strong>Skills</strong> INSERT SKILLS; <strong>Racial Modifiers</strong> INSERT RACIAL MODIFIERS</p>
 
-					<p className="creature-header"><strong>OFFENSE</strong></p>
+					<p className="creature-header"><strong>ECOLOGY</strong></p>
 
 					<p><strong>Environment</strong> INSERT ENVIRONMENT</p>
 					<p><strong>Organization</strong> INSERT ORGANIZATION</p>
@@ -69,4 +69,4 @@ const CreatureDetails = props => {
 	)
 }
 
-export default CreatureDetails
+export default CreatureStatBlock
