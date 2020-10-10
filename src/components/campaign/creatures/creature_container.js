@@ -9,23 +9,13 @@ const CreatureContainer = props => {
 
 	const displayCreature = creature => {
 		if (selectedCreature?.id === creature.id){setSelectedCreature(null)}
-		else {
-			console.log("creature changed")
-			setSelectedCreature(creature)
-		}
-	}
-
-	const displayStatBlock = () => {
-		if (selectedCreature){
-			console.log(selectedCreature)
-			return <CreatureStatBlock creature={selectedCreature}/>
-		}
+		else {setSelectedCreature(creature)}
 	}
 
 	return (
 		<main id="campaign-show-creatures">
 			<CreatureSearch displayCreature={displayCreature}/>
-			{displayStatBlock()}
+			{selectedCreature && <CreatureStatBlock creature={selectedCreature}/>}
 		</main>
 	)
 }

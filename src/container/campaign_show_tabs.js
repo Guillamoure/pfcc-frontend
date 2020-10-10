@@ -8,6 +8,7 @@ const CampaignShowTabs = props => {
 			<Tab label="Characters" renderTabClick={props.renderTabClick} activeTab={props.activeTab} />
 			<Tab label="Details" renderTabClick={props.renderTabClick} activeTab={props.activeTab} />
 			<Tab label="Creatures" renderTabClick={props.renderTabClick} activeTab={props.activeTab} />
+			<Tab label="Encounters" renderTabClick={props.renderTabClick} activeTab={props.activeTab} />
 		</span>
 	)
 }

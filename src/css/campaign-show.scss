@@ -23,3 +23,28 @@
 		border-bottom: 1px solid black;
 	}
 }
+
+#campaign-show-encounters {
+	display: grid;
+	grid-template-columns: 1fr 3fr;
+}
+
+.block-list-btn {
+	border-radius: 4px;
+	text-align: center;
+	width: 100%;
+	padding: 10px 0;
+	margin-top: 3px;
+	&:hover {
+		background-color: #7DF9FF;
+	}
+}
+
+#campaign-new-encounter {
+	background: lightgrey;
+	margin: 5px;
+	padding: 5px;
+	label {
+		margin: 3px;
+	}
+}
