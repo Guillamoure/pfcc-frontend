@@ -26,7 +26,7 @@
 
 #campaign-show-encounters {
 	display: grid;
-	grid-template-columns: 1fr 3fr;
+	grid-template-columns: 2fr 8fr 3fr;
 }
 
 .block-list-btn {
@@ -44,6 +44,11 @@
 	background: lightgrey;
 	margin: 5px;
 	padding: 5px;
+	display: grid;
+	grid-template-columns: 10fr 5fr 1fr;
+	grid-template-areas:
+		"name name close"
+		"notes creatures creatures";
 	label {
 		margin: 3px;
 	}

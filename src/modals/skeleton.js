@@ -15,6 +15,7 @@ import SpontaneousCasting from '../components/modals/spontaneous_casting'
 import KlassSpecialization from '../components/modals/klass_specialization'
 import BonusSpellSlotManager from '../components/modals/bonus_spell_slot_manager'
 import Feat from '../components/modals/feat'
+import CreatureStatBlock from '../components/creature_stat_block'
 
 const ModalSkeleton = (props) => {
 
@@ -46,6 +47,8 @@ const ModalSkeleton = (props) => {
 				return <BonusSpellSlotManager spellcastingData={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
 			case 'feat':
 				return <Feat feat={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
+			case 'statBlock':
+				return <CreatureStatBlock creature={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
       default:
         break
     }
