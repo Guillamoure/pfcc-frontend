@@ -9,7 +9,7 @@ const CreatureSearch = props => {
 	const renderSearchField = () => {
 		return (
 			<aside>
-				<label forHTML="campaign-creature-search"><strong>Creature Search</strong></label>
+				<label forhtml ="campaign-creature-search"><strong>Creature Search</strong></label>
 				<br/>
 				<input type="text" id="campaign-creature-search" name="campaign-creature-search" value={searchTerm} onChange={e => setSearchTerm(e.target.value)}/>
 				<button onClick={renderSubmit}>Search</button>

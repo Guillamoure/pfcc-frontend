@@ -1,5 +1,6 @@
 import React from 'react'
 import { modalAction } from '../../../helper_functions/action_creator/popups'
+import { postFetch } from '../../../helper_functions/fetches'
 
 import CreatureSearch from '../creatures/creature_search'
 
@@ -68,8 +69,9 @@ const NewEncounter = props => {
 	}
 
 	const renderForm = () => {
+		let submitButton = creatures.length ? <button>Create Encounter</button> : null
 		return (
-			<form id="campaign-new-encounter">
+			<form id="campaign-new-encounter" onSubmit={createEncounter}>
 				<label style={{gridArea: "name"}}>
 					<strong>Encounter Name </strong>
 					<input type="text" name="name" value={form.name} onChange={editForm}/>
@@ -79,8 +81,28 @@ const NewEncounter = props => {
 					<textarea type="text" name="notes" rows="10" cols="60" value={form.notes} onChange={editForm}/>
 				</label>
 				{renderCreatures()}
+				{submitButton}
 			</form>
 		)
+	}
+
+	const createEncounter = (e) => {
+		e.preventDefault()
+		let campaignId = window.location.href.split("campaigns/")[1]
+		let body = {
+			...form,
+			creatures,
+			campaign_id: campaignId
+		}
+
+		postFetch("encounters", body)
+			.then(data => {
+				if (data.response){
+					debugger
+				} else {
+					console.log("Unable to create encounter")
+				}
+			})
 	}
 
 	return (
