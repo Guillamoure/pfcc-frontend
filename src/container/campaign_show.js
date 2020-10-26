@@ -47,7 +47,7 @@ const CampaignShow = props => {
 				content = <CreatureContainer />
 				break
 			case "Encounters":
-				content = <EncounterContainer />
+				content = <EncounterContainer encounters={campaign.encounters}/>
 				break
 			default:
 				break
