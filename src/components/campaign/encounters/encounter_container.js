@@ -14,14 +14,20 @@ const EncounterContainer = props => {
 
 		if (chosenEncounter.id !== encounter.id){
 			setChosenEncounter(encounter)
+			toggleEncounterForm(false)
 		} else {
 			setChosenEncounter({})
 		}
 	}
 
+	const renderNewForm = (value) => {
+		setChosenEncounter({})
+		toggleEncounterForm(value)
+	}
+
 	return (
 		<main id="campaign-show-encounters">
-			<EncounterSearch toggleEncounterForm={toggleEncounterForm} encounters={props.encounters} selectedEncounter={selectedEncounter}/>
+			<EncounterSearch toggleEncounterForm={renderNewForm} encounters={props.encounters} selectedEncounter={selectedEncounter}/>
 			{encounterForm && <NewEncounter toggleEncounterForm={toggleEncounterForm}/>}
 			{chosenEncounter.id && <EncounterDetails encounter={chosenEncounter}/>}
 		</main>

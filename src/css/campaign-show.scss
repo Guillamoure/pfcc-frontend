@@ -53,3 +53,14 @@
 		margin: 3px;
 	}
 }
+
+#campaign-show-encounter {
+	background: lightgrey;
+	margin: 5px;
+	padding: 5px;
+	display: grid;
+	grid-template-columns: 1fr 2fr 1fr;
+	grid-template-areas:
+		"name name buttons"
+		"creatures details details";
+}
