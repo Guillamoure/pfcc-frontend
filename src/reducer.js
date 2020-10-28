@@ -583,13 +583,25 @@ const reducer = (state = initialState, action) => {
 			return {...state, storedNotifications: action.notifications}
 		case "REMOVE ENCOUNTER":
 			let userCopy = {...state.currentUser}
-			let newCampaigns = userCopy.campaigns.map(camp => {
+			var newCampaigns = userCopy.campaigns.map(camp => {
 				if (camp.id === action.campaignId){
 					let newEncounters = camp.encounters.filter(enc => enc.id !== action.encounterId)
 					let campCopy = {...camp, encounters: newEncounters}
 					return campCopy
 				} else {return camp}
 			})
+			return {...state, currentUser: {...state.currentUser, campaigns: newCampaigns}}
+		case "UPDATE ENCOUNTER":
+			var newCampaigns = state.currentUser.campaigns.map(camp => {
+				if (camp.id === parseInt(action.campaignId)){
+					let newEncounters = camp.encounters.map(enc => {
+						if (enc.id === action.encounter.id){return action.encounter}
+						else {return enc}
+					})
+					return {...camp, encounters: newEncounters}
+				} else {return camp}
+			})
+			console.log(action)
 			return {...state, currentUser: {...state.currentUser, campaigns: newCampaigns}}
     default:
       return state

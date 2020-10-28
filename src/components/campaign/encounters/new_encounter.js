@@ -1,6 +1,7 @@
 import React from 'react'
-import { modalAction } from '../../../helper_functions/action_creator/popups'
-import { postFetch } from '../../../helper_functions/fetches'
+import { modalAction } from '../../../utils/action_creator/popups'
+import { updateEncounterAction } from '../../../utils/action_creator/current_user'
+import { postFetch, patchFetch } from '../../../utils/fetches'
 
 import CreatureSearch from '../creatures/creature_search'
 
@@ -11,6 +12,16 @@ const NewEncounter = props => {
 		notes: ""
 	})
 	const [creatures, updateCreatures] = React.useState([])
+
+	React.useEffect(() => {
+		if (props.editingEncounter){
+			updateForm({
+				name: props.editingEncounter.name,
+				notes: props.editingEncounter.notes,
+			})
+			updateCreatures(props.editingEncounter.creatures)
+		}
+	}, [props.editingEncounter])
 
 	const editForm = (e) => {
 		let updatedForm = {...form, [e.target.name]: e.target.value}
@@ -69,9 +80,10 @@ const NewEncounter = props => {
 	}
 
 	const renderForm = () => {
-		let submitButton = creatures.length ? <button>Create Encounter</button> : null
+		let submitButton = props.editingEncounter ? <button>Update Encounter</button> : <button>Create Encounter</button>
+		let formSubmit = props.editingEncounter ? updateEncounter : createEncounter
 		return (
-			<form id="campaign-new-encounter" onSubmit={createEncounter}>
+			<form id="campaign-new-encounter" onSubmit={formSubmit}>
 				<label style={{gridArea: "name"}}>
 					<strong>Encounter Name </strong>
 					<input type="text" name="name" value={form.name} onChange={editForm}/>
@@ -101,6 +113,26 @@ const NewEncounter = props => {
 					debugger
 				} else {
 					console.log("Unable to create encounter")
+				}
+			})
+	}
+
+	const updateEncounter = e => {
+		e.preventDefault()
+
+		let body = {
+			...form,
+			creatures,
+		}
+
+		patchFetch(`encounters/${props.editingEncounter.id}`, body)
+			.then(data => {
+				if (data.response){
+					let campaignId = window.location.href.split("campaigns/")[1]
+					updateEncounterAction(campaignId, {...body, id: props.editingEncounter.id})
+					props.resolveEditEncounter({...body, id: props.editingEncounter.id})
+				} else {
+					console.log("Unable to update encounter")
 				}
 			})
 	}

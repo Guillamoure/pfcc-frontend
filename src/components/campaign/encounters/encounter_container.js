@@ -8,6 +8,7 @@ const EncounterContainer = props => {
 
 	const [encounterForm, toggleEncounterForm] = React.useState(false)
 	const [chosenEncounter, setChosenEncounter] = React.useState({})
+	const [editingEncounter, setEditingEncounter] = React.useState(null)
 
 	const selectedEncounter = (e, encounter) => {
 		e.preventDefault()
@@ -25,11 +26,23 @@ const EncounterContainer = props => {
 		toggleEncounterForm(value)
 	}
 
+	const editEncounter = (encounter) => {
+		setEditingEncounter(encounter)
+		setChosenEncounter({})
+		toggleEncounterForm(true)
+	}
+
+	const resolveEditEncounter = (encounter) => {
+		setEditingEncounter(null)
+		setChosenEncounter(encounter)
+		toggleEncounterForm(false)
+	}
+
 	return (
 		<main id="campaign-show-encounters">
 			<EncounterSearch toggleEncounterForm={renderNewForm} encounters={props.encounters} selectedEncounter={selectedEncounter}/>
-			{encounterForm && <NewEncounter toggleEncounterForm={toggleEncounterForm}/>}
-			{chosenEncounter.id && <EncounterDetails encounter={chosenEncounter}/>}
+			{encounterForm && <NewEncounter toggleEncounterForm={toggleEncounterForm} editingEncounter={editingEncounter} resolveEditEncounter={resolveEditEncounter}/>}
+			{chosenEncounter.id && <EncounterDetails encounter={chosenEncounter} editEncounter={editEncounter}/>}
 		</main>
 	)
 }
