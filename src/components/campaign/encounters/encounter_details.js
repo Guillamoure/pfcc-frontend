@@ -39,7 +39,7 @@ const EncounterDetails = props => {
 			<>
 				<h1 style={{gridArea: "name"}}>{name || "Untited Encounter"}</h1>
 				<div style={{gridArea: "buttons"}}>
-					<button>Start Encounter</button>
+					<button onClick={(e) => props.startEncounter(e, props.encounter)}>Start Encounter</button>
 					<button onClick={() => props.editEncounter(props.encounter)}>Edit</button>
 					<button onClick={deleteEncounter}>Delete</button>
 				</div>

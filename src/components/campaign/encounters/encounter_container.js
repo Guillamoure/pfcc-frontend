@@ -42,7 +42,7 @@ const EncounterContainer = props => {
 		<main id="campaign-show-encounters">
 			<EncounterSearch toggleEncounterForm={renderNewForm} encounters={props.encounters} selectedEncounter={selectedEncounter}/>
 			{encounterForm && <NewEncounter toggleEncounterForm={toggleEncounterForm} editingEncounter={editingEncounter} resolveEditEncounter={resolveEditEncounter}/>}
-			{chosenEncounter.id && <EncounterDetails encounter={chosenEncounter} editEncounter={editEncounter}/>}
+			{chosenEncounter.id && <EncounterDetails encounter={chosenEncounter} editEncounter={editEncounter} startEncounter={props.startEncounter}/>}
 		</main>
 	)
 }

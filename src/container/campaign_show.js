@@ -9,11 +9,13 @@ import SetDate from '../components/campaign/set_date'
 import Ideas from '../components/campaign/ideas'
 import CreatureContainer from '../components/campaign/creatures/creature_container'
 import EncounterContainer from '../components/campaign/encounters/encounter_container'
+import ActiveEncounter from '../components/campaign/encounters/active_encounter'
 
 
 const CampaignShow = props => {
 
 	const [activeTab, setActiveTab] = React.useState("Characters")
+	const [encounter, setEncounter] = React.useState({})
 
   const url = props.history.location.pathname
   const campaignId = parseInt(url.substring(url.lastIndexOf('/') + 1))
@@ -47,7 +49,10 @@ const CampaignShow = props => {
 				content = <CreatureContainer />
 				break
 			case "Encounters":
-				content = <EncounterContainer encounters={campaign.encounters}/>
+				content = <EncounterContainer encounters={campaign.encounters} startEncounter={startEncounter}/>
+				break
+			case `${encounter.name ?? null}`:
+				content = <ActiveEncounter encounter={encounter}/>
 				break
 			default:
 				break
@@ -55,10 +60,16 @@ const CampaignShow = props => {
 		return (
 			<section style={{margin: "1em"}}>
 				<h1>{campaign.name}</h1>
-				<CampaignShowTabs renderTabClick={setActiveTab} activeTab={activeTab} />
+				<CampaignShowTabs renderTabClick={setActiveTab} activeTab={activeTab} encounter={encounter}/>
 				{content}
 			</section>
 		)
+	}
+
+	const startEncounter = (e, incomingEncounter) => {
+		e.preventDefault()
+		setActiveTab(incomingEncounter.name)
+		setEncounter(incomingEncounter)
 	}
 
 
