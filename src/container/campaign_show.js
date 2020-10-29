@@ -52,7 +52,7 @@ const CampaignShow = props => {
 				content = <EncounterContainer encounters={campaign.encounters} startEncounter={startEncounter}/>
 				break
 			case `${encounter.name ?? null}`:
-				content = <ActiveEncounter encounter={encounter}/>
+				content = <ActiveEncounter encounter={encounter} endEncounter={endEncounter}/>
 				break
 			default:
 				break
@@ -70,6 +70,12 @@ const CampaignShow = props => {
 		e.preventDefault()
 		setActiveTab(incomingEncounter.name)
 		setEncounter(incomingEncounter)
+	}
+
+	const endEncounter = (e) => {
+		e.preventDefault()
+		setActiveTab("Encounters")
+		setEncounter({})
 	}
 
 
