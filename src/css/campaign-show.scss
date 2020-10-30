@@ -64,3 +64,14 @@
 		"name name buttons"
 		"creatures details details";
 }
+
+#campaign-show-active-encounter {
+	background: lightgrey;
+	margin: 5px;
+	padding: 5px;
+	display: grid;
+	grid-template-columns: 1fr 2fr 1fr;
+	grid-template-areas:
+		"initiative name buttons"
+		"initiative details details";
+}
