@@ -1,9 +1,11 @@
 import React from 'react'
 import { averageHP } from '../../../utils/calculations/creatures'
+import { initializeCampaignWebsocket } from '../../../utils/websocket/campaign'
 
 const ActiveEncounterInitiative = props => {
 
 	const [activeParticipants, setParticipants] = React.useState([])
+	const [askForInitiative, setAsk] = React.useState(false)
 
 	React.useEffect(() => {
 		let initCreatures = props.creatures.map(cr => {
@@ -33,6 +35,11 @@ const ActiveEncounterInitiative = props => {
 				)
 			}
 		})
+		if (!askForInitiative){
+			nodeParticipants.push(
+				<button onClick={() => initializeCampaignWebsocket(null, {encounter: true, websocketCode: props.campaign.websocket_code})}>Ask Players for Initiative (Start Connection)</button>
+			)
+		}
 		return nodeParticipants
 	}
 

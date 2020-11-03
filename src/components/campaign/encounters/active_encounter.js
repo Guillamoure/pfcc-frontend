@@ -16,7 +16,7 @@ const ActiveEncounter = props => {
 
 	return (
 		<main id="campaign-show-active-encounter">
-			<ActiveEncounterInitiative creatures={props.encounter.creatures} seeDetails={seeDetails}/>
+			<ActiveEncounterInitiative creatures={props.encounter.creatures} seeDetails={seeDetails} campaign={props.campaign}/>
 			{participant.id && <aside><CreatureStatBlock creature={participant} /></aside>}
 			<p>I'm your active encounter</p>
 			<button onClick={props.endEncounter}>End</button>

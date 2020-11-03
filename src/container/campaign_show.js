@@ -52,7 +52,7 @@ const CampaignShow = props => {
 				content = <EncounterContainer encounters={campaign.encounters} startEncounter={startEncounter}/>
 				break
 			case `${encounter.name ?? null}`:
-				content = <ActiveEncounter encounter={encounter} endEncounter={endEncounter}/>
+				content = <ActiveEncounter encounter={encounter} endEncounter={endEncounter} campaign={campaign}/>
 				break
 			default:
 				break
