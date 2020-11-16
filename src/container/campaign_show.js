@@ -10,6 +10,7 @@ import Ideas from '../components/campaign/ideas'
 import CreatureContainer from '../components/campaign/creatures/creature_container'
 import EncounterContainer from '../components/campaign/encounters/encounter_container'
 import ActiveEncounter from '../components/campaign/encounters/active_encounter'
+import { initializeCampaignWebsocket } from '../utils/websocket/campaign'
 
 
 const CampaignShow = props => {
@@ -69,6 +70,7 @@ const CampaignShow = props => {
 	const startEncounter = (e, incomingEncounter) => {
 		e.preventDefault()
 		setActiveTab(incomingEncounter.name)
+		initializeCampaignWebsocket(null, {encounter: true, websocketCode: campaign.websocket_code, askForInitiative: true})
 		setEncounter(incomingEncounter)
 	}
 

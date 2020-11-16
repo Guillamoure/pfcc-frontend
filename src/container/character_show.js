@@ -5,7 +5,7 @@ import localhost from '../localhost'
 import { mod } from '../fuf'
 import { fetchCharacter } from '../dispatch'
 import { characterDistributer } from '../helper_functions/distributers/character'
-import { initializeCampaignWebsocket } from '../helper_functions/websocket/campaign'
+import { initializeCampaignWebsocket } from '../utils/websocket/campaign'
 
 import AbilityScores from '../components/character_show/ability_scores'
 import CharacterName from '../components/character_show/character_name'

@@ -42,9 +42,13 @@ export const initializeCampaignWebsocket = async (character, options) => {
 				console.log(websocket)
 				if (character){
 					websocket.campaign.send({character_id: character.id, message: `My name is ${character.name}`})
-				} else if (options.encounter){
-					websocket.campaign.send({message: "Initiating Encounter!"})
 				}
+				// else if (options.encounter){
+				// 	// websocket.campaign.send({message: "Initiating Encounter!"})
+				// 	if (options.askForInitiative){
+				// 		websocket.campaign.send({options: {askForInitiative: true}})
+				// 	}
+				// }
 			},
 			received: data => {
 				console.log("received websocket data", data.data)
@@ -60,11 +64,16 @@ export const sendCampaignWebsocket = (payload, source, options) => {
 	// STORED DATA
 	// CALCULATED DATA
 	const { websocket, character } = {...store.getState()}
+	console.log("CATCHING OUTGOING CONNECTIONS", payload)
+
 	websocket.campaign.send({sender_id: character.id, payload, source, options})
 }
 
 const parseSentCampaignData = data => {
+	console.log("CATCHING INCOMING CONNECTIONS", data)
+
 	let { sender_id, payload, source, options } = data
+
 	if (sender_id){
 		const { character, notifications, storedNotifications } = store.getState()
 		if (sender_id === character.id) {return null}
@@ -105,5 +114,18 @@ const parseSentCampaignData = data => {
 			updateNotificationsAction(updatedNotifications)
 		}
 		// don't distribute inherently if there is a togglable attribute
+	} else if (payload?.askForInitiative){
+		const { character, notifications, storedNotifications } = store.getState()
+
+		if (character.id){
+			console.log(payload, source)
+			sendCampaignWebsocket({participatingPlayer: true})
+
+			let updatedNotifications = [...notifications]
+			let notification = {message: payload.message}
+			updatedNotifications.push(notification)
+
+			updateNotificationsAction(updatedNotifications)
+		}
 	}
 }

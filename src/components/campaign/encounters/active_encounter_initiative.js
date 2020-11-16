@@ -1,6 +1,6 @@
 import React from 'react'
 import { averageHP } from '../../../utils/calculations/creatures'
-import { initializeCampaignWebsocket } from '../../../utils/websocket/campaign'
+import { sendCampaignWebsocket } from '../../../utils/websocket/campaign'
 
 const ActiveEncounterInitiative = props => {
 
@@ -13,6 +13,10 @@ const ActiveEncounterInitiative = props => {
 		})
 		setParticipants(initCreatures)
 	}, [props.creatures])
+
+	const iniatiateEncounterClick = () => {
+		sendCampaignWebsocket({message: "Combat is starting! Please roll initiative!", askForInitiative: true}, {dm: true})
+	}
 
 	const initiativeOrder = () => {
 		let sortedParticipants = []
@@ -37,7 +41,7 @@ const ActiveEncounterInitiative = props => {
 		})
 		if (!askForInitiative){
 			nodeParticipants.push(
-				<button onClick={() => initializeCampaignWebsocket(null, {encounter: true, websocketCode: props.campaign.websocket_code})}>Ask Players for Initiative (Start Connection)</button>
+				<button onClick={iniatiateEncounterClick} >Ask Players for Initiative (Start Connection)</button>
 			)
 		}
 		return nodeParticipants
