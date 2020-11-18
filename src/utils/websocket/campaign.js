@@ -77,6 +77,9 @@ const parseSentCampaignData = data => {
 	if (sender_id){
 		const { character, notifications, storedNotifications } = store.getState()
 		if (sender_id === character.id) {return null}
+
+		if (payload.participatingPlayer && !character.id){return incomingCharacter(data)}
+
 		let sender = character.campaign.characters.find(ch => ch.id === sender_id)
 
 
@@ -119,7 +122,7 @@ const parseSentCampaignData = data => {
 
 		if (character.id){
 			console.log(payload, source)
-			sendCampaignWebsocket({participatingPlayer: true})
+			sendCampaignWebsocket({participatingPlayer: true, name: character.name})
 
 			let updatedNotifications = [...notifications]
 			let notification = {message: payload.message}
@@ -128,4 +131,8 @@ const parseSentCampaignData = data => {
 			updateNotificationsAction(updatedNotifications)
 		}
 	}
+}
+
+const incomingCharacter = ({ sender_id, payload, source, options }) => {
+
 }

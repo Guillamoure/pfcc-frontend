@@ -11,12 +11,12 @@ import CreatureContainer from '../components/campaign/creatures/creature_contain
 import EncounterContainer from '../components/campaign/encounters/encounter_container'
 import ActiveEncounter from '../components/campaign/encounters/active_encounter'
 import { initializeCampaignWebsocket } from '../utils/websocket/campaign'
+import { startEncounterAction, endEncounterAction } from '../utils/action_creator/active_encounter'
 
 
 const CampaignShow = props => {
 
 	const [activeTab, setActiveTab] = React.useState("Characters")
-	const [encounter, setEncounter] = React.useState({})
 
   const url = props.history.location.pathname
   const campaignId = parseInt(url.substring(url.lastIndexOf('/') + 1))
@@ -52,8 +52,8 @@ const CampaignShow = props => {
 			case "Encounters":
 				content = <EncounterContainer encounters={campaign.encounters} startEncounter={startEncounter}/>
 				break
-			case `${encounter.name ?? null}`:
-				content = <ActiveEncounter encounter={encounter} endEncounter={endEncounter} campaign={campaign}/>
+			case `${props.activeEncounter.name ?? null}`:
+				content = <ActiveEncounter endEncounter={endEncounter} campaign={campaign}/>
 				break
 			default:
 				break
@@ -61,7 +61,7 @@ const CampaignShow = props => {
 		return (
 			<section style={{margin: "1em"}}>
 				<h1>{campaign.name}</h1>
-				<CampaignShowTabs renderTabClick={setActiveTab} activeTab={activeTab} encounter={encounter}/>
+				<CampaignShowTabs renderTabClick={setActiveTab} activeTab={activeTab} encounter={props.activeEncounter}/>
 				{content}
 			</section>
 		)
@@ -71,13 +71,13 @@ const CampaignShow = props => {
 		e.preventDefault()
 		setActiveTab(incomingEncounter.name)
 		initializeCampaignWebsocket(null, {encounter: true, websocketCode: campaign.websocket_code, askForInitiative: true})
-		setEncounter(incomingEncounter)
+		startEncounterAction(incomingEncounter)
 	}
 
 	const endEncounter = (e) => {
 		e.preventDefault()
 		setActiveTab("Encounters")
-		setEncounter({})
+		endEncounterAction()
 	}
 
 
@@ -95,7 +95,8 @@ const CampaignShow = props => {
 const mapStatetoProps = (state) => {
   return {
     currentUser: state.currentUser,
-    admin: state.admin
+    admin: state.admin,
+		activeEncounter: state.activeEncounter
   }
 }
 

@@ -35,7 +35,8 @@ const initialState = {
   modal: {},
 	websocket: {},
 	notifications: [],
-	storedNotifications: []
+	storedNotifications: [],
+	activeEncounter: {}
 }
 
 
@@ -603,6 +604,10 @@ const reducer = (state = initialState, action) => {
 			})
 			console.log(action)
 			return {...state, currentUser: {...state.currentUser, campaigns: newCampaigns}}
+		case "START ENCOUNTER":
+			return {...state, activeEncounter: {...action.encounter, participants: []}}
+		case "END ENCOUNTER":
+			return {...state, activeEncounter: {}}
     default:
       return state
   }
