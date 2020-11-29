@@ -11,6 +11,7 @@ import Details from '../components/character_forms/details'
 import Skills from '../components/character_forms/skills'
 
 import CreationTabs from './creation_tabs'
+import Navbar from '../components/character_forms/navbar'
 
 class CharacterCreation extends React.Component{
 
@@ -197,6 +198,17 @@ class CharacterCreation extends React.Component{
   // familiar selection?
   // help/how to section?
 
+	displayValidation = () => {
+		return (
+			<div id="new-character-validation-bubbles" className='centered'>
+				{(this.state.strength && this.state.constitution && this.state.dexterity && this.state.intelligence && this.state.wisdom && this.state.charisma) ? <span className='complete'>Ability Scores</span> : <span className='incomplete'>Ability Scores</span>}
+				{(this.state.name) ? <span className='complete'>Character Name</span> : <span className='incomplete' >Character Name</span>}
+				{(this.validClasses()) ? <span className='complete' >Character Class(es)</span> : <span className='incomplete' >Character Class(es)</span>}
+				{(this.state.race) ? <span className='complete' >Character Ancestry</span> : <span className='incomplete' >Character Ancestry</span>}
+			</div>
+		)
+	}
+
   displayForm = () => {
     switch(this.state.activeTab){
       case "Details":
@@ -230,27 +242,22 @@ class CharacterCreation extends React.Component{
 
   render () {
 		console.log("character creation state", this.state)
+		// <CreationTabs renderTabClick={this.renderTabClick} activeTab={this.state.activeTab}/>
     return (
-      <>
-
-        <CreationTabs renderTabClick={this.renderTabClick} activeTab={this.state.activeTab}/>
-        <span id='creation-form'>
+      <main id="character-creation-page">
+				<Navbar renderTabClick={this.renderTabClick} activeTab={this.state.activeTab}/>
+        <section id='creation-form'>
 
           {this.displayForm()}
           {/*<button onClick={() => this.renderButtonClick("abilityScores")}>{this.state.activeField === "abilityScores" ? "Hide Ability Score Form": "Create Your Ability Scores"}</button>*/}
           {/*<button onClick={() => this.renderButtonClick("race")}>{this.state.activeField === "race" ? "Hide Race Form": "Choose Your Fantasy Race"}</button>*/}
           {/*<button onClick={() => this.renderButtonClick("class")}>{this.state.activeField === "class" ? "Hide Class Form": "Choose Your Class"}</button>*/}
-        </span>
-        <div id="new-character-validation-bubbles" className='centered'>
-          {(this.state.strength && this.state.constitution && this.state.dexterity && this.state.intelligence && this.state.wisdom && this.state.charisma) ? <span className='complete'>Ability Scores</span> : <span className='incomplete'>Ability Scores</span>}
-          {(this.state.name) ? <span className='complete'>Character Name</span> : <span className='incomplete' >Character Name</span>}
-          {(this.validClasses()) ? <span className='complete' >Character Class(es)</span> : <span className='incomplete' >Character Class(es)</span>}
-          {(this.state.race) ? <span className='complete' >Character Ancestry</span> : <span className='incomplete' >Character Ancestry</span>}
-        </div>
+        </section>
+
         <div className='confirmation centered'>
           {this.renderSubmit()}
         </div>
-      </>
+      </main>
     )
   }
 

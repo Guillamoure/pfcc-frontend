@@ -948,3 +948,16 @@ $tan: #cfb997;
 		}
 	}
 }
+
+#user-home {
+	display: grid;
+	grid-template-columns: 55% 45%;
+	grid-template-areas:
+		"characters campaigns";
+	#user-characters {
+		grid-area: characters;
+	}
+	#user-campaigns {
+		grid-area: campaigns;
+	}
+}

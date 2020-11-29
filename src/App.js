@@ -9,6 +9,7 @@ import './css/form.scss';
 import './css/mobile.scss';
 import './css/popups.scss';
 import './css/campaign-show.scss';
+import './css/character-creation.scss';
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { connect } from 'react-redux'

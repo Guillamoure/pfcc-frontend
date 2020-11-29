@@ -1,0 +1,23 @@
+#character-creation-page {
+	display: grid;
+	grid-template-columns: 1fr 8fr;
+}
+
+#character-creation-tabs {
+	ul {
+		padding: 0;
+	}
+	.character-creation-tab {
+		list-style: none;
+		padding: 1em;
+		border: 1px solid black;
+		margin-top: 0.3vh;
+		border-radius: 0 1em 1em 0;
+		width: 95%;
+	}
+	.active-tab {
+		color: white;
+		background-color: rgba(0, 0, 0, 0.2);
+		width: 100%;
+	}
+}

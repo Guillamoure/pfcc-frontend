@@ -42,16 +42,20 @@ const Home = props => {
 
 
   return (
-    <span className='background'>
-      <button className='home-btn-create-links' onClick={() => props.history.push("/creation")} >Create Character</button>
-      <button className='home-btn-create-links' onClick={() => props.history.push("/campaigns/new")}>Create Campaign</button>
+    <main id="user-home" className='background'>
+			<section id="user-characters">
+				<button className='home-btn-create-links' onClick={() => props.history.push("/creation")} >Create Character</button>
+				<Characters characters={characters}/>
+			</section>
+			<section id="user-campaigns">
+				<button className='home-btn-create-links' onClick={() => props.history.push("/campaigns/new")}>Create Campaign</button>
+				<Campaigns />
+			</section>
       <br/><br/>
       <div className={className} style={{margin: '0 2em'}} >
         <Settings />
-        <Campaigns />
-        <Characters characters={characters}/>
       </div>
-    </span>
+    </main>
   )
 
 }
