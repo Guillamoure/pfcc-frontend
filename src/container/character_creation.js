@@ -105,7 +105,8 @@ const CharacterCreation = props => {
   }
 
 	const renderAncestryChange = (id) => {
-		setCharacterInfo({...characterInfo, race: id})
+		let data = characterInfo.race === id ? 0 : id
+		setCharacterInfo({...characterInfo, race: data})
 	}
 
 	const renderClassChange = (id) => {

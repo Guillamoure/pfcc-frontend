@@ -38,11 +38,6 @@ const Race = props => {
     })
   }
 
-  const renderChosenRace = () => {
-    let chosen = props.races.find(el => el.id === _.toNumber(props.chosenRaceId))
-    return <Link to={`/races/${chosen.name}`} > Info< br /></Link>
-  }
-
   const renderRacialAbilityModifiers = () => {
     let chosen = props.races.find(el => el.id === _.toNumber(props.chosenRaceId))
     return <span>{renderAbilityScoreModifiers(chosen)}</span>
@@ -62,10 +57,14 @@ const Race = props => {
   }
 
 	const renderAncestryCard = ancestry => {
-		let style = {border: "4px solid transparent"}
-		if (parseInt(props.chosenRaceId) === ancestry.id){style.border = "4px solid black"}
+		// let style = {border: "4px solid transparent"}
+		// let styleID = ""
+		// if (parseInt(props.chosenRaceId) === ancestry.id){
+		// 	style = {}
+		// 	styleID += "chosen-ancestry-card"
+		// }
 		return (
-			<div className="dynamic-card" style={style} onClick={() => props.renderAncestryChange(ancestry.id)}>
+			<div className="dynamic-card" style={{border: "4px solid transparent"}} onClick={() => props.renderAncestryChange(ancestry.id)}>
 				<img className='dynamic-card-img' alt={ancestry.name} src={ancestry.img_url}></img>
 				<p className='dynamic-card-content-button'> {ancestry.name} </p>
 			</div>
@@ -77,7 +76,12 @@ const Race = props => {
 		if (props.campaignDetails?.races.length > 1) {
 			ancestries = props.campaignDetails.races
 		}
-		let ancestryCards = ancestries.sort((a, b) => a.name.localeCompare(b.name)).map(renderAncestryCard)
+
+		let ancestryCards = ancestries.filter(an => an.id !== props.chosenRaceId)
+		let chosenAncestry = ancestries.find(an => an.id === props.chosenRaceId)
+
+		ancestryCards = ancestryCards.sort((a, b) => a.name.localeCompare(b.name)).map(renderAncestryCard)
+
 
 		return (
 			<section id="character-creation-ancestry-all">
@@ -97,6 +101,16 @@ const Race = props => {
 		// 		{this.state.raceAnyModifier ? this.renderAnyChoiceField() : null}
 		// 	</>
 		// )
+	}
+
+	const renderAncestryImage = () => {
+		let ancestry = props.races.find(an => an.id === props.chosenRaceId)
+		return (
+			<div id="chosen-ancestry-card" className="dynamic-card" onClick={() => props.renderAncestryChange(ancestry.id)}>
+				<img className='dynamic-card-img' alt={ancestry.name} src={ancestry.img_url}></img>
+				<p className='dynamic-card-content-button'> {ancestry.name} </p>
+			</div>
+		)
 	}
 
 	const renderAncestryDetails = () => {
@@ -127,10 +141,14 @@ const Race = props => {
 		)
 	}
 
+	const className = !!props.chosenRaceId ? "chosen-ancestry" : ""
+
   return (
-    <section id="character-creation-ancestry">
-			{renderAncestryOptions()}
+    <section id="character-creation-ancestry" className={className}>
+			{!props.chosenRaceId && renderAncestryOptions()}
+			{!!props.chosenRaceId && renderAncestryImage()}
 			{!!props.chosenRaceId && renderAncestryDetails()}
+			{!!props.chosenRaceId && <button onClick={() => props.renderAncestryChange(0)}>Go Back</button>}
     </section>
   )
 

@@ -17,7 +17,7 @@ $tan: #cfb997;
 		background-color: #FDFFFC;
 		width: 13vw;
 		height: 13vw;
-		margin: 0.5em;
+		margin: 0.25vw;
 		overflow: hidden;
 		border-radius: 1rem;
 		box-shadow: 0 3px 5px 0 #777;
@@ -38,24 +38,6 @@ $tan: #cfb997;
 			text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 			color: #fff;
 			line-height: 1em;
-		}
-		.dynamic-card-content-button {
-			position: absolute;
-			width: 100%;
-			top: 48%;
-			font-family: 'Righteous', cursive;
-			font-size: 2em;
-			text-align: center;
-			color: #fff;
-			text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-			line-height: 1em;
-			background: transparent;
-			border: transparent;
-			:focus {
-				text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
-				color: #000;
-				background: #000;
-			}
 		}
 		.dynamic-card-img {
 			width: 100%;
@@ -130,15 +112,15 @@ $tan: #cfb997;
 
 #character-creation-ancestry {
 	display: grid;
-	grid-template-columns: 1fr 1fr;
-	grid-template-areas:
-		"ancestries ancestry";
 	#character-creation-ancestry-all {
 		display: flex;
 		flex-wrap: wrap;
 		grid-area: ancestries;
+		// overflow-y: scroll;
+		height: 90vh;
 	}
 	#character-creation-ancestry-chosen {
+		margin: 0.25vw;
 		text-align: left;
 		ul {
 			list-style: none;
@@ -148,5 +130,20 @@ $tan: #cfb997;
 			font-size: 12px;
 		}
 		grid-area: ancestry;
+	}
+}
+.chosen-ancestry {
+	grid-template-columns: auto 65% auto;
+	grid-template-areas:
+	"ancestries ancestry button";
+	#chosen-ancestry-card {
+		height: 26.25vw;
+		width: 26.25vw;
+		border: 4px solid black;
+	}
+	button {
+		height: min-content;
+		border-radius: 0.3em;
+		
 	}
 }
