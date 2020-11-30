@@ -25,10 +25,14 @@ class Race extends React.Component {
   }
 
   componentDidMount() {
-    const race = this.renderURL()
-    fetch(`${localhost}/api/v1/races/${race}`)
-    .then(r => r.json())
-    .then(data => this.setState({race: data}))
+    const raceId = this.renderURL()
+		if (this.props.race){
+			this.setState({race: this.props.race})
+		} else {
+			fetch(`${localhost}/api/v1/races/${raceId}`)
+			.then(r => r.json())
+			.then(data => this.setState({race: data}))
+		}
   }
 
 
