@@ -266,6 +266,7 @@ $tan: #cfb997;
 	margin: 1%;
 	padding: 1%;
 }
+
 #new-character-details{
 	display: grid;
 	grid-template-columns: 1fr 1fr;
@@ -274,19 +275,6 @@ $tan: #cfb997;
 		"alignment ability-scores"
 		"description description";
 	text-align: left;
-	.new-character-label {
-		font-size: 1.2rem;
-		font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
-		color: grey;
-	}
-	.new-character-text-input {
-		background: transparent;
-		resize: none;
-		border: 1px solid transparent;
-		font-weight: bold;
-		color: $sapphire;
-		text-align: left;
-	}
 	textarea {
 		width: 100%;
 		height: 90%;

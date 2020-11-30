@@ -1,3 +1,13 @@
+// VARIABLES
+
+$ruby: #9b111e;
+$sapphire: #0f52ba;
+$emerald: #046307;
+
+$tan: #cfb997;
+
+// VARIABLES
+
 #character-creation-page {
 	display: grid;
 	grid-template-columns: 1fr 8fr;
@@ -13,11 +23,46 @@
 		border: 1px solid black;
 		margin-top: 0.3vh;
 		border-radius: 0 1em 1em 0;
-		width: 95%;
+		width: 90%;
 	}
 	.active-tab {
 		color: white;
 		background-color: rgba(0, 0, 0, 0.2);
 		width: 100%;
 	}
+}
+
+#character-creation-home {
+	text-align: left;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-template-areas:
+		"name campaign-details"
+		"campaign campaign-details";
+	#new-character-home-name {
+		input {
+			width: auto;
+		}
+		grid-area: name;
+	}
+	#new-character-home-campaign {
+		grid-area: campaign;
+	}
+	#character-creation-home-campaign-details {
+		grid-area: campaign-details;
+	}
+}
+
+.new-character-label {
+	font-size: 1.2rem;
+	font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
+	color: grey;
+}
+.new-character-text-input {
+	background: transparent;
+	resize: none;
+	border: 1px solid transparent;
+	font-weight: bold;
+	color: $sapphire;
+	text-align: left;
 }

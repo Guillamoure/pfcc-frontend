@@ -3,8 +3,9 @@ import React from 'react'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import localhost from '../localhost'
-import { getFetch } from '../helper_functions/fetches'
+import { getFetch } from '../utils/fetches'
 
+import CharacterHome from '../components/character_forms/home'
 import Race from '../components/character_forms/race'
 import Class from '../components/character_forms/class'
 import Details from '../components/character_forms/details'
@@ -13,112 +14,136 @@ import Skills from '../components/character_forms/skills'
 import CreationTabs from './creation_tabs'
 import Navbar from '../components/character_forms/navbar'
 
-class CharacterCreation extends React.Component{
+const CharacterCreation = props => {
 
-  state = {
-    activeField: "",
-    classes: [0],
-    race: 0,
-    strength: 0,
-    dexterity: 0,
-    constitution: 0,
-    intelligence: 0,
-    wisdom: 0,
-    charisma: 0,
-    name: "",
-    description: "",
-    background: "",
-    homeland: "",
-    age: 0,
-    gender: "",
-    hair: "",
-    eyes: "",
-    height: "",
-    weight: "",
-    alignment: "",
-    anyBonus: "",
-    doesRacehaveAnyBonus: false,
-    activeSkillset: 2,
-    activeTab: "Details",
+	const [ characterInfo, setCharacterInfo ] = React.useState({
+		activeField: "",
+		classes: [0],
+		race: 0,
+		strength: 0,
+		dexterity: 0,
+		constitution: 0,
+		intelligence: 0,
+		wisdom: 0,
+		charisma: 0,
+		name: "",
+		description: "",
+		background: "",
+		homeland: "",
+		age: 0,
+		gender: "",
+		hair: "",
+		eyes: "",
+		height: "",
+		weight: "",
+		alignment: "",
+		anyBonus: "",
+		doesRacehaveAnyBonus: false,
+		activeSkillset: 2,
+		activeTab: "Home",
 		campaign_id: null,
 		campaignDetails: null
-  }
+	})
 
-  componentDidMount() {
+  // componentDidMount() {
     // COMMENTED OUT FOR TESTING PURPOSES
-    // if (!this.props.currentUser){
+    // if (!props.currentUser){
     //   this.props.history.push("/signup")
     // } else {
     //   this.setState({activeSkillset: this.props.currentUser.skillset_id})
     // }
     // COMMENTED OUT FOR TESTING PURPOSES
-  }
+  // }
 
-	componentWillUpdate() {
-		if ((this.state.campaignDetails === null && !!this.state.campaign_id) || parseInt(this.state.campaign_id) !== this.state.campaignDetails?.id && !!this.state.campaign_id){
-			getFetch(`campaigns/${this.state.campaign_id}`)
+	React.useEffect(() => {
+		if (!!characterInfo.campaign_id){
+			getFetch(`campaigns/${characterInfo.campaign_id}`)
 				.then(data => {
-					this.setState({campaignDetails: data})
+					if (!data.error){
+						setCharacterInfo({...characterInfo, campaignDetails: data})
+					} else {
+						// debugger
+						if (data.status === 404 && data.error === "Not Found"){
+							setCharacterInfo({...characterInfo, campaignDetails: {name: "Campaign Does Not Exist"}})
+						}
+					}
+				})
+				.catch(err => {
+					console.log("Error with fetching campaign", err.status, err.exception)
 				})
 		}
-	}
+	}, [characterInfo.campaign_id])
 
-  renderButtonClick = (field) => {
-    if (this.state.activeField === field){
-      this.setState({activeField: ""})
-    } else {
-      this.setState({activeField: field})
-    }
-  }
+	// componentWillUpdate() {
+	// 	if ((characterInfo.campaignDetails === null && !!characterInfo.campaign_id) || parseInt(characterInfo.campaign_id) !== characterInfo.campaignDetails?.id && !!characterInfo.campaign_id){
+	// 		getFetch(`campaigns/${characterInfo.campaign_id}`)
+	// 			.then(data => {
+	// 				// debugger
+	// 				this.setState({campaignDetails: data})
+	// 			})
+	// 			.catch(err => {
+	// 				console.log("Error with fetching campaign", err.status, err.exception)
+	// 			})
+	// 	}
+	// }
 
-  renderChange = (e) => {
+  // const renderButtonClick = (field) => {
+  //   if (state.activeField === field){
+  //     this.setState({activeField: ""})
+  //   } else {
+  //     this.setState({activeField: field})
+  //   }
+  // }
+
+  const renderChange = (e) => {
 		console.log(e.target.name)
 		console.log(e.target.value)
-    this.setState({[e.target.name]: e.target.value})
-		if (e.target.name === "campaign_id"){
-			this.setState({campaignDetails: null})
-		}
+		setCharacterInfo({...characterInfo, [e.target.name]: e.target.value})
+		// if (e.target.name === "campaign_id"){
+		// 	setCharacterInfo({...characterInfo, campaignDetails: null})
+		// }
   }
 
-	renderAncestryChange = (id) => {
-		this.setState({race: id})
+	const renderAncestryChange = (id) => {
+		setCharacterInfo({...characterInfo, race: id})
 	}
 
-	renderClassChange = (id) => {
-		this.setState({classes: [id]})
+	const renderClassChange = (id) => {
+		setCharacterInfo({...characterInfo, classes: [id]})
 	}
 
-  renderTabClick = (choice) => {
-    this.setState({activeTab: choice})
+  const renderTabClick = (choice) => {
+    setCharacterInfo({...characterInfo, activeTab: choice})
   }
 
-  renderSubmit = () => {
-    if (this.state.name && this.state.strength && this.state.dexterity && this.state.constitution && this.state.intelligence && this.state.wisdom && this.state.charisma && this.validClasses() && this.state.race && (this.state.doesRacehaveAnyBonus ? this.state.anyBonus : true)) {
-      return <button className='create-btn' onClick={this.createCharacter}>Create Character!</button>
+  const renderSubmit = () => {
+		const {name, strength, dexterity, constitution, intelligence, wisdom, charisma, race, doesRacehaveAnyBonus, anyBonus} = characterInfo
+    if (name && strength && dexterity && constitution && intelligence && wisdom && charisma && validClasses() && race && (doesRacehaveAnyBonus ? anyBonus : true)) {
+      return <button className='create-btn' onClick={createCharacter}>Create Character!</button>
     }
   }
 
-  renderDynamicChanges = (e, index) => {
-    let classes = [...this.state.classes]
+  const renderDynamicChanges = (e, index) => {
+    let classes = [...characterInfo.classes]
 
     classes[index] = e.target.value
-    this.setState({ classes })
+    setCharacterInfo({ ...characterInfo, classes })
   }
 
-  addClassField = (e, change, index) => {
+  const addClassField = (e, change, index) => {
     e.preventDefault()
     if (change === "plus") {
-      this.setState( { classes: [...this.state.classes, this.state.classes[index]] } )
+      setCharacterInfo( { ...characterInfo, classes: [...characterInfo.classes, characterInfo.classes[index]] } )
     } else if (change === "minus") {
-      let removedClasses = [...this.state.classes]
+      let removedClasses = [...characterInfo.classes]
       removedClasses.pop()
-      this.setState({classes: removedClasses})
+      setCharacterInfo({...characterInfo, classes: removedClasses})
     }
   }
 
-  validClasses = () => {
+  const validClasses = () => {
     let valid = true
-    // this.state.classes.forEach(klass => {
+    // characterInfo.classes.forEach(klass => {
     //   if (klass.level > 20 || klass.level < 1){
     //     valid = false
     //   }
@@ -126,13 +151,13 @@ class CharacterCreation extends React.Component{
     //     valid = false
     //   }
     // })
-    if (this.state.classes[this.state.classes.length - 1] === 0 || this.state.classes[this.state.classes.length - 1] === ""){
+    if (characterInfo.classes[characterInfo.classes.length - 1] === 0 || characterInfo.classes[characterInfo.classes.length - 1] === ""){
       valid = false
     }
     return valid
   }
 
-  createCharacter = () => {
+  const createCharacter = () => {
     fetch(`${localhost}/api/v1/characters`, {
       method: 'POST',
       headers: {
@@ -140,18 +165,18 @@ class CharacterCreation extends React.Component{
         'Accept': 'application/json'
       },
       body: JSON.stringify({
-        character: this.state,
-        user_id: this.props.currentUser.id
+        character: characterInfo,
+        user_id: props.currentUser.id
       })
     })
     .then(res => res.json())
     .then(data => {
       console.log(data)
-      this.createCharacterClass(data.character.id)
+      createCharacterClass(data.character.id)
     })
   }
 
-  createCharacterClass = (characterId) => {
+  const createCharacterClass = (characterId) => {
     fetch(`${localhost}/api/v1/character_klasses`, {
       method: 'POST',
       headers: {
@@ -160,22 +185,23 @@ class CharacterCreation extends React.Component{
       },
       body: JSON.stringify({
         character_id: characterId,
-        classes: this.state.classes
+        classes: characterInfo.classes
       })
     })
     .then(res => res.json())
     .then(data => {
       console.log(data)
-      this.props.history.push('/characters/'+ characterId)
+      props.history.push('/characters/'+ characterId)
     })
   }
 
-  renderdoesHaveAnyBonus = () => {
-    this.setState({doesRacehaveAnyBonus: true})
+  const renderdoesHaveAnyBonus = () => {
+    setCharacterInfo({...characterInfo, doesRacehaveAnyBonus: true})
   }
 
-  mapAbilityScores = (array) => {
-    this.setState({
+  const mapAbilityScores = (array) => {
+    setCharacterInfo({
+			...characterInfo,
       strength: array[0],
       dexterity: array[1],
       constitution: array[2],
@@ -186,9 +212,9 @@ class CharacterCreation extends React.Component{
   }
 
 
-  // {this.state.strength && this.state.dexterity && this.state.constitution && this.state.intelligence && this.state.wisdom && this.state.charisma && this.state.activeField !== "abilityScores" ? <div><strong>Ability Scores Picked!</strong></div> : null}
-  // {this.state.race && (this.state.activeField !== "race") && (this.state.doesRacehaveAnyBonus ? this.state.anyBonus : true) ? <div><strong>Race Picked!</strong></div> : null}
-  // {this.validClasses() && this.state.activeField !== "class" ? <div><strong>Class Picked!</strong></div> : null}
+  // {characterInfo.strength && characterInfo.dexterity && characterInfo.constitution && characterInfo.intelligence && characterInfo.wisdom && characterInfo.charisma && characterInfo.activeField !== "abilityScores" ? <div><strong>Ability Scores Picked!</strong></div> : null}
+  // {characterInfo.race && (characterInfo.activeField !== "race") && (characterInfo.doesRacehaveAnyBonus ? characterInfo.anyBonus : true) ? <div><strong>Race Picked!</strong></div> : null}
+  // {this.validClasses() && characterInfo.activeField !== "class" ? <div><strong>Class Picked!</strong></div> : null}
   // <div className='header' style={{marginLeft: '2em'}}>Character Form</div>
 
   // campaign tab?
@@ -198,68 +224,62 @@ class CharacterCreation extends React.Component{
   // familiar selection?
   // help/how to section?
 
-	displayValidation = () => {
+	const displayValidation = () => {
+		const {strength, dexterity, constitution, intelligence, wisdom, charisma, name, race} = characterInfo
 		return (
 			<div id="new-character-validation-bubbles" className='centered'>
-				{(this.state.strength && this.state.constitution && this.state.dexterity && this.state.intelligence && this.state.wisdom && this.state.charisma) ? <span className='complete'>Ability Scores</span> : <span className='incomplete'>Ability Scores</span>}
-				{(this.state.name) ? <span className='complete'>Character Name</span> : <span className='incomplete' >Character Name</span>}
+				{(strength && constitution && dexterity && intelligence && wisdom && charisma) ? <span className='complete'>Ability Scores</span> : <span className='incomplete'>Ability Scores</span>}
+				{(name) ? <span className='complete'>Character Name</span> : <span className='incomplete' >Character Name</span>}
 				{(this.validClasses()) ? <span className='complete' >Character Class(es)</span> : <span className='incomplete' >Character Class(es)</span>}
-				{(this.state.race) ? <span className='complete' >Character Ancestry</span> : <span className='incomplete' >Character Ancestry</span>}
+				{(race) ? <span className='complete' >Character Ancestry</span> : <span className='incomplete' >Character Ancestry</span>}
 			</div>
 		)
 	}
 
-  displayForm = () => {
-    switch(this.state.activeTab){
+  const displayForm = () => {
+    switch(characterInfo.activeTab){
+			case "Home":
+				return (
+					<CharacterHome renderChange={renderChange} name={characterInfo.name} campaign_id={characterInfo.campaign_id} campaignDetails={characterInfo.campaignDetails}/>
+				)
       case "Details":
         return (
-          <>
-            <Details renderChange={this.renderChange} name={this.state.name} description={this.state.description} alignment={this.state.alignment} background={this.state.background} age={this.state.age} gender={this.state.gender} hair={this.state.hair} eyes={this.state.eyes} height={this.state.height} weight={this.state.weight} homeland={this.state.homeland} deity={this.state.deity} strength={this.state.strength}  dexterity={this.state.dexterity} constitution={this.state.constitution} intelligence={this.state.intelligence} wisdom={this.state.wisdom} charisma={this.state.charisma} mapAbilityScores={this.mapAbilityScores} campaign_id={this.state.campaign_id} campaignDetails={this.state.campaignDetails}/>
-          </>
+            <Details renderChange={renderChange} name={characterInfo.name} description={characterInfo.description} alignment={characterInfo.alignment} background={characterInfo.background} age={characterInfo.age} gender={characterInfo.gender} hair={characterInfo.hair} eyes={characterInfo.eyes} height={characterInfo.height} weight={characterInfo.weight} homeland={characterInfo.homeland} deity={characterInfo.deity} strength={characterInfo.strength}  dexterity={characterInfo.dexterity} constitution={characterInfo.constitution} intelligence={characterInfo.intelligence} wisdom={characterInfo.wisdom} charisma={characterInfo.charisma} mapAbilityScores={mapAbilityScores} campaign_id={characterInfo.campaign_id} campaignDetails={characterInfo.campaignDetails}/>
         )
       case "Ancestry":
         return (
-          <>
-            <Race renderAncestryChange={this.renderAncestryChange} chosenRaceId={this.state.race} anyBonus={this.state.anyBonus} doesRacehaveAnyBonus={this.state.doesRacehaveAnyBonus} renderdoesHaveAnyBonus={this.renderdoesHaveAnyBonus} campaignDetails={this.state.campaignDetails}/>
-          </>
+            <Race renderAncestryChange={renderAncestryChange} chosenRaceId={characterInfo.race} anyBonus={characterInfo.anyBonus} doesRacehaveAnyBonus={characterInfo.doesRacehaveAnyBonus} renderdoesHaveAnyBonus={renderdoesHaveAnyBonus} campaignDetails={characterInfo.campaignDetails}/>
         )
       case "Class":
         return (
-          <>
-            <Class renderChange={this.renderChange} renderDynamicChanges={this.renderDynamicChanges} addClassField={this.addClassField} chosenClasses={this.state.classes} renderClassChange={this.renderClassChange} campaignDetails={this.state.campaignDetails}/>
-          </>
+            <Class renderChange={renderChange} renderDynamicChanges={renderDynamicChanges} addClassField={addClassField} chosenClasses={characterInfo.classes} renderClassChange={renderClassChange} campaignDetails={characterInfo.campaignDetails}/>
         )
       case "Skills":
         return (
-          <>
-            <Skills activeSkillset={this.state.activeSkillset} renderChange={this.renderChange} classes={this.state.classes}/>
-          </>
+            <Skills activeSkillset={characterInfo.activeSkillset} renderChange={renderChange} classes={characterInfo.classes}/>
         )
       default:
         return <>Ya</>
     }
   }
 
-  render () {
-		console.log("character creation state", this.state)
-		// <CreationTabs renderTabClick={this.renderTabClick} activeTab={this.state.activeTab}/>
-    return (
-      <main id="character-creation-page">
-				<Navbar renderTabClick={this.renderTabClick} activeTab={this.state.activeTab}/>
-        <section id='creation-form'>
+	console.log("character creation state", characterInfo)
+	// <CreationTabs renderTabClick={renderTabClick} activeTab={characterInfo.activeTab}/>
+  return (
+    <main id="character-creation-page">
+			<Navbar renderTabClick={renderTabClick} activeTab={characterInfo.activeTab}/>
+      <section id='creation-form'>
+        {displayForm()}
+        {/*<button onClick={() => renderButtonClick("abilityScores")}>{characterInfo.activeField === "abilityScores" ? "Hide Ability Score Form": "Create Your Ability Scores"}</button>*/}
+        {/*<button onClick={() => renderButtonClick("race")}>{characterInfo.activeField === "race" ? "Hide Race Form": "Choose Your Fantasy Race"}</button>*/}
+        {/*<button onClick={() => renderButtonClick("class")}>{characterInfo.activeField === "class" ? "Hide Class Form": "Choose Your Class"}</button>*/}
+      </section>
 
-          {this.displayForm()}
-          {/*<button onClick={() => this.renderButtonClick("abilityScores")}>{this.state.activeField === "abilityScores" ? "Hide Ability Score Form": "Create Your Ability Scores"}</button>*/}
-          {/*<button onClick={() => this.renderButtonClick("race")}>{this.state.activeField === "race" ? "Hide Race Form": "Choose Your Fantasy Race"}</button>*/}
-          {/*<button onClick={() => this.renderButtonClick("class")}>{this.state.activeField === "class" ? "Hide Class Form": "Choose Your Class"}</button>*/}
-        </section>
-
-        <div className='confirmation centered'>
-          {this.renderSubmit()}
-        </div>
-      </main>
-    )
-  }
+      <div className='confirmation centered'>
+        {renderSubmit()}
+      </div>
+    </main>
+  )
 
 }
 

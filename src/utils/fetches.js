@@ -3,6 +3,9 @@ import localhost from '../localhost'
 export const getFetch = url => {
 	return fetch(`${localhost}/api/v1/${url}`)
 		.then(r => r.json())
+		.catch(err => {
+			console.log("Error", err.status, err.exception)
+		})
 }
 
 export const postFetch = (url, body) => {

@@ -81,8 +81,9 @@ class Race extends React.Component{
 
 	renderAncestryOptions = () => {
 		let ancestries = this.props.races
-		if (this.props.campaignDetails) {
+		if (this.props.campaignDetails?.races) {
 			ancestries = this.props.campaignDetails.races
+			debugger
 		}
 		let ancestryCards = ancestries.sort((a, b) => a.name.localeCompare(b.name)).map(this.renderAncestryCard)
 
