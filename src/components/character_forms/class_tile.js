@@ -9,13 +9,19 @@ const ClassTile = props => {
 			<>
 				<br/>
 				<button onClick={() => props.renderClassChange(props.klass.id)}>+</button>
-				<button>?</button>
+				<button onClick={() => props.displayChosenClass(props.klass.id)}>?</button>
 			</>
 		)
 	}
 
+	const areHoverButtonsDisplayed = () => {
+		if (!displayHoverButtons){
+			toggleHoverButtons(true)
+		}
+	}
+
 	return (
-		<div className="dynamic-card" style={{border: "4px solid transparent"}} onMouseEnter={() => toggleHoverButtons(true)} onMouseLeave={() => toggleHoverButtons(false)}>
+		<div className="dynamic-card" style={{border: "4px solid transparent"}} onMouseEnter={() => toggleHoverButtons(true)} onMouseLeave={() => toggleHoverButtons(false)} onMouseOver={areHoverButtonsDisplayed}>
 			<img className='dynamic-card-img' alt={props.klass.name} src={props.klass.img_url}></img>
 			<p className='dynamic-card-content-button'>
 				{props.klass.name}
