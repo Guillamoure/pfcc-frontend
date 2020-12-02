@@ -10,6 +10,7 @@ const Navbar = props => {
 				{renderTab("Class")}
 				{renderTab("Abilities")}
 				{renderTab("Skills")}
+				{renderTab("Feats")}
 				{renderTab("Details")}
 				{renderTab("Gold & Equipment")}
 				{renderTab("Create Character")}

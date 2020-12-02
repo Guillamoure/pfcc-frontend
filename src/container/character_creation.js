@@ -18,7 +18,7 @@ const CharacterCreation = props => {
 
 	const [ characterInfo, setCharacterInfo ] = React.useState({
 		activeField: "",
-		classes: [0],
+		classes: [],
 		race: 0,
 		strength: 0,
 		dexterity: 0,
@@ -110,7 +110,13 @@ const CharacterCreation = props => {
 	}
 
 	const renderClassChange = (id) => {
-		setCharacterInfo({...characterInfo, classes: [id]})
+		setCharacterInfo({...characterInfo, classes: [...characterInfo.classes, id]})
+	}
+
+	const removeLatestClass = () => {
+		let classesDuplicate =  [...characterInfo.classes]
+		classesDuplicate.splice(classesDuplicate.length - 1, 1)
+		setCharacterInfo({...characterInfo, classes: classesDuplicate})
 	}
 
   const renderTabClick = (choice) => {
@@ -253,7 +259,7 @@ const CharacterCreation = props => {
         )
       case "Class":
         return (
-            <Class renderChange={renderChange} renderDynamicChanges={renderDynamicChanges} addClassField={addClassField} chosenClasses={characterInfo.classes} renderClassChange={renderClassChange} campaignDetails={characterInfo.campaignDetails}/>
+            <Class renderChange={renderChange} renderDynamicChanges={renderDynamicChanges} addClassField={addClassField} chosenClasses={characterInfo.classes} renderClassChange={renderClassChange} campaignDetails={characterInfo.campaignDetails} removeLatestClass={removeLatestClass}/>
         )
       case "Skills":
         return (

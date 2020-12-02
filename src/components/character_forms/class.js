@@ -3,14 +3,15 @@ import _ from 'lodash'
 import { withRouter, Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import localhost from '../../localhost'
+import ClassTile from './class_tile'
 
-class Class extends React.Component{
+const Class = props => {
 
-  state = {
-    classes: false,
+  const [ classDetails, setClassDetails ] = React.useState({
+    classes: [],
     activeSkillset: 0,
     skillsets: {}
-  }
+  })
 	//
   // componentDidMount = () => {
   //   fetch(`${localhost}/api/v1/klasses`)
@@ -20,30 +21,46 @@ class Class extends React.Component{
   //   })
   // }
 
-  renderClasses = () => {
-    return this.props.classes.map(klass => {
+  const renderClasses = () => {
+    return props.classes.map(klass => {
       return <option key={klass.id} value={klass.id}>{klass.name}</option>
     })
   }
 
-  renderChosenClass = () => {
-    let chosen = this.props.classes.find(el => el.id === _.toNumber(this.props.chosenClassId))
+	const chosenClasses = () => {
+		let arr = [...props.chosenClasses, 0]
+		return arr.map((klid, idx) => {
+			if (klid > 0){
+				let klass = props.classes.find(kl => kl.id == klid)
+				let button = null
+				if (idx == arr.length - 2){
+					button = <button onClick={props.removeLatestClass}> - </button>
+				}
+				return <li className="selected-class-list-item"><span>Level {idx+1} - {klass.name}</span>{button}</li>
+			} else {
+				return <li className="empty-class-list-item">Level {idx+1}</li>
+			}
+		})
+	}
+
+  const renderChosenClass = () => {
+    let chosen = props.classes.find(el => el.id === _.toNumber(props.chosenClassId))
     return <Link to={`/classes/${chosen.name}`} >{chosen.name}< br /></Link>
   }
 
-  mapClassDynamicFields = () => {
-    return this.props.classes.map((val, idx)=> {
+  const mapClassDynamicFields = () => {
+    return props.classes.map((val, idx)=> {
       let classId = `class-${idx}`
       return (
         <div key={idx}>
           <label htmlFor={classId}>{`Class #${idx + 1}`} </label>
             <select
               name={classId}
-              value={this.props.classes[idx]}
-              onChange={(e) => this.props.renderDynamicChanges(e, idx)}
+              value={props.classes[idx]}
+              onChange={(e) => props.renderDynamicChanges(e, idx)}
             >
               <option value= "" >Choose One</option>
-              {this.props.classes && this.renderClasses()}
+              {props.classes && renderClasses()}
             </select>
             {`Level ${idx + 1}`}
         </div>
@@ -51,9 +68,9 @@ class Class extends React.Component{
     })
   }
 
-  checkForValidLevels = () => {
+  const checkForValidLevels = () => {
     let valid = true
-    this.props.classes.forEach(klass => {
+    .props.classes.forEach(klass => {
       if (klass.level > 20 || klass.level < 1){
         valid = false
       }
@@ -72,29 +89,26 @@ class Class extends React.Component{
   //   </select>
   // </label>
 
-	renderClassCard = klass => {
-		let style = {border: "4px solid transparent"}
-		if (parseInt(this.props.chosenClasses[0]) === klass.id){style.border = "4px solid black"}
-		return (
-			<div className="dynamic-card" style={style} onClick={() => this.props.renderClassChange(klass.id)}>
-				<button className='dynamic-card-content-button'>
-					Select {klass.name}
-				</button>
-				<img className='dynamic-card-img' alt={klass.name} src={klass.img_url}></img>
-			</div>
-		)
-	}
-
-	renderClassOptions = () => {
-		let classes = this.props.classes
-		if (this.props.campaignDetails) {
-			classes = this.props.campaignDetails.klasses
+	const renderClassOptions = () => {
+		let classes = props.classes
+		if (props.campaignDetails) {
+			classes = props.campaignDetails.klasses
 		}
-		let classCards = classes.sort((a,b) => a.name.localeCompare(b.name)).map(this.renderClassCard)
+		let classCards = classes.sort((a,b) => a.name.localeCompare(b.name)).map(klass => <ClassTile klass={klass} renderClassChange={props.renderClassChange}/>)
 		return (
 			<section style={{display: "flex", flexWrap: "wrap"}}>
 				{classCards}
 			</section>
+		)
+	}
+
+	const renderClassImage = () => {
+		let klass = props.klass.find(kl => kl.id === props.chosenClassId)
+		return (
+			<div id="chosen-class-card" className="dynamic-card" onClick={() => props.renderClassChange(klass.id)}>
+				<img className='dynamic-card-img' alt={klass.name} src={klass.img_url}></img>
+				<p className='dynamic-card-content-button'> {klass.name} </p>
+			</div>
 		)
 	}
 
@@ -106,13 +120,14 @@ class Class extends React.Component{
 	// {this.checkForValidLevels()}
 	// {this.props.classes[0] && this.props.chosenClassId ? this.renderChosenClass() : null}
 
-  render () {
-    return (
-      <div>
-				{this.renderClassOptions()}
-      </div>
-    )
-  }
+	const className = !!props.chosenClassId ? "chosen-class" : ""
+
+  return (
+    <section id="character-creation-class" className={className}>
+			<ul>{chosenClasses()}</ul>
+			{renderClassOptions()}
+    </section>
+  )
 }
 
 const mapStateToProps = (state) => {
