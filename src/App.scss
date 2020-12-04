@@ -93,7 +93,7 @@ $tan: #cfb997;
 
 
 .show {
-  padding: 0 2em;
+  padding: 0 0.5em;
 }
 
 .show td{
@@ -960,4 +960,26 @@ $tan: #cfb997;
 	#user-campaigns {
 		grid-area: campaigns;
 	}
+}
+
+#class-table {
+	#class-table-fort {
+		width: 7%;
+	}
+	#class-table-ref {
+		width: 7%;
+	}
+	#class-table-will {
+		width: 7%;
+	}
+	#class-table-level {
+		width: 5%;
+	}
+}
+
+.feature-title {
+	background-color: lightblue;
+	width: 100%;
+	padding: 0.25em;
+	margin: 0.2em;
 }

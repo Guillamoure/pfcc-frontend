@@ -7,7 +7,15 @@ class Features extends React.Component {
 
   renderFeatures = () => {
     const sortedFeatures = this.props.klass.klass_features.sort((a, b) => {
-      return a.level_learned - b.level_learned
+			let lowestA = 20
+			a.feature_levels.forEach(fl => {
+				if (fl.level < lowestA){lowestA = fl.level}
+			})
+			let lowestB = 20
+			b.feature_levels.forEach(fl => {
+				if (fl.level < lowestB){lowestB = fl.level}
+			})
+      return lowestA - lowestB
     })
     // IF I WANT TO SHOW ON A FEATURE IF IT IS LEARNED MULTIPLE TIMES
     // const multiLevelAbilities = {}
@@ -45,9 +53,9 @@ class Features extends React.Component {
 
   render () {
     return (
-      <span className='show'>
+      <ul className='show'>
         {this.props.klass.klass_features && this.renderFeatures()}
-      </span>
+      </ul>
     )
   }
 

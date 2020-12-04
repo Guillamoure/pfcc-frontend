@@ -608,6 +608,15 @@ const reducer = (state = initialState, action) => {
 			return {...state, activeEncounter: {...action.encounter, participants: []}}
 		case "END ENCOUNTER":
 			return {...state, activeEncounter: {}}
+		case "STORE ARCHETYPES":
+			var klasses = [...state.classes].map(cl => {
+				if (cl.id !== action.klassId){
+					return cl
+				} else {
+					return {...cl, archetypes: action.archetypes}
+				}
+			})
+			return {...state, classes: klasses}
     default:
       return state
   }

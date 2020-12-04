@@ -4,13 +4,21 @@ import { withRouter, Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import localhost from '../../localhost'
 import ClassTile from './class_tile'
+import ClassShow from '../../container/class_show'
+import ClassTable from '../class_show/table'
+import ClassTabs from './class_tabs'
+import { getFetch } from '../../utils/fetches'
+import { addArchetypesAction } from '../../utils/action_creator/classes'
+import ClassArchetypes from '../../container/class_archetypes'
 
 const Class = props => {
 
   const [ classDetails, setClassDetails ] = React.useState({
     classes: [],
     activeSkillset: 0,
-    skillsets: {}
+    skillsets: {},
+		viewSpecificClassDetails: 0,
+		activeTab: "Base Features"
   })
 	//
   // componentDidMount = () => {
@@ -20,6 +28,21 @@ const Class = props => {
   //     this.setState({classes: data})
   //   })
   // }
+
+	React.useEffect(() => {
+		if (classDetails.viewSpecificClassDetails){
+			let klass = props.classes.find(kl => kl.id === classDetails.viewSpecificClassDetails)
+			if (!klass.archetypes){
+				getFetch(`klasses/${classDetails.viewSpecificClassDetails}/archetypes`)
+				.then(data => {
+					if (!data.error){
+						addArchetypesAction(klass.id, data)
+					}
+				})
+			}
+
+		}
+	}, [classDetails.viewSpecificClassDetails])
 
   const renderClasses = () => {
     return props.classes.map(klass => {
@@ -43,9 +66,12 @@ const Class = props => {
 		})
 	}
 
-  const renderChosenClass = () => {
-    let chosen = props.classes.find(el => el.id === _.toNumber(props.chosenClassId))
-    return <Link to={`/classes/${chosen.name}`} >{chosen.name}< br /></Link>
+  const displayChosenClass = (id) => {
+		if (id === classDetails.viewSpecificClassDetails){
+			setClassDetails({...classDetails, viewSpecificClassDetails: 0})
+		} else {
+			setClassDetails({...classDetails, viewSpecificClassDetails: id})
+		}
   }
 
   const mapClassDynamicFields = () => {
@@ -70,7 +96,7 @@ const Class = props => {
 
   const checkForValidLevels = () => {
     let valid = true
-    .props.classes.forEach(klass => {
+    props.classes.forEach(klass => {
       if (klass.level > 20 || klass.level < 1){
         valid = false
       }
@@ -94,7 +120,7 @@ const Class = props => {
 		if (props.campaignDetails) {
 			classes = props.campaignDetails.klasses
 		}
-		let classCards = classes.sort((a,b) => a.name.localeCompare(b.name)).map(klass => <ClassTile klass={klass} renderClassChange={props.renderClassChange}/>)
+		let classCards = classes.sort((a,b) => a.name.localeCompare(b.name)).map(klass => <ClassTile klass={klass} renderClassChange={props.renderClassChange} displayChosenClass={displayChosenClass}/>)
 		return (
 			<section style={{display: "flex", flexWrap: "wrap"}}>
 				{classCards}
@@ -102,13 +128,57 @@ const Class = props => {
 		)
 	}
 
-	const renderClassImage = () => {
-		let klass = props.klass.find(kl => kl.id === props.chosenClassId)
+	// const renderClassImage = () => {
+	// 	let klass = props.classes.find(kl => kl.id === classDetails.viewSpecificClassDetails)
+	// 	return (
+	// 		<div id="chosen-class-card" className="dynamic-card" onClick={() => displayChosenClass(klass.id)}>
+	// 			<img className='dynamic-card-img' alt={klass.name} src={klass.img_url}></img>
+	// 			<p className='dynamic-card-content-button'> {klass.name} </p>
+	// 		</div>
+	// 	)
+	// }
+
+	const renderTabs = () => {
+
+		const renderTabClick = (tab) => {
+			setClassDetails({...classDetails, activeTab: tab})
+		}
+
 		return (
-			<div id="chosen-class-card" className="dynamic-card" onClick={() => props.renderClassChange(klass.id)}>
-				<img className='dynamic-card-img' alt={klass.name} src={klass.img_url}></img>
-				<p className='dynamic-card-content-button'> {klass.name} </p>
+			<nav id="chosen-class-tabs">
+				<ClassTabs activeTab={classDetails.activeTab} renderTabClick={renderTabClick}/>
+			</nav>
+		)
+	}
+
+	const renderClassTable = () => {
+		let klass = props.classes.find(kl => kl.id === classDetails.viewSpecificClassDetails)
+		return (
+			<div id="chosen-class-card">
+				<ClassTable klass={klass}/>
 			</div>
+		)
+	}
+
+	const renderClassDetails = () => {
+		let klass = props.classes.find(kl => kl.id === classDetails.viewSpecificClassDetails)
+
+		let content
+		switch (classDetails.activeTab){
+			case "Base Features":
+				content = <ClassShow klass={klass} options={{displayImage: false, displayDescription: false, displayTable: false}}/>
+				break
+			case "Archetypes":
+				content = <ClassArchetypes archetypes={klass.archetypes}/>
+				break
+			default:
+				content = <ClassShow klass={klass} options={{displayImage: false, displayDescription: false, displayTable: false}}/>
+				break
+		}
+		return (
+			<aside id="character-creation-class-chosen-details">
+				{content}
+			</aside>
 		)
 	}
 
@@ -120,12 +190,19 @@ const Class = props => {
 	// {this.checkForValidLevels()}
 	// {this.props.classes[0] && this.props.chosenClassId ? this.renderChosenClass() : null}
 
-	const className = !!props.chosenClassId ? "chosen-class" : ""
+	const className = !!classDetails.viewSpecificClassDetails ? "chosen-class" : ""
+	const id = !!classDetails.viewSpecificClassDetails ? "character-creation-chosen-class" : "character-creation-class"
 
   return (
-    <section id="character-creation-class" className={className}>
+    <section id="character-creation-class">
 			<ul>{chosenClasses()}</ul>
-			{renderClassOptions()}
+			{!classDetails.viewSpecificClassDetails && renderClassOptions()}
+			<section className={className}>
+				{!!classDetails.viewSpecificClassDetails && renderClassTable()}
+				{!!classDetails.viewSpecificClassDetails && renderTabs()}
+				{!!classDetails.viewSpecificClassDetails && renderClassDetails()}
+				{!!classDetails.viewSpecificClassDetails && <button onClick={() => setClassDetails({...classDetails, viewSpecificClassDetails: 0})}>Go Back</button>}
+			</section>
     </section>
   )
 }

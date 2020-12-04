@@ -16,9 +16,9 @@ import SpellsForm from '../components/spells_form'
 import FeatureEffect from '../modals/classes/effect'
 import FeatureOptions from '../components/class_show/feature_options'
 
-class Class extends React.Component {
+const ClassShow = props => {
 
-  state ={
+	const [ klassDisplay, setKlassDisplay ] = React.useState({
     klass : {},
     toggleFeatureForm: false,
     toggleClassForm: false,
@@ -26,45 +26,47 @@ class Class extends React.Component {
     toggleSpellsForm: false,
     modal: false,
     features: true
-  }
+  })
 
-  renderURL = () => {
+
+  const renderURL = () => {
     let url = window.location.href
     let urlArray = url.split("/")
     return urlArray[urlArray.length - 1]
   }
 
-  componentDidMount() {
-    const klass = this.renderURL()
+  React.useEffect(() => {
+    const klass = renderURL()
     let fw = ""
     if (klass === "Fate%20Weaver"){
       fw = "Fate Weaver"
     }
-    if (this.props.classes.find(kl => kl.name === klass || kl.name === fw)){
-      let selectedClass = this.props.classes.find(kl => kl.name === klass || kl.name === fw)
-      this.setState({klass: selectedClass})
+		if (props.klass){
+			setKlassDisplay({...klassDisplay, klass: props.klass})
+		} else if (props.classes.find(kl => kl.name === klass || kl.name === fw)){
+      let selectedClass = props.classes.find(kl => kl.name === klass || kl.name === fw)
+      setKlassDisplay({...klassDisplay, klass: selectedClass})
     } else {
       fetch(`${localhost}/api/v1/klasses/${klass}`)
       .then(r => r.json())
-      .then(data => this.setState({klass: data.klass}))
+      .then(data => setKlassDisplay({...klassDisplay, klass: data.klass}))
     }
+  }, [])
+
+  const changeAddFeatureToggle = () => {
+		setKlassDisplay({...klassDisplay, toggleFeatureForm: !klassDisplay.toggleFeatureForm})
+  }
+  const toggleClassForm = () => {
+		setKlassDisplay({...klassDisplay, toggleClassForm: !klassDisplay.toggleClassForm})
+  }
+  const toggleClassSkillsForm = () => {
+		setKlassDisplay({...klassDisplay, toggleClassSkillsForm: !klassDisplay.toggleClassSkillsForm})
+  }
+  const toggleSpellsForm = () => {
+		setKlassDisplay({...klassDisplay, toggleSpellsForm: !klassDisplay.toggleSpellsForm})
   }
 
-  changeAddFeatureToggle = () => {
-    this.setState({toggleFeatureForm: !this.state.toggleFeatureForm})
-  }
-  toggleClassForm = () => {
-    this.setState({toggleClassForm: !this.state.toggleClassForm})
-  }
-
-  toggleClassSkillsForm = () => {
-    this.setState({toggleClassSkillsForm: !this.state.toggleClassSkillsForm})
-  }
-  toggleSpellsForm = () => {
-    this.setState({toggleSpellsForm: !this.state.toggleSpellsForm})
-  }
-
-  renderSubmit = (e, feature) => {
+  const renderSubmit = (e, feature) => {
     e.preventDefault()
 
     fetch(`${localhost}/api/v1/klass_features`, {
@@ -74,45 +76,45 @@ class Class extends React.Component {
         'Accept': 'application/json'
       },
       body: JSON.stringify({
-        klass_id: this.state.klass.id,
+        klass_id: klassDisplay.klass.id,
         features: feature
       })
     })
     .then(r => r.json())
     .then(data => {
       if (!data.error){
-        this.renderClassFeature(data)
+        renderClassFeature(data)
       } else {
         console.log(data.error)
       }
     })
   }
 
-  renderClassEdit = (e, klass_updates) => {
+  const renderClassEdit = (e, klass_updates) => {
     e.preventDefault()
 
-    fetch(`${localhost}/api/v1/klasses/${this.state.klass.id}`, {
+    fetch(`${localhost}/api/v1/klasses/${klassDisplay.klass.id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       },
       body: JSON.stringify({
-        klass_id: this.state.klass.id,
+        klass_id: klassDisplay.klass.id,
         updates: klass_updates
       })
     })
     .then(r => r.json())
     .then(data => {
       if(!data.error){
-        this.setState({klass: data.klass, toggleClassForm: false})
+				setKlassDisplay({...klassDisplay, klass: data.klass, toggleClassForm: false})
       } else {
         console.log(data.error)
       }
     })
   }
 
-  renderClassSkillsFetch = (e, skills_data, method)=> {
+  const renderClassSkillsFetch = (e, skills_data, method)=> {
     e.preventDefault()
     fetch(`${localhost}/api/v1/class_skillset_skills`, {
       method: method,
@@ -121,22 +123,22 @@ class Class extends React.Component {
         'Accept': 'application/json'
       },
       body: JSON.stringify({
-        klass_id: this.state.klass.id,
+        klass_id: klassDisplay.klass.id,
         skills: skills_data,
-        skillset_id: this.props.currentUser.skillset_id
+        skillset_id: props.currentUser.skillset_id
       })
     })
     .then(r => r.json())
     .then(data => {
       if(!data.error){
-        this.setState({klass: data.klass, toggleClassSkillsForm: false})
+				setKlassDisplay({...klassDisplay, klass: data.klass, toggleClassSkillsForm: false})
       } else {
         console.log(data.error)
       }
     })
   }
 
-  submitSpellsPerDay = (nestedSpells) => {
+  const submitSpellsPerDay = (nestedSpells) => {
     fetch(`${localhost}/api/v1/spells_per_day`, {
       method: 'POST',
       headers: {
@@ -145,39 +147,40 @@ class Class extends React.Component {
       },
       body: JSON.stringify({
         spells_per_day: nestedSpells,
-        klass_id: this.state.klass.id
+        klass_id: klassDisplay.klass.id
       })
     })
     .then(r => r.json())
     .then(data => {
-      this.setState({klass: data.klass, toggleSpellsForm: false})
+			setKlassDisplay({...klassDisplay, klass: data.klass, toggleSpellsForm: false})
     })
   }
 
-  renderClassFeature = (newData) => {
+  const renderClassFeature = (newData) => {
     let remappedFeatures
     if (Number.isInteger(newData)) {
-      remappedFeatures = this.state.klass.klass_features.filter(feature => {
+      remappedFeatures = klassDisplay.klass.klass_features.filter(feature => {
         return feature.id !== newData
       })
-    } else if (!this.state.klass.klass_features.find(el => el.id === newData.klass_feature.id)){
-      remappedFeatures = this.state.klass.klass_features
+    } else if (!klassDisplay.klass.klass_features.find(el => el.id === newData.klass_feature.id)){
+      remappedFeatures = klassDisplay.klass.klass_features
       remappedFeatures.push(newData.klass_feature)
     } else if (typeof newData === 'object'){
-      remappedFeatures = this.state.klass.klass_features.map(feature => {
+      remappedFeatures = klassDisplay.klass.klass_features.map(feature => {
         return feature.id === newData.id ? newData : feature
       })
     }
-    this.setState({
+    setKlassDisplay({
+			...klassDisplay,
       klass: {
-        ...this.state.klass,
+        ...klassDisplay.klass,
         klass_features: remappedFeatures
       },
       toggleFeatureForm: false
     })
   }
 
-  fetchClassFeatureEffect = (state, effect) => {
+  const fetchClassFeatureEffect = (state, effect) => {
     fetch(`${localhost}/api/v1/${effect}`, {
       method: 'POST',
       headers: {
@@ -188,35 +191,35 @@ class Class extends React.Component {
         ability_score: state.abilityScore,
         prepared: state.prepared,
         limited: state.limited,
-        klass_feature_id: this.state.modal
+        klass_feature_id: klassDisplay.modal
       })
     })
     .then(r =>  r.json())
     .then(data => {
-      this.setState({klass: data.klass, modal: false})
+      setKlassDisplay({...klassDisplay, klass: data.klass, modal: false})
       // confirm that this works?
     })
   }
 
-  toggleModal = (id) => {
+  const toggleModal = (id) => {
     console.log("this feature is being adjusted", id)
-    this.setState({modal: id})
+    setKlassDisplay({...klassDisplay, modal: id})
   }
 
-  clickOut = (e) => {
+  const clickOut = (e) => {
     if(e.target.classList[0] === "page-dimmer"){
-      this.setState({modal: false})
+      setKlassDisplay({...klassDisplay, modal: false})
     }
   }
-  exitModal = () => {
-    this.setState({modal: false})
+  const exitModal = () => {
+    setKlassDisplay({...klassDisplay, modal: false})
   }
 
-  featuresTab = () => {
+  const featuresTab = () => {
     let featureOptions = false
     let feature = ""
     let featureOptionsArray = []
-    // this.state.klass.klass_features.forEach(kf => {
+    // klassDisplay.klass.klass_features.forEach(kf => {
     //   if (kf.feature_options.length){
     //     featureOptions = true
     //     feature = kf.name
@@ -224,16 +227,16 @@ class Class extends React.Component {
     //   }
     // })
     if (!featureOptions){
-      return <Features klass={this.state.klass} renderClassFeature={this.renderClassFeature} modal={this.state.modal} toggleModal={this.toggleModal}/>
+      return <Features klass={klassDisplay.klass} renderClassFeature={renderClassFeature} modal={klassDisplay.modal} toggleModal={toggleModal}/>
     } else {
       return (
         <div>
           <div id='options-toggle'>
-            <span className={this.toggleFeatureOptionCSS("features")} onClick={() => this.setState({features: true})}>Class Features</span><span className={this.toggleFeatureOptionCSS("options")} onClick={() => this.setState({features: false})}>{feature}</span>
+            <span className={toggleFeatureOptionCSS("features")} onClick={() => setKlassDisplay({...klassDisplay, features: true})}>Class Features</span><span className={toggleFeatureOptionCSS("options")} onClick={() => setKlassDisplay({...klassDisplay, features: false})}>{feature}</span>
           </div>
           {
-            this.state.features ?
-              <Features klass={this.state.klass} renderClassFeature={this.renderClassFeature} modal={this.state.modal} toggleModal={this.toggleModal}/>
+            klassDisplay.features ?
+              <Features klass={klassDisplay.klass} renderClassFeature={renderClassFeature} modal={klassDisplay.modal} toggleModal={toggleModal}/>
             :
               <FeatureOptions options={featureOptionsArray} />
           }
@@ -242,43 +245,41 @@ class Class extends React.Component {
     }
   }
 
-  toggleFeatureOptionCSS = (feature) => {
-    if ((this.state.features && feature === "features") || (!this.state.features && feature === "options")){
+  const toggleFeatureOptionCSS = (feature) => {
+    if ((klassDisplay.features && feature === "features") || (!klassDisplay.features && feature === "options")){
       return "tab-list-active"
     } else {
       return "none"
     }
   }
 
-  render() {
-    console.log("Class info", this.state.klass)
-    return (
-      <span className='roboto show'>
-        {this.state.klass.name && <Introduction klass={this.state.klass}/>}
-        {this.props.admin ? <button onClick={this.toggleClassForm}>{this.state.toggleClassForm ? "Hide Edit Class" : "Edit Class"}</button> : null}
-        {this.state.toggleClassForm ? <ClassForm toggleClassForm={this.state.toggleClassForm} klass={this.state.klass} renderClassEdit={this.renderClassEdit} history={this.props.history} /> : null }
+	const displayTable = () => {
+		if (props.options?.displayTable === false){return null}
+		return <Table klass={klassDisplay.klass}/>
+	}
 
-        {this.props.admin ? <button onClick={this.toggleClassSkillsForm}>{this.state.toggleClassSkillsForm ? "Hide Skills Form" : "Skills Form"}</button> : null}
-        {this.props.admin ? <button onClick={this.toggleSpellsForm}>{this.state.toggleSpellsForm ? "Hide Spells Form" : "Spells Form"}</button> : null}
+  return (
+    <span className='roboto show'>
+      {klassDisplay.klass.name && <Introduction klass={klassDisplay.klass} options={props.options}/>}
+      {props.admin ? <button onClick={toggleClassForm}>{klassDisplay.toggleClassForm ? "Hide Edit Class" : "Edit Class"}</button> : null}
+      {klassDisplay.toggleClassForm ? <ClassForm toggleClassForm={klassDisplay.toggleClassForm} klass={klassDisplay.klass} renderClassEdit={renderClassEdit} history={props.history} /> : null }
 
-        {this.state.toggleClassSkillsForm && <ClassSkillsForm toggleClassSkillsForm={this.state.toggleClassSkillsForm} klass={this.state.klass} renderClassSkills={this.renderClassSkillsFetch} />}
+      {props.admin && <><button onClick={toggleClassSkillsForm}>{klassDisplay.toggleClassSkillsForm ? "Hide Skills Form" : "Skills Form"}</button><br/><button onClick={toggleSpellsForm}>{klassDisplay.toggleSpellsForm ? "Hide Spells Form" : "Spells Form"}</button></>}
 
-        {this.state.toggleSpellsForm && <SpellsForm submitSpellsPerDay={this.submitSpellsPerDay} toggleSpellsForm={this.state.toggleSpellsForm} klass={this.state.klass}/>}
+      {klassDisplay.toggleClassSkillsForm && <ClassSkillsForm toggleClassSkillsForm={klassDisplay.toggleClassSkillsForm} klass={klassDisplay.klass} renderClassSkills={renderClassSkillsFetch} />}
 
-        <Table klass={this.state.klass}/>
+      {klassDisplay.toggleSpellsForm && <SpellsForm submitSpellsPerDay={submitSpellsPerDay} toggleSpellsForm={klassDisplay.toggleSpellsForm} klass={klassDisplay.klass}/>}
 
-        <div className='header' style={{marginLeft: '2em'}}>Class Features</div>
-        {this.state.klass.name && this.featuresTab()}
-        {this.props.admin ? <button onClick={this.changeAddFeatureToggle}>{this.state.toggleFeatureForm ? "Hide new Feature Form" : "Add a new Class Feature"}</button> : null}
+      {displayTable()}
 
-        < br />< br />
+      {klassDisplay.klass.name && featuresTab()}
+      {props.admin ? <button onClick={changeAddFeatureToggle}>{klassDisplay.toggleFeatureForm ? "Hide new Feature Form" : "Add a new Class Feature"}</button> : null}
 
-        <FeatureForm toggleFeatureForm={this.state.toggleFeatureForm} renderSubmit={this.renderSubmit}/>
+      <FeatureForm toggleFeatureForm={klassDisplay.toggleFeatureForm} renderSubmit={renderSubmit}/>
 
-        {this.state.modal && <FeatureEffect exitModal={this.exitModal} clickOut={this.clickOut} fetch={this.fetchClassFeatureEffect}/>}
-      </span>
-    )
-  }
+      {klassDisplay.modal && <FeatureEffect exitModal={exitModal} clickOut={clickOut} fetch={fetchClassFeatureEffect}/>}
+    </span>
+  )
 }
 
 const mapStatetoProps = (state) => {
@@ -289,4 +290,4 @@ const mapStatetoProps = (state) => {
   }
 }
 
-export default connect(mapStatetoProps)(Class)
+export default connect(mapStatetoProps)(ClassShow)
