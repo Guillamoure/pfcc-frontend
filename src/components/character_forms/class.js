@@ -18,6 +18,7 @@ const Class = props => {
     activeSkillset: 0,
     skillsets: {},
 		viewSpecificClassDetails: 0,
+		viewSpecificArchetype: {},
 		activeTab: "Base Features"
   })
 	//
@@ -74,6 +75,14 @@ const Class = props => {
 		}
   }
 
+	const displayKlassArchetype = (arch) => {
+		if (arch.id === classDetails.viewSpecificArchetype.id){
+			setClassDetails({...classDetails, viewSpecificArchetype: {}})
+		} else {
+			setClassDetails({...classDetails, viewSpecificArchetype: arch})
+		}
+	}
+
   const mapClassDynamicFields = () => {
     return props.classes.map((val, idx)=> {
       let classId = `class-${idx}`
@@ -116,7 +125,7 @@ const Class = props => {
   // </label>
 
 	const renderClassOptions = () => {
-		let classes = props.classes
+		let classes = props.classes ?? []
 		if (props.campaignDetails) {
 			classes = props.campaignDetails.klasses
 		}
@@ -141,7 +150,12 @@ const Class = props => {
 	const renderTabs = () => {
 
 		const renderTabClick = (tab) => {
-			setClassDetails({...classDetails, activeTab: tab})
+			let resetSpecificArchetype = classDetails.viewSpecificArchetype
+			if (tab !== "Archetypes"){
+				resetSpecificArchetype = {}
+			}
+
+			setClassDetails({...classDetails, activeTab: tab, viewSpecificArchetype: resetSpecificArchetype})
 		}
 
 		return (
@@ -155,7 +169,7 @@ const Class = props => {
 		let klass = props.classes.find(kl => kl.id === classDetails.viewSpecificClassDetails)
 		return (
 			<div id="chosen-class-card">
-				<ClassTable klass={klass}/>
+				<ClassTable klass={klass} activeArchetype={classDetails.viewSpecificArchetype}/>
 			</div>
 		)
 	}
@@ -169,7 +183,7 @@ const Class = props => {
 				content = <ClassShow klass={klass} options={{displayImage: false, displayDescription: false, displayTable: false}}/>
 				break
 			case "Archetypes":
-				content = <ClassArchetypes archetypes={klass.archetypes}/>
+				content = <ClassArchetypes archetypes={klass.archetypes} displayKlassArchetype={displayKlassArchetype}/>
 				break
 			default:
 				content = <ClassShow klass={klass} options={{displayImage: false, displayDescription: false, displayTable: false}}/>
@@ -201,7 +215,7 @@ const Class = props => {
 				{!!classDetails.viewSpecificClassDetails && renderClassTable()}
 				{!!classDetails.viewSpecificClassDetails && renderTabs()}
 				{!!classDetails.viewSpecificClassDetails && renderClassDetails()}
-				{!!classDetails.viewSpecificClassDetails && <button onClick={() => setClassDetails({...classDetails, viewSpecificClassDetails: 0})}>Go Back</button>}
+				{!!classDetails.viewSpecificClassDetails && <button onClick={() => setClassDetails({...classDetails, viewSpecificClassDetails: 0, viewSpecificArchetype: {}, activeTab: "Base Features"})}>Go Back</button>}
 			</section>
     </section>
   )

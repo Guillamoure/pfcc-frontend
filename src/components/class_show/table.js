@@ -28,20 +28,61 @@ const Table = props => {
   }
 
   const renderLevelFeatures = (lvl) => {
+		// converts class features into an array of the table description with a slug for href
     let onlyFeatures = _.flatten(props.klass.klass_features.map(kf => {
 			let slug = kf.name.toLowerCase().split(" ").join("-")
 			return kf.feature_levels.map(fl => {
-				return {slug, featureLevel: fl}
+				return {slug, featureLevel: fl, color: "black"}
 			})
 		}))
-    const levelFeatures = onlyFeatures.filter(feature => {
+
+		// filter all the features by their level
+		let levelFeatures = onlyFeatures.filter(feature => {
 			const {table_description, level} = feature.featureLevel
-      return level === lvl && (table_description !== "none" && table_description !== "")
-    })
+			return level === lvl && (table_description !== "none" && table_description !== "")
+		})
+
+
+		// if there is an activeArchetype
+		if (props.activeArchetype.id){
+			levelFeatures = levelFeatures.map(feat => {
+				let newFeature = false
+				props.activeArchetype.klass_archetype_features.forEach(archF => {
+					archF.replaces_klass_features.forEach(kf => {
+						if (kf.klass_feature_id === feat.featureLevel.klass_feature_id){
+							if (!kf.affects_specific_level || kf.affects_specific_level === lvl){
+								newFeature = true
+							}
+						}
+					})
+				})
+				if (newFeature){return {...feat, strikethrough: true, color: "darkgrey"}}
+				else {return feat}
+			})
+			props.activeArchetype.klass_archetype_features.forEach(archF => {
+				archF.klass_archetype_feature_levels.forEach(archFL => {
+					if (archFL.table_description !== "none" && archFL.table_description !== ""){
+						if (archFL.level === lvl){
+							let slug = archF.name.toLowerCase().split(" ").join("-")
+
+							levelFeatures.push({slug, featureLevel: archFL, color: "forestgreen"})
+						}
+					}
+				})
+			})
+		}
+
+		// make dom element of description with slug href
     const nameOfFeatures = levelFeatures.map(feature => {
 			// return feature.featureLevel.table_description
-			return <a className="underline-hover" style={{color: "black"}} href={`#${feature.slug}`}>{feature.featureLevel.table_description}</a>
+			let style = {color: feature.color}
+			if (feature.strikethrough){
+				style.textDecoration = "line-through"
+			}
+			return <a className="underline-hover" style={style} href={`#${feature.slug}`}>{feature.featureLevel.table_description}</a>
 		})
+
+		// join all of them with commas to become a string
 		const domFeatures = []
 		for (let i = 0; i < nameOfFeatures.length; i++){
 			domFeatures.push(nameOfFeatures[i])

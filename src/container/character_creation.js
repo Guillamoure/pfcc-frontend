@@ -19,6 +19,7 @@ const CharacterCreation = props => {
 	const [ characterInfo, setCharacterInfo ] = React.useState({
 		activeField: "",
 		classes: [],
+		archetypes: [],
 		race: 0,
 		strength: 0,
 		dexterity: 0,
