@@ -236,3 +236,19 @@ export const tableDescriptionPerLevel = (lvl, klassFeatures, viewedArchetype, ch
 
 	return descriptions
 }
+
+export const archetypeClassSkillNodes = (chosenArchetypes) => {
+	let arr = []
+
+	chosenArchetypes.forEach(arch => {
+		arch.klass_archetype_features.forEach(archF => {
+			archF.replaces_klass_features.forEach(replaceKF => {
+				if (replaceKF.alters_class_skills){
+					arr.push(archF.description)
+				}
+			})
+		})
+	})
+
+	return arr
+}

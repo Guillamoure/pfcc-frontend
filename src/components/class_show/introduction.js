@@ -2,6 +2,8 @@ import React from 'react'
 import _ from 'lodash'
 import { connect } from 'react-redux'
 
+import { archetypeClassSkillNodes } from '../../utils/calculations/class_archetypes'
+
 
 class Introduction extends React.Component {
 
@@ -12,8 +14,14 @@ class Introduction extends React.Component {
   renderDescription = () => {
     if (this.props.klass.description){
 			if (this.props.options?.displayDescription === false && !this.state.showDetails){return <p onClick={() => this.setState({showDetails: true})}>Show Details</p>}
+
       let desc = this.props.klass.description
+			this.props.chosenArchetypes.forEach(arch => {
+				desc += `\n\n${arch.name}\n\n${arch.description}`
+			})
+
       desc = desc.split("\n\n")
+
 			let onClick = this.props.options?.displayDescription === false ? () => this.setState({showDetails: false}) : null
       return desc.map(para => <p key={_.random(1, 2000000)} onClick={onClick}>{para}</p>)
     }
@@ -36,9 +44,16 @@ class Introduction extends React.Component {
   renderSkills = () => {
     let validSkills = this.renderValidSkillsetSkills()
 		validSkills = validSkills.sort((a, b) => a.name.localeCompare(b.name))
-    return validSkills.map((skill, index, array) => {
+    let domSkills = validSkills.map((skill, index, array) => {
       return index === array.length -1 ? `and ${skill.name} (${skill.ability_score.slice(0, 3)}).` : `${skill.name} (${skill.ability_score.slice(0, 3)}), `
     })
+
+		archetypeClassSkillNodes(this.props.chosenArchetypes).forEach(archDesc => {
+			domSkills.push(<><br/><br/>{archDesc}</>)
+		})
+
+
+		return domSkills
   }
 
 	renderImage = () => {
@@ -50,11 +65,20 @@ class Introduction extends React.Component {
 		)
 	}
 
+	renderName = () => {
+		let name = []
+		this.props.chosenArchetypes.forEach(arch => {
+			name.push(arch.name)
+		})
+		name.push(this.props.klass.name)
+		return name.join(" ")
+	}
+
   render () {
     return (
       <div className='show' id='class-intro'>
         <span>
-          <h2>{this.props.klass.name}</h2>
+          <h2>{this.renderName()}</h2>
           {this.renderDescription()}
           <p><strong>Hit Die</strong>: d{this.props.klass.hit_die}</p>
           <p><strong>Starting Wealth</strong>: {this.props.klass.starting_wealth}</p>

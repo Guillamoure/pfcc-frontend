@@ -260,7 +260,7 @@ const ClassShow = props => {
 
   return (
     <span className='roboto show'>
-      {klassDisplay.klass.name && <Introduction klass={klassDisplay.klass} options={props.options}/>}
+      {klassDisplay.klass.name && <Introduction klass={klassDisplay.klass} options={props.options} chosenArchetypes={props.chosenArchetypes}/>}
       {props.admin ? <button onClick={toggleClassForm}>{klassDisplay.toggleClassForm ? "Hide Edit Class" : "Edit Class"}</button> : null}
       {klassDisplay.toggleClassForm ? <ClassForm toggleClassForm={klassDisplay.toggleClassForm} klass={klassDisplay.klass} renderClassEdit={renderClassEdit} history={props.history} /> : null }
 
