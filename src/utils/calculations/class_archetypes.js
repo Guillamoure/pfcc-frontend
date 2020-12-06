@@ -103,50 +103,6 @@ const shouldOptionsKlassFeatureBeRemoved = (klassFeature, chosenArchetypes) => {
 	return !klassFeatureLevels.length
 }
 
-// const featuresForGivenLevel = (lvl, klassFeatures, viewedArchetype, chosenArchetypes) => {
-// 	let features = []
-//
-// 	klassFeatures.forEach(kf => {
-// 		kf.feature_levels.forEach(fl => {
-// 			if (fl.level === lvl){
-//
-// 				let slug = f.name.toLowerCase().split(" ").join("-")
-// 				features.push({klassFeatureId: kf.id, slug, tableDescription: fl.table_description, color: "black"})
-//
-// 			}
-// 		})
-// 	})
-
-	// chosenArchetypes.forEach(arch => {
-	// 	arch.klass_archetype_features.forEach(archF => {
-	// 		archF.klass_archetype_feature_levels.forEach(archFL => {
-	// 			if (archFL.level === lvl){
-	//
-	// 				archF.replaces_klass_features.forEach(replaceKF => {
-	//
-	// 				})
-	// 				let slug = archF.name.toLowerCase().split(" ").join("-")
-	// 				features.push({slug, tableDescription: archFL.table_description, color: "darkblue"})
-	//
-	// 			}
-	// 		})
-	// 	})
-	// })
-	// if (viewedArchetype.id){
-	// 	viewedArchetype.klass_archetype_features.forEach(archF => {
-	// 		archF.replaces_klass_features.forEach(replaceKF => {
-	// 			if (replaceKF.klass_feature_id === klassFeatureId && !isFeatureReplaced){
-	// 				features.push({...kf, color: "darkgrey"})
-	// 				features.push({...archF, color: "forestgreen"})
-	// 				isFeatureReplaced = true
-	// 			}
-	// 		})
-	// 	})
-	// }
-
-// 	return features
-// }
-
 export const tableDescriptionsByLevel = (klassFeatures, viewedArchetype, chosenArchetypes) => {
 	let obj = {}
 

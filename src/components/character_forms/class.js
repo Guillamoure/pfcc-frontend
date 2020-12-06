@@ -179,6 +179,11 @@ const Class = props => {
 		)
 	}
 
+	const archetypeChange = (id) => {
+		setClassDetails({...classDetails, viewSpecificArchetype: {}, activeTab: "Base Features"})
+		props.archetypeChange(id)
+	}
+
 	const renderClassDetails = () => {
 		let klass = props.classes.find(kl => kl.id === classDetails.viewSpecificClassDetails)
 		let archetypes = props.chosenArchetypes.map(id => {
@@ -193,7 +198,7 @@ const Class = props => {
 				content = <ClassShow klass={klass} options={{displayImage: false, displayDescription: false, displayTable: false}} chosenArchetypes={archetypes}/>
 				break
 			case "Archetypes":
-				content = <ClassArchetypes archetypes={klass.archetypes} displayKlassArchetype={displayKlassArchetype} chosenArchetypes={archetypes} archetypeChange={props.archetypeChange}/>
+				content = <ClassArchetypes archetypes={klass.archetypes} displayKlassArchetype={displayKlassArchetype} chosenArchetypeIds={props.chosenArchetypes} archetypeChange={archetypeChange}/>
 				break
 			default:
 				content = <ClassShow klass={klass} options={{displayImage: false, displayDescription: false, displayTable: false}}/>

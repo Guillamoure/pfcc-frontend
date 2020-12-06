@@ -17,7 +17,7 @@ const ArchetypeShow = props => {
 						<h4><strong>{name}</strong></h4>
 					</span>
 					<span>
-						<button onClick={() => props.archetypeChange(id)}>Add Archetype</button>
+						<button onClick={() => props.archetypeChange(id)}>{props.chosen ? "Remove" : "Add"} Archetype</button>
 						<button onClick={collapseContent}>Collapse</button>
 					</span>
 				</div>
