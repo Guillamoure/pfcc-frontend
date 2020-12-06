@@ -167,15 +167,25 @@ const Class = props => {
 
 	const renderClassTable = () => {
 		let klass = props.classes.find(kl => kl.id === classDetails.viewSpecificClassDetails)
+		let archetypes = props.chosenArchetypes.map(id => {
+			if (!klass.archetypes){return null}
+			return klass.archetypes.find(klar => klar.id === id) || null
+		})
+		archetypes = archetypes.filter(arch => arch)
 		return (
 			<div id="chosen-class-card">
-				<ClassTable klass={klass} activeArchetype={classDetails.viewSpecificArchetype}/>
+				<ClassTable klass={klass} activeArchetype={classDetails.viewSpecificArchetype} chosenArchetypes={archetypes}/>
 			</div>
 		)
 	}
 
 	const renderClassDetails = () => {
 		let klass = props.classes.find(kl => kl.id === classDetails.viewSpecificClassDetails)
+		let archetypes = props.chosenArchetypes.map(id => {
+			if (!klass.archetypes){return null}
+			return klass.archetypes.find(klar => klar.id === id) || null
+		})
+		archetypes = archetypes.filter(arch => arch)
 
 		let content
 		switch (classDetails.activeTab){
@@ -183,7 +193,7 @@ const Class = props => {
 				content = <ClassShow klass={klass} options={{displayImage: false, displayDescription: false, displayTable: false}}/>
 				break
 			case "Archetypes":
-				content = <ClassArchetypes archetypes={klass.archetypes} displayKlassArchetype={displayKlassArchetype}/>
+				content = <ClassArchetypes archetypes={klass.archetypes} displayKlassArchetype={displayKlassArchetype} chosenArchetypes={archetypes} archetypeChange={props.archetypeChange}/>
 				break
 			default:
 				content = <ClassShow klass={klass} options={{displayImage: false, displayDescription: false, displayTable: false}}/>

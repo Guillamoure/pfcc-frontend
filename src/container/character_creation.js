@@ -114,6 +114,17 @@ const CharacterCreation = props => {
 		setCharacterInfo({...characterInfo, classes: [...characterInfo.classes, id]})
 	}
 
+	const archetypeChange = (id) => {
+		let archetypeDupe = [...characterInfo.archetypes]
+		if (archetypeDupe.includes(id)){
+			let i = archetypeDupe.indexOf(id)
+			archetypeDupe.splice(i, 1)
+		} else {
+			archetypeDupe.push(id)
+		}
+		setCharacterInfo({...characterInfo, archetypes: archetypeDupe})
+	}
+
 	const removeLatestClass = () => {
 		let classesDuplicate =  [...characterInfo.classes]
 		classesDuplicate.splice(classesDuplicate.length - 1, 1)
@@ -260,7 +271,7 @@ const CharacterCreation = props => {
         )
       case "Class":
         return (
-            <Class renderChange={renderChange} renderDynamicChanges={renderDynamicChanges} addClassField={addClassField} chosenClasses={characterInfo.classes} renderClassChange={renderClassChange} campaignDetails={characterInfo.campaignDetails} removeLatestClass={removeLatestClass}/>
+            <Class renderChange={renderChange} renderDynamicChanges={renderDynamicChanges} addClassField={addClassField} chosenClasses={characterInfo.classes} renderClassChange={renderClassChange} campaignDetails={characterInfo.campaignDetails} removeLatestClass={removeLatestClass} chosenArchetypes={characterInfo.archetypes} archetypeChange={archetypeChange}/>
         )
       case "Skills":
         return (

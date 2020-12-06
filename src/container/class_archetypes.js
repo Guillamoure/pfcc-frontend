@@ -6,10 +6,10 @@ const ClassArchetypes = props => {
 	const renderArchetypes = () => {
 		if (!props.archetypes.length){ return null }
 		return props.archetypes.map(arch => {
-			return <ArchetypeShow archetype={arch} displayKlassArchetype={props.displayKlassArchetype}/>
+			return <ArchetypeShow archetype={arch} displayKlassArchetype={props.displayKlassArchetype} archetypeChange={props.archetypeChange}/>
 		})
 	}
-	
+
 	return (
 		<ul id="chosen-class-archetype-container">
 			{renderArchetypes()}
