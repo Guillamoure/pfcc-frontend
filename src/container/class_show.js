@@ -227,7 +227,7 @@ const ClassShow = props => {
     //   }
     // })
     if (!featureOptions){
-      return <Features klass={klassDisplay.klass} renderClassFeature={renderClassFeature} modal={klassDisplay.modal} toggleModal={toggleModal}/>
+      return <Features klass={klassDisplay.klass} renderClassFeature={renderClassFeature} modal={klassDisplay.modal} toggleModal={toggleModal} chosenArchetypes={props.chosenArchetypes}/>
     } else {
       return (
         <div>

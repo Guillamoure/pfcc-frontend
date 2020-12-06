@@ -58,8 +58,8 @@ export const compositeKlassFeatures = (klassFeatures, chosenArchetypes) => {
 	return features
 }
 
-export const sortCompositeKlassFeatures = (klassFeatures, viewedArchetype, chosenArchetypes) => {
-	let features = compositeKlassFeatures(klassFeatures, viewedArchetype, chosenArchetypes)
+export const sortCompositeKlassFeatures = (klassFeatures, chosenArchetypes) => {
+	let features = compositeKlassFeatures(klassFeatures, chosenArchetypes)
 
 	const sortedFeatures = features.sort((a, b) => {
 		let lowestA = 20

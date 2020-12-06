@@ -1,22 +1,24 @@
 import React from 'react'
 // import _ from 'lodash'
+import { sortCompositeKlassFeatures } from '../../utils/calculations/class_archetypes'
 
 import Feature from './feature'
 
 class Features extends React.Component {
 
   renderFeatures = () => {
-    const sortedFeatures = this.props.klass.klass_features.sort((a, b) => {
-			let lowestA = 20
-			a.feature_levels.forEach(fl => {
-				if (fl.level < lowestA){lowestA = fl.level}
-			})
-			let lowestB = 20
-			b.feature_levels.forEach(fl => {
-				if (fl.level < lowestB){lowestB = fl.level}
-			})
-      return lowestA - lowestB
-    })
+		const sortedFeatures = sortCompositeKlassFeatures(this.props.klass.klass_features, this.props.chosenArchetypes)
+    // const sortedFeatures = this.props.klass.klass_features.sort((a, b) => {
+		// 	let lowestA = 20
+		// 	a.feature_levels.forEach(fl => {
+		// 		if (fl.level < lowestA){lowestA = fl.level}
+		// 	})
+		// 	let lowestB = 20
+		// 	b.feature_levels.forEach(fl => {
+		// 		if (fl.level < lowestB){lowestB = fl.level}
+		// 	})
+    //   return lowestA - lowestB
+    // })
     // IF I WANT TO SHOW ON A FEATURE IF IT IS LEARNED MULTIPLE TIMES
     // const multiLevelAbilities = {}
     // sortedFeatures.forEach(feature => {

@@ -190,7 +190,7 @@ const Class = props => {
 		let content
 		switch (classDetails.activeTab){
 			case "Base Features":
-				content = <ClassShow klass={klass} options={{displayImage: false, displayDescription: false, displayTable: false}}/>
+				content = <ClassShow klass={klass} options={{displayImage: false, displayDescription: false, displayTable: false}} chosenArchetypes={archetypes}/>
 				break
 			case "Archetypes":
 				content = <ClassArchetypes archetypes={klass.archetypes} displayKlassArchetype={displayKlassArchetype} chosenArchetypes={archetypes} archetypeChange={props.archetypeChange}/>
