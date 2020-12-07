@@ -3,6 +3,7 @@ import _ from 'lodash'
 import FeatureForm from './feature_form'
 import { connect } from 'react-redux'
 import localhost from '../../localhost'
+import { descriptionParser } from '../../utils/fuf'
 
 class Feature extends React.Component {
 
@@ -74,8 +75,7 @@ class Feature extends React.Component {
     if (this.props.feature.description){
 
       let desc = this.props.feature.description
-      desc = desc.split("\n\n")
-      return desc.map(para => <p key={_.random(1, 2000000)}>{para}</p>)
+      return descriptionParser(desc)
     }
   }
 

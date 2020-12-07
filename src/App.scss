@@ -983,3 +983,15 @@ $tan: #cfb997;
 	padding: 0.25em;
 	margin: 0.2em;
 }
+
+.generic-table {
+	th {
+		background-color: lightblue;
+	}
+	th, tr {
+		text-align: center;
+	}
+	tr:nth-child(even) {
+		background-color: gainsboro;
+	}
+}

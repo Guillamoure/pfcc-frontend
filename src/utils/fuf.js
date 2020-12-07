@@ -113,3 +113,46 @@ export const mod = (score) => {
 export const pluser = (num) => {
   return num < 0 ? num : `+${num}`
 }
+
+export const descriptionParser = description => {
+	let desc
+
+	let table = null
+	if (description.includes("<table>")){
+		let i = description.indexOf("<table>")
+		let tableString = description.substr(i, description.length-1)
+		description = description.replace(tableString, "")
+		table = parseTable(tableString)
+	}
+
+	desc = description.split("\n\n")
+	desc = desc.map(para => <p key={_.random(1, 2000000)}>{para}</p>)
+
+
+	return <>{desc} {table}</>
+}
+
+const parseTable = text => {
+	let innerTable = text.slice(7, -8)
+	innerTable.trim()
+	innerTable = innerTable.split("</tr>")
+
+	let rows = innerTable.map(r => {
+		r = r.trim()
+		let i = r.indexOf("<tr>")
+		r = r.substr(i+4, r.length-1)
+
+		let cellContainer = r.includes("<th>") ? "<th>" : "<td>"
+		let cells = r.split(cellContainer)
+
+		cells = cells.map(c => {
+			c = c.trim()
+			if (c === ""){return null}
+			let content = c.substr(0, c.length-5)
+			return cellContainer === "<th>" ? <th>{content}</th> : <td>{content}</td>
+		})
+		return <tr>{cells}</tr>
+	})
+
+	return <table className="generic-table">{rows}</table>
+}

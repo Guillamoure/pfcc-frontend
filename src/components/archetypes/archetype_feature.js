@@ -1,13 +1,13 @@
 import React from 'react'
 import _ from 'lodash'
+import { descriptionParser } from '../../utils/fuf'
 
 const ArchetypeFeature = props => {
 
 	const { name, description } = props.feature
 
 	const renderDescription = () => {
-		let desc = description.split("\n\n")
-		return desc.map(para => <p key={_.random(1, 2000000)}>{para}</p>)
+		return descriptionParser(description)
 	}
 
 	let slug = name.toLowerCase().split(" ").join("-")
