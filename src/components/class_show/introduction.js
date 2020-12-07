@@ -2,7 +2,7 @@ import React from 'react'
 import _ from 'lodash'
 import { connect } from 'react-redux'
 
-import { archetypeClassSkillNodes } from '../../utils/calculations/class_archetypes'
+import { archetypeClassSkillNodes } from '../../utils/calculations/class'
 
 
 class Introduction extends React.Component {

@@ -617,6 +617,22 @@ const reducer = (state = initialState, action) => {
 				}
 			})
 			return {...state, classes: klasses}
+		case "STORE OPTIONS":
+			var klasses = [...state.classes].map(cl => {
+				if (cl.id !== action.klassId){
+					return cl
+				} else {
+					var klassFeatures = cl.klass_features.map(kf => {
+						if (kf.id !== action.klassFeatureId){
+							return kf
+						} else {
+							return {...kf, options: action.options}
+						}
+					})
+					return {...cl, klass_features: klassFeatures}
+				}
+			})
+			return {...state, classes: klasses}
     default:
       return state
   }

@@ -252,3 +252,15 @@ export const archetypeClassSkillNodes = (chosenArchetypes) => {
 
 	return arr
 }
+
+export const doesKlassFeatureHaveOptions = (klass) => {
+	let id = 0
+
+	klass.klass_features.forEach(kf => {
+		if (kf.has_klass_feature_options){
+			id = kf.id
+		}
+	})
+
+	return id
+}

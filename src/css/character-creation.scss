@@ -233,6 +233,18 @@ $tan: #cfb997;
 			}
 		}
 	}
+	#chosen-class-options-container {
+		list-style: none;
+		.chosen-class-option {
+			border: 1px solid black;
+			padding: 0.2em;
+			margin-bottom: 0.25em;
+			border-radius: 0.5em;
+			h4 {
+				margin-bottom: 0.25em;
+			}
+		}
+	}
 	button {
 		height: min-content;
 		border-radius: 0.3em;

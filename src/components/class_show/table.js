@@ -1,7 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
 import { renderTH } from '../../utils/fuf'
-import { tableDescriptionsByLevel } from '../../utils/calculations/class_archetypes'
+import { tableDescriptionsByLevel } from '../../utils/calculations/class'
 
 const Table = props => {
 
@@ -32,7 +32,7 @@ const Table = props => {
 
   const renderLevelFeatures = (lvl) => {
 		// converts class features into an array of the table description with a slug for href
-		let levelFeatures = tableDescriptions[lvl]
+		let levelFeatures = tableDescriptions[lvl] ?? []
 		// let klassFeatureIds = []
 		//
     // props.klass.klass_features.forEach(kf => {

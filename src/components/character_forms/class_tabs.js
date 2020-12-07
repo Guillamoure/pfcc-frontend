@@ -2,14 +2,15 @@ import React from 'react'
 import Tab from '../character_show/tab'
 
 const ClassTabs = props => {
-	
+
 	const tabOptions = () => {
-		return (
-			<>
-				<Tab label="Base Features" renderTabClick={props.renderTabClick} activeTab={props.activeTab}/>
-				<Tab label="Archetypes" renderTabClick={props.renderTabClick} activeTab={props.activeTab}/>
-			</>
-		)
+		let array = ["Base Features", "Archetypes"]
+		if (props.optionsTabName){
+			array.push(props.optionsTabName)
+		}
+		return array.map(lbl => {
+			return <Tab label={lbl} renderTabClick={props.renderTabClick} activeTab={props.activeTab}/>
+		})
 	}
 
 	return(

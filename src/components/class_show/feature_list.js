@@ -1,6 +1,6 @@
 import React from 'react'
 // import _ from 'lodash'
-import { sortCompositeKlassFeatures } from '../../utils/calculations/class_archetypes'
+import { sortCompositeKlassFeatures } from '../../utils/calculations/class'
 
 import Feature from './feature'
 

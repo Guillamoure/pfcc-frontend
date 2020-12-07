@@ -8,8 +8,10 @@ import ClassShow from '../../container/class_show'
 import ClassTable from '../class_show/table'
 import ClassTabs from './class_tabs'
 import { getFetch } from '../../utils/fetches'
-import { addArchetypesAction } from '../../utils/action_creator/classes'
+import { addArchetypesAction, addOptionsAction } from '../../utils/action_creator/classes'
+import { doesKlassFeatureHaveOptions } from '../../utils/calculations/class'
 import ClassArchetypes from '../../container/class_archetypes'
+import ClassOptions from '../../container/class_options'
 
 const Class = props => {
 
@@ -19,7 +21,9 @@ const Class = props => {
     skillsets: {},
 		viewSpecificClassDetails: 0,
 		viewSpecificArchetype: {},
-		activeTab: "Base Features"
+		activeTab: "Base Features",
+		hasOptions: false,
+		optionsTabName: null
   })
 	//
   // componentDidMount = () => {
@@ -40,6 +44,17 @@ const Class = props => {
 						addArchetypesAction(klass.id, data)
 					}
 				})
+			}
+			let id = doesKlassFeatureHaveOptions(klass)
+			if (id){
+				getFetch(`klass_features/${id}/options`)
+					.then(data => {
+						if (!data.error){
+							addOptionsAction(klass.id, id, data)
+							let optionsTabName = klass.klass_features.find(kf => kf.id === id)?.name
+							setClassDetails({...classDetails, hasOptions: true, optionsTabName})
+						}
+					})
 			}
 
 		}
@@ -160,7 +175,7 @@ const Class = props => {
 
 		return (
 			<nav id="chosen-class-tabs">
-				<ClassTabs activeTab={classDetails.activeTab} renderTabClick={renderTabClick}/>
+				<ClassTabs activeTab={classDetails.activeTab} renderTabClick={renderTabClick} optionsTabName={classDetails.optionsTabName}/>
 			</nav>
 		)
 	}
@@ -180,7 +195,7 @@ const Class = props => {
 	}
 
 	const archetypeChange = (id) => {
-		setClassDetails({...classDetails, viewSpecificArchetype: {}, activeTab: "Base Features"})
+		setClassDetails({...classDetails, viewSpecificArchetype: {}, activeTab: "Base Features", hasOptions: false, optionsTabName: null})
 		props.archetypeChange(id)
 	}
 
@@ -191,6 +206,8 @@ const Class = props => {
 			return klass.archetypes.find(klar => klar.id === id) || null
 		})
 		archetypes = archetypes.filter(arch => arch)
+		let optionsId = doesKlassFeatureHaveOptions(klass)
+		let options = klass.klass_features.find(kf => kf.id === optionsId)?.options
 
 		let content
 		switch (classDetails.activeTab){
@@ -199,6 +216,9 @@ const Class = props => {
 				break
 			case "Archetypes":
 				content = <ClassArchetypes archetypes={klass.archetypes} displayKlassArchetype={displayKlassArchetype} chosenArchetypeIds={props.chosenArchetypes} archetypeChange={archetypeChange}/>
+				break
+			case `${classDetails.optionsTabName}`:
+				content = <ClassOptions options={options} />
 				break
 			default:
 				content = <ClassShow klass={klass} options={{displayImage: false, displayDescription: false, displayTable: false}}/>
@@ -230,7 +250,7 @@ const Class = props => {
 				{!!classDetails.viewSpecificClassDetails && renderClassTable()}
 				{!!classDetails.viewSpecificClassDetails && renderTabs()}
 				{!!classDetails.viewSpecificClassDetails && renderClassDetails()}
-				{!!classDetails.viewSpecificClassDetails && <button onClick={() => setClassDetails({...classDetails, viewSpecificClassDetails: 0, viewSpecificArchetype: {}, activeTab: "Base Features"})}>Go Back</button>}
+				{!!classDetails.viewSpecificClassDetails && <button onClick={() => setClassDetails({...classDetails, viewSpecificClassDetails: 0, viewSpecificArchetype: {}, activeTab: "Base Features", hasOptions: false, optionsTabName: null})}>Go Back</button>}
 			</section>
     </section>
   )
