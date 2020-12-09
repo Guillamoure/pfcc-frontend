@@ -115,21 +115,76 @@ export const pluser = (num) => {
 }
 
 export const descriptionParser = description => {
-	let desc
+	let desc = []
 
-	let table = null
+	let tables = []
 	if (description.includes("<table>")){
-		let i = description.indexOf("<table>")
-		let tableString = description.substr(i, description.length-1)
-		description = description.replace(tableString, "")
-		table = parseTable(tableString)
+		// if <table>
+		let tempArr = description.split("<table>")
+
+		for (let i = 0; i < tempArr.length; i++){
+			// break the description into an array where strings are space with symbols
+			if (!tempArr[i].includes ("</table>")){
+				desc.push(tempArr[i])
+			} else {
+				let tableArr = tempArr[i].split("</table>")
+
+				let table = parseTable(tableArr[0])
+
+				tables.push(table)
+				// like {{0}} ?
+				// that signify an index of an array with the table to be inserted later
+				desc.push(`{{${tables.length - 1}}}`)
+				desc.push(tableArr[1])
+			}
+			// if no <table>
+		}
+
+
+		// let i = description.indexOf("<table>")
+		// let tableString = description.substr(i, description.length-1)
+		// description = description.replace(tableString, "")
+		// table = parseTable(tableString)
+	} else {
+		// put description into array with one length
+		desc.push(description)
 	}
 
-	desc = description.split("\n\n")
-	desc = desc.map(para => <p key={_.random(1, 2000000)}>{para}</p>)
+	let descSplitParagraphs =  []
+
+	// then, iterate
+	desc.forEach(d => {
+		// if a table placeholder is present, skip it
+		if (d.includes("{{") && d.includes("}}")){
+			descSplitParagraphs.push(d)
+		} else {
+			// take string, split by \n\n
+			let arr = d.split("\n\n")
+			// then remap the array of strings into a new array
+			descSplitParagraphs = [...descSplitParagraphs, ...arr]
+		}
+	})
+
+	descSplitParagraphs = descSplitParagraphs.map(dsp => {
+		if (dsp.includes("{{") && dsp.includes("}}")){
+			// replace table symbol
+			let i = dsp.replace("{{", "")
+			i = i.replace("}}", "")
+			i = parseInt(i)
+			return tables[i]
+		} else {
+			return <p key={_.random(1, 2000000)}>{parseInlineSemantics(dsp)}</p>
+		}
+	})
+	// you should have an array of <p> and table symbols
+
+	// serve with parsely and flakey salt
+
+	// desc = description.split("\n\n")
+	// desc = desc.map(para => <p key={_.random(1, 2000000)}>{para}</p>)
 
 
-	return <>{desc} {table}</>
+	return descSplitParagraphs
 }
 
 const parseTable = text => {
@@ -155,4 +210,30 @@ const parseTable = text => {
 	})
 
 	return <table className="generic-table">{rows}</table>
+}
+
+const parseInlineSemantics = (text) => {
+	let arr = [text]
+	let underline = arr.find(t => {
+		if (typeof t === "string"){
+			return t.includes("<underline>")
+		} else {return false}
+	})
+
+	if (underline){
+		arr = arr.map(t => {
+			if (!t.includes("<underline>")){return t}
+			else {
+				let tempArr = []
+				let front = t.split("<underline>")
+				let back = front[1].split("</underline>")
+				tempArr.push(front[0])
+				tempArr.push(<span className="underline">{back[0]}</span>)
+				tempArr.push(back[1])
+				return tempArr
+			}
+		})
+	}
+
+	return arr
 }

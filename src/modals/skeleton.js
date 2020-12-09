@@ -16,6 +16,7 @@ import KlassSpecialization from '../components/modals/klass_specialization'
 import BonusSpellSlotManager from '../components/modals/bonus_spell_slot_manager'
 import Feat from '../components/modals/feat'
 import CreatureStatBlock from '../components/creature_stat_block'
+import SkillDescription from '../components/skill_description'
 
 const ModalSkeleton = (props) => {
 
@@ -49,6 +50,8 @@ const ModalSkeleton = (props) => {
 				return <Feat feat={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
 			case 'statBlock':
 				return <CreatureStatBlock creature={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
+			case 'skill':
+				return <SkillDescription skillId={props.modal.obj} />
       default:
         break
     }

@@ -31,6 +31,7 @@ const initialState = {
   classes: [],
   races: [],
   spells: [],
+	skills: [],
   tooltip: {},
   modal: {},
 	websocket: {},
@@ -81,7 +82,7 @@ const reducer = (state = initialState, action) => {
     // case "CLASSES":
     //   return {...state, classes: action.classes}
     case "EVERYTHING":
-      return {...state, classes: action.classes, races: action.races};
+      return {...state, classes: action.classes, races: action.races, skills: action.skills};
     case "CAST CANTRIP SPA OR SPONTANEOUS SPELL":
       let updatedState = castingCantripSPASpontaneous(state, action)
       return {...state, character_info: updatedState};
@@ -633,6 +634,8 @@ const reducer = (state = initialState, action) => {
 				}
 			})
 			return {...state, classes: klasses}
+		case 'ADD SKILL':
+			return {...state, skills: [...state.skills, action.skill]}
     default:
       return state
   }

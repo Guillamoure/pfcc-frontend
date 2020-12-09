@@ -50,7 +50,7 @@ class App extends React.Component {
     fetch(`${localhost}/api/v1/data`)
     .then(r => r.json())
     .then(data => {
-      this.props.dispatch({type: 'EVERYTHING', classes: data.klasses, races: data.races })
+      this.props.dispatch({type: 'EVERYTHING', classes: data.klasses, races: data.races, skills: data.skills})
     })
   }
   // COMMENTED OUT FOR TESTING PURPOSES

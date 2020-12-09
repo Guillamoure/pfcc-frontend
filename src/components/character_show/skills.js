@@ -2,8 +2,8 @@ import React from 'react'
 import _ from 'lodash'
 import { connect } from 'react-redux'
 import localhost from '../../localhost'
-import { abilityScoreMod } from '../../helper_functions/calculations/ability_scores'
-import { skillBonusPluser, isThisAClassSkill, skillRanks, renderSkillTooltip, renderSkillName } from '../../helper_functions/calculations/skills'
+import { abilityScoreMod } from '../../utils/calculations/ability_scores'
+import { skillBonusPluser, isThisAClassSkill, skillRanks, renderSkillTooltip, renderSkillName } from '../../utils/calculations/skills'
 
 class Skills extends React.Component {
 

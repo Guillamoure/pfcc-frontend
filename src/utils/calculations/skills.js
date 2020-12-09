@@ -4,6 +4,7 @@ import { abilityScoreMod } from './ability_scores'
 import { armorCheckPenalty } from './proficiencies'
 import { pluser } from '../../fuf'
 import { locateAbility, locateFeatureThroughAbility } from '../fuf'
+import { modalAction } from '../action_creator/popups'
 
 export const skillBonusArray = (skillObj) => {
 	let permanent = 0
@@ -157,5 +158,5 @@ export const renderSkillName = skillObj => {
 	}
 
 
-	return <>{name}{hasACP}{asterisk}</>
+	return <><span onClick={() => modalAction("skill", skillObj.id)}>{name}</span>{hasACP}{asterisk}</>
 }

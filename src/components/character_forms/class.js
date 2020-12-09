@@ -195,7 +195,7 @@ const Class = props => {
 	}
 
 	const archetypeChange = (id) => {
-		setClassDetails({...classDetails, viewSpecificArchetype: {}, activeTab: "Base Features", hasOptions: false, optionsTabName: null})
+		setClassDetails({...classDetails, viewSpecificArchetype: {}, activeTab: "Base Features", hasOptions: false})
 		props.archetypeChange(id)
 	}
 
