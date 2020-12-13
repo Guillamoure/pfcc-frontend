@@ -34,7 +34,7 @@ $tan: #cfb997;
 .container-8 {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
-  grid-template-rows: repeat(12, 1fr);
+  grid-template-rows: repeat(9, 1fr);
 }
 
 .container-6 {
@@ -631,6 +631,7 @@ $tan: #cfb997;
 .underline-hover:hover {
   text-decoration: underline;
   color: cyan;
+	cursor: default;
 }
 
 .underline {
