@@ -46,11 +46,11 @@ const Details = props => {
     )
   }
 
-	const renderAbilityForm = () => {
-		return (
-				<AbilityForm renderChange={props.renderChange} strength={props.strength}  dexterity={props.dexterity} constitution={props.constitution} intelligence={props.intelligence} wisdom={props.wisdom} charisma={props.charisma} mapAbilityScores={props.mapAbilityScores}/>
-		)
-	}
+	// const renderAbilityForm = () => {
+	// 	return (
+	// 			<AbilityForm renderChange={props.renderChange} strength={props.strength}  dexterity={props.dexterity} constitution={props.constitution} intelligence={props.intelligence} wisdom={props.wisdom} charisma={props.charisma} mapAbilityScores={props.mapAbilityScores}/>
+	// 	)
+	// }
 
   const renderDescription = () => {
     return (
@@ -116,7 +116,6 @@ const Details = props => {
       {renderName()}
 			{renderCampaign()}
       {renderAlignment()}
-			{renderAbilityForm()}
       {renderDescription()}
     </section>
   )

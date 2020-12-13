@@ -42,7 +42,7 @@ class Skills extends React.Component {
   }
 
   renderSkillTableRow = () => {
-    const skillset = this.state.skillsets.find(ss => ss.id === this.props.activeSkillset) ?? {}
+    const skillset = this.state.skillsets.find(ss => ss.id === parseInt(this.props.activeSkillset)) ?? {}
     const sortedSkills = skillset?.skills?.sort((a,b) => a.name > b.name ? 1 : -1) ?? []
     return sortedSkills.map(skill => {
       return (
@@ -50,8 +50,8 @@ class Skills extends React.Component {
           <td><strong>{skill.ability_score.slice(0, 3)}</strong></td>
           <td>{skill.name}</td>
         </tr>
-      )}
-    )
+      )
+    })
   }
 
 

@@ -3,16 +3,16 @@ import React from 'react'
 const Navbar = props => {
 
 	const renderTabs = () => {
+		// {renderTab("Skills")}
+		// {renderTab("Feats")}
+		// {renderTab("Gold & Equipment")}
 		return (
 			<ul>
 				{renderTab("Home")}
 				{renderTab("Ancestry")}
 				{renderTab("Class")}
-				{renderTab("Abilities")}
-				{renderTab("Skills")}
-				{renderTab("Feats")}
+				{renderTab("Ability Scores")}
 				{renderTab("Details")}
-				{renderTab("Gold & Equipment")}
 				{renderTab("Create Character")}
 			</ul>
 		)

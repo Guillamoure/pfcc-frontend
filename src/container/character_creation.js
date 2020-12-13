@@ -10,6 +10,8 @@ import Race from '../components/character_forms/race'
 import Class from '../components/character_forms/class'
 import Details from '../components/character_forms/details'
 import Skills from '../components/character_forms/skills'
+import AbilityForm from '../components/character_forms/ability_scores'
+import CharacterCreationConfirmation from '../components/character_forms/character_creation_confirmation'
 
 import CreationTabs from './creation_tabs'
 import Navbar from '../components/character_forms/navbar'
@@ -135,12 +137,12 @@ const CharacterCreation = props => {
     setCharacterInfo({...characterInfo, activeTab: choice})
   }
 
-  const renderSubmit = () => {
-		const {name, strength, dexterity, constitution, intelligence, wisdom, charisma, race, doesRacehaveAnyBonus, anyBonus} = characterInfo
-    if (name && strength && dexterity && constitution && intelligence && wisdom && charisma && validClasses() && race && (doesRacehaveAnyBonus ? anyBonus : true)) {
-      return <button className='create-btn' onClick={createCharacter}>Create Character!</button>
-    }
-  }
+  // const renderSubmit = () => {
+	// 	const {name, strength, dexterity, constitution, intelligence, wisdom, charisma, race, doesRacehaveAnyBonus, anyBonus} = characterInfo
+  //   if (name && strength && dexterity && constitution && intelligence && wisdom && charisma && validClasses() && race && (doesRacehaveAnyBonus ? anyBonus : true)) {
+  //     return <button className='create-btn' onClick={createCharacter}>Create Character!</button>
+  //   }
+  // }
 
   const renderDynamicChanges = (e, index) => {
     let classes = [...characterInfo.classes]
@@ -174,44 +176,6 @@ const CharacterCreation = props => {
       valid = false
     }
     return valid
-  }
-
-  const createCharacter = () => {
-    fetch(`${localhost}/api/v1/characters`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify({
-        character: characterInfo,
-        user_id: props.currentUser.id
-      })
-    })
-    .then(res => res.json())
-    .then(data => {
-      console.log(data)
-      createCharacterClass(data.character.id)
-    })
-  }
-
-  const createCharacterClass = (characterId) => {
-    fetch(`${localhost}/api/v1/character_klasses`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify({
-        character_id: characterId,
-        classes: characterInfo.classes
-      })
-    })
-    .then(res => res.json())
-    .then(data => {
-      console.log(data)
-      props.history.push('/characters/'+ characterId)
-    })
   }
 
   const renderdoesHaveAnyBonus = () => {
@@ -277,6 +241,14 @@ const CharacterCreation = props => {
         return (
             <Skills activeSkillset={characterInfo.activeSkillset} renderChange={renderChange} classes={characterInfo.classes}/>
         )
+			case "Ability Scores":
+				return (
+						<AbilityForm renderChange={renderChange} strength={characterInfo.strength}  dexterity={characterInfo.dexterity} constitution={characterInfo.constitution} intelligence={characterInfo.intelligence} wisdom={characterInfo.wisdom} charisma={characterInfo.charisma} mapAbilityScores={mapAbilityScores}/>
+				)
+			case "Create Character":
+				return (
+					<CharacterCreationConfirmation characterInfo={characterInfo} user_id={props.currentUser.id}/>
+				)
       default:
         return <>Ya</>
     }
@@ -294,9 +266,6 @@ const CharacterCreation = props => {
         {/*<button onClick={() => renderButtonClick("class")}>{characterInfo.activeField === "class" ? "Hide Class Form": "Choose Your Class"}</button>*/}
       </section>
 
-      <div className='confirmation centered'>
-        {renderSubmit()}
-      </div>
     </main>
   )
 
@@ -309,4 +278,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default withRouter(connect(mapStateToProps)(CharacterCreation))
+export default connect(mapStateToProps)(CharacterCreation)

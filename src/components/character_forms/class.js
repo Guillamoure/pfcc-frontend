@@ -141,7 +141,7 @@ const Class = props => {
 
 	const renderClassOptions = () => {
 		let classes = props.classes ?? []
-		if (props.campaignDetails) {
+		if (props.campaignDetails?.klasses.length > 1) {
 			classes = props.campaignDetails.klasses
 		}
 		let classCards = classes.sort((a,b) => a.name.localeCompare(b.name)).map(klass => <ClassTile klass={klass} renderClassChange={props.renderClassChange} displayChosenClass={displayChosenClass}/>)
