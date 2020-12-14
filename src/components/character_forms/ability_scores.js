@@ -2,6 +2,7 @@ import React from 'react'
 import _ from 'lodash'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { mod, pluser } from '../../utils/fuf'
 
 class AbilityForm extends React.Component{
 
@@ -38,25 +39,31 @@ class AbilityForm extends React.Component{
         <button onClick={this.generateRandomAbilityScores}>Generate 6 numbers!</button>
         {this.state.numbers.length === 6 && <button onClick={() => this.props.mapAbilityScores(this.state.numbers)}>Map directly to Abilities!</button>}
         <br /><br />
-        <div className='container-2' style={{marginLeft: '20%'}}>
+        <div id="character-creation-display-ability-scores" >
           <label className="new-character-label"><strong>Strength</strong></label>
             <input type="number" name="strength" className="new-character-text-input" value={this.props.strength} onChange={this.props.renderChange}/>
+						<span> Modifier: {pluser(mod(this.props.strength))}</span>
 
           <label className="new-character-label"><strong>Dexterity</strong></label>
             <input type="number" name="dexterity" className="new-character-text-input" value={this.props.dexterity} onChange={this.props.renderChange}/>
+						<span> Modifier: {pluser(mod(this.props.dexterity))}</span>
 
           <label className="new-character-label"><strong>Constitution</strong></label>
             <input type="number" name="constitution" className="new-character-text-input" value={this.props.constitution} onChange={this.props.renderChange}/>
+						<span> Modifier: {pluser(mod(this.props.constitution))}</span>
 
           <label className="new-character-label"><strong>Intelligence</strong></label>
             <input type="number" name="intelligence" className="new-character-text-input" value={this.props.intelligence} onChange={this.props.renderChange}/>
+						<span> Modifier: {pluser(mod(this.props.intelligence))}</span>
 
           <label className="new-character-label"><strong>Wisdom</strong></label>
             <input type="number" name="wisdom" className="new-character-text-input" value={this.props.wisdom} onChange={this.props.renderChange}/>
+						<span> Modifier: {pluser(mod(this.props.wisdom))}</span>
 
           <label className="new-character-label"><strong>Charisma</strong></label>
             <input type="number" name="charisma" className="new-character-text-input" value={this.props.charisma} onChange={this.props.renderChange}/>
-        </div>
+						<span> Modifier: {pluser(mod(this.props.charisma))}</span>
+				</div>
       </div>
 
     )

@@ -191,6 +191,7 @@ const adjustExistingTableDescription = (klassFeatureId, obj, action, specificLev
 	let adjustmentMade = false
 
 	for (let i = 1; i < 21; i++) {
+		if (obj[i] === undefined){return}
 
 		let j = obj[i].findIndex(td => td.klassFeatureId === klassFeatureId)
 		if (j > -1){

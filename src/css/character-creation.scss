@@ -203,8 +203,15 @@ $tan: #cfb997;
 		}
 	}
 }
-#character-creation-chosen-class {
-
+#character-creation-display-ability-scores {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	padding: 0 40%;
+	input[type=number]{
+		width: 100%;
+		text-align: center;
+		font-size: 16px;
+	}
 }
 .chosen-class {
 	display: grid;

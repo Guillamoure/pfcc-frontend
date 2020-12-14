@@ -23,12 +23,12 @@ const CharacterCreation = props => {
 		classes: [],
 		archetypes: [],
 		race: 0,
-		strength: 0,
-		dexterity: 0,
-		constitution: 0,
-		intelligence: 0,
-		wisdom: 0,
-		charisma: 0,
+		strength: 10,
+		dexterity: 10,
+		constitution: 10,
+		intelligence: 10,
+		wisdom: 10,
+		charisma: 10,
 		name: "",
 		description: "",
 		background: "",
@@ -43,6 +43,7 @@ const CharacterCreation = props => {
 		anyBonus: "",
 		doesRacehaveAnyBonus: false,
 		activeSkillset: 2,
+		skillRanks: [],
 		activeTab: "Home",
 		campaign_id: null,
 		campaignDetails: null
@@ -239,7 +240,7 @@ const CharacterCreation = props => {
         )
       case "Skills":
         return (
-            <Skills activeSkillset={characterInfo.activeSkillset} renderChange={renderChange} classes={characterInfo.classes}/>
+            <Skills activeSkillset={characterInfo.activeSkillset} renderChange={renderChange} classes={characterInfo.classes} skillRanks={characterInfo.skillRanks} intelligence={characterInfo.intelligence}/>
         )
 			case "Ability Scores":
 				return (
