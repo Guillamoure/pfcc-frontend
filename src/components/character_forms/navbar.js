@@ -3,7 +3,6 @@ import React from 'react'
 const Navbar = props => {
 
 	const renderTabs = () => {
-		// {renderTab("Skills")}
 		// {renderTab("Feats")}
 		// {renderTab("Gold & Equipment")}
 		return (
@@ -12,6 +11,7 @@ const Navbar = props => {
 				{renderTab("Ancestry")}
 				{renderTab("Class")}
 				{renderTab("Ability Scores")}
+				{renderTab("Skills")}
 				{renderTab("Details")}
 				{renderTab("Create Character")}
 			</ul>

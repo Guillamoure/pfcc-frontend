@@ -240,7 +240,7 @@ const CharacterCreation = props => {
         )
       case "Skills":
         return (
-            <Skills activeSkillset={characterInfo.activeSkillset} renderChange={renderChange} classes={characterInfo.classes} skillRanks={characterInfo.skillRanks} intelligence={characterInfo.intelligence}/>
+            <Skills activeSkillset={characterInfo.activeSkillset} renderChange={renderChange} classes={props.classes} chosenClasses={characterInfo.classes} campaignDetails={characterInfo.campaignDetails} skillRanks={characterInfo.skillRanks} intelligence={characterInfo.intelligence}/>
         )
 			case "Ability Scores":
 				return (
@@ -275,7 +275,8 @@ const CharacterCreation = props => {
 const mapStateToProps = (state) => {
   return {
     currentUser: state.currentUser,
-    admin: state.admin
+    admin: state.admin,
+		classes: state.classes
   }
 }
 
