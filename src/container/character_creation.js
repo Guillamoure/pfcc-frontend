@@ -240,7 +240,7 @@ const CharacterCreation = props => {
         )
       case "Skills":
         return (
-            <Skills activeSkillset={characterInfo.activeSkillset} renderChange={renderChange} classes={props.classes} chosenClasses={characterInfo.classes} campaignDetails={characterInfo.campaignDetails} skillRanks={characterInfo.skillRanks} intelligence={characterInfo.intelligence}/>
+            <Skills activeSkillset={characterInfo.activeSkillset} renderChange={renderChange} classes={props.classes} chosenClasses={characterInfo.classes} campaignDetails={characterInfo.campaignDetails} skillRanks={characterInfo.skillRanks} strength={characterInfo.strength}  dexterity={characterInfo.dexterity} constitution={characterInfo.constitution} intelligence={characterInfo.intelligence} wisdom={characterInfo.wisdom} charisma={characterInfo.charisma}/>
         )
 			case "Ability Scores":
 				return (

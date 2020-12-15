@@ -213,6 +213,14 @@ $tan: #cfb997;
 		font-size: 16px;
 	}
 }
+
+#character-creation-skills {
+	display: grid;
+	grid-template-columns: 1fr 0.5fr 2.5fr;
+	ul {
+		text-align: left;
+	}
+}
 .chosen-class {
 	display: grid;
 	grid-template-columns: 45% 50% 5%;
