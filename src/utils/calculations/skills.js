@@ -104,7 +104,15 @@ export const isThisAClassSkill = (skillObj, character) => {
 }
 
 export const skillRanks = (skillObj, character) => {
-	let skillsetSkill = character.character_skillset_skills.find(css => css.skill_id === skillObj.id)?.ranks || 0
+	let skillsetSkill = character.character_skillset_skills.find(css => {
+		if (css.skill_id === skillObj.id){
+			if (!css.detail){return true}
+			if (css.detail === skillObj.detail){return true}
+			return false
+		} else {
+			return false
+		}
+	})?.ranks || 0
 	return skillsetSkill
 }
 
@@ -159,4 +167,28 @@ export const renderSkillName = skillObj => {
 
 
 	return <><span className="underline-hover" style={{color: "black"}} onClick={() => modalAction("skill", skillObj.id)}>{name}</span>{hasACP}{asterisk}</>
+}
+
+export const addCustomSkills = (css, skills) => {
+	let arr = []
+
+	css.forEach(ss => {
+		if (ss.detail){
+			let skill = skills.find(sk => sk.id === ss.skill_id)
+			arr.push({...skill, name: `${skill.name} (${ss.detail})`, detail: ss.detail})
+		}
+	})
+
+	return arr
+}
+
+export const sortSkills = (skills) => {
+	return skills.sort((a, b) => {
+		if (a.id !== b.id){return a.name.localeCompare(b.name)}
+		if ((a.detail && !b.detail)){return -1}
+		if ((!a.detail && b.detail)){return 1}
+		let aSubstring = a.split("(")[1].slice(0, -1)
+		let bSubstring = b.split("(")[1].slice(0, -1)
+		return aSubstring.localeCompare(bSubstring)
+	})
 }
