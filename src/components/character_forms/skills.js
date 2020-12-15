@@ -143,13 +143,15 @@ const Skills = props => {
 
 				let arr = [...customSkillDetails]
 				let i = arr.findIndex(sd => sd.id === skill.id)
-				let arr2 = [...customizable].filter(id => id !== skill.id)
+				let arr2 = [...customizable]
+				let j = arr.indexOf(skill.id)
 
 				newRanks.push({skill, ranks: 0, detail: arr[i].text})
 				props.renderChange({target: {name: "skillRanks", value: newRanks}})
 
 				arr.splice(i, 1)
 				setCustomDetails(arr)
+				arr2.splice(j, 1)
 				customize(arr2)
 			}
 			if (customizable.includes(skill.id)){
@@ -158,7 +160,7 @@ const Skills = props => {
 					let arr = [...customSkillDetails]
 					arr = arr.map((sd, j) => {
 						if (j !== i){return sd}
-						return {...sd, text: e.target.value}
+						return {...sd, text: e.target.value.toLowerCase()}
 					})
 					setCustomDetails(arr)
 				}

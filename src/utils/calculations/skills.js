@@ -187,8 +187,8 @@ export const sortSkills = (skills) => {
 		if (a.id !== b.id){return a.name.localeCompare(b.name)}
 		if ((a.detail && !b.detail)){return -1}
 		if ((!a.detail && b.detail)){return 1}
-		let aSubstring = a.split("(")[1].slice(0, -1)
-		let bSubstring = b.split("(")[1].slice(0, -1)
+		let aSubstring = a.name.split("(")[1].slice(0, -1)
+		let bSubstring = b.name.split("(")[1].slice(0, -1)
 		return aSubstring.localeCompare(bSubstring)
 	})
 }
