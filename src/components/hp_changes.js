@@ -16,31 +16,29 @@ class HPChanges extends React.Component {
   renderAmount = () => {
     if (localStorage.computer === "true"){
       return (
-        <span>
-          <div>
-            <label>
-              <input type="number" name="amount" value={this.state.amount} onChange={this.handleChange}/>
-            </label>
-          {/*this.state.lethality === 'lethal' && this.state.adjustment === 'harm' && <label>
-          Damage Type:
-          <select name="damageType" value={this.state.damageType} onChange={this.handleChange}>
-          <option value="" >Choose One</option>
-          <option value="Bludgeoning">Bludgeoning</option>
-          <option value="Slashing">Slashing</option>
-          <option value="Piercing">Piercing</option>
-          <option value="Fire">Fire</option>
-          <option value="Cold">Cold</option>
-          <option value="Acid">Acid</option>
-          <option value="Electricity">Electricity</option>
-          <option value="Sonic">Sonic</option>
-          <option value="Psychic">Psychic</option>
-          <option value="Force">Force</option>
-          <option value="Positive">Positive</option>
-          <option value="Negetive">Negetive</option>
-          </select>
-          </label>*/}
-          </div>
-        </span>
+        <div>
+          <label>
+            <input type="number" name="amount" value={this.state.amount} onChange={this.handleChange}/>
+          </label>
+        {/*this.state.lethality === 'lethal' && this.state.adjustment === 'harm' && <label>
+        Damage Type:
+        <select name="damageType" value={this.state.damageType} onChange={this.handleChange}>
+        <option value="" >Choose One</option>
+        <option value="Bludgeoning">Bludgeoning</option>
+        <option value="Slashing">Slashing</option>
+        <option value="Piercing">Piercing</option>
+        <option value="Fire">Fire</option>
+        <option value="Cold">Cold</option>
+        <option value="Acid">Acid</option>
+        <option value="Electricity">Electricity</option>
+        <option value="Sonic">Sonic</option>
+        <option value="Psychic">Psychic</option>
+        <option value="Force">Force</option>
+        <option value="Positive">Positive</option>
+        <option value="Negetive">Negetive</option>
+        </select>
+        </label>*/}
+        </div>
       )
     } else {
       return (
@@ -68,7 +66,7 @@ class HPChanges extends React.Component {
   renderAdjustment = () => {
     if (localStorage.computer === "true"){
       return (
-        <span>
+        <div>
           <label>
           HP Changes:
             <select name="adjustment" value={this.state.adjustment} onChange={this.handleChange}>
@@ -78,7 +76,7 @@ class HPChanges extends React.Component {
               <option value="temp">Temporary HP</option>
             </select>
           </label>
-        </span>
+        </div>
       )
     } else if (localStorage.computer === "false"){
       return (
@@ -141,7 +139,9 @@ class HPChanges extends React.Component {
       array.push('Immune fire (50 damage total)')
     } else if (name === 'Grackle'){
       array.push('Resist fire 5')
-    }
+    } else if (name === "Majestik"){
+			array.push("Resist fire 5")
+		}
     return (
       <ul>
         {array.map(el => <li>{el}</li>)}
@@ -255,17 +255,16 @@ class HPChanges extends React.Component {
     submitButtonColor = this.state.adjustment === 'harm' ? '#f00' : submitButtonColor
     submitButtonColor = this.state.adjustment === 'temp' ? '#0892D0' : submitButtonColor
     return (
-      <>
-        <span style={{textAlign: 'center', display: 'grid', gridTemplateColumns: '25% 50% 25%', padding: '1%'}}>
-          {this.renderAmount()}{this.renderAdjustment()}
-          {localStorage.computer === "false" && <span><button className='mobile-close-button' onClick={this.props.closeHPChanges}>X</button></span>}
-        </span>
+      <section id="character-show-hp-container">
+        {this.renderAmount()}{this.renderAdjustment()}
+        {localStorage.computer === "false" && <span><button className='mobile-close-button' onClick={this.props.closeHPChanges}>X</button></span>}
+				
         {this.state.adjustment === 'harm' && this.renderLethality()}
         {localStorage.computer === "false" && this.renderMobileButtons()}
-        {localStorage.computer === "true" && <br/>}
+
         {this.renderTypeAdjustments()}
         {(this.state.amount !== 0 && this.state.amount !== "") && <span style={{textAlign: 'center', display: 'block'}}><button className='mobile-submit-button' style={{background: `linear-gradient(90deg, #fff 35%, ${submitButtonColor})`}} onClick={this.buttonEvent}>{this.renderString()}</button></span>}
-      </>
+      </section>
     )
   }
 

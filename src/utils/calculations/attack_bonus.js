@@ -1,6 +1,7 @@
 import { mod, pluser } from '../../fuf'
 import { abilityScoreMod } from './ability_scores'
 import { armorCheckPenaltyOnOtherAbilities } from './proficiencies'
+import { sizeMod } from './size'
 
 export const ab = (characterObj, characterInfoObj, type) => {
 	// NEW DATA
@@ -39,6 +40,7 @@ export const ab = (characterObj, characterInfoObj, type) => {
 
 	permanent += bab
 	permanent += armorCheckPenalty
+	permanent += sizeMod(characterObj.race.size)
 
 	if (permAbilityMod !== abilityMod) {
 		temporary += abilityMod - permAbilityMod

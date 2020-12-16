@@ -1,6 +1,7 @@
 import React from 'react'
 import store from '../../store'
 import { abilityScoreMod } from './ability_scores'
+import { stealthSizeMod } from './size'
 import { armorCheckPenalty } from './proficiencies'
 import { pluser } from '../../fuf'
 import { locateAbility, locateFeatureThroughAbility } from '../fuf'
@@ -28,12 +29,17 @@ export const skillBonusArray = (skillObj) => {
 	let bonuses = calculateBonuses(skillObj, character_info, character)
 	permanent += bonuses.permanent.map(b => b.bonus).reduce((b, agg) => (agg + b), 0)
 	temporary += bonuses.temporary.map(b => b.bonus).reduce((b, agg) => (agg + b), 0)
+	if (skillObj.name === "Stealth"){permanent += stealthSizeMod(character.race.size)}
 
 	// armor check penalty
 	let acp = armorCheckPenalty()
 	if (skillObj.ability_score === "Strength" || skillObj.ability_score === "Dexterity"){
 		permanent += acp
 	}
+
+	// HARDCODE
+	if (skillObj.name === "Swim" && character.name === "Unknown"){permanent += 2}
+	// HARDCODE
 
 	return [permanent, temporary]
 }

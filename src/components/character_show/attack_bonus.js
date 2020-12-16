@@ -1,7 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
 import { connect } from 'react-redux'
-import { pluserAB, bonusPenaltyAB } from '../../helper_functions/calculations/attack_bonus'
+import { pluserAB, bonusPenaltyAB } from '../../utils/calculations/attack_bonus'
 
 
 class AttackBonus extends React.Component {

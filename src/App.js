@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.scss';
 import './css/character.css';
-import './css/combat.css';
+import './css/combat.scss';
 import './css/card.css';
 import './css/container.css';
 import './css/animations.scss';

@@ -16,14 +16,14 @@ const Basics = props => {
   //   }
   // }
 
-  let speed = hc.speed
+  let speed = props.character.race.speed || hc.speed
   speed += hc.expeditious ? 30 : 0
   speed += hc.land10 ? 10 : 0
   speed += hc.land20 ? 20 : 0
   speed += hc.quick ? 10 : 0
   speed += hc.stealTime ? 5 : 0
 
-  const renderDispatch = (action, details) => {
+	  const renderDispatch = (action, details) => {
     let actions = props.character_info.actions
     if ((action === 'standard' || action  === 'move' || action === 'swift') && actions.full){
       return null

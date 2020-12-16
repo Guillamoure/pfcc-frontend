@@ -197,6 +197,8 @@ const parseTable = text => {
 		let i = r.indexOf("<tr>")
 		r = r.substr(i+4, r.length-1)
 
+		if (r.startsWith(">")){r = r.substring(1)}
+
 		let cellContainer = r.includes("<th>") ? "<th>" : "<td>"
 		let cells = r.split(cellContainer)
 

@@ -1,8 +1,8 @@
 import React from 'react'
 import _  from 'lodash'
 import { connect } from 'react-redux'
-import { armorClassModifiers, armorClassTotal } from '../../helper_functions/calculations/armor_class'
-import { tooltipAction } from '../../helper_functions/action_creator/additional_info'
+import { armorClassModifiers, armorClassTotal } from '../../utils/calculations/armor_class'
+import { tooltipAction } from '../../utils/action_creator/additional_info'
 import { pluser } from '../../fuf'
 
 

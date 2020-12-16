@@ -76,6 +76,22 @@ class Abilities extends React.Component {
 			})
 		})
 
+		// HARDCODE
+		if (this.props.character.name === "Majestik"){
+			// evil eye
+			activatableAbilities.push({action: {name: "Standard Action"}, sourceId: 1001, klassFeatureName: "Evil Eye", klassId: 19, usageSources: [], source: "hardcoded", damages: [], saving_throws: []})
+			// arcane strike
+			activatableAbilities.push({action: {name: "Swift Action"}, sourceId: 1001, klassFeatureName: "Arcane Strike", klassId: 1001, usageSources: [], source: "hardcoded", damages: [], saving_throws: []})
+			// prehensile tail
+			activatableAbilities.push({action: {name: "Swift Action"}, sourceId: 1001, klassFeatureName: "Prehensile Tail", klassId: 1001, usageSources: [], source: "hardcoded", damages: [], saving_throws: []})
+		} else if (this.props.character.name === "Unknown"){
+			// Pyrokinesis
+			activatableAbilities.push({action: {name: "Standard Action"}, sourceId: 1001, klassFeatureName: "Basic Pyrokinesis", klassId: 15, usageSources: [], source: "hardcoded", damages: [], saving_throws: []})
+			// Searing Flesh
+			activatableAbilities.push({action: {name: "Standard Action"}, sourceId: 1001, klassFeatureName: "Searing Flesh", klassId: 15, usageSources: [], source: "hardcoded", damages: [], saving_throws: []})
+		}
+		// HARDCODE
+
     return activatableAbilities.map((ability, idx) => {
 			let name = ability.klassFeatureName
 			if (!name){name = ability.kspecFeatureName}

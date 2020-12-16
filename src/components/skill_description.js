@@ -26,7 +26,9 @@ const SkillDescription = props => {
 	}, [])
 
 	const renderSkill = () => {
+		if (!skill.description && !props.skill){return null}
 		const { description, action, try_again, special } = props.skill || skill
+
 		return (
 			<>
 				{descriptionParser(description)}
@@ -41,8 +43,8 @@ const SkillDescription = props => {
 	console.log("New Skill", props.skill)
 	return (
 		<aside>
-			<h2>{props.skill.name || skill.name}</h2>
-			<p><em>{props.skill.blurb || skill.blurb}</em></p>
+			<h2>{props.skill?.name || skill.name}</h2>
+			<p><em>{props.skill?.blurb || skill.blurb}</em></p>
 			{renderSkill()}
 		</aside>
 	)

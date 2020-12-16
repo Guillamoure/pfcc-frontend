@@ -32,6 +32,9 @@ const Details = props => {
       case 'Robby':
         knownLanguages = ['Common', 'Aquan', 'Auran', 'Ignan', 'Halfling (Jabberjaw Gem)', 'Abyssal (Jabberjaw Gem)', 'Dwarven (Jabberjaw Gem)', 'Sylvan (Jabberjaw Gem)', 'Undercommon (Jabberjaw Gem)']
         break
+      case 'Unknown':
+        knownLanguages = ['Common', 'Sylvan', 'Aklo']
+        break
       default:
         break
     }

@@ -1,7 +1,8 @@
 import React from 'react'
 import { connect, useDispatch } from 'react-redux'
 import { pluser, mod } from '../../fuf'
-import { renderAB } from '../../helper_functions/calculations/attack_bonus'
+import { renderAB } from '../../utils/calculations/attack_bonus'
+import { abilityScoreMod } from '../../utils/calculations/ability_scores'
 // import { tooltip } from '../../dispatches/tooltip'
 import { expendAmmo, reloadAmmo } from '../../dispatch'
 import _ from 'lodash'
@@ -57,6 +58,61 @@ const Attacks = props => {
 			// unknown if this is in the frontend or backend
 			onlyEquippedWeapons.push(unarmed)
 		}
+		//HARDCODE
+		if (props.character.name === "Majestik"){
+			onlyEquippedWeapons.push({
+				id: 1001,
+				name: "Harrow Card",
+				description: "",
+				equipped: null,
+				known: true,
+				masterwork: true,
+				weapon: {
+					id: 1001,
+					name: "Harrow Card",
+					category: "Ranged",
+					damage_type: "Piercing",
+					critical: 2,
+					critical_range: 20,
+					damage_dice: 4,
+					num_of_dice: 1,
+					features: [],
+					price_in_gp: 1,
+					source: {id: 1001},
+					thrown: true,
+					range: 20,
+					proficiency: "Simple",
+					weapon_type: "Range"
+				}
+			})
+		} else if (props.character.name === "Unknown"){
+			onlyEquippedWeapons.push({
+				id: 1001,
+				name: "Fire Blast",
+				description: "",
+				equipped: null,
+				known: true,
+				masterwork: false,
+				weapon: {
+					id: 1001,
+					name: "Fire Blast",
+					category: "Ranged",
+					damage_type: "Fire",
+					critical: 2,
+					critical_range: 20,
+					damage_dice: 6,
+					num_of_dice: 1,
+					features: [],
+					price_in_gp: 0,
+					source: {id: 1001},
+					thrown: true,
+					range: 30,
+					proficiency: "Simple",
+					weapon_type: "Range"
+				}
+			})
+		}
+		//HARDCODE
 
     let attacks = onlyEquippedWeapons.map(renderTableElement)
     // two weapon fighting
@@ -313,6 +369,14 @@ const Attacks = props => {
         additionalArray.push({name: "Thrown", tooltip: "If throwing, use second attack bonus (T)", sidebarRules: 0, italics: false})
       }
     }
+		//HARDCODE
+		if (characterWeapon.name === "Harrow Card"){
+			additionalArray.push({name: "Magic Weapon", tooltip: "You must use your Swift Action on Arcane Strike to enchant these cards to be used as weapons.", sidebarRules: 0, italics: false})
+		}
+		if (characterWeapon.name === "Fire Blast"){
+			additionalArray.push({name: "Touch AC", tooltip: "This attack resolves against Touch AC.", sidebarRules: 0, italics: false})
+		}
+		//HARDCODE
     return additionalArray
   }
 
@@ -856,6 +920,11 @@ const Attacks = props => {
       }
 
 			let tempBonuses = bonusModifiers.reduce((agg, el) => (agg + el.bonus), 0)
+
+			//HARDCODE
+			if (characterWeapon.name === "Harrow Card"){tempBonuses += 1}
+			if (characterWeapon.name === "Fire Blast"){tempBonuses += Math.floor(abilityScoreMod("constitution")/2)}
+			//HARDCODE
 
 			return `${pluser(str + handedStrengthModifier + tempBonuses)}`
     }

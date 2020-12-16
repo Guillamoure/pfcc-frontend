@@ -1,8 +1,8 @@
 import React from 'react'
 import _ from 'lodash'
 import { connect } from 'react-redux'
-import { modalAction } from '../../helper_functions/action_creator/popups'
-import { injectSpellIntoDescription } from '../../helper_functions/fuf'
+import { modalAction } from '../../utils/action_creator/popups'
+import { injectSpellIntoDescription, descriptionParser } from '../../utils/fuf'
 
 class Features extends React.Component {
 
@@ -63,6 +63,7 @@ class Features extends React.Component {
 
 					if (spells.length){description = injectSpellIntoDescription(description, spells, this.renderSpellClick, {})}
 				}
+				if (typeof description === "string"){description = descriptionParser(description)}
 
         return (
           <li key={(feature.id * 3) -1} onClick={() => this.changeActiveFeature(feature.id)} className='highlight mobile-selected-tab-content' style={{maxHeight: window.outerHeight * 0.4}}>
@@ -549,21 +550,85 @@ class Features extends React.Component {
           spellcasting: false
         },
       ]
-    } else if (name === 'Festus'){
+    } else if (name === 'Unknown'){
       replacedFeatures = []
       addedFeatures = [
-        // {
-        //   id: 7000,
-        //   actions: [],
-        //   description: '',
-        //   feature_levels: [{level: 1}],
-        //   feature_options: [],
-        //   klass_id: 9,
-        //   name: '',
-        //   spellcasting: false
-        // }
+        {
+          id: 7000,
+          actions: [],
+          description: "Element(s) fire; Type utility (Sp)\n\nLevel 1; Burn 0\n\nYou can use your inner flame to reproduce the effects of a flare, light, or spark cantrip, except that the ligh t you create with ligh t produces heat like a normal flame; using any of the three abilities ends any previous ligh t effect from this wild talent.",
+          feature_levels: [{level: 1}],
+          feature_options: [],
+          klass_id: 9,
+          name: 'Basic Pyrokinesis',
+          features: [],
+					associated_spells: [
+						{name: "Flare", id: 221},
+						{name: "Light", id: 5},
+						{name: "Spark", id: 98}
+					]
+        },
+				{
+					id: 7001,
+					actions: [],
+					description: "Element(s) fire; Type simple blast (Sp); Level —; Burn 0\n\nBlast Type: energy; Damage fire\n\nYou unleash a gout of flickering fire to burn a single foe.",
+					feature_levels: [{level: 1}],
+					feature_options: [],
+					klass_id: 9,
+					name: 'Fire Blast',
+					features: [],
+					associated_spells: []
+				},
+				{
+					id: 7002,
+					actions: [],
+					description: "Element(s) fire; Type defense (Su); Level —; Burn 0\n\nYour body becomes painfully hot. Whenever a creature hits you with a natural attack or an unarmed strike, that creature takes 1 point of fire damage per 4 kineticist levels you possess (minimum 1 point of fire damage). A creature in a grapple with you takes double this amount of damage at the end of each of its turns.\n\nWeapons that strike you also take this damage, though the damage is unlikely to penetrate the weapon’s hardness. By accepting 1 point of burn, you can increase this damage by 1 point per 4 kineticist levels you possess until the next time your burn is removed. You can increase the damage in this way up to seven times.\n\n\Whenever you accept burn while using a fire wild talent, the surging flame causes your searing flesh to deal double its current amount of damage for 1 round (a creature in a grapple with you takes a total of four times as much damage as normal). You can dismiss or restore this effect as an immediate action.",
+					feature_levels: [{level: 1}],
+					feature_options: [],
+					klass_id: 9,
+					name: 'Searing Flesh',
+					features: [],
+					associated_spells: []
+				}
       ]
-    }
+    } else if (name === "Majestik"){
+			replacedFeatures = ["Witch's Familiar"]
+			addedFeatures = [
+				{
+					id: 8000,
+					actions: [],
+					description: "The target takes a –2 penalty on one of the following (witch’s choice): AC, ability checks, attack rolls, saving throws, or skill checks. This hex lasts for a number of rounds equal to 3 + the witch’s Intelligence modifier. A Will save reduces this to just 1 round.\n\nThis is a mind-affecting effect. At 8th level the penalty increases to –4.",
+					feature_levels: [{level: 1}],
+					feature_options: [],
+					klass_id: 9,
+					name: 'Hex: Evil Eye',
+					features: [],
+					associated_spells: []
+				},
+				{
+					id: 8001,
+					actions: [],
+					description: "Each cartomancer carries a special harrow deck that allows her to communicate with her patron. Its ability to hold spells functions identically to the way a witch’s spells are granted by her familiar. The cartomancer must consult her harrow deck each day to prepare her spells and cannot prepare spells that are not stored in the deck. The spell deck cannot be used for this purpose if any cards are missing.\n\nThis ability replaces the witch’s familiar.",
+					feature_levels: [{level: 1}],
+					feature_options: [],
+					klass_id: 9,
+					name: 'Spell Deck',
+					features: [],
+					associated_spells: []
+				},
+				{
+					id: 8002,
+					actions: [],
+					description: "At 2nd level, a cartomancer gains the Deadly Dealer feat as a bonus feat, even if she does not meet the prerequisites. The cartomancer gains the benefits of the Arcane Strike feat, but only for the purposes of using Deadly Dealer.\n\nThis replaces the witch’s 2nd-level hex.\n\nYou can throw a card as though it were a dart, with the same damage, range, and other features. You must use the Arcane Strike feat when throwing a card in this way, or else the card lacks the magical force and precision to deal lethal damage. A card is destroyed when thrown in this way.\n\nHarrow cards are treated as masterwork weapons when thrown using this feat, but are still destroyed after they are thrown. A harrow deck can no longer be used as a fortune-telling device after even a single card is thrown.\n\nA spellcaster with this feat can enhance a deck of cards as though it were a ranged weapon with 54 pieces of ammunition. This enhancement functions only when used in tandem with this feat, and has no affect on any other way the cards might be used.\n\nOnly a character who possesses this feat can use an enhanced deck of cards; she must still use the Arcane Strike feat to activate the cards’ enhancement.",
+					feature_levels: [{level: 2}],
+					feature_options: [],
+					klass_id: 9,
+					name: 'Deadly Dealer',
+					features: [],
+					associated_spells: []
+				}
+			]
+		}
 
 
     newFeatures = features.filter(f => {

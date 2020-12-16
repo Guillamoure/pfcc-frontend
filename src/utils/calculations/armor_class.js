@@ -47,6 +47,12 @@ export const armorClassModifiers = () => {
 	// luck
 	// morale
 	// natural
+	if (character.name === "Majestik"){
+		acModifiers.push({
+			bonus: "natural",
+			mod: 1
+		})
+	}
 	// profane
 	// resistance
 	// sacred
