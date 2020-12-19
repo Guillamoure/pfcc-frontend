@@ -2,6 +2,7 @@ import React from 'react'
 import _ from 'lodash'
 import { connect } from 'react-redux'
 import localhost from '../../localhost'
+import { modalAction } from '../../utils/action_creator/popups'
 
 import MagicItemSummary from '../magic_item_summary'
 import EquipmentItem from './equipment_item'
@@ -58,7 +59,19 @@ class Equipment extends React.Component {
     if (cws.length){groupings.push('weapon')}
     if (cas.length){groupings.push('armor')}
 
+		// HARDCODE
+		if (this.props.character.name === "Majestik"){groupings.push("harrow")}
+		// HARDCODE
+
     return groupings.map((group, idx) => {
+
+			if (group === "harrow"){
+				return (<div><strong onClick={() => modalAction("harrow", {})}>Harrow Deck</strong></div>)
+			}
+
+
+
+
       let groupedItems = cmis.filter(cmi => cmi.magic_item.group === group)
       groupedItems = group === 'unknown' ? unknowns : groupedItems
       groupedItems = group === 'weapon' ? cws : groupedItems

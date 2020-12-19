@@ -82,6 +82,16 @@ export const abbreviateDamageType = damageType => {
 	}
 }
 
+export const sortedSpellsByLevelAndName = (array) => {
+	let sortedData = []
+	for(let i = 0; i < 10; i++){
+		let thisLvl = array.filter(sp => sp.spell_level === i)
+		sortedData.push(thisLvl.sort((a,b) => a.name.localeCompare(b.name)))
+	}
+	sortedData = sortedData.flat()
+	return sortedData
+}
+
 export const injectSpellIntoDescription = (description, spells, onClickFunction, functionOptions) => {
 	let domDescArray = [description]
 	spells.forEach(sp => {

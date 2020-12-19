@@ -75,7 +75,8 @@ export const remainingSpellsPerDayFromSpellcasting = (spellcasting, level) => {
 	const { character, character_info } = store.getState()
 	let abilityScoreModifier = abilityScoreMod(spellcasting.ability_score)
 
-	let applicableSPD = [...spellcasting.spells_per_day_per_level].filter(spd => spd.klass_level === level)
+	let source = spellcasting.prepared_spells_per_level.length ? spellcasting.prepared_spells_per_level : spellcasting.spells_per_day_per_level
+	let applicableSPD = [...source].filter(spd => spd.klass_level === level)
 
 	return applicableSPD = [...applicableSPD].map(spd => {
 		let bonusSpell = null
@@ -105,7 +106,7 @@ export const remainingKnownSpellsArray = (spellcasting, level) => {
 
 	let knownSpellsThisLevel = knownSpellsArray(spellcasting, level)
 	let characterKnownSpells = character.character_known_spells
-
+	console.log(knownSpellsThisLevel)
 	knownSpellsThisLevel = knownSpellsThisLevel.map(kspl => {
 		let knownSpells = characterKnownSpells.filter(cks => cks.spellcasting.id === kspl.feature_spellcasting_id && cks.spell_list_spell.spell_level === kspl.spell_level)
 
@@ -140,6 +141,15 @@ export const knownSpellsArray = (spellcasting, level) => {
 
 export const spellsPerDayArray = (spellcasting, level) => {
 	return spellcasting.spells_per_day_per_level.filter(spdpl => spdpl.klass_level === level)
+}
+
+export const preparedSpellsPerLevelArray = (spellcasting, level) => {
+	return spellcasting.prepared_spells_per_level.filter(spdpl => spdpl.klass_level === level)
+}
+
+export const allowedPreparedSpellLevels = (spellcasting, level) => {
+	let spdArray = spellcasting.prepared_spells_per_level.length ? preparedSpellsPerLevelArray(spellcasting, level) : spellsPerDayArray(spellcasting, level)
+	return spdArray.map(spd => ({spell_level: spd.spell_level}))
 }
 
 export const areAllKnownSpellsFilled = (spellcasting, level) => {

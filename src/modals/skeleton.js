@@ -17,6 +17,7 @@ import BonusSpellSlotManager from '../components/modals/bonus_spell_slot_manager
 import Feat from '../components/modals/feat'
 import CreatureStatBlock from '../components/creature_stat_block'
 import SkillDescription from '../components/skill_description'
+import HarrowDeck from '../components/modals/harrow'
 
 const ModalSkeleton = (props) => {
 
@@ -52,6 +53,8 @@ const ModalSkeleton = (props) => {
 				return <CreatureStatBlock creature={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
 			case 'skill':
 				return <SkillDescription skillId={props.modal.obj} />
+			case 'harrow':
+				return <HarrowDeck />
       default:
         break
     }
