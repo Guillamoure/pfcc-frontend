@@ -117,7 +117,7 @@ const Saves = props => {
     ast = !!validBonuses.length ? true : ast
 
     if (type === 'Save'){
-      if (props.character.name === 'Robby'){
+      if (props.character.name === 'Robby' || props.character.name === "Natesse"){
         ast = true
       }
     } else if (type === 'Reflex'){
@@ -148,7 +148,11 @@ const Saves = props => {
       }
     } else if (props.character_info.hardcode.quick && type === 'Reflex'){
       comment = 'Advantage on Reflex saving throws'
-    }
+    } else if (props.character.name === "Natesse"){
+			if (type === "all"){
+				comment = "Constructed: +4 to mind-affecting effects, paralysis, poison, and stun"
+			}
+		}
     if (!!comment){
       props.renderTooltip(e, comment)
     }

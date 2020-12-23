@@ -84,11 +84,21 @@ class Abilities extends React.Component {
 			activatableAbilities.push({action: {name: "Swift Action"}, sourceId: 1001, klassFeatureName: "Arcane Strike", klassId: 1001, usageSources: [], source: "hardcoded", damages: [], saving_throws: []})
 			// prehensile tail
 			activatableAbilities.push({action: {name: "Swift Action"}, sourceId: 1001, klassFeatureName: "Prehensile Tail", klassId: 1001, usageSources: [], source: "hardcoded", damages: [], saving_throws: []})
-		} else if (this.props.character.name === "Unknown"){
+		} else if (this.props.character.name === "Fire-Roasted Tomatoes"){
 			// Pyrokinesis
 			activatableAbilities.push({action: {name: "Standard Action"}, sourceId: 1001, klassFeatureName: "Basic Pyrokinesis", klassId: 15, usageSources: [], source: "hardcoded", damages: [], saving_throws: []})
 			// Searing Flesh
 			activatableAbilities.push({action: {name: "Standard Action"}, sourceId: 1001, klassFeatureName: "Searing Flesh", klassId: 15, usageSources: [], source: "hardcoded", damages: [], saving_throws: []})
+		} else if (this.props.character.name === "Ildre"){
+			activatableAbilities.push({action: {name: "Move Action"}, sourceId: 1001, klassFeatureName: "Dimensional Slide", klassId: 15, usageSources: [], source: "hardcoded", damages: [], saving_throws: []})
+		} else if (this.props.character.name === "Iyugi"){
+			activatableAbilities.push({action: {name: "Move Action"}, sourceId: 1001, klassFeatureName: "Change Shape", klassId: 15, usageSources: [], source: "hardcoded", damages: [], saving_throws: []})
+		} else if (this.props.character.name === "Natesse"){
+			activatableAbilities.push({action: {name: "Immediate Action"}, sourceId: 1001, klassFeatureName: "Nanite Surge", klassId: 15, usageSources: [], source: "hardcoded", damages: [], saving_throws: []})
+		} else if (this.props.character.name === "Dz'eyn"){
+			activatableAbilities.push({action: {name: "Move Action"}, sourceId: 1001, klassFeatureName: "Climb 20 ft", klassId: 15, usageSources: [], source: "hardcoded", damages: [], saving_throws: []})
+			activatableAbilities.push({action: {name: "Swift Action"}, sourceId: 1001, klassFeatureName: "Toxic Skin - Poison Weapon", klassId: 15, usageSources: [], source: "hardcoded", damages: [], saving_throws: []})
+			activatableAbilities.push({action: {name: "Standard Action"}, sourceId: 1001, klassFeatureName: "Toxic Skin - Poison Self", klassId: 15, usageSources: [], source: "hardcoded", damages: [], saving_throws: []})
 		}
 		// HARDCODE
 
@@ -177,6 +187,8 @@ class Abilities extends React.Component {
 
 	renderDC = ability => {
 		let st = ability.saving_throws[0]
+		if (ability.klassFeatureName === "Basic Pyrokinesis"){return "14"}
+		if (ability.klassFeatureName?.includes("Toxic Skin")){return "Fort 13"}
 		if (st){
 			let save = _.capitalize(st.saving_throw)
 			let asMod = abilityScoreMod(st.ability_score_modifier, true)

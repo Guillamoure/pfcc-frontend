@@ -277,7 +277,7 @@ export const characterSpells = (spellcasting) => {
 	return sortedData
 }
 
-export const spellData = (spellData, klassId) => {
+export const spellData = (spellData, klassId, characterLevel) => {
 	const { character_info } = store.getState()
 	let { spell, spell_list_spell: sls, spellcasting, source } = spellData
 	let level = character_info.classes.find(cl => cl.id === klassId).level
@@ -288,7 +288,7 @@ export const spellData = (spellData, klassId) => {
 		castAtWill = spellData.cast_at_will
 	}
 	let spellLevel = sls?.spell_level ?? spellData.spell_level
-	let action = spellData.cast ? "cannot-cast" : isThisActionAvailable(spell, {spell: true, spellcasting, klassId, spellLevel, castAtWill})
+	let action = spellData.cast ? "cannot-cast" : isThisActionAvailable(spell, {spell: true, spellcasting, klassId, spellLevel, castAtWill, characterLevel})
 	let name = spell.name
 	let range = renderSpellRange(spell, level)
 	let duration = renderSpellDuration(spell, level)

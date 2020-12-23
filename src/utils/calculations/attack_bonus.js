@@ -3,7 +3,7 @@ import { abilityScoreMod } from './ability_scores'
 import { armorCheckPenaltyOnOtherAbilities } from './proficiencies'
 import { sizeMod } from './size'
 
-export const ab = (characterObj, characterInfoObj, type) => {
+export const ab = (characterObj, characterInfoObj, type, options = {}) => {
 	// NEW DATA
 	let array = []
 	let permanent = 0
@@ -28,6 +28,11 @@ export const ab = (characterObj, characterInfoObj, type) => {
     abilityMod = dex
 		permAbilityMod = permDEX
   }
+
+	if (options.finesse){
+		abilityMod = dex
+		permAbilityMod = permDEX
+	}
 
 	let bonuses = additionalBonuses(characterInfoObj.bonuses, type)
 		.map(b => b.bonus)
@@ -56,8 +61,8 @@ export const ab = (characterObj, characterInfoObj, type) => {
 	return array
 }
 
-export const renderAB = (characterObj, characterInfoObj, type) => {
-	let abArray = ab(characterObj, characterInfoObj, type)
+export const renderAB = (characterObj, characterInfoObj, type, options) => {
+	let abArray = ab(characterObj, characterInfoObj, type, options)
 	return (abArray[0] + abArray[1])
 }
 

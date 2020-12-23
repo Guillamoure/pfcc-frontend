@@ -550,7 +550,7 @@ class Features extends React.Component {
           spellcasting: false
         },
       ]
-    } else if (name === 'Unknown'){
+    } else if (name === 'Fire-Roasted Tomatoes'){
       replacedFeatures = []
       addedFeatures = [
         {
@@ -589,6 +589,28 @@ class Features extends React.Component {
 					name: 'Searing Flesh',
 					features: [],
 					associated_spells: []
+				},
+				{
+					id: 7003,
+					actions: [],
+					description: "Element(s) fire; Type substance infusion; Level 1; Burn 1\n\nAssociated Blasts blue flame, fire, magma, plasma\n\nSaving Throw Reflex negates\n\nYour kinetic blast ignites your foes. Whenever an infused blast hits a foe and penetrates its spell resistance, that foe catches on fire, regardless of whether it takes damage. A foe that catches fire takes 1d6 points of fire damage each round until the fire is extinguished. Against a creature on fire from this infusion, any fire kinetic blasts gain a +2 bonus on attack rolls, to DCs, and on caster level checks to overcome spell resistance.",
+					feature_levels: [{level: 1}],
+					feature_options: [],
+					klass_id: 9,
+					name: 'Infusion - Burning Infusion',
+					features: [],
+					associated_spells: []
+				},
+				{
+					id: 7004,
+					actions: [],
+					description: "Element fire, water; Type utility (Sp); Level 1; Burn 0\n\nYou are constantly protected by endure elements against hot temperatures only. You gain an amount of fire resistance equal to twice your current amount of burn.",
+					feature_levels: [{level: 1}],
+					feature_options: [],
+					klass_id: 9,
+					name: 'Utility Talent - Heat Adaptation',
+					features: [],
+					associated_spells: []
 				}
       ]
     } else if (name === "Majestik"){
@@ -624,6 +646,51 @@ class Features extends React.Component {
 					feature_options: [],
 					klass_id: 9,
 					name: 'Deadly Dealer',
+					features: [],
+					associated_spells: []
+				}
+			]
+		} else if (name === "Ildre"){
+			replacedFeatures = []
+			addedFeatures = [
+				{
+					id: 9000,
+					actions: [],
+					description: 'The arcanist can expend 1 point from her arcane reservoir to create a dimensional crack that she can step through to reach another location. This ability is used as part of a move action or withdraw action, allowing her to move up to 10 feet per arcanist level to any location she can see. This counts as 5 feet of movement. She can only use this ability once per round. She does not provoke attacks of opportunity when moving in this way, but any other movement she attempts as part of her move action provokes as normal.',
+					feature_levels: [{level: 1}],
+					feature_options: [],
+					klass_id: 13,
+					name: 'Arcanist Exploit - Dimensional Slide',
+					features: [],
+					associated_spells: []
+				}
+			]
+		} else if (name === "Iyugi"){
+			replacedFeatures = []
+			addedFeatures = [
+				{
+					id: 10000,
+					actions: [],
+					description: 'A rogue that selects this talent gains a bonus combat feat.\n\nTwo-Weapon Fighting\n\nYour penalties on attack rolls for fighting with two weapons are reduced. The penalty for your primary hand lessens by 2 and the one for your off hand lessens by 6.',
+					feature_levels: [{level: 2}],
+					feature_options: [],
+					klass_id: 13,
+					name: 'Rogue Talent - Combat Trick - Two-Weapon Fighting',
+					features: [],
+					associated_spells: []
+				}
+			]
+		} else if (name === "Dz'eyn"){
+			replacedFeatures = []
+			addedFeatures = [
+				{
+					id: 10000,
+					actions: [],
+					description: 'The slayer selects a ranger combat style (such as archery or two-weapon combat) and gains a combat feat from the first feat list of that style. He can choose feats from his selected combat style, even if he does not have the normal prerequisites. At 6th level, he may select this talent again and add the 6th-level ranger combat feats from his chosen style to the list. At 10th level, he may select this talent again and add the 10th-level ranger combat feats from his chosen style to the list.\n\nThrown Weapon\n\nPrecise Shot\n\nYou can shoot or throw ranged weapons at an opponent engaged in melee without taking the standard –4 penalty on your attack roll. Note: Two characters are engaged in melee if they are enemies of each other and either threatens the other.',
+					feature_levels: [{level: 2}],
+					feature_options: [],
+					klass_id: 13,
+					name: 'Slayer Talent - Ranger Combat Style - Thrown Style - Precise Shot',
 					features: [],
 					associated_spells: []
 				}

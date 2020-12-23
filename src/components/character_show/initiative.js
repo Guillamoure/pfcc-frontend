@@ -86,6 +86,9 @@ const Initiative = props => {
 		} else {
 			permanent += abilityMod
 		}
+		if (props.character.name === "Ildre"){
+			permanent += 4
+		}
 
 		array.push(permanent)
 		array.push(temporary)

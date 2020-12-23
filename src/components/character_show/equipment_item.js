@@ -41,9 +41,9 @@ const EquipmentItem = props => {
 	keyWord = group === 'Wondrous Item' ? 'magic_item' : keyWord
 
 	let known = group === 'unknown' ? false : true
-	let actions = known && item[keyWord].features ? item[keyWord].features.map(f => f.action ? f.action.name : null) : []
+	let actions = known && item[keyWord]?.features ? item[keyWord].features.map(f => f.action ? f.action.name : null) : []
 	let name = known ? item.name || item[keyWord].name : item.false_desc
-	let percentages = known && item[keyWord].features ? renderPercentage(item[keyWord]) : null
+	let percentages = known && item[keyWord]?.features ? renderPercentage(item[keyWord]) : null
 	// find feature usage, find limit, and find relevant cmifu, and have a fraction of current usage
 	let mappedActions = remappedActions(actions)
 	let equipped = item.equipped
@@ -53,7 +53,7 @@ const EquipmentItem = props => {
 	const renderTitle = () => {
 		return (
 			<>
-				{name} 
+				{name}
 				{percentages}
 				{equipped ? <span className='equipped'>{equipped === true ? "E" : equipped[0]}</span> : null}
 				{stored ? <span className='equipped'>S</span> : null}

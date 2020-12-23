@@ -32,10 +32,13 @@ class Equipment extends React.Component {
       let changingState = 'magic item'
       changingState = detail === 'weapon' ? 'weapon' : changingState
       changingState = detail === 'armor' ? 'armor' : changingState
+			changingState = ["unknown", "weapon", "armor", "harrow", "magic item", "Wondrous Item"].includes(detail) ? changingState : "item"
       this.props.editModal(changingState, null, cmiID)
       if (detail === 'armor'){
         this.props.dispatch({type: "MODAL", detail: "armor", obj: obj})
-      }
+      } else if (changingState === "item"){
+				modalAction("item", obj)
+			}
       // this.setState({itemObject: obj, descriptionAvailable: false})
     }
   }
@@ -46,6 +49,8 @@ class Equipment extends React.Component {
     let cws = this.props.character.character_weapons.filter(cw => cw.discovered)
     let cas = this.props.character.character_armors.filter(cw => cw.discovered)
     let weapons = cws.map(w => w.weapon)
+		let items = this.props.character.items
+		let itemGroups = _.uniq(items.map(i => i.category))
 
     let equipment = [...cmis]
     let cmifus = this.props.character.character_magic_item_feature_usages
@@ -58,9 +63,13 @@ class Equipment extends React.Component {
     }
     if (cws.length){groupings.push('weapon')}
     if (cas.length){groupings.push('armor')}
+		groupings = [...groupings, ...itemGroups]
 
 		// HARDCODE
 		if (this.props.character.name === "Majestik"){groupings.push("harrow")}
+		// if (this.props.character.name === "Natesse"){groupings.push("wand")}
+		// if (this.props.character.name === "Natesse"){groupings.push("scroll")}
+		// if (this.props.character.name === "Dz'eyn"){groupings.push("poison")}
 		// HARDCODE
 
     return groupings.map((group, idx) => {
@@ -76,13 +85,18 @@ class Equipment extends React.Component {
       groupedItems = group === 'unknown' ? unknowns : groupedItems
       groupedItems = group === 'weapon' ? cws : groupedItems
       groupedItems = group === 'armor' ? cas : groupedItems
+
       // remove unarmed as a valid weapon
       if (group === "weapon"){ groupedItems = groupedItems.filter(gi => gi.weapon.name !== "Unarmed") }
 
+			if (!groupedItems.length){groupedItems = items.filter(i => i.category === group)}
+
       let chosen = this.state.activeItemGroup === group
+			let label = ["unknown", "weapon", "armor", "harrow"].includes(group) ? group + "s" : group
+			// if (!["unknown", "weapon", "armor", "harrow"].includes(group)){label = group}
       return (
-        <div key={idx * 6 - 1} label={group + 's'}>
-          <div key={idx*3-1} onClick={() => this.changeActiveFeature(group)}><strong>{_.capitalize(group) + 's'} ({groupedItems.length})</strong></div>
+        <div key={idx * 6 - 1} label={label}>
+          <div key={idx*3-1} onClick={() => this.changeActiveFeature(group)}><strong>{_.capitalize(label)} ({groupedItems.length})</strong></div>
           {chosen && <ul style={{margin: '0', padding: '0'}}>
             {groupedItems.map((i, idx) => {
 

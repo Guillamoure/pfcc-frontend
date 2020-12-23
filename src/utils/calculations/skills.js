@@ -38,7 +38,12 @@ export const skillBonusArray = (skillObj) => {
 	}
 
 	// HARDCODE
-	if (skillObj.name === "Swim" && character.name === "Unknown"){permanent += 2}
+	if (skillObj.name === "Swim" && character.name === "Fire-Roasted Tomatoes"){permanent += 2}
+	if (skillObj.name === "Profession (chef)" && character.name === "Fire-Roasted Tomatoes"){permanent += 3}
+	if (skillObj.name === "Acrobatics" && character.name === "Iyugi"){permanent += 2}
+	if (skillObj.name === "Perception" && character.name === "Natesse"){permanent += 2}
+	if (skillObj.name === "Sense Motive" && character.name === "Natesse"){permanent += -4}
+	if (skillObj.name === "Climb" && character.name === "Dz'eyn"){permanent += 8}
 	// HARDCODE
 
 	return [permanent, temporary]

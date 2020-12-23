@@ -1,7 +1,7 @@
 import React from 'react'
-import * as SpellcastingCalculations from '../../helper_functions/calculations/spellcasting'
-import { modalAction, tooltipAction } from '../../helper_functions/action_creator/popups'
-import { renderTH } from '../../helper_functions/fuf'
+import * as SpellcastingCalculations from '../../utils/calculations/spellcasting'
+import { modalAction, tooltipAction } from '../../utils/action_creator/popups'
+import { renderTH } from '../../utils/fuf'
 import { useSelector } from 'react-redux'
 
 const Spellcasting = props => {
@@ -28,11 +28,13 @@ const Spellcasting = props => {
 		let castAtWillSpells = castAtWill.map((el) => {
 			return renderSpell(el.spellInfo, {spellcasting: el.spellcasting, klassFeature: el.klassFeature, abilityName: el.abilityName})
 		})
-		spellcastingArray.push(
-			<>
+		if (castAtWill.length){
+			spellcastingArray.push(
+				<>
 				{renderSpellTable({}, 0, castAtWillSpells)}
-			</>
-		)
+				</>
+			)
+		}
 		return spellcastingArray.flat()
 	}
 
@@ -117,7 +119,7 @@ const Spellcasting = props => {
 	const renderSpell = (spell, scData) => {
 		let source = scData.abilityName ? `${scData.abilityName}` : `${scData.klassName} - ${scData.klassFeature.name}`
 
-		let spellData = SpellcastingCalculations.spellData({...spell, spellcasting: scData.spellcasting, source}, scData.klassFeature.klass_id)
+		let spellData = SpellcastingCalculations.spellData({...spell, spellcasting: scData.spellcasting, source}, scData.klassFeature.klass_id, character.character_klasses.length)
 		spellData.castableBonusSpell = !!spell.bonus_spell === true
 		let buttonName = spell.cast ? "Spent" : "Cast"
 		let isBonus = spell.bonus_spell ? renderBonusSpellSlotTooltip(spell) : null

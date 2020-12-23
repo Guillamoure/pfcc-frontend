@@ -33,7 +33,7 @@ export const isThisActionAvailable = (feature, options = {}) => {
 		return 'cannot-cast'
 	// if you are out of spells per day from a spell at this level
 	// cannot use the action
-	} else if (options.spell && !options.castAtWill && remainingSpellsPerDayFromSpellcasting(options.spellcasting, options.spellLevel).find(spd => spd.spell_level === options.spellLevel)?.spells <= 0) {
+} else if (options.spell && !options.castAtWill && remainingSpellsPerDayFromSpellcasting(options.spellcasting, options.characterLevel).find(spd => spd.spell_level === options.spellLevel)?.spells <= 0) {
 		return 'cannot-cast'
 	}	else {
 		return action
