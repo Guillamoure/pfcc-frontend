@@ -82,6 +82,24 @@ const Details = props => {
 		)
 	}
 
+	const displayCurrency = () => {
+		let { pp, gp, sp, cp } = props.character
+		let totalGP = (pp*10) + (gp) + (sp*0.1) + (cp*0.01)
+		return (
+			<>
+				<li><strong>Money</strong>: {totalGP} gp</li>
+				<table>
+					<thead>
+						<tr><th>pp</th><th>gp</th><th>sp</th><th>cp</th></tr>
+					</thead>
+					<tbody>
+						<tr><td>{pp}</td><td>{gp}</td><td>{sp}</td><td>{cp}</td></tr>
+					</tbody>
+				</table>
+			</>
+		)
+	}
+
 	const renderDisplayDescription = () => {
 		const { displayDescriptions } = props.character_info
 
@@ -125,6 +143,7 @@ const Details = props => {
 					<div className='nested'>
 						{renderDisplayDescription()}
 						{displayLoad()}
+						{displayCurrency()}
 					</div>
       </>
     )
