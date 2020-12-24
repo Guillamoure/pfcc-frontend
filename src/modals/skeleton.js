@@ -19,6 +19,7 @@ import CreatureStatBlock from '../components/creature_stat_block'
 import SkillDescription from '../components/skill_description'
 import HarrowDeck from '../components/modals/harrow'
 import ItemDescription from '../components/modals/item_description'
+import CurrencyManager from '../components/modals/currency_manager'
 
 const ModalSkeleton = (props) => {
 
@@ -58,6 +59,8 @@ const ModalSkeleton = (props) => {
 				return <ItemDescription item={props.modal.obj} />
 			case 'harrow':
 				return <HarrowDeck />
+			case 'currency':
+				return <CurrencyManager />
       default:
         break
     }

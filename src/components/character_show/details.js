@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
+import { modalAction } from '../../utils/action_creator/popups'
 import _ from 'lodash'
 
 import { calculateWeight, carryingCapacity, calculateLoad } from '../../helper_functions/calculations/character'
@@ -87,15 +88,11 @@ const Details = props => {
 		let totalGP = (pp*10) + (gp) + (sp*0.1) + (cp*0.01)
 		return (
 			<>
-				<li><strong>Money</strong>: {totalGP} gp</li>
-				<table>
-					<thead>
-						<tr><th>pp</th><th>gp</th><th>sp</th><th>cp</th></tr>
-					</thead>
-					<tbody>
-						<tr><td>{pp}</td><td>{gp}</td><td>{sp}</td><td>{cp}</td></tr>
-					</tbody>
-				</table>
+				<li><strong>Money</strong>: {totalGP.toFixed(2)} gp</li>
+        <p>
+          {pp} pp | {gp} gp | {sp} sp | {cp} cp
+          <button onClick={() => modalAction("currency")}>Manage</button>
+        </p>
 			</>
 		)
 	}
