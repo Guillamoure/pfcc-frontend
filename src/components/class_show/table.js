@@ -1,10 +1,14 @@
 import React from 'react'
 import _ from 'lodash'
+import { renderTH } from '../../utils/fuf'
+import { tableDescriptionsByLevel } from '../../utils/calculations/class'
 
-class Table extends React.Component {
+const Table = props => {
 
-  renderBAB = () => {
-    switch (this.props.klass.hit_die){
+	const tableDescriptions = tableDescriptionsByLevel(props.klass.klass_features, props.activeArchetype, props.chosenArchetypes)
+
+  const renderBAB = () => {
+    switch (props.klass.hit_die){
       case 6:
         return 0.5;
       case 8:
@@ -18,7 +22,7 @@ class Table extends React.Component {
     }
   }
 
-  renderSave = (num, save) => {
+  const renderSave = (num, save) => {
     if (save === 0.5){
       return _.floor(num * save) + 2
     } else if (save === 0.34){
@@ -26,20 +30,71 @@ class Table extends React.Component {
     }
   }
 
-  renderLevelFeatures = (lvl) => {
-    let onlyFeatures = _.flatten(this.props.klass.klass_features.map(kf => {
-			let slug = kf.name.toLowerCase().split(" ").join("-")
-			return kf.feature_levels.map(fl => {
-				return {slug, featureLevel: fl}
-			})
-		}))
-    const levelFeatures = onlyFeatures.filter(feature => {
-      return feature.featureLevel.level === lvl && feature.featureLevel.table_description !== "none"
-    })
+  const renderLevelFeatures = (lvl) => {
+		// converts class features into an array of the table description with a slug for href
+		let levelFeatures = tableDescriptions[lvl] ?? []
+		// let klassFeatureIds = []
+		//
+    // props.klass.klass_features.forEach(kf => {
+		//
+		// 	let slug = kf.name.toLowerCase().split(" ").join("-")
+		//
+		// 	kf.feature_levels.forEach(fl => {
+		//
+		// 		const {table_description, level} = fl
+		// 		// filter all the features by their level
+		// 		if (level === lvl && (table_description !== "none" && table_description !== "")){
+		// 			levelFeatures.push({klassFeatureId: kf.id, slug, featureLevel: fl, color: "black"})
+		// 			klassFeatureIds.push(kf.id)
+		// 		}
+		//
+		// 	})
+		// })
+		//
+		// let desc  = tableDescriptionPerLevel(lvl, props.klass.klass_features, props.activeArchetype, props.chosenArchetypes)
+		//
+		// // if there is an activeArchetype
+		// if (props.activeArchetype.id){
+		// 	levelFeatures = levelFeatures.map(feat => {
+		// 		let newFeature = false
+		// 		props.activeArchetype.klass_archetype_features.forEach(archF => {
+		// 			archF.replaces_klass_features.forEach(kf => {
+		// 				if (kf.klass_feature_id === feat.featureLevel.klass_feature_id){
+		// 					if (!kf.affects_specific_level || kf.affects_specific_level === lvl){
+		// 						newFeature = true
+		// 					}
+		// 				}
+		// 			})
+		// 		})
+		// 		if (newFeature){return {...feat, strikethrough: true, color: "darkgrey"}}
+		// 		else {return feat}
+		// 	})
+		// 	props.activeArchetype.klass_archetype_features.forEach(archF => {
+		// 		archF.klass_archetype_feature_levels.forEach(archFL => {
+		// 			if (archFL.table_description !== "none" && archFL.table_description !== ""){
+		// 				if (archFL.level === lvl){
+		// 					let slug = archF.name.toLowerCase().split(" ").join("-")
+		//
+		// 					levelFeatures.push({slug, featureLevel: archFL, color: "forestgreen"})
+		// 				}
+		// 			}
+		// 		})
+		// 	})
+		// }
+
+
+
+		// make dom element of description with slug href
     const nameOfFeatures = levelFeatures.map(feature => {
 			// return feature.featureLevel.table_description
-			return <a style={{color: "black"}} href={`#${feature.slug}`}>{feature.featureLevel.table_description}</a>
+			let style = {color: feature.color}
+			if (feature.strikethrough){
+				style.textDecoration = "line-through"
+			}
+			return <a className="underline-hover" style={style} href={`#${feature.slug}`}>{feature.tableDescription}</a>
 		})
+
+		// join all of them with commas to become a string
 		const domFeatures = []
 		for (let i = 0; i < nameOfFeatures.length; i++){
 			domFeatures.push(nameOfFeatures[i])
@@ -50,49 +105,62 @@ class Table extends React.Component {
     return domFeatures
   }
 
-  renderClassTableRow = () => {
+  const renderClassTableRow = () => {
     let level = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
     return level.map(num => {
       return (
-        <tr key={_.random(1, 2000000)} className={this.renderTableStyling(num)}>
-          <td>{num}</td>
-          <td>+{_.floor(num * this.renderBAB())}</td>
-          <td>+{this.renderSave(num, this.props.klass.fortitude)}</td>
-          <td>+{this.renderSave(num, this.props.klass.reflex)}</td>
-          <td>+{this.renderSave(num, this.props.klass.will)}</td>
-          <td style={{textAlign: 'left'}}>{this.props.klass.klass_features && this.renderLevelFeatures(num)}</td>
-          {this.spellsPerDay(num)}
+        <tr key={_.random(1, 2000000)} className={renderTableStyling(num)}>
+          <td style={{textAlign: 'left'}}>{renderTH(num)}</td>
+          <td style={{textAlign: 'left'}}>{renderAttackBonus(num)}</td>
+          <td>+{renderSave(num, props.klass.fortitude)}</td>
+          <td>+{renderSave(num, props.klass.reflex)}</td>
+          <td>+{renderSave(num, props.klass.will)}</td>
+          <td style={{textAlign: 'left'}}>{props.klass.klass_features && renderLevelFeatures(num)}</td>
+          {spellsPerDay(num)}
         </tr>
       )
     })
   }
 
-  renderTableStyling = (level) => {
+	const renderAttackBonus = (level) => {
+		let bab = _.floor(level * renderBAB())
+		let string = ""
+		for (let i = bab; i > 0; i-=5){
+			if (string.length){
+				string += "/"
+			}
+			string += `+${i}`
+		}
+		if (!string.length){string = "+0"}
+		return string
+	}
+
+  const renderTableStyling = (level) => {
     return level%2 === 0 ? "even" : "odd"
   }
 
-  renderClassTable = () => {
+  const renderClassTable = () => {
     return (
-      <table className='show'>
+      <table id="class-table" className='show'>
         <thead >
           <tr >
-            <th >Level</th>
-            <th >BAB</th>
-            <th >Fortitude Save</th>
-            <th >Reflex Save</th>
-            <th >Will Save</th>
-            <th >Features</th>
-            {this.spells()}
+            <th id="class-table-level">Lvl</th>
+            <th id="class-table-bab">BAB</th>
+            <th id="class-table-fort">Fort Save</th>
+            <th id="class-table-ref">Reflex Save</th>
+            <th id="class-table-will">Will Save</th>
+            <th id="class-table-features">Features</th>
+            {spells()}
           </tr>
         </thead>
         <tbody >
-          {this.renderClassTableRow()}
+          {renderClassTableRow()}
         </tbody>
       </table>
     )
   }
 
-	findSpellcasting = klassFeatures => {
+	const findSpellcasting = klassFeatures => {
 		let spellcasting = null
 		klassFeatures.forEach(kf => {
 			kf.features.forEach(f => {
@@ -102,63 +170,54 @@ class Table extends React.Component {
 		return spellcasting
 	}
 
-  spells = () => {
-    if (this.findSpellcasting(this.props.klass.klass_features ?? [])){
+	const availableSpellLevels = spdpl => {
+		let arr = []
+		for (let i = 0; i < spdpl.length; i++){
+			if (!arr.includes(spdpl[i].spell_level)){
+				arr.push(spdpl[i].spell_level)
+			}
+		}
+		return arr
+	}
+
+  const spells = () => {
+		let spellcasting = findSpellcasting(props.klass.klass_features ?? [])
+    if (spellcasting){
       console.log("Has spells per day!")
+			let levels = availableSpellLevels(spellcasting.spells_per_day_per_level)
       return (
         <React.Fragment>
-          <th >0</th>
-          <th >1</th>
-          <th >2</th>
-          <th >3</th>
-          <th >4</th>
-          <th >5</th>
-          <th >6</th>
-          <th >7</th>
-          <th >8</th>
-          <th >9</th>
+          {levels.map(lvl => <th>{lvl}</th>)}
         </React.Fragment>
       )
     }
   }
 
-  spellsPerDay = (lvl) => {
-    if (this.findSpellcasting(this.props.klass.klass_features ?? [])){
+  const spellsPerDay = (lvl) => {
+		let spellcasting = findSpellcasting(props.klass.klass_features ?? [])
+    if (spellcasting){
+			let levels = availableSpellLevels(spellcasting.spells_per_day_per_level)
       return (
         <React.Fragment>
-          <th >{this.renderSpellsPerDayPerLevel(lvl, 0)}</th>
-          <th >{this.renderSpellsPerDayPerLevel(lvl, 1)}</th>
-          <th >{this.renderSpellsPerDayPerLevel(lvl, 2)}</th>
-          <th >{this.renderSpellsPerDayPerLevel(lvl, 3)}</th>
-          <th >{this.renderSpellsPerDayPerLevel(lvl, 4)}</th>
-          <th >{this.renderSpellsPerDayPerLevel(lvl, 5)}</th>
-          <th >{this.renderSpellsPerDayPerLevel(lvl, 6)}</th>
-          <th >{this.renderSpellsPerDayPerLevel(lvl, 7)}</th>
-          <th >{this.renderSpellsPerDayPerLevel(lvl, 8)}</th>
-          <th >{this.renderSpellsPerDayPerLevel(lvl, 9)}</th>
+					{levels.map(level => <td>{renderSpellsPerDayPerLevel(lvl, level)}</td>)}
         </React.Fragment>
       )
     }
   }
 
-  renderSpellsPerDayPerLevel = (lvl, sp_lvl) => {
-		let spellcasting = this.findSpellcasting(this.props.klass.klass_features ?? [])
+  const renderSpellsPerDayPerLevel = (lvl, sp_lvl) => {
+		let spellcasting = findSpellcasting(props.klass.klass_features ?? [])
     const spd = spellcasting.spells_per_day_per_level.find(spd => {
       return spd.klass_level === lvl && spd.spell_level === sp_lvl
     })
     return spd ? spd.spells : "-"
   }
 
-  render () {
-    return (
-      <span className='show'>
-        {this.renderClassTable()}
-      </span>
-    )
-  }
-
-
-
+  return (
+    <span className='show'>
+      {renderClassTable()}
+    </span>
+  )
 }
 
 export default Table

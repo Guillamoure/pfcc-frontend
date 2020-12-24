@@ -43,3 +43,30 @@
 	color: red;
 	background: white;
 }
+
+#klass-specialization-container {
+	display: grid;
+	grid-template-columns: 40% 60%;
+	grid-template-rows: 1fr 2fr;
+	grid-template-areas:
+		"options details"
+		"spell details";
+	grid-column-gap: 1%;
+	margin: 1%;
+	max-height: 80%;
+	.klass-specialization-details {
+		grid-area: details;
+		overflow-y: scroll;
+		text-align: left;
+	}
+	.klass-specialization-options {
+		grid-area: options;
+		overflow-y: scroll;
+	}
+	.klass-specialization-spell-description {
+		grid-area: spell;
+		overflow: scroll;
+		font-size: 14px;
+		text-align: left;
+	}
+}

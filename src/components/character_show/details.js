@@ -32,6 +32,18 @@ const Details = props => {
       case 'Robby':
         knownLanguages = ['Common', 'Aquan', 'Auran', 'Ignan', 'Halfling (Jabberjaw Gem)', 'Abyssal (Jabberjaw Gem)', 'Dwarven (Jabberjaw Gem)', 'Sylvan (Jabberjaw Gem)', 'Undercommon (Jabberjaw Gem)']
         break
+      case 'Fire-Roasted Tomatoes':
+        knownLanguages = ['Common', 'Sylvan', 'Aklo']
+        break
+      case 'Ildre':
+        knownLanguages = ['Common', 'Goblin', 'Draconic', "Elven", "Undercommon", "Sylvan", "Abyssal"]
+        break
+      case 'Iyugi':
+        knownLanguages = ['Common', "Elven", "Sylvan"]
+        break
+      case 'Natesse':
+        knownLanguages = ['Common', "Hexadecimal", "Elven", "Goblin", "Draconic"]
+        break
       default:
         break
     }
@@ -64,6 +76,24 @@ const Details = props => {
 							<td style={{borderRight: "1px solid black"}}>{cc[0]+1} - {cc[1]} lbs</td>
 							<td>{cc[1]+1} - {cc[2]} lbs</td>
 						</tr>
+					</tbody>
+				</table>
+			</>
+		)
+	}
+
+	const displayCurrency = () => {
+		let { pp, gp, sp, cp } = props.character
+		let totalGP = (pp*10) + (gp) + (sp*0.1) + (cp*0.01)
+		return (
+			<>
+				<li><strong>Money</strong>: {totalGP} gp</li>
+				<table>
+					<thead>
+						<tr><th>pp</th><th>gp</th><th>sp</th><th>cp</th></tr>
+					</thead>
+					<tbody>
+						<tr><td>{pp}</td><td>{gp}</td><td>{sp}</td><td>{cp}</td></tr>
 					</tbody>
 				</table>
 			</>
@@ -113,6 +143,7 @@ const Details = props => {
 					<div className='nested'>
 						{renderDisplayDescription()}
 						{displayLoad()}
+						{displayCurrency()}
 					</div>
       </>
     )

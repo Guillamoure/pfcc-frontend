@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
-import { faDiceD20 } from '@fortawesome/free-solid-svg-icons'
+
 // import { faDungeon } from '@fortawesome/free-solid-svg-icons'
 
 class CharacterName extends React.Component {
@@ -95,50 +95,15 @@ class CharacterName extends React.Component {
     return name
   }
 
-  greenBadge = () => {
-    let badge = false
-    let cmis = this.props.character?.character_magic_items || []
-    cmis.forEach(cmi => {
-      if (!cmi.discovered){
-        badge = true
-      }
-    })
-    return badge
-  }
 
-  yellowBadge = () => {
-    let badge = false
-
-    let prepared = false
-    this.props.character_info.classes.forEach(cl => {
-      if (cl.spellcasting && cl.spellcasting.prepared){
-        prepared = true
-      }
-    })
-    badge = prepared ? (!this.props.character.is_done_preparing_spells ? true : badge) : badge
-    return badge
-  }
-
-  redBadge = () => {
-    let badge = false
-    return badge
-  }
 
   render(){
     console.log('REDUX', this.props)
     return(
-      <div id='character' className='shrink'>
+      <div>
         <div className='first-row' style={{padding: '.25em'}} id='title'>{this.name()}</div>
-        <span className='second-row' style={{padding: '.5em'}}>{this.props.character.race.name} {this.renderClasses()}</span>
+        <div className='second-row' style={{padding: '.5em'}}>{this.props.character.race.name} {this.renderClasses()}</div>
         {this.props.character.user_id === this.props.currentUser.id && localStorage.computer === "true" && <span className='edit' onClick={() => this.props.editModal('character')}><FontAwesomeIcon icon={faPencilAlt} /></span>}
-        {localStorage.computer === "true" && <span className='notif'>
-          <div className='notification'>
-            {this.greenBadge() && <span className='badge green-badge'></span>}
-            {this.yellowBadge() && <span className='badge yellow-badge'></span>}
-            {this.redBadge() && <span className='badge red-badge'></span>}
-            <FontAwesomeIcon id='spin' icon={faDiceD20} size='3x' onClick={() => this.props.editModal('notifications')} />
-          </div>
-        </span >}
       </div>
     )
   }

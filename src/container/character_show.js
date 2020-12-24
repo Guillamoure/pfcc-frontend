@@ -5,7 +5,7 @@ import localhost from '../localhost'
 import { mod } from '../fuf'
 import { fetchCharacter } from '../dispatch'
 import { characterDistributer } from '../helper_functions/distributers/character'
-import { initializeCampaignWebsocket } from '../helper_functions/websocket/campaign'
+import { initializeCampaignWebsocket } from '../utils/websocket/campaign'
 
 import AbilityScores from '../components/character_show/ability_scores'
 import CharacterName from '../components/character_show/character_name'
@@ -21,6 +21,8 @@ import Initiative from '../components/character_show/initiative'
 import TurnActions from '../components/character_show/turn_actions'
 import Details from './details'
 import Campaign from './campaign'
+import NotificationDie from '../components/character_show/notification_die'
+import CharacterShowTabs from './character_show_tabs'
 
 // unfinished hardcoded features
 import Points from '../components/character_show/points'
@@ -457,65 +459,83 @@ class Character extends React.Component {
     }
   }
 
+	renderHeader = () => {
+		if (localStorage.computer !== "false"){
+
+			const renderTabClick = (tab) => {
+				this.setState({display: tab})
+			}
+
+			return (
+				<div id='character' className='shrink'>
+					{this.state.character.race && <CharacterName character={this.state.character} editModal={this.editModal}/>}
+					<CharacterShowTabs activeTab={this.state.display} renderTabClick={renderTabClick}/>
+					{this.state.character.race && <NotificationDie character={this.state.character} editModal={this.editModal} />}
+				</div>
+			)
+		}
+	}
+
   renderCharacter = () => {
     if (localStorage.computer !== "false"){
       return (
-        <span className="container-8 character">
-        {this.state.character.race && <CharacterName character={this.state.character} editModal={this.editModal}/>}
-        {this.state.character.race && this.state.display === "Adventure" && <AbilityScores character={this.state.character} editModal={this.editModal}/>}
-        {this.state.character.race && this.state.display === "Adventure" && <FeaturesTraits character={this.state.character} editModal={this.editModal} exitModal={this.exitModal} characterItemID={this.state.characterItemID}/>}
-        {this.state.character.race && this.state.display === "Character" && <Details character={this.state.character} editModal={this.editModal}/>}
-        {this.state.character.race && (this.state.display === "Adventure" || this.state.display === "Combat") && <Saves character={this.state.character} display={this.state.display} renderTooltip={this.renderTooltip} mouseOut={this.mouseOut}/>}
-        {this.state.character.race && (this.state.display === "Adventure" || this.state.display === "Combat") && <HP character={this.state.character} editModal={this.editModal} display={this.state.display}/>}
-        {this.state.character.race && this.state.display === "Combat" && <AttackBonus character={this.state.character}/>}
-        {this.state.character.race && this.state.display === "Combat" && <ArmorClass character={this.state.character} size={this.props.character_info.size}/>}
-        {this.state.character.race && this.state.display === "Adventure" && <Skills character={this.state.character} renderTooltip={this.renderTooltip} mouseOut={this.mouseOut}/>}
-        {this.state.character.race && this.state.display === "Combat" && <Actions character={this.state.character} editModal={this.editModal} clickOut={this.clickOut} renderTooltip={this.renderTooltip} mouseOut={this.mouseOut}/>}
-        {this.state.character.race && this.state.display === "Combat" && <Initiative character={this.state.character}/>}
-        {this.state.character.race && this.state.display === "Combat" && <TurnActions/>}
+				<>
+	        <span className="container-8 character">
+		        {this.state.character.race && this.state.display === "Adventure" && <AbilityScores character={this.state.character} editModal={this.editModal}/>}
+		        {this.state.character.race && this.state.display === "Adventure" && <FeaturesTraits character={this.state.character} editModal={this.editModal} exitModal={this.exitModal} characterItemID={this.state.characterItemID}/>}
+		        {this.state.character.race && this.state.display === "Character" && <Details character={this.state.character} editModal={this.editModal}/>}
+		        {this.state.character.race && (this.state.display === "Adventure" || this.state.display === "Combat") && <Saves character={this.state.character} display={this.state.display} renderTooltip={this.renderTooltip} mouseOut={this.mouseOut}/>}
+		        {this.state.character.race && (this.state.display === "Adventure" || this.state.display === "Combat") && <HP character={this.state.character} editModal={this.editModal} display={this.state.display}/>}
+		        {this.state.character.race && this.state.display === "Combat" && <AttackBonus character={this.state.character}/>}
+		        {this.state.character.race && this.state.display === "Combat" && <ArmorClass character={this.state.character} size={this.props.character_info.size}/>}
+		        {this.state.character.race && this.state.display === "Adventure" && <Skills character={this.state.character} renderTooltip={this.renderTooltip} mouseOut={this.mouseOut}/>}
+		        {this.state.character.race && this.state.display === "Combat" && <Actions character={this.state.character} editModal={this.editModal} clickOut={this.clickOut} renderTooltip={this.renderTooltip} mouseOut={this.mouseOut}/>}
+		        {this.state.character.race && this.state.display === "Combat" && <Initiative character={this.state.character}/>}
+		        {this.state.character.race && this.state.display === "Combat" && <TurnActions/>}
 
-        {/* unfinished, hardcoded features */}
-        {!!this.state.character && this.state.display === "Combat" && <Points editModal={this.editModal}/>}
-        {!!this.state.character && this.state.display === "Combat" && <Active activeEffects={this.state.activeEffects} editModal={this.editModal}/>}
-        {!!this.state.character && this.state.display === "Character" && <Campaign editModal={this.editModal}/>}
-        {!!this.state.character && this.state.display === "Combat" && <Size/>}
-        {/* unfinished, hardcoded features */}
+		        {/* unfinished, hardcoded features */}
+		        {!!this.state.character && this.state.display === "Combat" && <Points editModal={this.editModal}/>}
+		        {!!this.state.character && this.state.display === "Combat" && <Active activeEffects={this.state.activeEffects} editModal={this.editModal}/>}
+		        {!!this.state.character && this.state.display === "Character" && <Campaign editModal={this.editModal}/>}
+		        {!!this.state.character && this.state.display === "Combat" && <Size/>}
+		        {/* unfinished, hardcoded features */}
 
 
-        {this.state.modal === 'background' && <BackgroundForm character={this.state.character} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
-        {this.state.modal === 'character' && <CharacterForm character={this.state.character} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
-        {this.state.modal === 'ability' && <AbilityForm character={this.state.character} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
-        {this.state.modal === 'notifications' && <Notifications exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit} changeActiveEffects={this.changeActiveEffects}/>}
-        {this.state.modal === 'hitPoints' && <ModalSkeleton modal={this.state.modal} exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
-        {(this.state.modal === 'spell' && this.state.spellId !== 0) && <SpellDescriptionModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} spellId={this.state.spellId}/>}
-        {(this.state.modal === 'magic item' && this.state.characterItemID !== 0) && <MagicItemModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} characterItemID={this.state.characterItemID}/>}
-        {(this.state.modal === 'cFeature' && this.state.cfId !== 0) && <CharacterFeatureModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} cfId={this.state.cfId} detail={this.state.detail}/>}
-        {(this.state.modal === 'weapon' && this.state.characterItemID !== 0) && <WeaponModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} characterItemID={this.state.characterItemID}/>}
+		        {this.state.modal === 'background' && <BackgroundForm character={this.state.character} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
+		        {this.state.modal === 'character' && <CharacterForm character={this.state.character} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
+		        {this.state.modal === 'ability' && <AbilityForm character={this.state.character} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
+		        {this.state.modal === 'notifications' && <Notifications exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit} changeActiveEffects={this.changeActiveEffects}/>}
+		        {this.state.modal === 'hitPoints' && <ModalSkeleton modal={this.state.modal} exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} renderEdit={this.renderEdit}/>}
+		        {(this.state.modal === 'spell' && this.state.spellId !== 0) && <SpellDescriptionModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} spellId={this.state.spellId}/>}
+		        {(this.state.modal === 'magic item' && this.state.characterItemID !== 0) && <MagicItemModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} characterItemID={this.state.characterItemID}/>}
+		        {(this.state.modal === 'cFeature' && this.state.cfId !== 0) && <CharacterFeatureModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} cfId={this.state.cfId} detail={this.state.detail}/>}
+		        {(this.state.modal === 'weapon' && this.state.characterItemID !== 0) && <WeaponModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut} characterItemID={this.state.characterItemID}/>}
 
-        {/* unfinished, hardcoded features */}
-        {this.state.modal === 'points' && <PointModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
-        {this.state.modal === 'performance' && <PerformanceModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
-        {this.state.modal === 'frogCombat' && <FrogCombat exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
-        {this.state.modal === 'rage' && <RageModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
-        {this.state.toolTip && <Tooltip x={this.state.toolTipX} y={this.state.toolTipY} comment={this.state.toolTipComment}/>}
-        {this.state.modal === 'command ring' && <CommandRingModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
-        {this.state.modal === 'age' && <AgeModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
-        {this.state.modal === 'curio' && <CurioModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
-        {this.state.modal === 'poisons' && <PoisonModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
-        {this.state.modal === 'reservoir' && <SpellAugmentModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
-        {this.state.modal === 'metamagic' && <MetamagicModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
-        {this.state.modal === 'handy' && <HandyModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
-        {this.state.modal === 'debilitating' && <DebilitatingModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
-        {this.state.modal === 'ammo' && <AmmoModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
-        {this.state.modal === 'sasea' && <SaseaModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
-        {this.state.modal === 'aura' && <AuraModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
-        {this.state.modal === 'mutagen' && <MutagenModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
-        {/* unfinished, hardcoded features */}
+		        {/* unfinished, hardcoded features */}
+		        {this.state.modal === 'points' && <PointModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
+		        {this.state.modal === 'performance' && <PerformanceModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
+		        {this.state.modal === 'frogCombat' && <FrogCombat exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
+		        {this.state.modal === 'rage' && <RageModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
+		        {this.state.toolTip && <Tooltip x={this.state.toolTipX} y={this.state.toolTipY} comment={this.state.toolTipComment}/>}
+		        {this.state.modal === 'command ring' && <CommandRingModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
+		        {this.state.modal === 'age' && <AgeModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
+		        {this.state.modal === 'curio' && <CurioModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
+		        {this.state.modal === 'poisons' && <PoisonModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
+		        {this.state.modal === 'reservoir' && <SpellAugmentModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
+		        {this.state.modal === 'metamagic' && <MetamagicModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
+		        {this.state.modal === 'handy' && <HandyModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
+		        {this.state.modal === 'debilitating' && <DebilitatingModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
+		        {this.state.modal === 'ammo' && <AmmoModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
+		        {this.state.modal === 'sasea' && <SaseaModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
+		        {this.state.modal === 'aura' && <AuraModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
+		        {this.state.modal === 'mutagen' && <MutagenModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
+		        {/* unfinished, hardcoded features */}
 
-        <div id='right' onClick={() => this.setState({display: this.rightArrow()})}><FontAwesomeIcon icon={faCaretRight} size='9x'/><div>{this.rightArrow()}</div></div>
-        <div id='left' onClick={() => this.setState({display: this.leftArrow()})}><FontAwesomeIcon icon={faCaretLeft} size='9x'/><div>{this.leftArrow()}</div></div>
+		        <div id='right' onClick={() => this.setState({display: this.rightArrow()})}><FontAwesomeIcon icon={faCaretRight} size='9x'/><div>{this.rightArrow()}</div></div>
+		        <div id='left' onClick={() => this.setState({display: this.leftArrow()})}><FontAwesomeIcon icon={faCaretLeft} size='9x'/><div>{this.leftArrow()}</div></div>
 
-        </span>
+	        </span>
+				</>
       )
     } else {
       return (
@@ -553,6 +573,7 @@ class Character extends React.Component {
   render() {
     return (
       <>
+				{this.renderHeader()}
         {this.renderCharacter()}
       </>
     )

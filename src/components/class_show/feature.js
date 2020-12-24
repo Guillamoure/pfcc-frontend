@@ -3,6 +3,7 @@ import _ from 'lodash'
 import FeatureForm from './feature_form'
 import { connect } from 'react-redux'
 import localhost from '../../localhost'
+import { descriptionParser } from '../../utils/fuf'
 
 class Feature extends React.Component {
 
@@ -74,8 +75,7 @@ class Feature extends React.Component {
     if (this.props.feature.description){
 
       let desc = this.props.feature.description
-      desc = desc.split("\n\n")
-      return desc.map(para => <p key={_.random(1, 2000000)}>{para}</p>)
+      return descriptionParser(desc)
     }
   }
 
@@ -110,22 +110,18 @@ class Feature extends React.Component {
   render () {
 		let slug = this.props.feature.name.toLowerCase().split(" ").join("-")
     return (
-      <span>
-        <ul>
-          <span id={slug}><strong>{this.props.feature.name}</strong></span>
+      <>
+        <li id={slug} className="feature-title"><strong>{this.props.feature.name}</strong></li>
 
-          {this.state.deleteFeatureButton ? <span><br/>Are you sure about that?<br/> <button onClick={(e) => this.deleteFeatureConfirm(e, "no")}>No</button><button onClick={(e) => this.deleteFeatureConfirm(e, "yes")}>Yes</button><br/><br/></span> : null}
-          {!this.state.deleteFeatureButton && this.props.admin ? <button onClick={this.renderClick}>Edit</button> : null}
-          {this.props.admin && <button onClick={() => this.props.toggleModal(this.props.feature.id)}>Toggle Feature Effect</button>}
+        {this.state.deleteFeatureButton ? <span><br/>Are you sure about that?<br/> <button onClick={(e) => this.deleteFeatureConfirm(e, "no")}>No</button><button onClick={(e) => this.deleteFeatureConfirm(e, "yes")}>Yes</button><br/><br/></span> : null}
+        {!this.state.deleteFeatureButton && this.props.admin ? <button onClick={this.renderClick}>Edit</button> : null}
+        {this.props.admin && <button onClick={() => this.props.toggleModal(this.props.feature.id)}>Toggle Feature Effect</button>}
 
-          <li>A {this.props.klass_name} learns this at <strong>level {this.startingLevel(this.props.feature)}</strong></li>
-          <li>Description: {this.renderDescription()}</li>
-          {this.effectsButton()}
-          {this.state.showEffects && this.showEffects()}
-        </ul>
+        <li>{this.renderDescription()}</li>
+        {this.effectsButton()}
+        {this.state.showEffects && this.showEffects()}
         {this.state.toggleFeatureForm ? this.renderForm() : null}
-        < br />
-      </span>
+      </>
     )
   }
 }

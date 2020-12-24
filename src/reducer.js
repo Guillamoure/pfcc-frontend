@@ -31,11 +31,13 @@ const initialState = {
   classes: [],
   races: [],
   spells: [],
+	skills: [],
   tooltip: {},
   modal: {},
 	websocket: {},
 	notifications: [],
-	storedNotifications: []
+	storedNotifications: [],
+	activeEncounter: {}
 }
 
 
@@ -80,7 +82,7 @@ const reducer = (state = initialState, action) => {
     // case "CLASSES":
     //   return {...state, classes: action.classes}
     case "EVERYTHING":
-      return {...state, classes: action.classes, races: action.races};
+      return {...state, classes: action.classes, races: action.races, skills: action.skills};
     case "CAST CANTRIP SPA OR SPONTANEOUS SPELL":
       let updatedState = castingCantripSPASpontaneous(state, action)
       return {...state, character_info: updatedState};
@@ -114,10 +116,18 @@ const reducer = (state = initialState, action) => {
     case "TRIGGER ACTION":
       let actionDupe = state.character_info.actions
       if(action.action === 'full' && actionDupe.full === false){
-        actionDupe = {full: true, standard: true, move: true, swift: true, immediate: false}
+        actionDupe = {full: true, standard: true, move: true}
       } else if(action.action === 'full' && actionDupe.full === true) {
-        actionDupe = {full: false, standard: false, move: false, swift: false, immediate: false}
-      } else {
+        actionDupe = {full: false, standard: false, move: false}
+      } else if (action.action === "standard" && actionDupe.standard === false && actionDupe.full === false) {
+				actionDupe = {full: true, standard: true}
+			} else if (action.action === "standard" && actionDupe.standard === true && actionDupe.full === true) {
+				actionDupe = {full: false, standard: false}
+			} else if (action.action === "move" && actionDupe.move === false && actionDupe.full === false) {
+				actionDupe = {full: true, move: true}
+			} else if (action.action === "move" && actionDupe.move === true && actionDupe.full === true) {
+				actionDupe = {full: false, move: false}
+			} else {
         actionDupe[action.action] = !actionDupe[action.action]
       }
       return {...state, character_info: {...state.character_info, actions: actionDupe}}
@@ -573,6 +583,59 @@ const reducer = (state = initialState, action) => {
 			return {...state, notifications: action.notifications}
 		case "UPDATE STORED NOTIFICATIONS":
 			return {...state, storedNotifications: action.notifications}
+		case "REMOVE ENCOUNTER":
+			let userCopy = {...state.currentUser}
+			var newCampaigns = userCopy.campaigns.map(camp => {
+				if (camp.id === action.campaignId){
+					let newEncounters = camp.encounters.filter(enc => enc.id !== action.encounterId)
+					let campCopy = {...camp, encounters: newEncounters}
+					return campCopy
+				} else {return camp}
+			})
+			return {...state, currentUser: {...state.currentUser, campaigns: newCampaigns}}
+		case "UPDATE ENCOUNTER":
+			var newCampaigns = state.currentUser.campaigns.map(camp => {
+				if (camp.id === parseInt(action.campaignId)){
+					let newEncounters = camp.encounters.map(enc => {
+						if (enc.id === action.encounter.id){return action.encounter}
+						else {return enc}
+					})
+					return {...camp, encounters: newEncounters}
+				} else {return camp}
+			})
+			console.log(action)
+			return {...state, currentUser: {...state.currentUser, campaigns: newCampaigns}}
+		case "START ENCOUNTER":
+			return {...state, activeEncounter: {...action.encounter, participants: []}}
+		case "END ENCOUNTER":
+			return {...state, activeEncounter: {}}
+		case "STORE ARCHETYPES":
+			var klasses = [...state.classes].map(cl => {
+				if (cl.id !== action.klassId){
+					return cl
+				} else {
+					return {...cl, archetypes: action.archetypes}
+				}
+			})
+			return {...state, classes: klasses}
+		case "STORE OPTIONS":
+			var klasses = [...state.classes].map(cl => {
+				if (cl.id !== action.klassId){
+					return cl
+				} else {
+					var klassFeatures = cl.klass_features.map(kf => {
+						if (kf.id !== action.klassFeatureId){
+							return kf
+						} else {
+							return {...kf, options: action.options}
+						}
+					})
+					return {...cl, klass_features: klassFeatures}
+				}
+			})
+			return {...state, classes: klasses}
+		case 'ADD SKILL':
+			return {...state, skills: [...state.skills, action.skill]}
     default:
       return state
   }

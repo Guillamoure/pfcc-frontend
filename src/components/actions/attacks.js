@@ -1,7 +1,8 @@
 import React from 'react'
 import { connect, useDispatch } from 'react-redux'
 import { pluser, mod } from '../../fuf'
-import { renderAB } from '../../helper_functions/calculations/attack_bonus'
+import { renderAB } from '../../utils/calculations/attack_bonus'
+import { abilityScoreMod } from '../../utils/calculations/ability_scores'
 // import { tooltip } from '../../dispatches/tooltip'
 import { expendAmmo, reloadAmmo } from '../../dispatch'
 import _ from 'lodash'
@@ -49,6 +50,88 @@ const Attacks = props => {
     let onlyEquippedWeapons = props.character.character_weapons.filter(cw => cw.equipped)
     let nonUnarmedWeapons = [...onlyEquippedWeapons]
 
+		//HARDCODE
+		if (props.character.name === "Majestik"){
+			onlyEquippedWeapons.push({
+				id: 1001,
+				name: "Harrow Card",
+				description: "",
+				equipped: null,
+				known: true,
+				masterwork: true,
+				weapon: {
+					id: 1001,
+					name: "Harrow Card",
+					category: "Ranged",
+					damage_type: "Piercing",
+					critical: 2,
+					critical_range: 20,
+					damage_dice: 4,
+					num_of_dice: 1,
+					features: [],
+					price_in_gp: 1,
+					source: {id: 1001},
+					thrown: true,
+					range: 20,
+					proficiency: "Simple",
+					weapon_type: "Range"
+				}
+			})
+		} else if (props.character.name === "Fire-Roasted Tomatoes"){
+			onlyEquippedWeapons.push({
+				id: 1001,
+				name: "Fire Blast",
+				description: "",
+				equipped: null,
+				known: true,
+				masterwork: false,
+				weapon: {
+					id: 1001,
+					name: "Fire Blast",
+					category: "Ranged",
+					damage_type: "Fire",
+					critical: 2,
+					critical_range: 20,
+					damage_dice: 8,
+					num_of_dice: 1,
+					features: [],
+					price_in_gp: 0,
+					source: {id: 1001},
+					thrown: true,
+					range: 30,
+					proficiency: "Simple",
+					weapon_type: "Range"
+				}
+			})
+		} else if (props.character.name === "Iyugi"){
+			onlyEquippedWeapons.push({
+				id: 1001,
+				name: "Bite",
+				description: "",
+				equipped: null,
+				known: true,
+				masterwork: false,
+				weapon: {
+					id: 1001,
+					name: "Bite",
+					category: "Light",
+					damage_type: "Piercing",
+					critical: 2,
+					critical_range: 20,
+					damage_dice: 4,
+					num_of_dice: 1,
+					features: [],
+					price_in_gp: 0,
+					source: {id: 1001},
+					thrown: true,
+					range: 30,
+					proficiency: "Simple",
+					weapon_type: "Melee"
+				}
+			})
+		}
+		//HARDCODE
+
 		// add unarmed attack to end
     let unarmed = props.character.character_weapons.find(cw => cw.weapon.name === "Unarmed")
 		if (!!unarmed){
@@ -57,6 +140,7 @@ const Attacks = props => {
 			// unknown if this is in the frontend or backend
 			onlyEquippedWeapons.push(unarmed)
 		}
+
 
     let attacks = onlyEquippedWeapons.map(renderTableElement)
     // two weapon fighting
@@ -135,11 +219,18 @@ const Attacks = props => {
     // attackBonus is ability score modifier + class bab
     let meleeAttackBonus = null
     let rangeAttackBonus = null
+		let options = {}
+
+		if (props.character.name === "Natesse" && (cw.weapon.category === "Light" || cw.weapon.category === "Unarmed" || cw.weapon.name === "Rapier") ){
+			options.finesse = true
+		}
+
+
     if (cw.weapon.weapon_type === "Melee"){
-      meleeAttackBonus = renderAB(props.character, props.character_info, "melee")
+      meleeAttackBonus = renderAB(props.character, props.character_info, "melee", options)
     }
     if (cw.weapon.weapon_type === "Range" || cw.weapon.thrown){
-      rangeAttackBonus = renderAB(props.character, props.character_info, "range")
+      rangeAttackBonus = renderAB(props.character, props.character_info, "range", options)
     }
     // is the character proficient with this weapon
     // if it's proficiencyGroup can't be found, or if it's id isn't specifically found
@@ -242,6 +333,11 @@ const Attacks = props => {
 			penalties[1] = penalties[1] + 2
 		}
 
+		if (props.character.name === "Iyugi"){
+			penalties[0] = penalties[0] + 2
+			penalties[1] = penalties[1] + 6
+		}
+
 		if (double) {
 			twfAttackBonuses = `${calculateAttackBonuses(double, penalties[0])}/${calculateAttackBonuses(double, penalties[1])}`
 			twfRange = range(double)
@@ -251,8 +347,8 @@ const Attacks = props => {
 
 		} else if (primary && off) {
 			twfAttackBonuses = `${calculateAttackBonuses(primary, penalties[0])}/${calculateAttackBonuses(off, penalties[1])}`
-			twfRange = `${range(primary)}/${range(off)}`
-			twfDamage = `${renderDamage(primary)}/${renderDamage(off)}`
+			twfRange = range(primary) === range(off) ? `${range(primary)}` : `${range(primary)}/${range(off)}`
+			twfDamage = renderDamage(primary) === renderDamage(off) ? `${renderDamage(primary)}` : `${renderDamage(primary)}/${renderDamage(off)}`
 			allAttacks = [primary, off]
 		}
 
@@ -313,6 +409,25 @@ const Attacks = props => {
         additionalArray.push({name: "Thrown", tooltip: "If throwing, use second attack bonus (T)", sidebarRules: 0, italics: false})
       }
     }
+		//HARDCODE
+		if (characterWeapon.name === "Harrow Card"){
+			additionalArray.push({name: "Magic Weapon", tooltip: "You must use your Swift Action on Arcane Strike to enchant these cards to be used as weapons.", sidebarRules: 0, italics: false})
+		}
+		if (characterWeapon.name === "Fire Blast"){
+			additionalArray.push({name: "Touch AC", tooltip: "This attack resolves against Touch AC.", sidebarRules: 0, italics: false})
+			additionalArray.push({name: "Wild Talents", tooltip: "Can augment with your Substance Infusions (DC 14) or Form Infusions (DC 12)", sidebarRules: 0, italics: false})
+		}
+		if (props.character.name === "Iyugi"){
+			additionalArray.push({name: "Sneak Attack", tooltip: "If target is Denied Dex bonus to AC, or you are Flanking their, +1d6 Precision Damage", sidebarRules: 0, italics: false})
+		}
+		if (props.character.name === "Dz'eyn"){
+			additionalArray.push({name: "Studied Target", tooltip: "+1 to Attacks and Damage if target is studied", sidebarRules: 0, italics: false})
+			if (characterWeapon.weapon.thrown || characterWeapon.weapon.category === "Ranged"){
+				additionalArray.push({name: "Point-Blank Shot", tooltip: "+1 to Attacks and Damage if within 30 ft", sidebarRules: 0, italics: false})
+				additionalArray.push({name: "Precise Shot", tooltip: "Attack engaged target without penalty", sidebarRules: 0, italics: false})
+			}
+		}
+		//HARDCODE
     return additionalArray
   }
 
@@ -857,6 +972,11 @@ const Attacks = props => {
 
 			let tempBonuses = bonusModifiers.reduce((agg, el) => (agg + el.bonus), 0)
 
+			//HARDCODE
+			if (characterWeapon.name === "Harrow Card"){tempBonuses += 1}
+			if (characterWeapon.name === "Fire Blast"){tempBonuses += Math.floor(abilityScoreMod("constitution")/2)}
+			//HARDCODE
+
 			return `${pluser(str + handedStrengthModifier + tempBonuses)}`
     }
     if (characterWeapon.weapon.weapon_type === "Range"){
@@ -1018,7 +1138,7 @@ const Attacks = props => {
   }
 
   const renderDamageDice = (dice, sizeChange) => {
-    let size = props.character_info.size
+    let size = props.character.race.size || props.character_info.size
     if (sizeChange){
       switch(sizeChange){
         case "1":

@@ -11,13 +11,13 @@ export const isThisActionAvailable = (feature, options = {}) => {
 	// CALCULATED DATA
 	action = actionClass(action.name)
 
-	// if you are trying to do a standard, move, or swift, and you've already used your full
+	// if you are trying to do a standard or move, and you've already used your full
 	// cannot use the action
-	if ((action === 'standard' || action  === 'move' || action === 'swift') && actions.full){
+	if ((action === 'standard' || action  === 'move') && actions.full){
 		return 'cannot-cast'
-	// if you are trying to do a full, and you've already used your standard, move, or swift
+	// if you are trying to do a full, and you've already used your standard or move
 	// cannot use the action
-	} else if (action === 'full' && (actions.standard || actions.move || actions.swift)){
+	} else if (action === 'full' && (actions.standard || actions.move)){
 		return 'cannot-cast'
 	// if you've already used the action
 	// cannot use the action
@@ -33,7 +33,7 @@ export const isThisActionAvailable = (feature, options = {}) => {
 		return 'cannot-cast'
 	// if you are out of spells per day from a spell at this level
 	// cannot use the action
-} else if (options.spell && remainingSpellsPerDayFromSpellcasting(options.spellcasting, options.spellLevel).find(spd => spd.spell_level === options.spellLevel)?.spells <= 0) {
+	} else if (options.spell && !options.castAtWill && remainingSpellsPerDayFromSpellcasting(options.spellcasting, options.spellLevel).find(spd => spd.spell_level === options.spellLevel)?.spells <= 0) {
 		return 'cannot-cast'
 	}	else {
 		return action
@@ -55,6 +55,8 @@ export const actionClass = a => {
       return 'immediate'
     case 'Free Action':
       return 'free'
+		case 'no-action':
+			return 'no-action'
     default:
       return 'long'
   }
@@ -62,6 +64,6 @@ export const actionClass = a => {
 
 export const sharingConditions = feature => {
 	let statusConditions = store.getState().character_info.statusConditions.map(c => c.condition.toLowerCase())
-	let preventativeConditions = feature.conditions.filter(c => c.if_affected_by_condition).map(c => c.if_affected_by_condition.toLowerCase())
+	let preventativeConditions = feature.conditions?.filter(c => c.if_affected_by_condition).map(c => c.if_affected_by_condition.toLowerCase()) ?? []
 	return _.intersection(statusConditions, preventativeConditions).length ? true : false
 }

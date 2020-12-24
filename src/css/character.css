@@ -11,8 +11,8 @@
 #features-traits {
   grid-column-start: 1;
   grid-column-end: 6;
-  grid-row-start: 4;
-  grid-row-end: 9;
+  grid-row-start: 3;
+  grid-row-end: 8;
   overflow: auto;
   max-height: 23.75em;
   position: relative;
@@ -21,8 +21,8 @@
 .hp {
   grid-column-start: 8;
   grid-column-end: 9;
-  grid-row-start: 2;
-  grid-row-end: 3;
+  grid-row-start: 1;
+  grid-row-end: 2;
   margin-top: 2em;
   margin: .5em;
   padding: .2em;
@@ -36,8 +36,8 @@
 #saves {
   grid-column-start: 1;
   grid-column-end: 3;
-  grid-row-start: 3;
-  grid-row-end: 4;
+  grid-row-start: 2;
+  grid-row-end: 3;
   margin: .5em;
   padding: .2em;
   background-color: rgba(235, 235, 235, 0.95);
@@ -49,8 +49,8 @@
 #attack-bonus {
   grid-column-start: 3;
   grid-column-end: 4;
-  grid-row-start: 3;
-  grid-row-end: 4;
+  grid-row-start: 2;
+  grid-row-end: 3;
   margin: .5em;
   padding: .2em;
   background-color: rgba(235, 235, 235, 0.95);
@@ -62,8 +62,8 @@
 #ac {
   grid-column-start: 7;
   grid-column-end: 8;
-  grid-row-start: 2;
-  grid-row-end: 3;
+  grid-row-start: 1;
+  grid-row-end: 2;
   margin: .5em;
   padding: .2em;
   background-color: rgba(235, 235, 235, 0.95);
@@ -76,8 +76,8 @@
 #details {
   grid-column-start: 5;
   grid-column-end: 9;
-  grid-row-start: 2;
-  grid-row-end: 9;
+  grid-row-start: 1;
+  grid-row-end: 8;
   overflow: auto;
   max-height: 100%;
   position: relative;
@@ -86,8 +86,8 @@
 #campaign{
   grid-column-start: 1;
   grid-column-end: 5;
-  grid-row-start: 2;
-  grid-row-end: 9;
+  grid-row-start: 1;
+  grid-row-end: 8;
   overflow: auto;
   max-height: 29em;
   position: relative;
@@ -96,8 +96,8 @@
 #skills {
   grid-column-start: 6;
   grid-column-end: 9;
-  grid-row-start: 3;
-  grid-row-end: 11;
+  grid-row-start: 2;
+  grid-row-end: 10;
   margin: .5em;
   padding: .6em;
   background-color: rgba(235, 235, 235, 0.95);

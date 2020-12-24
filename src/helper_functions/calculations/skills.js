@@ -52,6 +52,12 @@ const calculateBonuses = (skillObj, character_info, character) => {
 			if (b.specific_statistic === "Knowledge" && skillObj.knowledge){
 				let level
 				if (b.bonus_multiplier_based_on_feature_level){
+					// occasionally getting an error on load
+					// typeerror, cannot do "klass_id" on undefined
+					// when id refresh, error doesn't exist
+					// would occur with classes that didn't have bonuses, i.e. Cleric
+					// could be vestigial from another class, like Bard? Bardic Knowledge?
+					debugger
 					let klassId = character[b.source.source].find(ability => ability.id === b.source.sourceId).klass_id
 					level = character_info.classes.find(cl => cl.id === klassId).level
 				} else {

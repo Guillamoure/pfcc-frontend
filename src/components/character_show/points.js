@@ -5,6 +5,20 @@ import { calculateFeaturePercentage } from '../../helper_functions/calculations/
 
 const Points = props => {
 
+	const [loading, doneLoading] = React.useState(true)
+	const [floatingNum, toggleFloatingNum] = React.useState(false)
+	const numsRefContainer = React.useRef(null)
+
+	React.useEffect(() => {
+		if (loading){doneLoading(false)}
+		else {
+			toggleFloatingNum(true)
+			setTimeout(() => {
+				toggleFloatingNum(false)
+			}, 1100)
+		}
+	}, [props.character.character_klass_feature_usages])
+
 	const renderClick = (feature) => {
 		props.dispatch({type: "MODAL", detail: "adjust points", obj: feature})
 	}
@@ -59,20 +73,31 @@ const Points = props => {
 					akf.features.forEach(f => {
 						if (f.usage?.limit || f.usage?.limit_frequency && !f.usage?.destroy_after_use){
 							let ckfus = props.character.character_klass_feature_usages.filter(fu => fu.klass_feature_id === akf.id)
-							pointsFeatures.push({...f, sourceId: akf.id, klassFeatureName: akf.name, klassId: akf.klass_id, character_klass_feature_usages: ckfus, source: "applicable_klass_features"})
+							pointsFeatures.push({...f, sourceId: akf.id, klassFeatureName: akf.name, klassId: akf.klass_id, usageSources: ckfus, source: "applicable_klass_features"})
 						}
 					})
 				})
 				return pointsFeatures.map(f => {
 					return (
 						<span className='centered' onClick={() => renderClick(f)}>
-							<div className='enhanced'>{calculateFeaturePercentage(f)}</div>
+							<div className='enhanced' ref={numsRefContainer}>{calculateFeaturePercentage(f)}{renderFloatingNumber()}</div>
 							<div className='muted'>{_.capitalize(f.klassFeatureName)} {_.capitalize(f.usage.unit)}</div>
 						</span>
 					)
 				})
     }
   }
+
+	const renderFloatingNumber = () => {
+		if (floatingNum){
+			let style = {position: "absolute"}
+			if (numsRefContainer.current){
+				let { offsetLeft, offsetTop, offsetWidth, offsetHeight } = numsRefContainer.current
+				style = {...style, left: offsetLeft + (offsetWidth/3), top: offsetTop + (offsetHeight/2)}
+			}
+			return <span className="minus-one" style={style}>-1</span>
+		}
+	}
 
   return(
     <div id='points' className='shadow shrink'>

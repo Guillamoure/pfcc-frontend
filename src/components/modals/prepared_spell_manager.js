@@ -1,14 +1,15 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import SpellDescription from '../spell_description'
-import { remainingPreparedSpellsArray, spellsPerDayArray } from '../../helper_functions/calculations/spellcasting'
-import { abilityScoreMod } from '../../helper_functions/calculations/ability_scores'
-import { getFetch, postFetch, deleteFetch, patchFetch } from '../../helper_functions/fetches'
-import { replaceCharacterAction } from '../../helper_functions/action_creator/character'
+import { remainingPreparedSpellsArray, spellsPerDayArray, preparedSpellsPerLevelArray } from '../../utils/calculations/spellcasting'
+import { abilityScoreMod } from '../../utils/calculations/ability_scores'
+import { getFetch, postFetch, deleteFetch, patchFetch } from '../../utils/fetches'
+import { sortedSpellsByLevelAndName } from '../../utils/fuf'
+import { replaceCharacterAction } from '../../utils/action_creator/character'
 
 const PreparedSpellManager = props => {
 
-	let { prepared_spells: preparedSpells, id } = useSelector(state => state.character)
+	let { prepared_spells: preparedSpells, id, character_known_spells: knownSpells } = useSelector(state => state.character)
 
 	const [displayButton, toggleDisplayButton] = React.useState("All")
 	const [filterInput, updateFilter] = React.useState("")
@@ -35,17 +36,22 @@ const PreparedSpellManager = props => {
 				let mutatedData = data.map(spell => {
 					return {...spell, spell_level: spell.spell_list_spells.find(sls => sls.spell_list.id === spellcasting.spell_list.id).spell_level}
 				})
-				let sortedData = []
-				for(let i = 0; i < 10; i++){
-					let thisLvl = mutatedData.filter(sp => sp.spell_level === i)
-					sortedData.push(thisLvl.sort((a,b) => a.name.localeCompare(b.name)))
-				}
-				sortedData = sortedData.flat()
+				// let sortedData = []
+				// for(let i = 0; i < 10; i++){
+				// 	let thisLvl = mutatedData.filter(sp => sp.spell_level === i)
+				// 	sortedData.push(thisLvl.sort((a,b) => a.name.localeCompare(b.name)))
+				// }
+				let sortedData = sortedSpellsByLevelAndName(mutatedData)
 				console.log(sortedData)
 				updateSpells(sortedData)
 				updateSpellListId(spellcasting.spell_list.id)
 				updateFeatureSpellcasting(spellcasting)
 			})
+		} else {
+			let ks = knownSpells.map(ks => ({...ks.spell, spell_level: ks.spell_list_spell.spell_level}))
+			updateSpells(sortedSpellsByLevelAndName(ks))
+			updateSpellListId(spellcasting.spell_list.id)
+			updateFeatureSpellcasting(spellcasting)
 		}
 	}, [])
 
@@ -136,7 +142,7 @@ const PreparedSpellManager = props => {
 		// render known spells, and missing spells
 		const { level, spellcasting } = props.spellcastingData
 
-		let preparedSpellsPerDay = spellsPerDayArray(spellcasting, level)
+		let preparedSpellsPerDay = spellcasting.prepared_spells_per_level.length ? preparedSpellsPerLevelArray(spellcasting, level) : spellsPerDayArray(spellcasting, level)
 		let remainingPreparedSpells = remainingPreparedSpellsArray(spellcasting, level)
 		let buttons = remainingPreparedSpells.map(ks => {
 			let className = ""
@@ -156,7 +162,7 @@ const PreparedSpellManager = props => {
 		let allPreparedSpells = []
 		preparedSpellsPerDay.forEach(ps => {
 			let num = ps.spells
-			let thisLevelPreparedSpells = preparedSpells.filter(cps => cps.spell_level === ps.spell_level)
+			let thisLevelPreparedSpells = preparedSpells.filter(cps => cps.spell_level === ps.spell_level && !cps.bonus_spell)
 			num -= thisLevelPreparedSpells.length
 			thisLevelPreparedSpells.forEach(tlps => allPreparedSpells.push({spellLevel: ps.spell_level, spellName: tlps.spell.name, spellId: tlps.spell.id, preparedSpellId: tlps.id, cast: tlps.cast}))
 
@@ -214,7 +220,6 @@ const PreparedSpellManager = props => {
 		})
 
 		let preparedSpellsIDs = preparedSpells.map(ps => ps.spell.id)
-
 
 		let nodeSpells = filteredSpells.map(sp => {
 			let className = sp.spell_level > level ? "mobile-active-tab" : ""

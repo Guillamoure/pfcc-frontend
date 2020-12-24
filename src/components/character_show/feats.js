@@ -48,6 +48,24 @@ class Feats extends React.Component {
       case 'Grackle':
         feats = this.grackle()
         break
+      case 'Majestik':
+        feats = this.majestik()
+        break
+      case 'Ildre':
+        feats = this.ildre()
+        break
+      case 'Fire-Roasted Tomatoes':
+        feats = this.fireRoastedTomatoes()
+        break
+      case 'Iyugi':
+        feats = this.iyugi()
+        break
+      case 'Natesse':
+        feats = this.natesse()
+        break
+      case "Dz'eyn":
+        feats = this.dzeyn()
+        break
       default:
         break
     }
@@ -260,6 +278,71 @@ class Feats extends React.Component {
       }
     ]
   }
+
+	majestik = () => {
+		return [
+			{
+				id: 9000,
+				description: 'You get a +1 bonus on all Will saves made to resist enchantment effects. Once per day, you may draw a card from a Harrow deck you own. At any one time for the rest of that day, you may apply a +2 bonus on any d20 roll modified by the card’s suit. For example, if you drew a card from the suit of Dexterity, you could apply this +2 bonus on an Initiative check, a Reflex save, a Dexterity-based skill check, or a ranged attack roll. You may assign this +2 bonus after you make the roll, but you must do so before you know whether the roll was a success or not.',
+				name: 'Harrowed'
+			},
+		]
+	}
+
+	ildre = () => {
+		return [
+			{
+				id: 10000,
+				description: 'You get a +4 bonus on initiative checks.',
+				name: 'Improved Initiative'
+			},
+			{
+				id: 10001,
+				description: 'An extended spell lasts twice as long as normal. A spell with a duration of concentration, instantaneous, or permanent is not affected by this feat. Level Increase: +1 (an extended spell uses up a spell slot one level higher than the spell’s actual level.)',
+				name: 'Extend Spell'
+			},
+		]
+	}
+
+	fireRoastedTomatoes = () => {
+		return [
+			{
+				id: 11000,
+				description: 'You get a +3 bonus on all checks involving the chosen skill. If you have 10 or more ranks in that skill, this bonus increases to +6.',
+				name: 'Skill Focus (Profession (chef))'
+			},
+		]
+	}
+
+	iyugi = () => {
+		return [
+			{
+				id: 12000,
+				description: 'You can precisely mimic the physical features of any individual you have encountered. When you use your racial change shape ability, you can attempt to take the form of an individual, granting you a +10 circumstance bonus on Disguise checks made to fool others with your impersonation.',
+				name: 'Realistic Likeness'
+			},
+		]
+	}
+
+	natesse = () => {
+		return [
+			{
+				id: 13000,
+				description: 'With a light weapon, elven curve blade, rapier, whip, or spiked chain made for a creature of your size category, you may use your Dexterity modifier instead of your Strength modifier on attack rolls. If you carry a shield, its armor check penalty applies to your attack rolls.',
+				name: "Weapon Finesse"
+			},
+		]
+	}
+
+	dzeyn = () => {
+		return [
+			{
+				id: 14000,
+				description: 'You get a +1 bonus on attack and damage rolls with ranged weapons at ranges of up to 30 feet.',
+				name: "Point-Blank Shot"
+			},
+		]
+	}
 
 
   render () {

@@ -15,7 +15,7 @@ const Movement = props => {
     let base = _.maxBy(movementRedux.map(mr => {
       return mr.movement === "Base" && !mr.bonus && !mr.penalty ? mr.feet : 0
     }))
-		let speed = base
+		let speed = props.character.race.speed || base
 		let load = calculateLoad(calculateWeight(props.character, props.character_info), props.character_info.ability_scores.strength)
 
     movementRedux.forEach(mr => {

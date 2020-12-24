@@ -3,14 +3,28 @@ import _ from 'lodash'
 import { withRouter, Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import localhost from '../../localhost'
+import ClassTile from './class_tile'
+import ClassShow from '../../container/class_show'
+import ClassTable from '../class_show/table'
+import ClassTabs from './class_tabs'
+import { getFetch } from '../../utils/fetches'
+import { addArchetypesAction, addOptionsAction } from '../../utils/action_creator/classes'
+import { doesKlassFeatureHaveOptions } from '../../utils/calculations/class'
+import ClassArchetypes from '../../container/class_archetypes'
+import ClassOptions from '../../container/class_options'
 
-class Class extends React.Component{
+const Class = props => {
 
-  state = {
-    classes: false,
+  const [ classDetails, setClassDetails ] = React.useState({
+    classes: [],
     activeSkillset: 0,
-    skillsets: {}
-  }
+    skillsets: {},
+		viewSpecificClassDetails: 0,
+		viewSpecificArchetype: {},
+		activeTab: "Base Features",
+		hasOptions: false,
+		optionsTabName: null
+  })
 	//
   // componentDidMount = () => {
   //   fetch(`${localhost}/api/v1/klasses`)
@@ -20,30 +34,83 @@ class Class extends React.Component{
   //   })
   // }
 
-  renderClasses = () => {
-    return this.props.classes.map(klass => {
+	React.useEffect(() => {
+		if (classDetails.viewSpecificClassDetails){
+			let klass = props.classes.find(kl => kl.id === classDetails.viewSpecificClassDetails)
+			if (!klass.archetypes){
+				getFetch(`klasses/${classDetails.viewSpecificClassDetails}/archetypes`)
+				.then(data => {
+					if (!data.error){
+						addArchetypesAction(klass.id, data)
+					}
+				})
+			}
+			let id = doesKlassFeatureHaveOptions(klass)
+			if (id){
+				getFetch(`klass_features/${id}/options`)
+					.then(data => {
+						if (!data.error){
+							addOptionsAction(klass.id, id, data)
+							let optionsTabName = klass.klass_features.find(kf => kf.id === id)?.name
+							setClassDetails({...classDetails, hasOptions: true, optionsTabName})
+						}
+					})
+			}
+
+		}
+	}, [classDetails.viewSpecificClassDetails])
+
+  const renderClasses = () => {
+    return props.classes.map(klass => {
       return <option key={klass.id} value={klass.id}>{klass.name}</option>
     })
   }
 
-  renderChosenClass = () => {
-    let chosen = this.props.classes.find(el => el.id === _.toNumber(this.props.chosenClassId))
-    return <Link to={`/classes/${chosen.name}`} >{chosen.name}< br /></Link>
+	const chosenClasses = () => {
+		let arr = [...props.chosenClasses, 0]
+		return arr.map((klid, idx) => {
+			if (klid > 0){
+				let klass = props.classes.find(kl => kl.id == klid)
+				let button = null
+				if (idx == arr.length - 2){
+					button = <button onClick={props.removeLatestClass}> - </button>
+				}
+				return <li className="selected-class-list-item"><span>Level {idx+1} - {klass.name}</span>{button}</li>
+			} else {
+				return <li className="empty-class-list-item">Level {idx+1}</li>
+			}
+		})
+	}
+
+  const displayChosenClass = (id) => {
+		if (id === classDetails.viewSpecificClassDetails){
+			setClassDetails({...classDetails, viewSpecificClassDetails: 0})
+		} else {
+			setClassDetails({...classDetails, viewSpecificClassDetails: id})
+		}
   }
 
-  mapClassDynamicFields = () => {
-    return this.props.classes.map((val, idx)=> {
+	const displayKlassArchetype = (arch) => {
+		if (arch.id === classDetails.viewSpecificArchetype.id){
+			setClassDetails({...classDetails, viewSpecificArchetype: {}})
+		} else {
+			setClassDetails({...classDetails, viewSpecificArchetype: arch})
+		}
+	}
+
+  const mapClassDynamicFields = () => {
+    return props.classes.map((val, idx)=> {
       let classId = `class-${idx}`
       return (
         <div key={idx}>
           <label htmlFor={classId}>{`Class #${idx + 1}`} </label>
             <select
               name={classId}
-              value={this.props.classes[idx]}
-              onChange={(e) => this.props.renderDynamicChanges(e, idx)}
+              value={props.classes[idx]}
+              onChange={(e) => props.renderDynamicChanges(e, idx)}
             >
               <option value= "" >Choose One</option>
-              {this.props.classes && this.renderClasses()}
+              {props.classes && renderClasses()}
             </select>
             {`Level ${idx + 1}`}
         </div>
@@ -51,9 +118,9 @@ class Class extends React.Component{
     })
   }
 
-  checkForValidLevels = () => {
+  const checkForValidLevels = () => {
     let valid = true
-    this.props.classes.forEach(klass => {
+    props.classes.forEach(klass => {
       if (klass.level > 20 || klass.level < 1){
         valid = false
       }
@@ -72,29 +139,95 @@ class Class extends React.Component{
   //   </select>
   // </label>
 
-	renderClassCard = klass => {
-		let style = {border: "4px solid transparent"}
-		if (parseInt(this.props.chosenClasses[0]) === klass.id){style.border = "4px solid black"}
-		return (
-			<div className="dynamic-card" style={style} onClick={() => this.props.renderClassChange(klass.id)}>
-				<button className='dynamic-card-content-button'>
-					Select {klass.name}
-				</button>
-				<img className='dynamic-card-img' alt={klass.name} src={klass.img_url}></img>
-			</div>
-		)
-	}
-
-	renderClassOptions = () => {
-		let classes = this.props.classes
-		if (this.props.campaignDetails) {
-			classes = this.props.campaignDetails.klasses
+	const renderClassOptions = () => {
+		let classes = props.classes ?? []
+		if (props.campaignDetails?.klasses.length > 1) {
+			classes = props.campaignDetails.klasses
 		}
-		let classCards = classes.sort((a,b) => a.name.localeCompare(b.name)).map(this.renderClassCard)
+		let classCards = classes.sort((a,b) => a.name.localeCompare(b.name)).map(klass => <ClassTile klass={klass} renderClassChange={props.renderClassChange} displayChosenClass={displayChosenClass}/>)
 		return (
 			<section style={{display: "flex", flexWrap: "wrap"}}>
 				{classCards}
 			</section>
+		)
+	}
+
+	// const renderClassImage = () => {
+	// 	let klass = props.classes.find(kl => kl.id === classDetails.viewSpecificClassDetails)
+	// 	return (
+	// 		<div id="chosen-class-card" className="dynamic-card" onClick={() => displayChosenClass(klass.id)}>
+	// 			<img className='dynamic-card-img' alt={klass.name} src={klass.img_url}></img>
+	// 			<p className='dynamic-card-content-button'> {klass.name} </p>
+	// 		</div>
+	// 	)
+	// }
+
+	const renderTabs = () => {
+
+		const renderTabClick = (tab) => {
+			let resetSpecificArchetype = classDetails.viewSpecificArchetype
+			if (tab !== "Archetypes"){
+				resetSpecificArchetype = {}
+			}
+
+			setClassDetails({...classDetails, activeTab: tab, viewSpecificArchetype: resetSpecificArchetype})
+		}
+
+		return (
+			<nav id="chosen-class-tabs">
+				<ClassTabs activeTab={classDetails.activeTab} renderTabClick={renderTabClick} optionsTabName={classDetails.optionsTabName}/>
+			</nav>
+		)
+	}
+
+	const renderClassTable = () => {
+		let klass = props.classes.find(kl => kl.id === classDetails.viewSpecificClassDetails)
+		let archetypes = props.chosenArchetypes.map(id => {
+			if (!klass.archetypes){return null}
+			return klass.archetypes.find(klar => klar.id === id) || null
+		})
+		archetypes = archetypes.filter(arch => arch)
+		return (
+			<div id="chosen-class-card">
+				<ClassTable klass={klass} activeArchetype={classDetails.viewSpecificArchetype} chosenArchetypes={archetypes}/>
+			</div>
+		)
+	}
+
+	const archetypeChange = (id) => {
+		setClassDetails({...classDetails, viewSpecificArchetype: {}, activeTab: "Base Features", hasOptions: false})
+		props.archetypeChange(id)
+	}
+
+	const renderClassDetails = () => {
+		let klass = props.classes.find(kl => kl.id === classDetails.viewSpecificClassDetails)
+		let archetypes = props.chosenArchetypes.map(id => {
+			if (!klass.archetypes){return null}
+			return klass.archetypes.find(klar => klar.id === id) || null
+		})
+		archetypes = archetypes.filter(arch => arch)
+		let optionsId = doesKlassFeatureHaveOptions(klass)
+		let options = klass.klass_features.find(kf => kf.id === optionsId)?.options
+
+		let content
+		switch (classDetails.activeTab){
+			case "Base Features":
+				content = <ClassShow klass={klass} options={{displayImage: false, displayDescription: false, displayTable: false}} chosenArchetypes={archetypes}/>
+				break
+			case "Archetypes":
+				content = <ClassArchetypes archetypes={klass.archetypes} displayKlassArchetype={displayKlassArchetype} chosenArchetypeIds={props.chosenArchetypes} archetypeChange={archetypeChange}/>
+				break
+			case `${classDetails.optionsTabName}`:
+				content = <ClassOptions options={options} />
+				break
+			default:
+				content = <ClassShow klass={klass} options={{displayImage: false, displayDescription: false, displayTable: false}}/>
+				break
+		}
+		return (
+			<aside id="character-creation-class-chosen-details">
+				{content}
+			</aside>
 		)
 	}
 
@@ -106,13 +239,21 @@ class Class extends React.Component{
 	// {this.checkForValidLevels()}
 	// {this.props.classes[0] && this.props.chosenClassId ? this.renderChosenClass() : null}
 
-  render () {
-    return (
-      <div>
-				{this.renderClassOptions()}
-      </div>
-    )
-  }
+	const className = !!classDetails.viewSpecificClassDetails ? "chosen-class" : ""
+	const id = !!classDetails.viewSpecificClassDetails ? "character-creation-chosen-class" : "character-creation-class"
+
+  return (
+    <section id="character-creation-class">
+			<ul>{chosenClasses()}</ul>
+			{!classDetails.viewSpecificClassDetails && renderClassOptions()}
+			<section className={className}>
+				{!!classDetails.viewSpecificClassDetails && renderClassTable()}
+				{!!classDetails.viewSpecificClassDetails && renderTabs()}
+				{!!classDetails.viewSpecificClassDetails && renderClassDetails()}
+				{!!classDetails.viewSpecificClassDetails && <button onClick={() => setClassDetails({...classDetails, viewSpecificClassDetails: 0, viewSpecificArchetype: {}, activeTab: "Base Features", hasOptions: false, optionsTabName: null})}>Go Back</button>}
+			</section>
+    </section>
+  )
 }
 
 const mapStateToProps = (state) => {

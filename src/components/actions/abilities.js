@@ -4,9 +4,10 @@ import _ from 'lodash'
 import { isThisActionAvailable } from '../../helper_functions/calculations/round_actions'
 import { abilityScoreMod } from '../../helper_functions/calculations/ability_scores'
 import { calculateFeaturePercentage, remainingUsage, calculateCurrentUsage, isThisFeatureActive } from '../../helper_functions/calculations/feature_usage'
-import { featureDistribution } from '../../helper_functions/distributers/features'
+import { featureDistribution, doesThisFeatureNeedToBeDistributed } from '../../helper_functions/distributers/features'
 import { patchFetch } from '../../helper_functions/fetches'
-import { locateFeatureAndAbilityFromSource } from '../../helper_functions/fuf'
+import { locateFeatureAndAbilityFromSource, classLevel, renderDamage, abbreviateDamageType } from '../../helper_functions/fuf'
+import { modalAction } from '../../helper_functions/action_creator/popups'
 
 class Abilities extends React.Component {
 
@@ -20,7 +21,6 @@ class Abilities extends React.Component {
     switch(this.props.character.name){
       case 'Nettie':
         return this.nettie()
-      case 'Merg':
       case 'Merg':
         return this.merg()
       case 'Cedrick':
@@ -39,30 +39,78 @@ class Abilities extends React.Component {
         break
     }
     let activatableAbilities = []
-    this.props.character.applicable_klass_features.map(akf => {
+    this.props.character.applicable_klass_features.forEach(akf => {
       // if an akf has a feature with an action, display it
 			akf.features.forEach(f => {
 				if (f.action){
 					let ckfus = this.props.character.character_klass_feature_usages.filter(fu => fu.klass_feature_id === akf.id)
 					// the id value in the below object refers to the id of the character[type]
 					// so that specific klass_feature, magic_item_feature, etc. can be found by id
-					activatableAbilities.push({...f, sourceId: akf.id, klassFeatureName: akf.name, klassId: akf.klass_id, character_klass_feature_usages: ckfus, source: "applicable_klass_features"})
+					activatableAbilities.push({...f, sourceId: akf.id, klassFeatureName: akf.name, klassId: akf.klass_id, usageSources: ckfus, source: "applicable_klass_features"})
 				}
 
+				// if a feature is a choice of another action (i.e. Bardic Performances)
 				if (f.usage?.feature_usage_base) {
 					let baseFeatureAndAbility = locateFeatureAndAbilityFromSource(f.usage.feature_usage_base.baseSource)
 					let ckfus = this.props.character.character_klass_feature_usages.filter(fu => fu.klass_feature_id === baseFeatureAndAbility.ability.id)
-					activatableAbilities.push({...f, sourceId: akf.id, klassFeatureName: akf.name, klassId: akf.klass_id, character_klass_feature_usages: ckfus, source: "applicable_klass_features", baseFeatureAndAbility, action: baseFeatureAndAbility.feature.action})
+					activatableAbilities.push({...f, sourceId: akf.id, klassFeatureName: akf.name, klassId: akf.klass_id, usageSources: ckfus, source: "applicable_klass_features", baseFeatureAndAbility, action: baseFeatureAndAbility.feature.action})
+				}
+				// if a feature is spontaneous casting, like Cleric or Druid
+				if (akf.name === "Spontaneous Casting" && f.spontaneous_castings.length){
+					activatableAbilities.push({...f, sourceId: akf.id, klassFeatureName: akf.name, klassId: akf.klass_id, action: {name: "no-action"}, source: "applicable_klass_features", options: {spontaneous_casting: true}})
 				}
 			})
       // only display the feature, but the text should be from the akf
     })
+		this.props.character.klass_specializations.forEach(cKSpec => {
+			cKSpec.klass_specialization_features.forEach(kspecFeature => {
+				if (classLevel(cKSpec.klass_feature.klass_id) >= kspecFeature.level){
+					kspecFeature.features.forEach(f => {
+						if (f.usage){
+							let action = f.action || {name: "no-action"}
+							let cksfus = this.props.character.character_klass_specialization_feature_usages.filter(fu => fu.klass_specialization_feature_id === kspecFeature.id)
+							activatableAbilities.push({...f, action, source: 'klass_specializations', sourceId: cKSpec.id, subSourceId: kspecFeature.id, kspecFeatureName: kspecFeature.name, klassId: cKSpec.klass_feature.klass_id, usageSources: cksfus})
+						}
+					})
+				}
+			})
+		})
+
+		// HARDCODE
+		if (this.props.character.name === "Majestik"){
+			// evil eye
+			activatableAbilities.push({action: {name: "Standard Action"}, sourceId: 1001, klassFeatureName: "Evil Eye", klassId: 19, usageSources: [], source: "hardcoded", damages: [], saving_throws: []})
+			// arcane strike
+			activatableAbilities.push({action: {name: "Swift Action"}, sourceId: 1001, klassFeatureName: "Arcane Strike", klassId: 1001, usageSources: [], source: "hardcoded", damages: [], saving_throws: []})
+			// prehensile tail
+			activatableAbilities.push({action: {name: "Swift Action"}, sourceId: 1001, klassFeatureName: "Prehensile Tail", klassId: 1001, usageSources: [], source: "hardcoded", damages: [], saving_throws: []})
+		} else if (this.props.character.name === "Fire-Roasted Tomatoes"){
+			// Pyrokinesis
+			activatableAbilities.push({action: {name: "Standard Action"}, sourceId: 1001, klassFeatureName: "Basic Pyrokinesis", klassId: 15, usageSources: [], source: "hardcoded", damages: [], saving_throws: []})
+			// Searing Flesh
+			activatableAbilities.push({action: {name: "Standard Action"}, sourceId: 1001, klassFeatureName: "Searing Flesh", klassId: 15, usageSources: [], source: "hardcoded", damages: [], saving_throws: []})
+		} else if (this.props.character.name === "Ildre"){
+			activatableAbilities.push({action: {name: "Move Action"}, sourceId: 1001, klassFeatureName: "Dimensional Slide", klassId: 15, usageSources: [], source: "hardcoded", damages: [], saving_throws: []})
+		} else if (this.props.character.name === "Iyugi"){
+			activatableAbilities.push({action: {name: "Move Action"}, sourceId: 1001, klassFeatureName: "Change Shape", klassId: 15, usageSources: [], source: "hardcoded", damages: [], saving_throws: []})
+		} else if (this.props.character.name === "Natesse"){
+			activatableAbilities.push({action: {name: "Immediate Action"}, sourceId: 1001, klassFeatureName: "Nanite Surge", klassId: 15, usageSources: [], source: "hardcoded", damages: [], saving_throws: []})
+		} else if (this.props.character.name === "Dz'eyn"){
+			activatableAbilities.push({action: {name: "Move Action"}, sourceId: 1001, klassFeatureName: "Climb 20 ft", klassId: 15, usageSources: [], source: "hardcoded", damages: [], saving_throws: []})
+			activatableAbilities.push({action: {name: "Swift Action"}, sourceId: 1001, klassFeatureName: "Toxic Skin - Poison Weapon", klassId: 15, usageSources: [], source: "hardcoded", damages: [], saving_throws: []})
+			activatableAbilities.push({action: {name: "Standard Action"}, sourceId: 1001, klassFeatureName: "Toxic Skin - Poison Self", klassId: 15, usageSources: [], source: "hardcoded", damages: [], saving_throws: []})
+		}
+		// HARDCODE
 
     return activatableAbilities.map((ability, idx) => {
+			let name = ability.klassFeatureName
+			if (!name){name = ability.kspecFeatureName}
 			return (
 				<tr key={idx * 3 - 1}>
 					<td><button className={this.canThisAbilityBeUsed(ability)} onClick={() => this.newRenderClick(ability)}><strong>Click</strong></button></td>
-					<td>{ability.klassFeatureName} {calculateFeaturePercentage(ability)}</td>
+					<td>{name}</td>
+					<td>{this.renderUsage(ability)}</td>
+					<td>{this.renderDice(ability)}</td>
 					<td>{this.renderDC(ability)}</td>
 					<td>Nothin'</td>
 				</tr>
@@ -79,8 +127,68 @@ class Abilities extends React.Component {
 		return actionClass
 	}
 
+	renderUsage = (ability) => {
+		let display = calculateFeaturePercentage(ability)
+		if (display){
+			return (
+				<button className="ability-usage-buttons" onClick={() => {modalAction("adjust points", ability)}}>
+					{display}
+				</button>
+			)
+		} else {
+			return null
+		}
+	}
+
+	renderDice = (ability) => {
+		if (ability.damages.length){
+			let level = classLevel(ability.klassId)
+
+
+			let damage = null
+			// find the greatest value without going over the specified level
+			// i.e., if you get a bonus at odd levels, and you are level 12
+			// you will get the level 11 bonus
+			for (let i = 0; i < ability.damages.length; i++) {
+				if (ability.damages[i].applicable_level <= level){
+					if (i+1 >= ability.damages.length || ability.damages[i+1].applicable_level > level){
+						damage = ability.damages[i]
+						break
+					}
+				}
+			}
+			if (!damage){
+				let step = null
+				for (let i = 0; i < ability.steps.length; i++) {
+					if (ability.steps[i].applicable_level <= level){
+						if (i+1 >= ability.steps.length || ability.steps[i+1].applicable_level > level){
+							step = ability.steps[i].step
+							break
+						}
+					}
+				}
+				damage = ability.damages.find(d => d.applicable_step === step)
+			}
+
+			let damageType = abbreviateDamageType(damage.damage_type)
+
+			if (ability.character_choices.length && ability.character_choices[0].sub_feature === "damage" && ability.character_choices[0].column === "damage_type"){
+				let characterChoice = this.props.character.character_choices.find(ccc => ccc.feature_id === ability.id)
+				if (characterChoice){damageType = abbreviateDamageType(characterChoice.choice)}
+			}
+
+			let string = renderDamage(damage)
+			if(damageType){
+				string += " " + damageType
+			}
+			return string
+		}
+	}
+
 	renderDC = ability => {
 		let st = ability.saving_throws[0]
+		if (ability.klassFeatureName === "Basic Pyrokinesis"){return "14"}
+		if (ability.klassFeatureName?.includes("Toxic Skin")){return "Fort 13"}
 		if (st){
 			let save = _.capitalize(st.saving_throw)
 			let asMod = abilityScoreMod(st.ability_score_modifier, true)
@@ -124,8 +232,11 @@ class Abilities extends React.Component {
 			featureDistribution(ability)
 		} else {
 
-			if (ability.usage.all_feature_usage_options.length){
+			if (ability.usage?.all_feature_usage_options.length){
 				this.props.dispatch({type: "MODAL", detail: "featureUsageOptions", obj: ability})
+				return null
+			} else if (ability.klassFeatureName === "Spontaneous Casting" && ability.spontaneous_castings.length){
+				modalAction('spontaneousCasting', ability)
 				return null
 			}
 
@@ -133,23 +244,40 @@ class Abilities extends React.Component {
 				character_id: this.props.character.id,
 				klass_feature_id: ability.sourceId,
 				feature_usage_id: ability.usage.id,
-				current_usage: calculateCurrentUsage(ability.character_klass_feature_usages) + 1
+				current_usage: calculateCurrentUsage(ability.usageSources) + 1
 			}
 			if (ability.baseFeatureAndAbility){
-				if (ability.character_klass_feature_usages.length === 1){
-					let ckfu = ability.character_klass_feature_usages[0]
+				if (ability.usageSources.length === 1){
+					let ckfu = ability.usageSources[0]
 					body = {...ckfu, current_usage: ckfu.current_usage + 1}
-				} else if (ability.character_klass_feature_usages.length === 0){
+				} else if (ability.usageSources.length === 0){
 					body.feature_usage_id = ability.baseFeatureAndAbility.feature.usage.id
 					body.klass_feature_id = ability.baseFeatureAndAbility.ability.id
 					body.current_usage = 1
 				}
+			} else if (ability.kspecFeatureName){
+				delete body.klass_feature_id
+				body.klass_specialization_feature_id = ability.subSourceId
 			}
 
-			patchFetch("character_klass_feature_usages", body)
+			let url
+			switch(ability.source){
+				case "applicable_klass_features":
+					url = "character_klass_feature_usages"
+					break
+				case "klass_specializations":
+					url = "character_klass_specialization_feature_usages"
+					break
+				default:
+					url = "character_klass_feature_usages"
+			}
+
+			patchFetch(url, body)
 				.then(data => {
-					this.props.dispatch({type: "ADJUST CHARACTER REPLACE VALUE IN ARRAY", adjust: "character_klass_feature_usages", value: data})
-					featureDistribution(ability)
+					this.props.dispatch({type: "ADJUST CHARACTER REPLACE VALUE IN ARRAY", adjust: url, value: data})
+					 if (doesThisFeatureNeedToBeDistributed(ability)){
+						 featureDistribution(ability)
+					 }
 				})
 
 			this.props.dispatch({type: 'TRIGGER ACTION', action: isThisActionAvailable(ability)})
@@ -892,6 +1020,8 @@ class Abilities extends React.Component {
             <tr>
               <th>Action</th>
               <th>Name</th>
+              <th>Usage</th>
+							<th>Dice</th>
               <th>DC</th>
               <th>Details</th>
             </tr>

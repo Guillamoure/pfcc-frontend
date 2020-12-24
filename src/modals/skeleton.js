@@ -10,6 +10,15 @@ import FeatureUsageOptions from '../components/modals/feature_usage_options'
 import KnownSpellManager from '../components/modals/known_spell_manager'
 import SpellDescription from '../components/spell_description'
 import PreparedSpellManager from '../components/modals/prepared_spell_manager'
+import CharacterChoice from '../components/modals/character_choice'
+import SpontaneousCasting from '../components/modals/spontaneous_casting'
+import KlassSpecialization from '../components/modals/klass_specialization'
+import BonusSpellSlotManager from '../components/modals/bonus_spell_slot_manager'
+import Feat from '../components/modals/feat'
+import CreatureStatBlock from '../components/creature_stat_block'
+import SkillDescription from '../components/skill_description'
+import HarrowDeck from '../components/modals/harrow'
+import ItemDescription from '../components/modals/item_description'
 
 const ModalSkeleton = (props) => {
 
@@ -31,6 +40,24 @@ const ModalSkeleton = (props) => {
 				return <SpellDescription spell={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
 			case 'managePreparedSpells':
 				return <PreparedSpellManager spellcastingData={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
+			case 'characterChoice':
+				return <CharacterChoice choiceObj={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
+			case 'spontaneousCasting':
+				return <SpontaneousCasting feature={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
+			case 'klassSpecialization':
+				return <KlassSpecialization klassFeature={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
+			case 'manageBonusSpellSlots':
+				return <BonusSpellSlotManager spellcastingData={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
+			case 'feat':
+				return <Feat feat={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
+			case 'statBlock':
+				return <CreatureStatBlock creature={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
+			case 'skill':
+				return <SkillDescription skillId={props.modal.obj} />
+			case 'item':
+				return <ItemDescription item={props.modal.obj} />
+			case 'harrow':
+				return <HarrowDeck />
       default:
         break
     }

@@ -2,15 +2,28 @@ import React from 'react'
 import _ from 'lodash'
 import { connect } from 'react-redux'
 
+import { archetypeClassSkillNodes } from '../../utils/calculations/class'
+
 
 class Introduction extends React.Component {
 
+	state = {
+		showDetails: false
+	}
+
   renderDescription = () => {
     if (this.props.klass.description){
+			if (this.props.options?.displayDescription === false && !this.state.showDetails){return <p onClick={() => this.setState({showDetails: true})}>Show Details</p>}
 
       let desc = this.props.klass.description
+			this.props.chosenArchetypes.forEach(arch => {
+				desc += `\n\n${arch.name}\n\n${arch.description}`
+			})
+
       desc = desc.split("\n\n")
-      return desc.map(para => <p key={_.random(1, 2000000)}>{para}</p>)
+
+			let onClick = this.props.options?.displayDescription === false ? () => this.setState({showDetails: false}) : null
+      return desc.map(para => <p key={_.random(1, 2000000)} onClick={onClick}>{para}</p>)
     }
   }
 
@@ -29,25 +42,50 @@ class Introduction extends React.Component {
   }
 
   renderSkills = () => {
-    const validSkills = this.renderValidSkillsetSkills()
-    return validSkills.map((skill, index, array) => {
+    let validSkills = this.renderValidSkillsetSkills()
+		validSkills = validSkills.sort((a, b) => a.name.localeCompare(b.name))
+    let domSkills = validSkills.map((skill, index, array) => {
       return index === array.length -1 ? `and ${skill.name} (${skill.ability_score.slice(0, 3)}).` : `${skill.name} (${skill.ability_score.slice(0, 3)}), `
     })
+
+		archetypeClassSkillNodes(this.props.chosenArchetypes).forEach(archDesc => {
+			domSkills.push(<><br/><br/>{archDesc}</>)
+		})
+
+
+		return domSkills
   }
+
+	renderImage = () => {
+		if (this.props.options?.displayImage === false){return null}
+		return (
+			<span>
+				<img id='class-img' alt={this.props.klass.name} src={this.props.klass.img_url}/>
+			</span>
+		)
+	}
+
+	renderName = () => {
+		let name = []
+		this.props.chosenArchetypes.forEach(arch => {
+			name.push(arch.name)
+		})
+		name.push(this.props.klass.name)
+		return name.join(" ")
+	}
 
   render () {
     return (
       <div className='show' id='class-intro'>
         <span>
-          <h2>{this.props.klass.name}</h2>
+          <h2>{this.renderName()}</h2>
           {this.renderDescription()}
           <p><strong>Hit Die</strong>: d{this.props.klass.hit_die}</p>
-          <p><strong>Skill Ranks per Level</strong>: {this.props.klass.skill_ranks} + Int modifier</p>
+          <p><strong>Starting Wealth</strong>: {this.props.klass.starting_wealth}</p>
           {this.props.klass.skills[0] && <p><strong>Class Skills</strong>: The {_.lowerCase(this.props.klass.name)}'s class skills are {this.renderSkills()}</p>}
+					<p><strong>Skill Ranks per Level</strong>: {this.props.klass.skill_ranks} + Int modifier</p>
         </span>
-        <span>
-          <img id='class-img' alt={this.props.klass.name} src={this.props.klass.img_url}/>
-        </span>
+				{this.renderImage()}
       </div>
     )
   }

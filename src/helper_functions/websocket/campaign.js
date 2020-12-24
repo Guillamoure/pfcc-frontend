@@ -13,16 +13,19 @@ import { updateNotificationsAction, updateStoredNotificationsAction } from '../a
 // 			connected: () => console.log("connected!")
 // 		})
 
-export const initializeCampaignWebsocket = async (character) => {
+export const initializeCampaignWebsocket = async (character, options) => {
 	// NEW DATA
+	let websocketCode
 
 	// STORED DATA
 	let websocket = {...store.getState().websocket}
-	const websocketCode = character.campaign?.websocket_code
+	if (options?.encounter){
+		websocketCode = options.websocketCode
+	} else {
+		websocketCode = character.campaign?.websocket_code
+	}
 
 	// CALCULATED DATA
-
-	// let addedSubscriptionWebsocket =
 
 	if (websocket.cable === undefined){
 		return null
@@ -37,7 +40,11 @@ export const initializeCampaignWebsocket = async (character) => {
 			connected: () => {
 				console.log("connected!")
 				console.log(websocket)
-				websocket.campaign.send({character_id: character.id, message: `My name is ${character.name}`})
+				if (character){
+					websocket.campaign.send({character_id: character.id, message: `My name is ${character.name}`})
+				} else if (options.encounter){
+					websocket.campaign.send({message: "Initiating Encounter!"})
+				}
 			},
 			received: data => {
 				console.log("received websocket data", data.data)

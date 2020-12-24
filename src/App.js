@@ -1,13 +1,15 @@
 import React from 'react';
 import './App.scss';
 import './css/character.css';
-import './css/combat.css';
+import './css/combat.scss';
 import './css/card.css';
 import './css/container.css';
 import './css/animations.scss';
 import './css/form.scss';
 import './css/mobile.scss';
 import './css/popups.scss';
+import './css/campaign-show.scss';
+import './css/character-creation.scss';
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { connect } from 'react-redux'
@@ -48,7 +50,7 @@ class App extends React.Component {
     fetch(`${localhost}/api/v1/data`)
     .then(r => r.json())
     .then(data => {
-      this.props.dispatch({type: 'EVERYTHING', classes: data.klasses, races: data.races })
+      this.props.dispatch({type: 'EVERYTHING', classes: data.klasses, races: data.races, skills: data.skills})
     })
   }
   // COMMENTED OUT FOR TESTING PURPOSES

@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import * as SpellcastingCalculations from '../../helper_functions/calculations/spellcasting'
 import { modalAction } from '../../helper_functions/action_creator/popups'
+import { renderCharacterChoices } from '../../helper_functions/notifications/character_choices'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
@@ -112,6 +113,7 @@ class Update extends React.Component {
 		return <button onClick={renderClick}>Manage Prepared Spells - {spellcastingData.klassName}</button>
 	}
 
+
   render(){
     return(
       <span style={{padding: '1em'}}>
@@ -120,6 +122,7 @@ class Update extends React.Component {
 				{this.manageKnownSpells()}
 				{this.managePreparedSpells()}
         {this.prepareSpells()}
+				{renderCharacterChoices()}
       </span>
     )
   }

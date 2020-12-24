@@ -117,7 +117,7 @@ const Saves = props => {
     ast = !!validBonuses.length ? true : ast
 
     if (type === 'Save'){
-      if (props.character.name === 'Robby'){
+      if (props.character.name === 'Robby' || props.character.name === "Natesse"){
         ast = true
       }
     } else if (type === 'Reflex'){
@@ -148,7 +148,11 @@ const Saves = props => {
       }
     } else if (props.character_info.hardcode.quick && type === 'Reflex'){
       comment = 'Advantage on Reflex saving throws'
-    }
+    } else if (props.character.name === "Natesse"){
+			if (type === "all"){
+				comment = "Constructed: +4 to mind-affecting effects, paralysis, poison, and stun"
+			}
+		}
     if (!!comment){
       props.renderTooltip(e, comment)
     }
@@ -176,14 +180,14 @@ const Saves = props => {
 		// STORED DATA
 		// CALCULATED DATA
 
-		return saveDetails.map(saveDetail => {
+		return saveDetails.map((saveDetail, i) => {
 			let capitalizedSave = _.capitalize(saveDetail.save)
       if (!isAComputer){
         capitalizedSave = capitalizedSave.substring(0, 3)
       }
 			let color = bonusPenaltySave(saveDetail.save, saveDetail.ability)
 			return (
-	      <span className='centered' >
+	      <span key={i*3+1} className='centered' >
 	        <div className='enhanced' style={{color}}>{renderSave(saveDetail.save, saveDetail.ability)}</div>
 	        <div className='muted'><strong>{capitalizedSave}</strong></div>
 	      </span>

@@ -1,0 +1,268 @@
+// VARIABLES
+
+$ruby: #9b111e;
+$sapphire: #0f52ba;
+$emerald: #046307;
+
+$tan: #cfb997;
+
+// VARIABLES
+
+#character-creation-page {
+	display: grid;
+	grid-template-columns: 1fr 8fr;
+
+	.dynamic-card {
+		position: relative;
+		background-color: #FDFFFC;
+		width: 13vw;
+		height: 13vw;
+		margin: 0.25vw;
+		overflow: hidden;
+		border-radius: 1rem;
+		box-shadow: 0 3px 5px 0 #777;
+		&:hover {
+			.dynamic-card-content-button {
+				text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+				color: #000;
+			}
+		}
+		.dynamic-card-content {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			top: 48%;
+			font-family: 'Righteous', cursive;
+			font-size: 2em;
+			text-align: center;
+			text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+			color: #fff;
+			line-height: 1em;
+		}
+		.dynamic-card-img {
+			width: 100%;
+			overflow: hidden;
+			object-fit: cover;
+			img {
+				height: 100%;
+				width: 100%;
+				object-fit: cover;
+			}
+		}
+	}
+}
+
+#character-creation-tabs {
+	ul {
+		padding: 0;
+	}
+	.character-creation-tab {
+		list-style: none;
+		padding: 1em;
+		border: 1px solid black;
+		margin-top: 0.3vh;
+		border-radius: 0 1em 1em 0;
+		width: 90%;
+		font-family: 'Righteous', cursive;
+		color: #000;
+		text-shadow: -1px -1px #fff, -1px 1px #fff, 1px -1px #fff, 1px 1px #fff;
+	}
+	.active-tab {
+		color: #fff;
+		text-shadow: -1px -1px #000, -1px 1px #000, 1px -1px #000, 1px 1px #000;
+		background-color: rgba(0, 0, 0, 0.2);
+		width: 100%;
+	}
+}
+
+#character-creation-home {
+	text-align: left;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-template-areas:
+		"name campaign-details"
+		"campaign campaign-details";
+	#new-character-home-name {
+		input {
+			width: auto;
+		}
+		grid-area: name;
+	}
+	#new-character-home-campaign {
+		grid-area: campaign;
+	}
+	#character-creation-home-campaign-details {
+		grid-area: campaign-details;
+	}
+}
+
+.new-character-label {
+	font-size: 1.2rem;
+	font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
+	color: grey;
+}
+.new-character-text-input {
+	background: transparent;
+	resize: none;
+	border: 1px solid transparent;
+	font-weight: bold;
+	color: $sapphire;
+	text-align: left;
+}
+
+#character-creation-ancestry {
+	display: grid;
+	#character-creation-ancestry-all {
+		display: flex;
+		flex-wrap: wrap;
+		grid-area: ancestries;
+		// overflow-y: scroll;
+		height: 90vh;
+	}
+	#character-creation-ancestry-chosen {
+		margin: 0.25vw;
+		text-align: left;
+		ul {
+			list-style: none;
+			padding-left: 0;
+		}
+		p {
+			font-size: 12px;
+		}
+		grid-area: ancestry;
+	}
+}
+.chosen-ancestry {
+	grid-template-columns: auto 65% auto;
+	grid-template-areas:
+	"ancestries ancestry button";
+	#chosen-ancestry-card {
+		height: 26.25vw;
+		width: 26.25vw;
+		border: 4px solid black;
+	}
+	button {
+		height: min-content;
+		border-radius: 0.3em;
+	}
+}
+
+#character-creation-class {
+	display: grid;
+	grid-template-columns: 1fr 8fr;
+	grid-template-areas:
+	"chosen-classes classes";
+	#character-creation-class-all {
+		display: flex;
+		flex-wrap: wrap;
+		grid-area: classes;
+		// overflow-y: scroll;
+		height: 90vh;
+	}
+	#character-creation-class-chosen-details {
+		margin: 0.25vw;
+		text-align: left;
+		overflow: scroll;
+		height: 80vh;
+		ul {
+			list-style: none;
+			padding-left: 0;
+		}
+		p {
+			font-size: 12px;
+		}
+		grid-area: class;
+	}
+	ul {
+		list-style: none;
+		padding-left: 0;
+		text-align: left;
+	}
+	.empty-class-list-item {
+		font-family: 'Righteous', cursive;
+		border: 2px dashed black;
+		padding: 0.2em;
+		margin-top: 0.15em;
+		border-radius: 0.25em;
+	}
+	.selected-class-list-item {
+		font-family: 'Righteous', cursive;
+		border: 1px solid black;
+		padding: 0.2em;
+		margin-top: 0.15em;
+		border-radius: 0.25em;
+		background-color: rgba(255, 255, 255, 0.2);
+		display: flex;
+		justify-content: space-between;
+		span {
+			align-self: center;
+		}
+		button {
+			font-family: 'Righteous', cursive;
+			// font-size: 14px;
+		}
+	}
+}
+#character-creation-display-ability-scores {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	padding: 0 40%;
+	input[type=number]{
+		width: 100%;
+		text-align: center;
+		font-size: 16px;
+	}
+}
+
+#character-creation-skills {
+	display: grid;
+	grid-template-columns: 1fr 0.5fr 2.5fr;
+	ul {
+		text-align: left;
+	}
+}
+.chosen-class {
+	display: grid;
+	grid-template-columns: 45% 50% 5%;
+	grid-template-areas:
+	"table tabs button"
+	"table class button";
+	#chosen-class-card {
+		// height: 26.25vw;
+		// width: 26.25vw;
+		// border: 4px solid black;
+		grid-area: table;
+	}
+	#chosen-class-tabs {
+		grid-area: tabs;
+	}
+	#chosen-class-archetype-container {
+		list-style: none;
+		.chosen-class-archetype {
+			border: 1px solid black;
+			padding: 0.2em;
+			margin-bottom: 0.25em;
+			border-radius: 0.5em;
+			h4 {
+				margin-bottom: 0.25em;
+			}
+		}
+	}
+	#chosen-class-options-container {
+		list-style: none;
+		.chosen-class-option {
+			border: 1px solid black;
+			padding: 0.2em;
+			margin-bottom: 0.25em;
+			border-radius: 0.5em;
+			h4 {
+				margin-bottom: 0.25em;
+			}
+		}
+	}
+	button {
+		height: min-content;
+		border-radius: 0.3em;
+		grid-area: button;
+	}
+}

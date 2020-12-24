@@ -1,7 +1,8 @@
 import React from 'react'
 import _ from 'lodash'
 import { connect } from 'react-redux'
-import { modalAction } from '../../helper_functions/action_creator/popups'
+import { modalAction } from '../../utils/action_creator/popups'
+import { injectSpellIntoDescription, descriptionParser } from '../../utils/fuf'
 
 class Features extends React.Component {
 
@@ -26,7 +27,12 @@ class Features extends React.Component {
     let klasses = [...this.props.character.uniq_klasses]
     let justFeatures = klasses.map(kl => kl.klass_features)
     // let features = _.flatten(justFeatures)
-    let features = [...this.props.character.applicable_klass_features]
+		let kspecFeatures = this.props.character.klass_specializations.map(ckspec => {
+			return ckspec.klass_specialization_features.map(kspecFeature => {
+				return {...kspecFeature, name: `${ckspec.name} - ${kspecFeature.name}`}
+			})
+		}).flat()
+    let features = [...this.props.character.applicable_klass_features, ...kspecFeatures]
     features = this.circumventFeatures(this.props.character.name, features)
     return features.map(feature => {
       // let level = this.props.character_info.classes.find(cl => cl.id === feature.klass_id).level
@@ -43,22 +49,21 @@ class Features extends React.Component {
           name = `${feature.name} - ${klass.name}`
         }
 				let description = feature.description
-				if (feature.associated_spells.length) {
-					let domDescArray = []
-					feature.associated_spells.forEach(sp => {
-						let name = sp.name.toLowerCase()
-						let descArray = description.split(name)
-						for (let i = 0; i < descArray.length; i++){
-							domDescArray.push(descArray[i])
-							if (i + 1 < descArray.length){
-								domDescArray.push(" ")
-								domDescArray.push(<em className="underline-hover" onClick={() => modalAction("spellDescription", sp)}>{name}</em>)
-								domDescArray.push(" ")
-							}
-						}
-					})
-					description = <span>{domDescArray}</span>
+				if (feature.associated_spells?.length) {
+					let spells = feature.associated_spells
+					if (spells.length){description = injectSpellIntoDescription(description, spells, this.renderSpellClick, {})}
 				}
+				if (feature.features.find(f => f.castable_spells.length)) {
+					let spells = []
+					feature.features.forEach(f => {
+						f.castable_spells.forEach(cs => {
+							spells.push(cs.spell)
+						})
+					})
+
+					if (spells.length){description = injectSpellIntoDescription(description, spells, this.renderSpellClick, {})}
+				}
+				if (typeof description === "string"){description = descriptionParser(description)}
 
         return (
           <li key={(feature.id * 3) -1} onClick={() => this.changeActiveFeature(feature.id)} className='highlight mobile-selected-tab-content' style={{maxHeight: window.outerHeight * 0.4}}>
@@ -72,6 +77,10 @@ class Features extends React.Component {
 
     })
   }
+
+	renderSpellClick = (incomingSpell) => {
+		modalAction("spellDescription", incomingSpell)
+	}
 
   circumventFeatures = (name, features) => {
     let newFeatures = []
@@ -541,21 +550,152 @@ class Features extends React.Component {
           spellcasting: false
         },
       ]
-    } else if (name === 'Festus'){
+    } else if (name === 'Fire-Roasted Tomatoes'){
       replacedFeatures = []
       addedFeatures = [
-        // {
-        //   id: 7000,
-        //   actions: [],
-        //   description: '',
-        //   feature_levels: [{level: 1}],
-        //   feature_options: [],
-        //   klass_id: 9,
-        //   name: '',
-        //   spellcasting: false
-        // }
+        {
+          id: 7000,
+          actions: [],
+          description: "Element(s) fire; Type utility (Sp)\n\nLevel 1; Burn 0\n\nYou can use your inner flame to reproduce the effects of a flare, light, or spark cantrip, except that the ligh t you create with ligh t produces heat like a normal flame; using any of the three abilities ends any previous ligh t effect from this wild talent.",
+          feature_levels: [{level: 1}],
+          feature_options: [],
+          klass_id: 9,
+          name: 'Basic Pyrokinesis',
+          features: [],
+					associated_spells: [
+						{name: "Flare", id: 221},
+						{name: "Light", id: 5},
+						{name: "Spark", id: 98}
+					]
+        },
+				{
+					id: 7001,
+					actions: [],
+					description: "Element(s) fire; Type simple blast (Sp); Level —; Burn 0\n\nBlast Type: energy; Damage fire\n\nYou unleash a gout of flickering fire to burn a single foe.",
+					feature_levels: [{level: 1}],
+					feature_options: [],
+					klass_id: 9,
+					name: 'Fire Blast',
+					features: [],
+					associated_spells: []
+				},
+				{
+					id: 7002,
+					actions: [],
+					description: "Element(s) fire; Type defense (Su); Level —; Burn 0\n\nYour body becomes painfully hot. Whenever a creature hits you with a natural attack or an unarmed strike, that creature takes 1 point of fire damage per 4 kineticist levels you possess (minimum 1 point of fire damage). A creature in a grapple with you takes double this amount of damage at the end of each of its turns.\n\nWeapons that strike you also take this damage, though the damage is unlikely to penetrate the weapon’s hardness. By accepting 1 point of burn, you can increase this damage by 1 point per 4 kineticist levels you possess until the next time your burn is removed. You can increase the damage in this way up to seven times.\n\n\Whenever you accept burn while using a fire wild talent, the surging flame causes your searing flesh to deal double its current amount of damage for 1 round (a creature in a grapple with you takes a total of four times as much damage as normal). You can dismiss or restore this effect as an immediate action.",
+					feature_levels: [{level: 1}],
+					feature_options: [],
+					klass_id: 9,
+					name: 'Searing Flesh',
+					features: [],
+					associated_spells: []
+				},
+				{
+					id: 7003,
+					actions: [],
+					description: "Element(s) fire; Type substance infusion; Level 1; Burn 1\n\nAssociated Blasts blue flame, fire, magma, plasma\n\nSaving Throw Reflex negates\n\nYour kinetic blast ignites your foes. Whenever an infused blast hits a foe and penetrates its spell resistance, that foe catches on fire, regardless of whether it takes damage. A foe that catches fire takes 1d6 points of fire damage each round until the fire is extinguished. Against a creature on fire from this infusion, any fire kinetic blasts gain a +2 bonus on attack rolls, to DCs, and on caster level checks to overcome spell resistance.",
+					feature_levels: [{level: 1}],
+					feature_options: [],
+					klass_id: 9,
+					name: 'Infusion - Burning Infusion',
+					features: [],
+					associated_spells: []
+				},
+				{
+					id: 7004,
+					actions: [],
+					description: "Element fire, water; Type utility (Sp); Level 1; Burn 0\n\nYou are constantly protected by endure elements against hot temperatures only. You gain an amount of fire resistance equal to twice your current amount of burn.",
+					feature_levels: [{level: 1}],
+					feature_options: [],
+					klass_id: 9,
+					name: 'Utility Talent - Heat Adaptation',
+					features: [],
+					associated_spells: []
+				}
       ]
-    }
+    } else if (name === "Majestik"){
+			replacedFeatures = ["Witch's Familiar"]
+			addedFeatures = [
+				{
+					id: 8000,
+					actions: [],
+					description: "The target takes a –2 penalty on one of the following (witch’s choice): AC, ability checks, attack rolls, saving throws, or skill checks. This hex lasts for a number of rounds equal to 3 + the witch’s Intelligence modifier. A Will save reduces this to just 1 round.\n\nThis is a mind-affecting effect. At 8th level the penalty increases to –4.",
+					feature_levels: [{level: 1}],
+					feature_options: [],
+					klass_id: 9,
+					name: 'Hex: Evil Eye',
+					features: [],
+					associated_spells: []
+				},
+				{
+					id: 8001,
+					actions: [],
+					description: "Each cartomancer carries a special harrow deck that allows her to communicate with her patron. Its ability to hold spells functions identically to the way a witch’s spells are granted by her familiar. The cartomancer must consult her harrow deck each day to prepare her spells and cannot prepare spells that are not stored in the deck. The spell deck cannot be used for this purpose if any cards are missing.\n\nThis ability replaces the witch’s familiar.",
+					feature_levels: [{level: 1}],
+					feature_options: [],
+					klass_id: 9,
+					name: 'Spell Deck',
+					features: [],
+					associated_spells: []
+				},
+				{
+					id: 8002,
+					actions: [],
+					description: "At 2nd level, a cartomancer gains the Deadly Dealer feat as a bonus feat, even if she does not meet the prerequisites. The cartomancer gains the benefits of the Arcane Strike feat, but only for the purposes of using Deadly Dealer.\n\nThis replaces the witch’s 2nd-level hex.\n\nYou can throw a card as though it were a dart, with the same damage, range, and other features. You must use the Arcane Strike feat when throwing a card in this way, or else the card lacks the magical force and precision to deal lethal damage. A card is destroyed when thrown in this way.\n\nHarrow cards are treated as masterwork weapons when thrown using this feat, but are still destroyed after they are thrown. A harrow deck can no longer be used as a fortune-telling device after even a single card is thrown.\n\nA spellcaster with this feat can enhance a deck of cards as though it were a ranged weapon with 54 pieces of ammunition. This enhancement functions only when used in tandem with this feat, and has no affect on any other way the cards might be used.\n\nOnly a character who possesses this feat can use an enhanced deck of cards; she must still use the Arcane Strike feat to activate the cards’ enhancement.",
+					feature_levels: [{level: 2}],
+					feature_options: [],
+					klass_id: 9,
+					name: 'Deadly Dealer',
+					features: [],
+					associated_spells: []
+				}
+			]
+		} else if (name === "Ildre"){
+			replacedFeatures = []
+			addedFeatures = [
+				{
+					id: 9000,
+					actions: [],
+					description: 'The arcanist can expend 1 point from her arcane reservoir to create a dimensional crack that she can step through to reach another location. This ability is used as part of a move action or withdraw action, allowing her to move up to 10 feet per arcanist level to any location she can see. This counts as 5 feet of movement. She can only use this ability once per round. She does not provoke attacks of opportunity when moving in this way, but any other movement she attempts as part of her move action provokes as normal.',
+					feature_levels: [{level: 1}],
+					feature_options: [],
+					klass_id: 13,
+					name: 'Arcanist Exploit - Dimensional Slide',
+					features: [],
+					associated_spells: []
+				}
+			]
+		} else if (name === "Iyugi"){
+			replacedFeatures = []
+			addedFeatures = [
+				{
+					id: 10000,
+					actions: [],
+					description: 'A rogue that selects this talent gains a bonus combat feat.\n\nTwo-Weapon Fighting\n\nYour penalties on attack rolls for fighting with two weapons are reduced. The penalty for your primary hand lessens by 2 and the one for your off hand lessens by 6.',
+					feature_levels: [{level: 2}],
+					feature_options: [],
+					klass_id: 13,
+					name: 'Rogue Talent - Combat Trick - Two-Weapon Fighting',
+					features: [],
+					associated_spells: []
+				}
+			]
+		} else if (name === "Dz'eyn"){
+			replacedFeatures = []
+			addedFeatures = [
+				{
+					id: 10000,
+					actions: [],
+					description: 'The slayer selects a ranger combat style (such as archery or two-weapon combat) and gains a combat feat from the first feat list of that style. He can choose feats from his selected combat style, even if he does not have the normal prerequisites. At 6th level, he may select this talent again and add the 6th-level ranger combat feats from his chosen style to the list. At 10th level, he may select this talent again and add the 10th-level ranger combat feats from his chosen style to the list.\n\nThrown Weapon\n\nPrecise Shot\n\nYou can shoot or throw ranged weapons at an opponent engaged in melee without taking the standard –4 penalty on your attack roll. Note: Two characters are engaged in melee if they are enemies of each other and either threatens the other.',
+					feature_levels: [{level: 2}],
+					feature_options: [],
+					klass_id: 13,
+					name: 'Slayer Talent - Ranger Combat Style - Thrown Style - Precise Shot',
+					features: [],
+					associated_spells: []
+				}
+			]
+		}
 
 
     newFeatures = features.filter(f => {

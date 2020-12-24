@@ -1,9 +1,9 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import SpellDescription from '../spell_description'
-import { remainingKnownSpellsArray, knownSpellsArray } from '../../helper_functions/calculations/spellcasting'
-import { getFetch, postFetch, deleteFetch } from '../../helper_functions/fetches'
-import { replaceCharacterAction } from '../../helper_functions/action_creator/character'
+import { remainingKnownSpellsArray, knownSpellsArray, allowedPreparedSpellLevels } from '../../utils/calculations/spellcasting'
+import { getFetch, postFetch, deleteFetch } from '../../utils/fetches'
+import { replaceCharacterAction } from '../../utils/action_creator/character'
 
 const KnownSpellManager = props => {
 
@@ -114,6 +114,14 @@ const KnownSpellManager = props => {
 
 		let knownSpells = knownSpellsArray(spellcasting, level)
 		let remainingKnownSpells = remainingKnownSpellsArray(spellcasting, level)
+		// if there are no specified spells to be known
+		// class can know any amount of spells
+		// find out what spells they can cast with spells_per_day_per_level
+		// add buttons to show levels
+		if (remainingKnownSpells.length === 0){
+			remainingKnownSpells = allowedPreparedSpellLevels(spellcasting, level)
+			knownSpells = [...remainingKnownSpells]
+		}
 		let buttons = remainingKnownSpells.map(ks => {
 			let className = ""
 			if (ks.spells > 0){className='attention-button-animation'}
@@ -122,7 +130,7 @@ const KnownSpellManager = props => {
 		})
 		let allKnownSpells = []
 		knownSpells.forEach(ks => {
-			let num = ks.spells
+			let num = ks.spells || 0
 			let thisLevelKnownSpells = character_known_spells.filter(cks => cks.spell_list_spell.spell_level === ks.spell_level)
 			num -= thisLevelKnownSpells.length
 			thisLevelKnownSpells.forEach(tlks => allKnownSpells.push({spellLevel: ks.spell_level, spellName: tlks.spell.name, spellId: tlks.spell.id, characterKnownSpellId: tlks.id}))

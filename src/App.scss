@@ -18,28 +18,28 @@ $tan: #cfb997;
 
 .container-4 {
   display: grid;
-  grid-template-columns: repeat(4, 1fr)
+  grid-template-columns: repeat(4, 1fr);
 }
 
 .container-3 {
   display: grid;
-  grid-template-columns: repeat(3, 1fr)
+  grid-template-columns: repeat(3, 1fr);
 }
 
 .container-2 {
   display: grid;
-  grid-template-columns: repeat(2, 1fr)
+  grid-template-columns: repeat(2, 1fr);
 }
 
 .container-8 {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
-  grid-template-rows: repeat(12, 1fr)
+  grid-template-rows: repeat(9, 1fr);
 }
 
 .container-6 {
   display: grid;
-  grid-template-columns: repeat(6, 1fr)
+  grid-template-columns: repeat(6, 1fr);
 }
 
 .container-7 {
@@ -93,7 +93,7 @@ $tan: #cfb997;
 
 
 .show {
-  padding: 0 2em;
+  padding: 0 0.5em;
 }
 
 .show td{
@@ -128,17 +128,20 @@ $tan: #cfb997;
 
 
 #character {
-  grid-column-start: 1;
-  grid-column-end: 9;
-  grid-row-start: 1;
-  grid-row-end: 2;
-  margin: .5em;
+  // grid-column-start: 1;
+  // grid-column-end: 9;
+  // grid-row-start: 1;
+  // grid-row-end: 2;
+  margin: 16px 8em;
   /* background-color: rgba(235, 235, 235, 0.95); */
   /* text-align: center; */
   /* border: solid; */
   /* border-color: #000; */
   /* border-radius: 2.2em; */
-  padding: .15em;
+  padding: .5em;
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
 
 }
 
@@ -458,7 +461,6 @@ $tan: #cfb997;
   background-color: rgba(255, 255, 255, 0.95);
   color: #000;
   box-shadow: 2px 2px 3px rgba(0 ,0, 0, 0.95);
-  text-align: center;
   font-size: 16px;
   z-index: 1001;
   overflow: scroll;
@@ -629,6 +631,11 @@ $tan: #cfb997;
 .underline-hover:hover {
   text-decoration: underline;
   color: cyan;
+	cursor: default;
+}
+
+.underline {
+  text-decoration: underline;
 }
 
 #tooltip {
@@ -944,5 +951,52 @@ $tan: #cfb997;
 		tr:hover {
 			background: #a0a0a0;
 		}
+	}
+}
+
+#user-home {
+	display: grid;
+	grid-template-columns: 55% 45%;
+	grid-template-areas:
+		"characters campaigns";
+	#user-characters {
+		grid-area: characters;
+	}
+	#user-campaigns {
+		grid-area: campaigns;
+	}
+}
+
+#class-table {
+	#class-table-fort {
+		width: 7%;
+	}
+	#class-table-ref {
+		width: 7%;
+	}
+	#class-table-will {
+		width: 7%;
+	}
+	#class-table-level {
+		width: 5%;
+	}
+}
+
+.feature-title {
+	background-color: lightblue;
+	width: 100%;
+	padding: 0.25em;
+	margin: 0.2em;
+}
+
+.generic-table {
+	th {
+		background-color: lightblue;
+	}
+	th, tr {
+		text-align: center;
+	}
+	tr:nth-child(even) {
+		background-color: gainsboro;
 	}
 }

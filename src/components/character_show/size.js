@@ -1,28 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { sizeSpaceReach } from '../../utils/calculations/size'
 
 const Size = props => {
 
-  const size = props.character_info.size
-  let space = '5 ft'
-  let reach = '5 ft'
-
-  switch(size){
-    case "Tiny":
-      space = '2.5 ft'
-      reach = '0 ft'
-      break
-    case "Small" || "Medium":
-      space = '5 ft'
-      reach = '5 ft'
-      break
-    case "Large":
-      space = '10 ft'
-      reach = '10 ft'
-      break
-    default:
-      break;
-  }
+  const size = props.character.race.size
+	let data = sizeSpaceReach(size)
+  let space = data[0]
+  let reach = data[1]
 
   return(
     <div id='size' className='shadow shrink character-show'>
@@ -41,12 +26,8 @@ const Size = props => {
 
 const mapStateToProps = (state) => {
   return {
-    currentUser: state.currentUser,
-    admin: state.admin,
-    character_info: state.character_info,
-    classes: state.classes
+    character: state.character,
   }
 }
-
 
 export default connect(mapStateToProps)(Size)

@@ -1,6 +1,10 @@
 import React from 'react'
 import _ from 'lodash'
 import { connect } from 'react-redux'
+import { injectSpellIntoDescription } from '../../utils/fuf'
+import { modalAction } from '../../utils/action_creator/popups'
+
+
 
 class Traits extends React.Component {
 
@@ -10,7 +14,7 @@ class Traits extends React.Component {
 
   changeActiveFeature = (e) => {
     let id = _.parseInt(e.target.dataset.id)
-    if (this.state.activeTrait) {
+    if (this.state.activeTrait === id) {
       this.setState({activeTrait: 0})
     } else {
       this.setState({activeTrait: id})
@@ -20,17 +24,46 @@ class Traits extends React.Component {
   renderRacialTraits = () => {
     let traits = this.props.character.race.racial_traits
     traits = this.circumventTraits(this.props.character.name, traits)
+		traits = this.alternateTraits(traits, this.props.character.alternate_racial_traits)
 
-    return traits.map(trait => {
+    return traits.map((trait, i) => {
+			let desc = trait.description
+			if (trait.associated_spells?.length) {
+				let spells = trait.associated_spells
+				if (spells.length){desc = injectSpellIntoDescription(desc, spells, this.renderSpellClick, {})}
+			}
         return (
-          <li data-id={trait.id} onClick={this.changeActiveFeature} className='highlight mobile-selected-tab-content'  style={{maxHeight: window.outerHeight * 0.4}}>
-            <strong data-id={trait.id}>{trait.name}</strong>
-            {this.state.activeTrait === trait.id && <div style={{color: '#000'}}>{trait.description}</div>}
+          <li data-id={i * 3 + 1} onClick={this.changeActiveFeature} className='highlight mobile-selected-tab-content'  style={{maxHeight: window.outerHeight * 0.4}}>
+            <strong data-id={i * 3 + 1}>{trait.name}</strong>
+            {this.state.activeTrait === i * 3 + 1 && <div style={{color: '#000'}}>{desc}</div>}
           </li>
         )
 
     })
   }
+
+	renderSpellClick = (incomingSpell) => {
+		modalAction("spellDescription", incomingSpell)
+	}
+
+	alternateTraits = (traits, alternates) => {
+		let arr = []
+
+		traits.forEach(tr => {
+			let found = false
+
+			alternates.forEach(alt => {
+				alt.alternate_trait_replace_racial_traits.forEach(atrrt => {
+					if (atrrt.racial_trait_id === tr.id){found = true}
+				})
+			})
+
+			if (!found){arr.push(tr)}
+		})
+
+		arr = [...arr, ...alternates]
+		return arr
+	}
 
   circumventTraits = (name, traits) => {
     let newTraits = []
