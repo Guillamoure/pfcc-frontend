@@ -32,7 +32,6 @@ class Notifications extends React.Component{
       <Portal>
         <div className="page-dimmer" onClick={this.props.clickOut}>
           <div className="edit-form" name="background">
-            <p>Yo dude, it's your boi</p>
             <NotificationTabs renderTabClick={this.renderTabClick} activeTab={this.state.activeTab}/>
             <div style={{height: '100%', overflow: 'auto'}}>
               {this.state.activeTab === "Communique" && <Notice exitModal={this.props.exitModal} changeActiveEffects={this.props.changeActiveEffects}/>}

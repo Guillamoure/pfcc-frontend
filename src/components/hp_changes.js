@@ -227,7 +227,9 @@ class HPChanges extends React.Component {
 
 				// this.props.dispatch({type: 'CHARACTER', character: data.character })
 				// this.setState({character: data.character, modal: false}, this.dispatchAbilityScores(), this.dispatchClassLevels())
-				this.props.exitModal()
+        if (localStorage.computer === "true"){
+          this.props.exitModal()
+        }
 			})
 		} else {
 			this.props.exitModal()

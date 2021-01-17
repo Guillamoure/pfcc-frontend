@@ -134,33 +134,36 @@ class Notice extends React.Component {
         {this.tempFeatures()}
         <h3>Active Conditions</h3>
         {this.renderConditions()}
-        {this.props.character_info.hardcode.stealTime && <button onClick={() => this.props.dispatch({type: 'STEAL TIME'})}>Return Time</button>}
-        <br/>
-        <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderDispatch('HELMSMAN')}>Sasea Bitch Helmsman</button>
-        <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderDispatch('CREW')}>Sasea Bitch crew</button>
-        <h3>Bardic Performances</h3>
-        <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderActiveEffects("Inspire Courage: +2 to Attack and Damage rolls, charm saves, and fear saves")}>Inspire Courage</button>
-        <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderActiveEffects("Inspire Competence: +3 to One Specific Skill")}>Inspire Competence</button>
-        <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderActiveEffects("Countersong: Reroll Sonic or language-dependent saves")}>Countersong</button>
-        <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderActiveEffects("Distraction: Affected by illusion magic")}>Distraction</button>
-        <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderActiveEffects("Fascinate")}>Fascinate</button>
-        <h3>Hexes</h3>
-        <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderActiveEffects("Protective Luck: Attackers have disadvantage")}>Protective Luck</button>
-        <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderActiveEffects("Fortune: Target has advantage on one roll per round")}>Fortune</button>
-        <h3>Spell Effects</h3>
-        <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderDispatch("ENLARGE")}>Enlarged</button>
-        <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderDispatch("REDUCE")}>Reduced</button>
-        <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderDispatch("EXPEDITIOUS RETREAT")}>Expeditious Retreat</button>
-        <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderDispatch("SWIM SPEED")}>Swim Speed 30 ft</button>
-        <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderDispatch("SWIM 20")}>Swim Speed 20 ft</button>
-        <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderDispatch("LAND 10")}>Land Speed +10 ft</button>
-        <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderDispatch("LAND 20")}>Land Speed +20 ft</button>
-        <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderDispatch("QUICK")}>Quick Reaction</button>
+
         {this.renderAdditionalButtons()}
       </span>
     )
   }
 }
+// 
+// {this.props.character_info.hardcode.stealTime && <button onClick={() => this.props.dispatch({type: 'STEAL TIME'})}>Return Time</button>}
+// <br/>
+// <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderDispatch('HELMSMAN')}>Sasea Bitch Helmsman</button>
+// <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderDispatch('CREW')}>Sasea Bitch crew</button>
+// <h3>Bardic Performances</h3>
+// <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderActiveEffects("Inspire Courage: +2 to Attack and Damage rolls, charm saves, and fear saves")}>Inspire Courage</button>
+// <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderActiveEffects("Inspire Competence: +3 to One Specific Skill")}>Inspire Competence</button>
+// <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderActiveEffects("Countersong: Reroll Sonic or language-dependent saves")}>Countersong</button>
+// <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderActiveEffects("Distraction: Affected by illusion magic")}>Distraction</button>
+// <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderActiveEffects("Fascinate")}>Fascinate</button>
+// <h3>Hexes</h3>
+// <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderActiveEffects("Protective Luck: Attackers have disadvantage")}>Protective Luck</button>
+// <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderActiveEffects("Fortune: Target has advantage on one roll per round")}>Fortune</button>
+// <h3>Spell Effects</h3>
+// <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderDispatch("ENLARGE")}>Enlarged</button>
+// <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderDispatch("REDUCE")}>Reduced</button>
+// <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderDispatch("EXPEDITIOUS RETREAT")}>Expeditious Retreat</button>
+// <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderDispatch("SWIM SPEED")}>Swim Speed 30 ft</button>
+// <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderDispatch("SWIM 20")}>Swim Speed 20 ft</button>
+// <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderDispatch("LAND 10")}>Land Speed +10 ft</button>
+// <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderDispatch("LAND 20")}>Land Speed +20 ft</button>
+// <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderDispatch("QUICK")}>Quick Reaction</button>
+
 const mapStatetoProps = (state) => {
   return {
     character: state.character,
