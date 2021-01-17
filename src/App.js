@@ -32,6 +32,7 @@ import CharacterCreation from './container/character_creation'
 import Character from './container/character_show'
 import Campaign from './container/campaign_show'
 import NewCampaign from './container/new_campaign'
+import CharacterContainer from './container/character_container'
 
 import Login from './components/login'
 import SignUp from './components/signup'
@@ -89,6 +90,7 @@ class App extends React.Component {
               <Route exact path="/skills/:slug" component={Skill} />
               <Route exact path="/spells" component={Spells} />
               <Route exact path="/creation" component={CharacterCreation} />
+              <Route exact path="/characters/10001" component={CharacterContainer} />
               <Route exact path="/characters/:slug" component={Character} />
               <Route exact path="/campaigns/new" component={NewCampaign} />
               <Route path="/campaigns/:slug" component={Campaign} />
