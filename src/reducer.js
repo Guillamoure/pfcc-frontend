@@ -37,7 +37,11 @@ const initialState = {
 	websocket: {},
 	notifications: [],
 	storedNotifications: [],
-	activeEncounter: {}
+	activeEncounter: {},
+	settings: {
+		layout: "detailed",
+		colorTheme: "noir"
+	}
 }
 
 
@@ -47,6 +51,8 @@ const reducer = (state = initialState, action) => {
       return {...state, currentUser: action.user, admin: action.admin};
     case "SIGNOUT":
       return {...state, currentUser: "", admin: false};
+		case "SET SETTINGS":
+			return {...state, settings: action.settings}
     case "CHARACTER":
       // hardcoded stuff
       let size = 'Medium'

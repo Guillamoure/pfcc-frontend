@@ -10,6 +10,7 @@ import './css/mobile.scss';
 import './css/popups.scss';
 import './css/campaign-show.scss';
 import './css/character-creation.scss';
+import './css/character-details.scss';
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { connect } from 'react-redux'
@@ -48,6 +49,7 @@ class App extends React.Component {
 
   // COMMENTED OUT FOR TESTING PURPOSES
   componentDidMount(){
+		if (window.location.href === "http://localhost:3000/characters/10001"){return null}
     fetch(`${localhost}/api/v1/data`)
     .then(r => r.json())
     .then(data => {

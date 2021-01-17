@@ -2,7 +2,7 @@ import Store from '../../store'
 
 const { getState, dispatch } = Store
 
-
+export const settingsAction = (settings) => dispatch({type: 'SET SETTINGS', settings})
 export const characterAction = (character) => dispatch({type: 'CHARACTER', character })
 
 export const characterClassesAction = (array) => dispatch({type: 'CHARACTER_CLASSES', classes: array})

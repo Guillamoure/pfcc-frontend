@@ -5,6 +5,8 @@ import { Menu } from 'semantic-ui-react'
 import localhost from '../localhost'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
+import { modalAction } from '../utils/action_creator/popups'
+
 
 class NavBar extends React.Component {
 
@@ -15,6 +17,7 @@ class NavBar extends React.Component {
 
   componentDidMount(){
     const token = localStorage.getItem("token")
+		if (window.location.href === "http://localhost:3000/characters/10001"){return null}
     if (!this.state.currentUser && token){
       fetch(`${localhost}/api/v1/auth`, {
         headers: {
@@ -65,14 +68,19 @@ class NavBar extends React.Component {
   renderNavBar = () => {
     if (localStorage.computer === "true"){
       return (
-        <Menu>
-          <Menu.Item className='project-name'>CharacterFinder</Menu.Item>
-          <Menu.Item onClick={() => this.props.history.push('/classes')}>Classes</Menu.Item>
-          <Menu.Item onClick={() => this.props.history.push('/ancestries')}>Ancestries</Menu.Item>
-          <Menu.Item onClick={() => this.props.history.push('/spells')}>Spells</Menu.Item>
-          {this.props.currentUser ? <Menu.Item onClick={() => this.props.history.push('/')}>{this.props.currentUser.username}</Menu.Item>: <Menu.Item onClick={() => this.props.history.push('/login')}>Login</Menu.Item>}
-          {this.props.currentUser ? <Menu.Item onClick={this.renderLogOut}>Log Out</Menu.Item> : <Menu.Item onClick={() => this.props.history.push('/signup')}>Sign Up</Menu.Item>}
-        </Menu>
+        <nav className="menu">
+					<div>
+	          <a className='item project-name'>CharacterFinder</a>
+	          <a className="item" onClick={() => this.props.history.push('/classes')}>Classes</a>
+	          <a className="item" onClick={() => this.props.history.push('/ancestries')}>Ancestries</a>
+	          <a className="item" onClick={() => this.props.history.push('/spells')}>Spells</a>
+					</div>
+					<div>
+          	{this.props.currentUser ? <a className="item" onClick={() => this.props.history.push('/')}>{this.props.currentUser.username}</a>: <a className="item" onClick={() => this.props.history.push('/login')}>Login</a>}
+          	{this.props.currentUser ? <a className="item" onClick={this.renderLogOut}>Log Out</a> : <a className="item" onClick={() => this.props.history.push('/signup')}>Sign Up</a>}
+						<a className="item" onClick={() => modalAction("settings")}>Settings</a>
+					</div>
+        </nav>
       )
     } else {
       if (!this.state.menuDropDown){

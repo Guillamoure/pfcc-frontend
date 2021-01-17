@@ -20,6 +20,7 @@ import SkillDescription from '../components/skill_description'
 import HarrowDeck from '../components/modals/harrow'
 import ItemDescription from '../components/modals/item_description'
 import CurrencyManager from '../components/modals/currency_manager'
+import Settings from '../components/modals/settings'
 
 const ModalSkeleton = (props) => {
 
@@ -61,6 +62,8 @@ const ModalSkeleton = (props) => {
 				return <HarrowDeck />
 			case 'currency':
 				return <CurrencyManager />
+			case 'settings':
+				return <Settings />
       default:
         break
     }
