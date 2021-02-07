@@ -21,8 +21,8 @@ const Character1 = {
 				"will": 0.34,
 				source: {
 					id: 11,
-					"title": "Occult Adventures",
-					"abbreviation": "OA",
+					title: "Occult Adventures",
+					abbreviation: "OA",
 					code: "PZO1132"
 				},
 				klass_features: [
@@ -627,7 +627,197 @@ const Character1 = {
 					}
 				]
 			}
-		]
+		],
+		class_obj: [
+			{
+				klass_id: 15,
+				level: 2
+			}
+		],
+		race: {
+			id: 8,
+			name: "Vine Leshy",
+			speed: 20,
+			size: "Small",
+			description: "Vine leshys are born by ritual, called forth when a druid channels a nature spirit into a plant’s form. The nature spirit that answers the call for a vine leshy creation ritual is always one that has keenly felt the influence of mortal beings. Compared to other leshys, vine leshys have an easier time relating to non-plant creatures and a deeper sense of curiosity about the wonders of the natural world beyond those plants closely related to them, as well as a fascination with the societies of humans and other creatures.\n\nPhysical Description: A vine leshy’s body is made of masses of twisted vines and leaves, sometimes incorporating flowers and fruits as well. Their appearance is mostly determined by the species of vine used in their creation, but most have a large cluster of leaves that forms a face with round eyes, a small mouth, and no visible nose.\n\nSociety: Because of their ritual-based genesis, vine leshys do not have a traditional family structure. They form strong friendships with those who accompany them on explorations or who assist them in protecting a natural site. Unlike most leshys, vine leshys usually feel a strong desire to seek out the one who create!d them. They see their creators as friends and allies rather than as parents.\n\nWhile most leshys devote themselves to protecting a particular ward for long stretches of time, vine leshys are far more likely to travel and explore, stopping to care for many different wards for short periods throughout their lifetime. Vine leshys love storytelling, but they place more importance on the meaning and message of the story than the details, both because they can’t always remember the details and because they find many details to be unnecessary. A story that has passed through several vine leshys is likely to undergo significant changes in characters and setting but usually retains its core message.\n\nRelations: Vine leshys are interested in learning about the cultures of many other races. Their initial attitudes when they encounter new races are based on biases from the nature spirit’s past incarnations, but they evolve over time through the leshy’s experiences. In unfamiliar situations, vine leshys prefer to blend in with vegetation to observe before venturing out and introducing themselves.\n\nConsistent with the plant species from which they derive their bodies, vine leshys recognize a spectrum of genders. Some vine leshys are exclusively female or male, while many vine leshys are both. The biological features of a leshy’s flowers do not necessarily indicate its gender, as the nature spirit that inhabits the leshy plays a strong role in determining the leshy’s identity.\n\nVine leshys have an unusual relationship with other leshys, for unlike standard leshys, vine leshys are not grown to be servants. They are free-willed and individualistic creatures. Whether or not an individual vine leshy views the servitude other leshys endure as akin to slavery or as something more like an honorable tradition of service to a powerful druid depends on the vine leshy’s opinion and alignment. While it’s unusual for a vine leshy to take on another leshy as a minion in the traditional way, it’s not unusual to see vine leshys take on sponsorship of a sort over other leshys, treating them almost as adopted children or wayward exiles in need of guidance and protection from those who would force their servitude.\n\nAlignment and Religion: Vine leshys see themselves as part of the ancient cycle of nature. They care for their friends and any natural areas under their care, but rarely feel compelled toward either charity or malice. Most vine leshys are truly neutral, and they almost always have at least one neutral aspect to their alignments. Religion is not particularly important to vine leshys.\n\nAdventurers: Like most leshys, vine leshys typically do not fear death. They know that if their bodies die, their spirits will return to the natural world and may someday find themselves in new bodies. This lack of fear combined with their curiosity leads them to take risks. However, they typically avoid excessively dangerous activities, as they would rather gather a story from their adventures to tell later. Vine leshys gravitate toward classes that let them use their connection to nature, such as druid and ranger.\n\nNames: Vine leshys’ names change throughout their lives. A young vine leshy typically names herself after her physical characteristics or a natural feature that she particularly enjoys. As vine leshys age, they modify their names to better reflect their personality and experiences. A leshy may even have several names that she cycles among, such as one name for each season. Most vine leshys select names that are at least two words long. Example vine leshy names include Burbling Waterfall, Lovely Triple Leaves, Masterful Sun Drinker, Snowy Pine Branches, Verdant Taleweaver, and Vibrant Tree Climber.",
+			racial_traits: [
+				{
+					id: 42,
+					name: "Type",
+					race_id: 8,
+					description: "Vine leshys are plants with the leshy subtype but lack the immunities to mind-affecting effects, paralysis, poison, polymorph, sleep, and stunning that the plant type usually grants, and they lack the immunity to electricity and sonic that the leshy subtype usually grants.",
+					source_id: null
+				},
+				{
+					id: 43,
+					name: "Languages",
+					race_id: 8,
+					description: "Vine leshys begin play speaking Common and Sylvan. Vine leshys with high Intelligence scores can choose from the following: Aquan, Auran, Aklo, Elven, Gnome, Goblin, Terran, or Undercommon.",
+					source_id: null
+				},
+				{
+					id: 44,
+					name: "Plantspeech",
+					race_id: 8,
+					description: "Vine leshys can speak with vines as if subject to a continual speak with plants spell.",
+					source_id: null
+				},
+				{
+					id: 45,
+					name: "Darkvision",
+					race_id: 8,
+					description: "Vine leshys can see in the dark up to 60 feet.",
+					source_id: null
+				},
+				{
+					id: 46,
+					name: "Low-Light Vision",
+					race_id: 8,
+					description: "Vine leshys can see twice as far as humans under conditions of dim light.",
+					source_id: null
+				},
+				{
+					id: 47,
+					name: "Pass Without Trace",
+					race_id: 8,
+					description: "Vine leshys have pass without trace as a constant spell-like ability (caster level 2nd).",
+					source_id: null
+				},
+				{
+					id: 48,
+					name: "Change Shape",
+					race_id: 8,
+					description: "Vine leshys can transform into vines, with results similar to tree shape. In this form, the leshy appears as a particularly healthy Small vine. The 	leshy can assume plant form or revert to its true form as a swift action.",
+					source_id: null
+				},
+				{
+					id: 49,
+					name: "Verdant Burst",
+					race_id: 8,
+					description: "When slain, a vine leshy explodes in a burst of fertile energies. All plant creatures within 30 feet of the slain leshy regain hit 1d8 points, and vines quickly infest the area. If the terrain can support vines, the undergrowth is dense enough to make the region into difficult terrain for 24 hours, after which the plant life diminishes to a normal level; otherwise, this plant life has no significant effect on movement and withers and dies within an hour.",
+					source_id: null
+				},
+				{
+					id: 50,
+					name: "Unassuming Foliage",
+					race_id: 8,
+					description: "Vine leshys gain a +4 racial bonus on Stealth checks in forests.",
+					source_id: null
+				},
+				{
+					id: 51,
+					name: "Climber",
+					race_id: 8,
+					description: "Vine leshys gain a +2 racial bonus on Climb checks.",
+					source_id: null
+				}
+			],
+			race_ability_score_modifiers: [
+				{
+					id: 20,
+					race_id: 8,
+					ability_score: "Constitution",
+					bonus: 2
+				},
+				{
+					id: 21,
+					race_id: 8,
+					ability_score: "Wisdom",
+					bonus: 2
+				},
+				{
+					id: 22,
+					race_id: 8,
+					ability_score: "Intelligence",
+					bonus: -2
+				}
+			],
+			img_url: "https://i.pinimg.com/originals/95/2f/4a/952f4a813b92fdde2da083dc934c36b3.png",
+			favored_klass_bonuses: [
+				{
+					id: 4,
+					description: "Add a +1/3 bonus to Perform (oratory) checks, including checks using versatile performance, as long as the bard first spends at least 10 minutes telling a story.",
+					klass_id: 7,
+					race_id: 8,
+					source_id: null
+				},
+				{
+					id: 5,
+					description: "An oracle with the nature or wood mystery adds one spell from the druid's spell list that isn't on the cleric spell list to the oracle's spell list; they still must select this spell as one of their spells known in order to cast it. This spell must be at least 1 level lower than the highest spell level the oracle can cast.",
+					klass_id: 1,
+					race_id: 8,
+					source_id: null
+				}
+			],
+			source: {
+				id: 14,
+				title: "Ultimate Wilderness",
+				abbreviation: "UW",
+				code: "PZO1140"
+			},
+			alternate_racial_traits: [
+				{
+					name: "Grapevine",
+					description: "A vine leshy made from a grapevine can produce magically infused fruit that can heal her allies. She can cast goodberry once per day as a spell-like ability, with a caster level equal to her character level. This replaces pass without trace.",
+					source: {
+						id: 14,
+						title: "Ultimate Wilderness",
+						abbreviation: "UW",
+						code: "PZO1140"
+					},
+					alternate_trait_replace_racial_traits: [
+						{
+							id: 4,
+							alternate_racial_trait_id: 3,
+							racial_trait_id: 47
+						}
+					],
+					associated_spells: [
+						{
+							id: 219,
+							name: "Goodberry",
+							description: "Casting goodberry makes 2d4 freshly picked berries magical. You (as well as any other druid of 3rd or higher level) can immediately discern which berries are affected. Each transmuted berry provides nourishment as if it were a normal meal for a Medium creature. The berry also cures 1 point of damage when eaten, subject to a maximum of 8 points of such curing in any 24-hour period.",
+							target: "2d4 fresh berries touched",
+							saving_throw: "none",
+							spell_resistance: false,
+							magic_school_id: 8,
+							action_id: 1,
+							duration: "1 day/level",
+							time: 1,
+							unit_of_time: "day",
+							increase_per_level: 1,
+							dismissible: false,
+							concentration: false,
+							spell_range_id: 2,
+							source_id: null
+						}
+					]
+				},
+				{
+					name: "Swamp Leshy",
+					description: "Some vine leshys are made from plants that naturally grow in swamps. These leshys gain a +2 racial bonus on Swim checks and a +4 racial bonus on Stealth checks in swamps. This replaces climber and alters unassuming foliage.",
+					source: {
+						id: 14,
+						title: "Ultimate Wilderness",
+						abbreviation: "UW",
+						code: "PZO1140"
+					},
+					alternate_trait_replace_racial_traits: [
+						{
+							id: 5,
+							alternate_racial_trait_id: 4,
+							racial_trait_id: 51
+						},
+						{
+							id: 6,
+							alternate_racial_trait_id: 4,
+							racial_trait_id: 50
+						}
+					],
+					associated_spells: []
+				}
+			]
+		},
 	}
 }
 
@@ -767,7 +957,7 @@ export default Character1
 // }
 // ],
 // has_klass_feature_options: null,
-// "associated_spells": [],
+// associated_spells: [],
 // specialization: null,
 // choice_amount: 0,
 // "klass_specializations": []
@@ -788,7 +978,7 @@ export default Character1
 // "actions": [],
 // "features": [],
 // has_klass_feature_options: null,
-// "associated_spells": [],
+// associated_spells: [],
 // specialization: true,
 // choice_amount: 1,
 // "klass_specializations": [
@@ -890,7 +1080,7 @@ export default Character1
 // "actions": [],
 // "features": [],
 // has_klass_feature_options: null,
-// "associated_spells": [],
+// associated_spells: [],
 // specialization: null,
 // choice_amount: 0,
 // "klass_specializations": []
@@ -911,7 +1101,7 @@ export default Character1
 // "actions": [],
 // "features": [],
 // has_klass_feature_options: null,
-// "associated_spells": [],
+// associated_spells: [],
 // specialization: null,
 // choice_amount: 0,
 // "klass_specializations": []
@@ -932,7 +1122,7 @@ export default Character1
 // "actions": [],
 // "features": [],
 // has_klass_feature_options: null,
-// "associated_spells": [],
+// associated_spells: [],
 // specialization: true,
 // choice_amount: 1,
 // "klass_specializations": []
@@ -992,7 +1182,7 @@ export default Character1
 // }
 // ],
 // has_klass_feature_options: null,
-// "associated_spells": [],
+// associated_spells: [],
 // specialization: null,
 // choice_amount: 0,
 // "klass_specializations": []
@@ -1055,7 +1245,7 @@ export default Character1
 // "actions": [],
 // "features": [],
 // has_klass_feature_options: null,
-// "associated_spells": [],
+// associated_spells: [],
 // specialization: null,
 // choice_amount: 0,
 // "klass_specializations": []
@@ -1076,16 +1266,10 @@ export default Character1
 // "actions": [],
 // "features": [],
 // has_klass_feature_options: null,
-// "associated_spells": [],
+// associated_spells: [],
 // specialization: null,
 // choice_amount: 0,
 // "klass_specializations": []
-// }
-// ],
-// "class_obj": [
-// {
-// klass_id: 15,
-// "level": 2
 // }
 // ],
 // "skillset": {
@@ -1532,41 +1716,41 @@ export default Character1
 // "sp": null,
 // "cp": null,
 // "archetypes": [],
-// "alternate_racial_traits": [
+// alternate_racial_traits: [
 // {
 // name: "Grapevine",
 // description: "A vine leshy made from a grapevine can produce magically infused fruit that can heal her allies. She can cast goodberry once per day as a spell-like ability, with a caster level equal to her character level. This replaces pass without trace.",
 // source: {
 // id: 14,
-// "title": "Ultimate Wilderness",
-// "abbreviation": "UW",
+// title: "Ultimate Wilderness",
+// abbreviation: "UW",
 // code: "PZO1140"
 // },
 // "alternate_trait_replace_racial_traits": [
 // {
 // id: 4,
-// "alternate_racial_trait_id": 3,
-// "racial_trait_id": 47
+// alternate_racial_trait_id: 3,
+// racial_trait_id: 47
 // }
 // ],
-// "associated_spells": [
+// associated_spells: [
 // {
 // id: 219,
 // name: "Goodberry",
 // description: "Casting goodberry makes 2d4 freshly picked berries magical. You (as well as any other druid of 3rd or higher level) can immediately discern which berries are affected. Each transmuted berry provides nourishment as if it were a normal meal for a Medium creature. The berry also cures 1 point of damage when eaten, subject to a maximum of 8 points of such curing in any 24-hour period.",
-// "target": "2d4 fresh berries touched",
-// "saving_throw": "none",
-// "spell_resistance": false,
-// "magic_school_id": 8,
-// "action_id": 1,
-// "duration": "1 day/level",
-// "time": 1,
-// "unit_of_time": "day",
-// "increase_per_level": 1,
-// "dismissible": false,
-// "concentration": false,
-// "spell_range_id": 2,
-// "source_id": null
+// target: "2d4 fresh berries touched",
+// saving_throw: "none",
+// spell_resistance: false,
+// magic_school_id: 8,
+// action_id: 1,
+// duration: "1 day/level",
+// time: 1,
+// unit_of_time: "day",
+// increase_per_level: 1,
+// dismissible: false,
+// concentration: false,
+// spell_range_id: 2,
+// source_id: null
 // }
 // ]
 // },
@@ -1575,23 +1759,23 @@ export default Character1
 // description: "Some vine leshys are made from plants that naturally grow in swamps. These leshys gain a +2 racial bonus on Swim checks and a +4 racial bonus on Stealth checks in swamps. This replaces climber and alters unassuming foliage.",
 // source: {
 // id: 14,
-// "title": "Ultimate Wilderness",
-// "abbreviation": "UW",
+// title: "Ultimate Wilderness",
+// abbreviation: "UW",
 // code: "PZO1140"
 // },
 // "alternate_trait_replace_racial_traits": [
 // {
 // id: 5,
-// "alternate_racial_trait_id": 4,
-// "racial_trait_id": 51
+// alternate_racial_trait_id: 4,
+// racial_trait_id: 51
 // },
 // {
 // id: 6,
-// "alternate_racial_trait_id": 4,
-// "racial_trait_id": 50
+// alternate_racial_trait_id: 4,
+// racial_trait_id: 50
 // }
 // ],
-// "associated_spells": []
+// associated_spells: []
 // }
 // ],
 // "klass_feature_options": [],
@@ -1738,7 +1922,7 @@ export default Character1
 // "background": null,
 // created_at: "2021-01-02T15:58:45.041Z",
 // updated_at: "2021-01-02T16:27:35.762Z",
-// "race_id": 8,
+// race_id: 8,
 // "any_bonus": null,
 // skillset_id: 3,
 // "lethal_damage": 0,
@@ -1752,190 +1936,6 @@ export default Character1
 // "gp": null,
 // "sp": null,
 // "cp": null
-// }
-// ]
-// },
-// "race": {
-// id: 8,
-// name: "Vine Leshy",
-// "speed": 20,
-// "size": "Small",
-// description: "Vine leshys are born by ritual, called forth when a druid channels a nature spirit into a plant’s form. The nature spirit that answers the call for a vine leshy creation ritual is always one that has keenly felt the influence of mortal beings. Compared to other leshys, vine leshys have an easier time relating to non-plant creatures and a deeper sense of curiosity about the wonders of the natural world beyond those plants closely related to them, as well as a fascination with the societies of humans and other creatures.\n\nPhysical Description: A vine leshy’s body is made of masses of twisted vines and leaves, sometimes incorporating flowers and fruits as well. Their appearance is mostly determined by the species of vine used in their creation, but most have a large cluster of leaves that forms a face with round eyes, a small mouth, and no visible nose.\n\nSociety: Because of their ritual-based genesis, vine leshys do not have a traditional family structure. They form strong friendships with those who accompany them on explorations or who assist them in protecting a natural site. Unlike most leshys, vine leshys usually feel a strong desire to seek out the one who create!d them. They see their creators as friends and allies rather than as parents.\n\nWhile most leshys devote themselves to protecting a particular ward for long stretches of time, vine leshys are far more likely to travel and explore, stopping to care for many different wards for short periods throughout their lifetime. Vine leshys love storytelling, but they place more importance on the meaning and message of the story than the details, both because they can’t always remember the details and because they find many details to be unnecessary. A story that has passed through several vine leshys is likely to undergo significant changes in characters and setting but usually retains its core message.\n\nRelations: Vine leshys are interested in learning about the cultures of many other races. Their initial attitudes when they encounter new races are based on biases from the nature spirit’s past incarnations, but they evolve over time through the leshy’s experiences. In unfamiliar situations, vine leshys prefer to blend in with vegetation to observe before venturing out and introducing themselves.\n\nConsistent with the plant species from which they derive their bodies, vine leshys recognize a spectrum of genders. Some vine leshys are exclusively female or male, while many vine leshys are both. The biological features of a leshy’s flowers do not necessarily indicate its gender, as the nature spirit that inhabits the leshy plays a strong role in determining the leshy’s identity.\n\nVine leshys have an unusual relationship with other leshys, for unlike standard leshys, vine leshys are not grown to be servants. They are free-willed and individualistic creatures. Whether or not an individual vine leshy views the servitude other leshys endure as akin to slavery or as something more like an honorable tradition of service to a powerful druid depends on the vine leshy’s opinion and alignment. While it’s unusual for a vine leshy to take on another leshy as a minion in the traditional way, it’s not unusual to see vine leshys take on sponsorship of a sort over other leshys, treating them almost as adopted children or wayward exiles in need of guidance and protection from those who would force their servitude.\n\nAlignment and Religion: Vine leshys see themselves as part of the ancient cycle of nature. They care for their friends and any natural areas under their care, but rarely feel compelled toward either charity or malice. Most vine leshys are truly neutral, and they almost always have at least one neutral aspect to their alignments. Religion is not particularly important to vine leshys.\n\nAdventurers: Like most leshys, vine leshys typically do not fear death. They know that if their bodies die, their spirits will return to the natural world and may someday find themselves in new bodies. This lack of fear combined with their curiosity leads them to take risks. However, they typically avoid excessively dangerous activities, as they would rather gather a story from their adventures to tell later. Vine leshys gravitate toward classes that let them use their connection to nature, such as druid and ranger.\n\nNames: Vine leshys’ names change throughout their lives. A young vine leshy typically names herself after her physical characteristics or a natural feature that she particularly enjoys. As vine leshys age, they modify their names to better reflect their personality and experiences. A leshy may even have several names that she cycles among, such as one name for each season. Most vine leshys select names that are at least two words long. Example vine leshy names include Burbling Waterfall, Lovely Triple Leaves, Masterful Sun Drinker, Snowy Pine Branches, Verdant Taleweaver, and Vibrant Tree Climber.",
-// "racial_traits": [
-// {
-// id: 42,
-// name: "Type",
-// "race_id": 8,
-// description: "Vine leshys are plants with the leshy subtype but lack the immunities to mind-affecting effects, paralysis, poison, polymorph, sleep, and stunning that the plant type usually grants, and they lack the immunity to electricity and sonic that the leshy subtype usually grants.",
-// "source_id": null
-// },
-// {
-// id: 43,
-// name: "Languages",
-// "race_id": 8,
-// description: "Vine leshys begin play speaking Common and Sylvan. Vine leshys with high Intelligence scores can choose from the following: Aquan, Auran, Aklo, Elven, Gnome, Goblin, Terran, or Undercommon.",
-// "source_id": null
-// },
-// {
-// id: 44,
-// name: "Plantspeech",
-// "race_id": 8,
-// description: "Vine leshys can speak with vines as if subject to a continual speak with plants spell.",
-// "source_id": null
-// },
-// {
-// id: 45,
-// name: "Darkvision",
-// "race_id": 8,
-// description: "Vine leshys can see in the dark up to 60 feet.",
-// "source_id": null
-// },
-// {
-// id: 46,
-// name: "Low-Light Vision",
-// "race_id": 8,
-// description: "Vine leshys can see twice as far as humans under conditions of dim light.",
-// "source_id": null
-// },
-// {
-// id: 47,
-// name: "Pass Without Trace",
-// "race_id": 8,
-// description: "Vine leshys have pass without trace as a constant spell-like ability (caster level 2nd).",
-// "source_id": null
-// },
-// {
-// id: 48,
-// name: "Change Shape",
-// "race_id": 8,
-// description: "Vine leshys can transform into vines, with results similar to tree shape. In this form, the leshy appears as a particularly healthy Small vine. The leshy can assume plant form or revert to its true form as a swift action.",
-// "source_id": null
-// },
-// {
-// id: 49,
-// name: "Verdant Burst",
-// "race_id": 8,
-// description: "When slain, a vine leshy explodes in a burst of fertile energies. All plant creatures within 30 feet of the slain leshy regain hit 1d8 points, and vines quickly infest the area. If the terrain can support vines, the undergrowth is dense enough to make the region into difficult terrain for 24 hours, after which the plant life diminishes to a normal level; otherwise, this plant life has no significant effect on movement and withers and dies within an hour.",
-// "source_id": null
-// },
-// {
-// id: 50,
-// name: "Unassuming Foliage",
-// "race_id": 8,
-// description: "Vine leshys gain a +4 racial bonus on Stealth checks in forests.",
-// "source_id": null
-// },
-// {
-// id: 51,
-// name: "Climber",
-// "race_id": 8,
-// description: "Vine leshys gain a +2 racial bonus on Climb checks.",
-// "source_id": null
-// }
-// ],
-// "race_ability_score_modifiers": [
-// {
-// id: 20,
-// "race_id": 8,
-// ability_score: "Constitution",
-// "bonus": 2
-// },
-// {
-// id: 21,
-// "race_id": 8,
-// ability_score: "Wisdom",
-// "bonus": 2
-// },
-// {
-// id: 22,
-// "race_id": 8,
-// ability_score: "Intelligence",
-// "bonus": -2
-// }
-// ],
-// "img_url": "https://i.pinimg.com/originals/95/2f/4a/952f4a813b92fdde2da083dc934c36b3.png",
-// "favored_klass_bonuses": [
-// {
-// id: 4,
-// description: "Add a +1/3 bonus to Perform (oratory) checks, including checks using versatile performance, as long as the bard first spends at least 10 minutes telling a story.",
-// klass_id: 7,
-// "race_id": 8,
-// "source_id": null
-// },
-// {
-// id: 5,
-// description: "An oracle with the nature or wood mystery adds one spell from the druid's spell list that isn't on the cleric spell list to the oracle's spell list; they still must select this spell as one of their spells known in order to cast it. This spell must be at least 1 level lower than the highest spell level the oracle can cast.",
-// klass_id: 1,
-// "race_id": 8,
-// "source_id": null
-// }
-// ],
-// source: {
-// id: 14,
-// "title": "Ultimate Wilderness",
-// "abbreviation": "UW",
-// code: "PZO1140"
-// },
-// "alternate_racial_traits": [
-// {
-// name: "Grapevine",
-// description: "A vine leshy made from a grapevine can produce magically infused fruit that can heal her allies. She can cast goodberry once per day as a spell-like ability, with a caster level equal to her character level. This replaces pass without trace.",
-// source: {
-// id: 14,
-// "title": "Ultimate Wilderness",
-// "abbreviation": "UW",
-// code: "PZO1140"
-// },
-// "alternate_trait_replace_racial_traits": [
-// {
-// id: 4,
-// "alternate_racial_trait_id": 3,
-// "racial_trait_id": 47
-// }
-// ],
-// "associated_spells": [
-// {
-// id: 219,
-// name: "Goodberry",
-// description: "Casting goodberry makes 2d4 freshly picked berries magical. You (as well as any other druid of 3rd or higher level) can immediately discern which berries are affected. Each transmuted berry provides nourishment as if it were a normal meal for a Medium creature. The berry also cures 1 point of damage when eaten, subject to a maximum of 8 points of such curing in any 24-hour period.",
-// "target": "2d4 fresh berries touched",
-// "saving_throw": "none",
-// "spell_resistance": false,
-// "magic_school_id": 8,
-// "action_id": 1,
-// "duration": "1 day/level",
-// "time": 1,
-// "unit_of_time": "day",
-// "increase_per_level": 1,
-// "dismissible": false,
-// "concentration": false,
-// "spell_range_id": 2,
-// "source_id": null
-// }
-// ]
-// },
-// {
-// name: "Swamp Leshy",
-// description: "Some vine leshys are made from plants that naturally grow in swamps. These leshys gain a +2 racial bonus on Swim checks and a +4 racial bonus on Stealth checks in swamps. This replaces climber and alters unassuming foliage.",
-// source: {
-// id: 14,
-// "title": "Ultimate Wilderness",
-// "abbreviation": "UW",
-// code: "PZO1140"
-// },
-// "alternate_trait_replace_racial_traits": [
-// {
-// id: 5,
-// "alternate_racial_trait_id": 4,
-// "racial_trait_id": 51
-// },
-// {
-// id: 6,
-// "alternate_racial_trait_id": 4,
-// "racial_trait_id": 50
-// }
-// ],
-// "associated_spells": []
 // }
 // ]
 // },
@@ -2224,7 +2224,7 @@ export default Character1
 // id: 78,
 // name: "Traveling Kettle",
 // "category": "Light",
-// "proficiency": "Simple",
+// proficiency: "Simple",
 // "weapon_type": "Melee",
 // "price_in_gp": 5,
 // "damage_dice": 6,
@@ -2244,8 +2244,8 @@ export default Character1
 // "ammunition_type": null,
 // source: {
 // id: 1,
-// "title": "Core Rulebook",
-// "abbreviation": "CR",
+// title: "Core Rulebook",
+// abbreviation: "CR",
 // code: "PZO1110"
 // },
 // "weapon_qualities": [
@@ -2266,7 +2266,7 @@ export default Character1
 // id: 24,
 // "weapon_id": 78,
 // "hands": "One",
-// "bonus": null
+// bonus: null
 // }
 // ],
 // "attack_type": null,
@@ -2289,7 +2289,7 @@ export default Character1
 // id: 3,
 // name: "Dagger",
 // "category": "Light",
-// "proficiency": "Simple",
+// proficiency: "Simple",
 // "weapon_type": "Melee",
 // "price_in_gp": 2,
 // "damage_dice": 4,
@@ -2309,8 +2309,8 @@ export default Character1
 // "ammunition_type": null,
 // source: {
 // id: 1,
-// "title": "Core Rulebook",
-// "abbreviation": "CR",
+// title: "Core Rulebook",
+// abbreviation: "CR",
 // code: "PZO1110"
 // },
 // "weapon_qualities": [],
@@ -2349,7 +2349,7 @@ export default Character1
 // id: 1,
 // name: "Unarmed",
 // "category": "Unarmed",
-// "proficiency": "Simple",
+// proficiency: "Simple",
 // "weapon_type": "Melee",
 // "price_in_gp": 0,
 // "damage_dice": 3,
@@ -2369,8 +2369,8 @@ export default Character1
 // "ammunition_type": null,
 // source: {
 // id: 1,
-// "title": "Core Rulebook",
-// "abbreviation": "CR",
+// title: "Core Rulebook",
+// abbreviation: "CR",
 // code: "PZO1110"
 // },
 // "weapon_qualities": [
@@ -2404,9 +2404,9 @@ export default Character1
 // "armor": {
 // id: 16,
 // name: "Leaf Armor",
-// "proficiency": "Light",
+// proficiency: "Light",
 // "price_in_gp": 500,
-// "bonus": 3,
+// bonus: 3,
 // "bonus_type": "Armor",
 // "max_dex_bonus": 5,
 // "armor_check_penalty": 0,
@@ -2414,7 +2414,7 @@ export default Character1
 // "spell_30": 30,
 // "spell_20": 20,
 // "weight": 20,
-// "source_id": 16,
+// source_id: 16,
 // description: "Using alchemical compounds, elves or druidic orders treat special leaves for use in crafting armor. These leaves are stitched together in an overlapping pattern to create a leathery armor as strong and deflective as metal counterparts. Leaf armor jerkins, bracers, and leggings have been made through this process.",
 // "don": "1 minute",
 // "don_hastily": "5 rounds",

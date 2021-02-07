@@ -249,3 +249,9 @@ const parseInlineSemantics = (text) => {
 
 	return arr
 }
+
+export const justInitials = string => {
+	let arr = string.split(" ")
+	arr = arr.map(w => w[0].toUpperCase())
+	return arr.join("")
+}

@@ -154,3 +154,16 @@ export const reducedSpeed = (speed) => {
 		default: return speed
 	}
 }
+
+export const characterLevel = character => {
+	let { class_obj: classObj, uniq_klasses: klasses } = character
+	let string = ""
+
+	classObj.forEach(cl => {
+		let klass = klasses.find(kl => kl.id === cl.klass_id)
+		if (string.length > 0){ string += " "}
+		string += klass.name + " " + cl.level
+	})
+
+	return string
+}
