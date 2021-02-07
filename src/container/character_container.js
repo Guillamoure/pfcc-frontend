@@ -1,5 +1,6 @@
 import React from 'react'
 import DetailsBrief from '../components/character_details/details_brief'
+import AbilityScores from '../components/character_details/ability_scores'
 
 import Character1 from '../dummy_data/character1'
 import { settingsAction } from '../utils/action_creator/character'
@@ -30,6 +31,7 @@ const CharacterDetails = props => {
 		return (
 			<>
 				<DetailsBrief character={character}/>
+				<AbilityScores character={character}/>
 			</>
 		)
 	}

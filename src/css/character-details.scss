@@ -13,6 +13,7 @@
 .detailed-layout {
 	grid-template-areas:
 		". . . brief brief brief brief . . ."
+		". ability-scores ability-scores . . . . . . .";
 }
 
 .underline-input-field {
@@ -86,4 +87,11 @@
 	.character-details-details-brief-eyes {
 		grid-area: eyes;
 	}
+}
+
+#character-details-ability-scores {
+	grid-area: ability-scores;
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+	grid-template-rows: repeat(7, 1fr);
 }
