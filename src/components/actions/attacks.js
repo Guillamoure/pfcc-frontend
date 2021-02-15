@@ -47,12 +47,27 @@ const Attacks = props => {
   }
 
   const renderAttacks = () => {
-    let onlyEquippedWeapons = props.character.character_weapons.filter(cw => cw.equipped)
-    let nonUnarmedWeapons = [...onlyEquippedWeapons]
+    // let onlyEquippedWeapons = props.character.character_weapons.filter(cw => cw.equipped)
+		let weapons = []
+		// make a list of only uniquely named items
+		props.character.character_weapons.forEach(cw => {
+			if (cw.masterwork || cw.name) {
+				weapons.push({...cw, count: 1})
+			} else {
+				let existingWeapon = weapons.find(w => w.weapon.name === cw.weapon.name)
+				if (!existingWeapon || existingWeapon.equipped !== cw.equipped){
+					weapons.push({...cw, count: 1})
+				} else {
+					existingWeapon.count++
+				}
+			}
+		})
+    // let nonUnarmedWeapons = [...onlyEquippedWeapons]
+		let nonUnarmedWeapons = [...weapons]
 
 		//HARDCODE
 		if (props.character.name === "Majestik"){
-			onlyEquippedWeapons.push({
+			weapons.push({
 				id: 1001,
 				name: "Harrow Card",
 				description: "",
@@ -78,7 +93,7 @@ const Attacks = props => {
 				}
 			})
 		} else if (props.character.name === "Fire-Roasted Tomatoes"){
-			onlyEquippedWeapons.push({
+			weapons.push({
 				id: 1001,
 				name: "Fire Blast",
 				description: "",
@@ -104,7 +119,7 @@ const Attacks = props => {
 				}
 			})
 		} else if (props.character.name === "Iyugi"){
-			onlyEquippedWeapons.push({
+			weapons.push({
 				id: 1001,
 				name: "Bite",
 				description: "",
@@ -124,7 +139,7 @@ const Attacks = props => {
 					price_in_gp: 0,
 					source: {id: 1001},
 					thrown: true,
-					range: 30,
+					range: 0,
 					proficiency: "Simple",
 					weapon_type: "Melee"
 				}
@@ -133,18 +148,21 @@ const Attacks = props => {
 		//HARDCODE
 
 		// add unarmed attack to end
+		weapons = weapons.filter(cw => cw.weapon.name !== "Unarmed")
     let unarmed = props.character.character_weapons.find(cw => cw.weapon.name === "Unarmed")
-		if (!!unarmed){
+		// if (!!unarmed){
 			// there seems to be a bug on database reset
 			// unarmed is not attached to the character's weapons
 			// unknown if this is in the frontend or backend
-			onlyEquippedWeapons.push(unarmed)
-		}
+			weapons.push(unarmed)
+		// }
 
 
-    let attacks = onlyEquippedWeapons.map(renderTableElement)
+    let attacks = weapons.map(renderTableElement)
     // two weapon fighting
-    if (nonUnarmedWeapons.length > 1 || onlyEquippedWeapons.find(ew => ew.equipped === "Double")){
+		let onlyEquippedWeapons = weapons.filter(cw => cw.equipped)
+
+    if (onlyEquippedWeapons.length > 1 || weapons.find(ew => ew.equipped === "Double")){
       attacks.push(renderTwoWeaponTableElement())
     }
 
@@ -155,13 +173,22 @@ const Attacks = props => {
 
   const renderTableElement = (cw, index) => {
     let name = cw.name !== "" ? cw.name : cw.weapon.name
+		if (cw.count > 1){ name += ` (x${cw.count})`}
     let damageDice = cw.weapon.num_of_dice + "d" + cw.weapon.damage_dice
     let damageType = cw.weapon.damage_type
     let damageDiceSizeChange = null
 
     let action = "standard"
-    let clickAction = () => newRenderDispatch(action, {characterWeapon: cw})
     let buttonName = "Attack"
+		let styling = canCast(action)
+
+		if (cw.equipped === "" && (cw.name !== "Unarmed" && cw.weapon.name !== "Unarmed")){
+			buttonName = "Equip"
+			action = "move"
+			styling = "move"
+		}
+
+		let clickAction = () => newRenderDispatch(action, {characterWeapon: cw, buttonName})
 
     if (cw.weapon.features.find(f => f.loading)){
       let loading = cw.weapon.features.find(f => f.loading)
@@ -191,7 +218,7 @@ const Attacks = props => {
     if (localStorage.computer === "true"){
       return (
         <tr key={index * 3 - 1}>
-          <td><button className={canCast(action)} onClick={clickAction}><strong>{buttonName}</strong></button></td>
+          <td><button className={styling} onClick={clickAction}><strong>{buttonName}</strong></button></td>
           <td>{name}</td>
           <td style={renderNum('abS', null, true)}>{calculateAttackBonuses(cw)}</td>
           <td>{cw.weapon.range ? cw.weapon.range + " ft" : "-"}</td>
@@ -205,7 +232,7 @@ const Attacks = props => {
 
       return (
         <tr key={index * 3 - 1}>
-          <td><button className={canCast(action)} onClick={clickAction}><strong>{buttonName}</strong></button></td>
+          <td><button className={styling} onClick={clickAction}><strong>{buttonName}</strong></button></td>
           <td>{name}</td>
           <td style={renderNum('abS', null, true)}>{calculateAttackBonuses(cw)}</td>
           <td>{renderDamage(cw)}</td>
@@ -221,7 +248,7 @@ const Attacks = props => {
     let rangeAttackBonus = null
 		let options = {}
 
-		if (props.character.name === "Natesse" && (cw.weapon.category === "Light" || cw.weapon.category === "Unarmed" || cw.weapon.name === "Rapier") ){
+		if ((props.character.name === "Natesse" || props.character.name === "Iyugi") && (cw.weapon.category === "Light" || cw.weapon.category === "Unarmed" || cw.weapon.name === "Rapier") ){
 			options.finesse = true
 		}
 
@@ -248,8 +275,10 @@ const Attacks = props => {
 
     // join that array together
 
-		if (cw.weapon.thrown && attackBonuses.length === 2) {
+		if (cw.weapon.thrown && attackBonuses.length === 2 && attackBonuses[0] !== attackBonuses[1]) {
 			return attackBonuses[0] + " (T " + attackBonuses[1] + ")"
+		} else if (attackBonuses[0] === attackBonuses[1]){
+			return attackBonuses[0]
 		}
     return attackBonuses.join(", ")
   }
@@ -467,6 +496,9 @@ const Attacks = props => {
 
       if (details.characterWeapon){
         let cw = details.characterWeapon
+				if (action === "move" && !cw.equipped && details.buttonName === "Equip"){
+					console.log("do something here")
+				}
         if (cw.weapon.category === "Ranged"){
           if ((cw.character_weapon_ammunition_id || cw.improvised_ammunition) && cw.weapon.features.find(f => f.loading?.id)){
             let cwAmmo = props.character.character_weapons.find(cwa => cwa.id === cw.character_weapon_ammunition_id)
@@ -1512,7 +1544,7 @@ const Attacks = props => {
             <tr>
               <th>Action</th>
               <th>Weapon</th>
-              <th>Bonus</th>
+              <th>Attack Bonus</th>
               <th>Range</th>
               <th>Damage</th>
               <th>Critical</th>

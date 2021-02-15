@@ -486,18 +486,16 @@ class Character extends React.Component {
 		        {this.state.character.race && this.state.display === "Character" && <Details character={this.state.character} editModal={this.editModal}/>}
 		        {this.state.character.race && (this.state.display === "Adventure" || this.state.display === "Combat") && <Saves character={this.state.character} display={this.state.display} renderTooltip={this.renderTooltip} mouseOut={this.mouseOut}/>}
 		        {this.state.character.race && (this.state.display === "Adventure" || this.state.display === "Combat") && <HP character={this.state.character} editModal={this.editModal} display={this.state.display}/>}
-		        {this.state.character.race && this.state.display === "Combat" && <AttackBonus character={this.state.character}/>}
-		        {this.state.character.race && this.state.display === "Combat" && <ArmorClass character={this.state.character} size={this.props.character_info.size}/>}
+		        {this.state.character.race && (this.state.display === "Adventure" || this.state.display === "Combat") && <ArmorClass character={this.state.character} size={this.props.character_info.size}/>}
 		        {this.state.character.race && this.state.display === "Adventure" && <Skills character={this.state.character} renderTooltip={this.renderTooltip} mouseOut={this.mouseOut}/>}
-		        {this.state.character.race && this.state.display === "Combat" && <Actions character={this.state.character} editModal={this.editModal} clickOut={this.clickOut} renderTooltip={this.renderTooltip} mouseOut={this.mouseOut}/>}
-		        {this.state.character.race && this.state.display === "Combat" && <Initiative character={this.state.character}/>}
+		        {this.state.character.race && (this.state.display === "Adventure" || this.state.display === "Combat") && <Actions character={this.state.character} editModal={this.editModal} clickOut={this.clickOut} renderTooltip={this.renderTooltip} mouseOut={this.mouseOut}/>}
 		        {this.state.character.race && this.state.display === "Combat" && <TurnActions/>}
 
 		        {/* unfinished, hardcoded features */}
 		        {!!this.state.character && this.state.display === "Combat" && <Points editModal={this.editModal}/>}
 		        {!!this.state.character && this.state.display === "Combat" && <Active activeEffects={this.state.activeEffects} editModal={this.editModal}/>}
 		        {!!this.state.character && this.state.display === "Character" && <Campaign editModal={this.editModal}/>}
-		        {!!this.state.character && this.state.display === "Combat" && <Size/>}
+		        {!!this.state.character && (this.state.display === "Adventure" || this.state.display === "Combat") && <Size/>}
 		        {/* unfinished, hardcoded features */}
 
 

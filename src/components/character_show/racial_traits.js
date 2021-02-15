@@ -4,8 +4,6 @@ import { connect } from 'react-redux'
 import { injectSpellIntoDescription } from '../../utils/fuf'
 import { modalAction } from '../../utils/action_creator/popups'
 
-
-
 class Traits extends React.Component {
 
   state = {

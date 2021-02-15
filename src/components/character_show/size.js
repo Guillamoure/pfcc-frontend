@@ -4,6 +4,10 @@ import { sizeSpaceReach } from '../../utils/calculations/size'
 
 const Size = props => {
 
+	if (!Object.keys(props.character).length){
+		return null
+	}
+
   const size = props.character.race.size
 	let data = sizeSpaceReach(size)
   let space = data[0]

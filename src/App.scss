@@ -35,6 +35,8 @@ $tan: #cfb997;
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   grid-template-rows: repeat(9, 1fr);
+	height: 80vh;
+	// overflow: auto;
 }
 
 .container-6 {
@@ -1046,4 +1048,33 @@ $tan: #cfb997;
 	color: #fff;
 	padding: 0.18em 0.35em;
 	vertical-align: middle;
+}
+
+.dynamic-size {
+	@media (max-width: 1500px){
+		font-size: 13px;
+		width: 110%;
+	}
+	@media (max-width: 1350px){
+		font-size: 12px;
+		width: 120%;
+	}
+	@media (max-width: 1200px){
+		width: 140%;
+	}
+}
+
+.dynamic-size-small {
+	@media (max-width: 1500px){
+		font-size: 12px;
+		width: 110%;
+	}
+	@media (max-width: 1350px){
+		font-size: 11px;
+		width: 120%;
+	}
+	@media (max-width: 1200px){
+		font-size: 10px;
+		width: 140%;
+	}
 }

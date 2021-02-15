@@ -615,7 +615,7 @@ class Skills extends React.Component {
     if (localStorage.computer === "true"){
       return(
         <div id='skills' className='shadow'>
-          <div name="skill list">
+          <div className="dynamic-size" name="skill list">
             {!!this.state.skillset ? this.renderSkillsTable() : null}
           </div>
         </div>

@@ -101,3 +101,16 @@ export const bonusPenaltyAB = (characterObj, characterInfoObj, type) => {
 	if (temp < 0){color = "maroon"}
 	return color
 }
+
+export const combatManuevers = (characterObj, characterInfoObj) => {
+	let obj = {}
+
+	let bab = baseAttackBonus(characterInfoObj.classes, characterObj.uniq_klasses)
+	let str = abilityScoreMod("strength")
+	let dex = abilityScoreMod("dexterity")
+
+	obj.bonus = str + bab
+	obj.defense = 10 + str + dex + bab
+
+	return obj
+}

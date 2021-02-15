@@ -48,10 +48,10 @@
 }
 
 .actions {
-  grid-column-start: 1;
+  grid-column-start: 4;
   grid-column-end: 7;
   grid-row-start: 3;
-  grid-row-end: 8;
+  grid-row-end: 10;
   margin: .5em;
   padding: .2em;
   background-color: rgba(235, 235, 235, 0.95);
@@ -59,7 +59,7 @@
   border-color: #000;
   border-radius: 1em;
   overflow: auto;
-  max-height: 23.75em;
+  height: 100%;
   position: relative;
 }
 
@@ -332,8 +332,8 @@
 }
 
 #size{
-  grid-column-start: 5;
-  grid-column-end: 6;
+  grid-column-start: 3;
+  grid-column-end: 4;
   grid-row-start: 2;
   grid-row-end: 3;
   overflow: auto;

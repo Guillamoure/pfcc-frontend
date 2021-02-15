@@ -7,9 +7,10 @@ class ActionTabs extends React.Component {
   render(){
 
     return(
-      <span className='tab-list'>
+      <span className='tab-list dynamic-size-small'>
         <Tab label="Attacks" renderTabClick={this.props.renderTabClick} activeTab={this.props.activeTab}/>
-        <Tab label="Basics" renderTabClick={this.props.renderTabClick} activeTab={this.props.activeTab}/>
+        <Tab label="Tactics" renderTabClick={this.props.renderTabClick} activeTab={this.props.activeTab}/>
+        <Tab label="Combat Manuevers" renderTabClick={this.props.renderTabClick} activeTab={this.props.activeTab}/>
         <Tab label="Spells" renderTabClick={this.props.renderTabClick} activeTab={this.props.activeTab}/>
         <Tab label="Abilities" renderTabClick={this.props.renderTabClick} activeTab={this.props.activeTab}/>
       </span>
