@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import _ from 'lodash'
 import { isThisActionAvailable } from '../../helper_functions/calculations/round_actions'
 import { abilityScoreMod } from '../../helper_functions/calculations/ability_scores'
-import { calculateFeaturePercentage, remainingUsage, calculateCurrentUsage, isThisFeatureActive } from '../../helper_functions/calculations/feature_usage'
+import { calculateFeaturePercentage, remainingUsage, calculateCurrentUsage, isThisFeatureActive } from '../../utils/calculations/feature_usage'
 import { featureDistribution, doesThisFeatureNeedToBeDistributed } from '../../helper_functions/distributers/features'
 import { patchFetch } from '../../helper_functions/fetches'
 import { locateFeatureAndAbilityFromSource, classLevel, renderDamage, abbreviateDamageType } from '../../helper_functions/fuf'
@@ -144,12 +144,14 @@ class Abilities extends React.Component {
 		if (ability.damages.length){
 			let level = classLevel(ability.klassId)
 
+			console.log(ability)
 
 			let damage = null
 			// find the greatest value without going over the specified level
 			// i.e., if you get a bonus at odd levels, and you are level 12
 			// you will get the level 11 bonus
 			for (let i = 0; i < ability.damages.length; i++) {
+				if (ability.damages[i].applicable_level === null){ continue }
 				if (ability.damages[i].applicable_level <= level){
 					if (i+1 >= ability.damages.length || ability.damages[i+1].applicable_level > level){
 						damage = ability.damages[i]

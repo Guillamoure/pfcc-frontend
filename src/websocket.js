@@ -1,6 +1,6 @@
 const websocket = () => {
   let url = 'ws://websocket:3000'
-  url = 'ws://39243ed998b1.ngrok.io'
+  url = 'ws://676b5243b1b8.ngrok.io/'
   return url
 }
 export default websocket()

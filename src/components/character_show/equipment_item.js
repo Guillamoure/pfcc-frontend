@@ -37,31 +37,45 @@ const EquipmentItem = props => {
 		return null
 	}
 
-	let keyWord = group
-	keyWord = group === 'Wondrous Item' || group === "Potion" ? 'magic_item' : keyWord
 
-	let known = group === 'unknown' ? false : true
-	let actions = known && item[keyWord]?.features ? item[keyWord].features.map(f => f.action ? f.action.name : null) : []
-	let name = known ? item.name || item[keyWord].name : item.false_desc
-	let percentages = known && item[keyWord]?.features ? renderPercentage(item[keyWord]) : null
-	// find feature usage, find limit, and find relevant cmifu, and have a fraction of current usage
-	let mappedActions = remappedActions(actions)
-	let equipped = item.equipped
-	let stored = isThisStored(item, keyWord)
-	let id = item.id
 
 	const renderTitle = () => {
+
+		console.log("specific item in equipment tab", props)
+
+
+		let keyWord = group
+		keyWord = group === 'Wondrous Item' || group === "Potion" || group === "Magic Item"? 'magic_item' : keyWord
+
+		let known = group === 'unknown' ? false : true
+		// debugger
+		let name = known ? item.name || item[keyWord.toLowerCase()].name : item.false_desc
+		let percentages = known && item[keyWord]?.features ? renderPercentage(item[keyWord]) : null
+		// find feature usage, find limit, and find relevant cmifu, and have a fraction of current usage
+		let equipped = item.equipped
+		let stored = isThisStored(item, keyWord)
+		let id = item.id
+
+		// {equipped ? <span className='equipped'>{equipped === true ? "E" : equipped[0]}</span> : null}
+		// {stored ? <span className='equipped'>S</span> : null}
 		return (
-			<>
-				{name}
-				{percentages}
-				{equipped ? <span className='equipped'>{equipped === true ? "E" : equipped[0]}</span> : null}
-				{stored ? <span className='equipped'>S</span> : null}
-			</>
+			<tr key={index*item.id*3-1} onClick={() => props.changeSelectedItem(item.id, group.toLowerCase(), item)}>
+				<td>{name} {percentages}</td>
+				<td>{group}</td>
+				<td>0 lbs</td>
+				<td>0 gp</td>
+			</tr>
 		)
 	}
 
 	const renderAction = () => {
+		let known = group === 'unknown' ? false : true
+		let keyWord = group
+		keyWord = group === 'Wondrous Item' || group === "Potion" ? 'magic_item' : keyWord
+		let actions = known && item[keyWord]?.features ? item[keyWord].features.map(f => f.action ? f.action.name : null) : []
+		let mappedActions = remappedActions(actions)
+		let id = item.id
+
 		return (
 			<>
 				{!!actions.length && mappedActions.map((a, index) => <span key={index*3+1} className={a} style={{borderRadius: '100%', paddingLeft: '8%', margin: '1.5%'}}>{'  '}</span>)}
@@ -71,10 +85,7 @@ const EquipmentItem = props => {
 
 	return (
 		<>
-			<li className='noStyleLi' style={{fontSize: 'smaller'}} key={index*item.id*3-1} onClick={() => props.changeSelectedItem(id, group, item)}>
-				{renderTitle()}
-				{renderAction()}
-			</li>
+			{renderTitle()}
 		</>
 	)
 

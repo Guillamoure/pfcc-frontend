@@ -466,10 +466,10 @@ class Character extends React.Component {
 				this.setState({display: tab})
 			}
 
+			// <CharacterShowTabs activeTab={this.state.display} renderTabClick={renderTabClick}/>
 			return (
 				<div id='character' className='shrink'>
 					{this.state.character.race && <CharacterName character={this.state.character} editModal={this.editModal}/>}
-					<CharacterShowTabs activeTab={this.state.display} renderTabClick={renderTabClick}/>
 					{this.state.character.race && <NotificationDie character={this.state.character} editModal={this.editModal} />}
 				</div>
 			)
@@ -489,7 +489,7 @@ class Character extends React.Component {
 		        {this.state.character.race && (this.state.display === "Adventure" || this.state.display === "Combat") && <ArmorClass character={this.state.character} size={this.props.character_info.size}/>}
 		        {this.state.character.race && this.state.display === "Adventure" && <Skills character={this.state.character} renderTooltip={this.renderTooltip} mouseOut={this.mouseOut}/>}
 		        {this.state.character.race && (this.state.display === "Adventure" || this.state.display === "Combat") && <Actions character={this.state.character} editModal={this.editModal} clickOut={this.clickOut} renderTooltip={this.renderTooltip} mouseOut={this.mouseOut}/>}
-		        {this.state.character.race && this.state.display === "Combat" && <TurnActions/>}
+		        {this.state.character.race && this.state.display === "Adventure" && <TurnActions/>}
 
 		        {/* unfinished, hardcoded features */}
 		        {!!this.state.character && this.state.display === "Combat" && <Points editModal={this.editModal}/>}

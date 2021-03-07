@@ -5,6 +5,7 @@ import { exitModal } from '../dispatch'
 
 import HPChanges from '../components/hp_changes'
 import Armor from '../components/armor_summary'
+import Weapon from '../components/weapon_summary'
 import Points from '../components/modals/points'
 import FeatureUsageOptions from '../components/modals/feature_usage_options'
 import KnownSpellManager from '../components/modals/known_spell_manager'
@@ -64,6 +65,8 @@ const ModalSkeleton = (props) => {
 				return <CurrencyManager />
 			case 'settings':
 				return <Settings />
+			case 'weapon':
+				return <Weapon item={props.modal.obj.weapon} cw={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
       default:
         break
     }

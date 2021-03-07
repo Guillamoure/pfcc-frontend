@@ -21,13 +21,13 @@ export const areYouProficientWithThisArmor = (characterArmor) => {
 	let isProficient = false
 
 	armor.groups.forEach(gr => {
-		if (characterArmor.proficiency === gr.proficiency_group){
+		if (characterArmor.armor.proficiency === gr.proficiency_group){
 			isProficient = true
 		}
 	})
 
 	armor.individualIds.forEach(ii => {
-		if (ii.armor_id === characterArmor.id){
+		if (ii.armor_id === characterArmor.armor.id){
 			if (ii.additive){
 				isProficient = true
 			} else {
@@ -35,6 +35,7 @@ export const areYouProficientWithThisArmor = (characterArmor) => {
 			}
 		}
 	})
+
 
 	return isProficient
 }
@@ -45,7 +46,12 @@ export const currentEquippedCharacterArmor = () => {
 }
 
 export const armorCheckPenalty = () => {
-	return currentEquippedCharacterArmor().armor?.armor_check_penalty || 0
+	let ceca = currentEquippedCharacterArmor()
+	let penalty = ceca.armor?.armor_check_penalty || 0
+	if (penalty < 0 && ceca.masterwork){
+		penalty += 1
+	}
+	return penalty
 }
 
 export const armorCheckPenaltyOnOtherAbilities = () =>{

@@ -1,7 +1,7 @@
 import { mod, pluser } from '../../fuf'
 import { abilityScoreMod } from './ability_scores'
 import { armorCheckPenaltyOnOtherAbilities } from './proficiencies'
-import { sizeMod } from './size'
+import { sizeMod, specialSizeMod } from './size'
 
 export const ab = (characterObj, characterInfoObj, type, options = {}) => {
 	// NEW DATA
@@ -108,9 +108,10 @@ export const combatManuevers = (characterObj, characterInfoObj) => {
 	let bab = baseAttackBonus(characterInfoObj.classes, characterObj.uniq_klasses)
 	let str = abilityScoreMod("strength")
 	let dex = abilityScoreMod("dexterity")
+	let size = specialSizeMod(characterObj.race.size)
 
-	obj.bonus = str + bab
-	obj.defense = 10 + str + dex + bab
+	obj.bonus = str + bab + size
+	obj.defense = 10 + str + dex + bab + size
 
 	return obj
 }

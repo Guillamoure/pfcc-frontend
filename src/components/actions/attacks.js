@@ -150,12 +150,12 @@ const Attacks = props => {
 		// add unarmed attack to end
 		weapons = weapons.filter(cw => cw.weapon.name !== "Unarmed")
     let unarmed = props.character.character_weapons.find(cw => cw.weapon.name === "Unarmed")
-		// if (!!unarmed){
+		if (!!unarmed){
 			// there seems to be a bug on database reset
 			// unarmed is not attached to the character's weapons
 			// unknown if this is in the frontend or backend
 			weapons.push(unarmed)
-		// }
+		}
 
 
     let attacks = weapons.map(renderTableElement)
@@ -266,6 +266,11 @@ const Attacks = props => {
     let proficiencyPenalty = proficiency(cw) ? 0 : -4
 
     bonus = cw.improvised_ammunition ? bonus - 1 : bonus
+		bonus = cw.masterwork ? bonus + 1 : bonus
+
+		if ((props.character.name === "Dink Weatherbyrst" ) && (cw.weapon.name === "Heavy Pick") ){
+			bonus += 1
+		}
     // add everything together
     // use pluser on Each
     // shovel into array

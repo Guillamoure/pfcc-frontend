@@ -6,9 +6,6 @@ import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import { modalAction } from '../../utils/action_creator/popups'
 import _ from 'lodash'
 
-import { calculateWeight, carryingCapacity, calculateLoad } from '../../helper_functions/calculations/character'
-import { abilityScore } from '../../helper_functions/calculations/ability_scores'
-
 
 const Details = props => {
 
@@ -56,47 +53,6 @@ const Details = props => {
     return knownLanguages
   }
 
-	const displayLoad = () => {
-		let weight = calculateWeight(props.character, props.character_info)
-		let cc = carryingCapacity(abilityScore("strength"))
-		let load = calculateLoad(weight, abilityScore("strength"))
-		return (
-			<>
-				<li><strong>Carrying</strong>: {weight} lbs (<em>{load} Load</em>)</li>
-				<table>
-					<thead>
-						<tr>
-							<th style={{textAlign: "center", borderRight: "1px solid black"}}>Light</th>
-							<th style={{textAlign: "center", borderRight: "1px solid black"}}>Medium</th>
-							<th style={{textAlign: "center"}}>Heavy</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td style={{borderRight: "1px solid black"}}>{cc[0]} lbs or less</td>
-							<td style={{borderRight: "1px solid black"}}>{cc[0]+1} - {cc[1]} lbs</td>
-							<td>{cc[1]+1} - {cc[2]} lbs</td>
-						</tr>
-					</tbody>
-				</table>
-			</>
-		)
-	}
-
-	const displayCurrency = () => {
-		let { pp, gp, sp, cp } = props.character
-		let totalGP = (pp*10) + (gp) + (sp*0.1) + (cp*0.01)
-		return (
-			<>
-				<li><strong>Money</strong>: {totalGP.toFixed(2)} gp</li>
-        <p>
-          {pp} pp | {gp} gp | {sp} sp | {cp} cp
-          <button onClick={() => modalAction("currency")}>Manage</button>
-        </p>
-			</>
-		)
-	}
-
 	const renderDisplayDescription = () => {
 		const { displayDescriptions } = props.character_info
 
@@ -139,8 +95,6 @@ const Details = props => {
 				<div className='header'>Statistics</div>
 					<div className='nested'>
 						{renderDisplayDescription()}
-						{displayLoad()}
-						{displayCurrency()}
 					</div>
       </>
     )

@@ -3,6 +3,9 @@ import _ from 'lodash'
 import { connect } from 'react-redux'
 import localhost from '../../localhost'
 import { modalAction } from '../../utils/action_creator/popups'
+import { calculateWeight, carryingCapacity, calculateLoad } from '../../utils/calculations/character'
+import { abilityScore } from '../../utils/calculations/ability_scores'
+
 
 import MagicItemSummary from '../magic_item_summary'
 import EquipmentItem from './equipment_item'
@@ -24,8 +27,8 @@ class Equipment extends React.Component {
     }
   }
 
-  changeSelectedItem = (cmiID, detail, obj) => {
-    if (this.props.cmidId === cmiID) {
+  changeSelectedItem = (itemID, detail, obj) => {
+    if (this.props.cmidId === itemID) {
       this.props.exitModal()
       // this.setState({itemObject: null})
     } else {
@@ -33,12 +36,14 @@ class Equipment extends React.Component {
       changingState = detail === 'weapon' ? 'weapon' : changingState
       changingState = detail === 'armor' ? 'armor' : changingState
 			changingState = ["unknown", "weapon", "armor", "harrow", "magic item", "Wondrous Item"].includes(detail) ? changingState : "item"
-      this.props.editModal(changingState, null, cmiID)
-      if (detail === 'armor'){
-        this.props.dispatch({type: "MODAL", detail: "armor", obj: obj})
-      } else if (changingState === "item"){
-				modalAction("item", obj)
-			}
+			modalAction(changingState, obj)
+			// debugger
+      // this.props.editModal(changingState, null, itemID)
+      // if (detail === 'armor'){
+      //   modalAction("armor", obj)
+      // } else if (changingState === "item"){
+			// 	modalAction("item", obj)
+			// }
       // this.setState({itemObject: obj, descriptionAvailable: false})
     }
   }
@@ -123,12 +128,104 @@ class Equipment extends React.Component {
     // })
   }
 
+	renderEquipmentList = () => {
+		let items = []
+
+		let cmis = this.props.character.character_magic_items.filter(cmi => cmi.discovered)
+		let cws = this.props.character.character_weapons.filter(cw => cw.discovered)
+		let cas = this.props.character.character_armors.filter(cw => cw.discovered)
+
+		cmis.forEach(cmi => {
+			items.push({...cmi, category: "Magic Item"})
+		})
+
+		cws.forEach(cw => {
+			if (cw.weapon.name !== "Unarmed"){
+				items.push({...cw, category: "Weapon"})
+			}
+		})
+
+		cas.forEach(ca => {
+			items.push({...ca, category: "Armor"})
+		})
+
+		items = [...items, ...this.props.character.items]
+
+		let itemRows = items.map((item, idx) => {
+			return <EquipmentItem item={item} index={idx} group={item.category} changeSelectedItem={this.changeSelectedItem}/>
+		})
+
+		return (
+			<table>
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Category</th>
+						<th>Weight</th>
+						<th>Cost</th>
+					</tr>
+				</thead>
+				<tbody>
+					{itemRows}
+				</tbody>
+			</table>
+		)
+	}
+
+
+	renderCurrency = () => {
+		let { pp, gp, sp, cp } = this.props.character
+		let totalGP = (pp*10) + (gp) + (sp*0.1) + (cp*0.01)
+		return (
+			<header style={{display: "flex", justifyContent: "space-between"}}>
+				<span>
+					<strong>Money</strong>: {totalGP.toFixed(2)} gp <small><em>({pp ?? 0} pp, {gp ?? 0} gp, {sp ?? 0} sp, {cp ?? 0} cp)</em></small>
+        </span>
+        <button onClick={() => modalAction("currency")}>Manage</button>
+			</header>
+		)
+	}
+
+	renderCarryWeight = () => {
+		let weight = calculateWeight(this.props.character, this.props.character_info)
+		let cc = carryingCapacity(abilityScore("strength"))
+		let load = calculateLoad(weight, abilityScore("strength"))
+		return (
+			<footer style={{display: "flex", justifyContent: "space-between", position: "sticky", bottom: "-5px", backgroundColor: "rgba(235, 235, 235, 0.95)", padding: "5px"}}>
+				<div>
+					<strong>Carrying</strong>: {weight} lbs (<em>{load} Load</em>)
+				</div>
+				<table>
+					<thead>
+						<tr>
+							<th style={{textAlign: "center", borderRight: "1px solid black"}}>Light</th>
+							<th style={{textAlign: "center", borderRight: "1px solid black"}}>Medium</th>
+							<th style={{textAlign: "center"}}>Heavy</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td style={{borderRight: "1px solid black"}}>{cc[0]} lbs or less</td>
+							<td style={{borderRight: "1px solid black"}}>{cc[0]+1} - {cc[1]} lbs</td>
+							<td>{cc[1]+1} - {cc[2]} lbs</td>
+						</tr>
+					</tbody>
+				</table>
+			</footer>
+		)
+	}
+
+
 
   render(){
     return(
-      <div style={{padding: '1em', display: 'grid', gridTemplateColumns: '40% 60%'}} className={localStorage.computer === "false" ? 'mobile-tab-selected-tab-container mobile-tab-bottom shadow' : 'none'}>
-        {this.renderEquipment()}
-      </div>
+			<>
+				{this.renderCurrency()}
+		    <div style={{padding: '1em', display: 'grid', gridTemplateColumns: '40% 60%'}} className={localStorage.computer === "false" ? 'mobile-tab-selected-tab-container mobile-tab-bottom shadow' : 'none'}>
+		      {this.renderEquipmentList()}
+		    </div>
+				{this.renderCarryWeight()}
+			</>
     )
   }
 }

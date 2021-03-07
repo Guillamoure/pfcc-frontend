@@ -111,7 +111,8 @@ export const armorClassTotal = () => {
 
 	// FLAT FOOTED ARMOR CLASS
 	let flatFootedModifiers = acModifiers.filter(m => {
-		return (m.bonus !== "dex" && m.bonus !== "dodge")
+		if (m.bonus === "dex" && m.mod < 0){return true}
+		return ((m.bonus !== "dex") && m.bonus !== "dodge")
 	})
 	ac.flatFooted += _.sum(flatFootedModifiers.map(m => m.mod))
 

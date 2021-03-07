@@ -31,6 +31,12 @@ export const calculateMaxUsage = (usage, klassId) => {
 	points += usage.base_limit
 	if (usage.base_limit_modifier){points += mod(abilityScores[usage.base_limit_modifier])}
 	if (classLvl > 1){points += (usage.limit_increase_per_level * (classLvl - 1))}
+	
+	// if a feature has a float for its limit_increase_per_level, and the base_limit is 0, its probably not nothing at the 1st level, but the same as the limit_increase_per_level
+	if (usage.base_limit === 0 && usage.limit_increase_per_level < 1){points += usage.limit_increase_per_level}
+
+	// round down points
+	points = Math.floor(points)
 
 	return points
 }

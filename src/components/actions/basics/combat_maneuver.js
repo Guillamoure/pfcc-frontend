@@ -1,10 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { pluser } from '../../../utils/fuf'
+import { baseAttackBonus, pluserAB, combatManuevers } from '../../../utils/calculations/attack_bonus'
 
 const CombatManeuver = props => {
 
   const swinging = props.character.name === 'Robby' ? ', Swinging Reposition' : null
-  const hc = props.character_info.hardcode
+  const hc = props.characterInfo.hardcode
   const name = props.character.name
   const largeMorph = ['Bull - Major', 'Condor - Major', 'Frog - Major', 'Squid - Major', 'Chameleon - Major'].includes(hc.major)
   let rage = hc.rage
@@ -16,13 +18,13 @@ const CombatManeuver = props => {
   const reducer = hc.reduce
   const activeMutagen = hc.activeMutagen ? hc.mutagen : false
 
-  const actions = props.character_info.actions
+  const actions = props.characterInfo.actions
 
 
 
   const bab = () => {
     let bab = 0
-    props.character_info.classes.forEach(cl => {
+    props.characterInfo.classes.forEach(cl => {
       const klass = props.classes.find(c => c.id === cl.id)
       bab += (cl.level * renderBAB(klass.hit_die))
     })
@@ -30,7 +32,7 @@ const CombatManeuver = props => {
   }
 
   const str = () => {
-    let mod = Math.floor( ( props.character_info.ability_scores.strength - 10 ) / 2)
+    let mod = Math.floor( ( props.characterInfo.ability_scores.strength - 10 ) / 2)
     mod += !!largeMorph ? 2 : 0
     mod += !!bullMinor ? 1 : 0
 
@@ -39,7 +41,7 @@ const CombatManeuver = props => {
   }
 
   const dex = () => {
-    let mod = Math.floor( ( props.character_info.ability_scores.dexterity - 10 ) / 2)
+    let mod = Math.floor( ( props.characterInfo.ability_scores.dexterity - 10 ) / 2)
     mod += !!largeMorph ? -1 : 0
     mod += name === 'Cedrick' ? 1 : 0
     mod += enlarger ? -1 : 0
@@ -65,7 +67,7 @@ const CombatManeuver = props => {
   }
 
   const size = () => {
-    let size = props.character_info.size
+    let size = props.characterInfo.size
     switch(size){
       case "Fine":
         return -8;
@@ -128,6 +130,10 @@ const CombatManeuver = props => {
     }
   }
 
+	const cms = combatManuevers(props.character, props.characterInfo)
+	let cmb = pluser(cms.bonus)
+	let cmd = cms.defense
+
   const calcCMB = (name, style, cmd) => {
     let ab = bab() + str() + size()
 
@@ -158,23 +164,33 @@ const CombatManeuver = props => {
     }
   }
 
+	// combat manuevers: tip, disarm, sunder, grapple, dirty trick, pin, overrun, steal, reposition, drag
+
   const renderCombatManeuvers = () => {
     let maneuvers = [
-      {
-        id: 100,
-        name: 'Bull Rush',
-        action: 'standard',
-        description: 'Move target 5 ft back, +5 ft for every 5 you beat their CMD',
-        button: 'Rush'
-      }
+      {id: 100, name: 'Bull Rush', action: 'standard', description: 'Move target 5 ft back, +5 ft for every 5 you beat their CMD.', button: 'Rush'},
+			{id: 101, name: "Dirty Trick", action: 'standard', description: "Impose condition (blinded, dazzled, deafened, entangled, shaken, sickened) for 1 round, +1 round for every 5 you beat their CMD. Condition can be removed with move action.", button: "Pocket Sand"},
+			{id: 102, name: "Disarm", action: 'standard', description: "Remove 1 item from target, beat CMD by 10, remove both items. Can automatically pick up disarmed weapon. Fail by 10, drop your weapon. If unarmed, -4 penalty to CMB.", button: "Disarm"},
+			{id: 103, name: "Drag", action: 'standard', description: "Drag in straight line. Move you and target 5 ft, +5 ft for every 5 you beat their CMD. Must be able to move with target.", button: "Drag"},
+			{id: 104, name: "Grapple", action: 'standard', description: "You and target have Grappled condition. Must make check to maintain each round. Use two hands or -4 penalty to CMB", button: "Grab"},
+			{id: 105, name: "Grapple (Move)", action: 'standard', description: "If target is grappled, move up to half your speed with target.", button: "Move"},
+			{id: 106, name: "Grapple (Damage)", action: 'standard', description: "If target is grappled, attack with unarmed, natural attack, or light/one-handed weapon.", button: "Attack"},
+			{id: 107, name: "Grapple (Pin)", action: 'standard', description: "If target is grappled, give target Pinned condition.", button: "Pin"},
+			{id: 108, name: "Grapple (Tie Up)", action: 'standard', description: "If target is pinned, tie up target. DC to escape is 20 + your CMB. If target is grappled, -10 penalty to CMB.", button: "Wrangle"},
+			{id: 109, name: "Grapple (Break)", action: 'standard', description: "If you are grappled, CMB/Acrobatics check against CMD. If succeed, can escape or become grappler.", button: "Reversal"},
+			{id: 110, name: "Overrun", action: 'standard', description: "As part of Charge, move through enemy square. They can choose to let you pass. If beat their CMD by 5, knock them prone.", button: "Charge"},
+			{id: 111, name: "Reposition", action: 'standard', description: "Move target 5ft from their position, within your reach, except for final 5 ft. +5 ft for every 5 your beat their CMD.", button: "Shift"},
+			{id: 112, name: "Steal", action: 'standard', description: "Choose item to take, +5 to their CMD if item is fastened, cannot take worn/wielded items.", button: "Thieve"},
+			{id: 113, name: "Sunder", action: 'standard', description: "Attack an item held/worn by target. Deal damage, can choose not to destroy the item.", button: "Smash"},
+			{id: 114, name: "Trip", action: 'standard', description: "Knock target prone. If you fail by 10, you are knocked prone.", button: "Trip"},
     ]
     return maneuvers.map((m, idx) => {
       return (
         <tr>
           <td><button className={actions[m.action] ? 'cannot-cast' : m.action} onClick={() => renderDispatch(m.action)}>{m.button}</button></td>
           <td>{m.name}</td>
-          <td style={calcCMB(m.name, true)}>{calcCMB(m.name)}</td>
-          <td style={calcCMD(m.name, true)}>{calcCMD(m.name)}</td>
+          <td>{cmb}</td>
+          <td>{cmd}</td>
           <td>{m.description}</td>
         </tr>
       )
@@ -189,12 +205,6 @@ const CombatManeuver = props => {
     } else if (!action === 'free'){
       props.dispatch({type: 'TRIGGER ACTION', action})
     }
-  }
-
-  const baselines = () => {
-    return (
-      <div style={{paddingLeft: '2.5%'}}><strong>CMB</strong> <span style={calcCMB(null, true)}>{calcCMB()}</span> || <strong>CMD</strong> <span style={calcCMD(null, true)}>{calcCMD()}</span> </div>
-    )
   }
 
   const cm = () => {
@@ -219,7 +229,6 @@ const CombatManeuver = props => {
 
   return (
     <React.Fragment>
-      {baselines()}
       {cm()}
     </React.Fragment>
   )
@@ -228,7 +237,7 @@ const CombatManeuver = props => {
 const mapStatetoProps = (state) => {
   return {
     character: state.character,
-    character_info: state.character_info,
+    characterInfo: state.character_info,
     classes: state.classes
   }
 }

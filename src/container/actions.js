@@ -7,6 +7,7 @@ import Abilities from '../components/actions/abilities'
 import Attacks from '../components/actions/attacks'
 import Basics from '../components/actions/basics'
 import Equipment from '../components/actions/equipment'
+import CombatManuevers from '../components/actions/basics/combat_maneuver'
 import Misc from '../components/actions/misc'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -139,7 +140,7 @@ class Actions extends React.Component {
 						{this.renderAttackDetails()}
 	          {this.state.activeTab === "Attacks" && <Attacks editModal={this.props.editModal} renderTooltip={this.props.renderTooltip} mouseOut={this.props.mouseOut}/>}
 	          {this.state.activeTab === "Tactics" && <Basics renderTooltip={this.props.renderTooltip} mouseOut={this.props.mouseOut}/>}
-	          {this.state.activeTab === "Combat Maeneuvers" && null}
+	          {this.state.activeTab === "Combat Manuevers" && <CombatManuevers />}
 	          {this.state.activeTab === "Spells" && <Spellcasting />}
 	          {this.state.activeTab === "Abilities" && <Abilities editModal={this.props.editModal}/>}
           </div>

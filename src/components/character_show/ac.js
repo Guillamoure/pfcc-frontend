@@ -146,7 +146,7 @@ const ArmorClass = props => {
       case 't':
         return (10 + dexMod() + renderSize() + dodge() + deflection() + raging + charging + cleave + cedrick + enlarge + reduce + dodgingPanache + quick + stealTime)
       case 'ff':
-        return (10 + renderSize() + armorBonus() + natural() + deflection() + raging + charging + cleave + cedrick + enlarge + reduce + dodgingPanache + quick + stealTime)
+        return (10 + (dexMod() > 0 ? 0 : dexMod()) + renderSize() + armorBonus() + natural() + deflection() + raging + charging + cleave + cedrick + enlarge + reduce + dodgingPanache + quick + stealTime)
       default:
         return 10
     }

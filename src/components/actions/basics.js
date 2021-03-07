@@ -88,22 +88,6 @@ const Basics = props => {
     }
   }
 
-  const calcCMB = (cm) => {
-    let bab = 0
-    props.character_info.classes.forEach(cl => {
-      const klass = props.classes.find(c => c.id === cl.id)
-      bab += (cl.level * renderBAB(klass.hit_die))
-    })
-    const str = Math.floor( ( props.character_info.ability_scores.strength - 10 ) / 2)
-    const size = renderSize(props.character.race.size)
-    let ab = bab + str + size
-    if (props.character.name === 'Cedrick' && cm === 'bull rush'){
-      ab += 2
-    }
-    ab = Math.floor(ab)
-    return ab >= 0 ? `+${ab}` : ab
-  }
-
   const swinging = props.character.name === 'Robby' ? ', Swinging Reposition' : null
 
   const renderBAB = (hd) => {
@@ -214,33 +198,23 @@ const Basics = props => {
             <td>Charge</td>
             <td>Move up to {speed * 2} ft, make Attack. +2 to attack, -2 to AC{swinging}</td>
           </tr>
+          <tr>
+            <td><button className={canCast('standard')} onClick={() => renderDispatch('standard', 'total defense')}><strong>Defend</strong></button></td>
+            <td>Total Defense</td>
+            <td>+4 dodge bonus to AC, cannot AoO/fight defensively/use Combat Expertise</td>
+          </tr>
+          <tr>
+            <td><button className={canCast('full')} onClick={() => renderDispatch('full', 'withdraw')}><strong>Flee</strong></button></td>
+            <td>Withdraw</td>
+            <td>Move up to {speed * 2} ft, you cannot be hit by AoO from your current square by visible enemies</td>
+          </tr>
         </tbody>
       </table>
     )
   }
 
-  const cm = () => {
-    return (
-      <table>
-        <thead>
-          <tr>
-            <th>Action</th>
-            <th>Name</th>
-            <th>Bonus</th>
-            <th>Effect</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><button className={canCast('standard')} onClick={() => renderDispatch('standard')}><strong>Attack</strong></button></td>
-            <td>Bull Rush</td>
-            <td>{calcCMB('bull rush')}</td>
-            <td>Move target 5 ft back, +5 ft for every 5 you beat their CMD{swinging}</td>
-          </tr>
-        </tbody>
-      </table>
-    )
-  }
+	// aid another, coup de grace, feint, delay, ready, standup
+	// notes: cover, concealment, two weapon fighting, flanking, helpless defenders,
 
   const alternateMove = (type, speed) => {
     let fast = speed * 4
@@ -300,7 +274,6 @@ const Basics = props => {
       {/* mvmt() */}
       <Movement renderTooltip={props.renderTooltip} mouseOut={props.mouseOut}/>
       {fight()}
-      <CombatManeuver renderTooltip={props.renderTooltip} mouseOut={props.mouseOut}/>
     </section>
   )
 }
