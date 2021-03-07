@@ -22,6 +22,7 @@ import HarrowDeck from '../components/modals/harrow'
 import ItemDescription from '../components/modals/item_description'
 import CurrencyManager from '../components/modals/currency_manager'
 import Settings from '../components/modals/settings'
+import FamiliarDescription from '../components/modals/familiar_description'
 
 const ModalSkeleton = (props) => {
 
@@ -67,6 +68,8 @@ const ModalSkeleton = (props) => {
 				return <Settings />
 			case 'weapon':
 				return <Weapon item={props.modal.obj.weapon} cw={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
+			case "familiar":
+				return <FamiliarDescription familiar={props.modal.obj}/>
       default:
         break
     }
