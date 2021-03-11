@@ -1,7 +1,10 @@
 import React from 'react'
 import Portal from '../portal'
 import { connect } from 'react-redux'
-import { exitModal } from '../dispatch'
+import { modalAction } from '../utils/action_creator/popups'
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons'
 
 import HPChanges from '../components/hp_changes'
 import Armor from '../components/armor_summary'
@@ -33,33 +36,33 @@ const ModalSkeleton = (props) => {
       case 'hitPoints':
         return <HPChanges exitModal={exitModal} editModal={props.editModal} clickOut={clickOut} renderEdit={props.renderEdit}/>
       case 'armor':
-        return <Armor characterArmor={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
+        return <Armor characterArmor={modal.obj} exitModal={exitModal} clickOut={clickOut}/>
       case 'adjust points':
-        return <Points feature={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
+        return <Points feature={modal.obj} exitModal={exitModal} clickOut={clickOut}/>
 			case 'featureUsageOptions':
-				return <FeatureUsageOptions feature={props.modal.obj} exitModal={exitModal} clickOut={clickOut} />
+				return <FeatureUsageOptions feature={modal.obj} exitModal={exitModal} clickOut={clickOut} />
 			case 'manageKnownSpells':
-				return <KnownSpellManager spellcastingData={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
+				return <KnownSpellManager spellcastingData={modal.obj} exitModal={exitModal} clickOut={clickOut}/>
 			case 'spellDescription':
-				return <SpellDescription spell={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
+				return <SpellDescription spell={modal.obj} exitModal={exitModal} clickOut={clickOut}/>
 			case 'managePreparedSpells':
-				return <PreparedSpellManager spellcastingData={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
+				return <PreparedSpellManager spellcastingData={modal.obj} exitModal={exitModal} clickOut={clickOut}/>
 			case 'characterChoice':
-				return <CharacterChoice choiceObj={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
+				return <CharacterChoice choiceObj={modal.obj} exitModal={exitModal} clickOut={clickOut}/>
 			case 'spontaneousCasting':
-				return <SpontaneousCasting feature={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
+				return <SpontaneousCasting feature={modal.obj} exitModal={exitModal} clickOut={clickOut}/>
 			case 'klassSpecialization':
-				return <KlassSpecialization klassFeature={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
+				return <KlassSpecialization klassFeature={modal.obj} exitModal={exitModal} clickOut={clickOut}/>
 			case 'manageBonusSpellSlots':
-				return <BonusSpellSlotManager spellcastingData={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
+				return <BonusSpellSlotManager spellcastingData={modal.obj} exitModal={exitModal} clickOut={clickOut}/>
 			case 'feat':
-				return <Feat feat={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
+				return <Feat feat={modal.obj} exitModal={exitModal} clickOut={clickOut}/>
 			case 'statBlock':
-				return <CreatureStatBlock creature={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
+				return <CreatureStatBlock creature={modal.obj} exitModal={exitModal} clickOut={clickOut}/>
 			case 'skill':
-				return <SkillDescription skillId={props.modal.obj} />
+				return <SkillDescription skillId={modal.obj} />
 			case 'item':
-				return <ItemDescription item={props.modal.obj} />
+				return <ItemDescription item={modal.obj} />
 			case 'harrow':
 				return <HarrowDeck />
 			case 'currency':
@@ -67,9 +70,9 @@ const ModalSkeleton = (props) => {
 			case 'settings':
 				return <Settings />
 			case 'weapon':
-				return <Weapon item={props.modal.obj.weapon} cw={props.modal.obj} exitModal={exitModal} clickOut={clickOut}/>
+				return <Weapon item={modal.obj.weapon} cw={modal.obj} exitModal={exitModal} clickOut={clickOut}/>
 			case "familiar":
-				return <FamiliarDescription familiar={props.modal.obj}/>
+				return <FamiliarDescription familiar={modal.obj}/>
       default:
         break
     }
@@ -81,19 +84,123 @@ const ModalSkeleton = (props) => {
     }
   }
 
-  const exitModal = () => {
-    props.dispatch(props.exitModal())
+  const exitModal = (index) => {
+    modalAction(null, null, {remove: true, indexToRemove: index})
   }
+	//
+  // return (
+  //   <Portal>
+  //     <div className="page-dimmer" onClick={clickOut}>
+  //       <div className="edit-form" name="background">
+  //         {renderComponent(props.modal)}
+  //       </div>
+  //     </div>
+  //   </Portal>
+  // )
 
-  return (
-    <Portal>
-      <div className="page-dimmer" onClick={clickOut}>
-        <div className="edit-form" name="background">
-          {renderComponent(props.modal)}
-        </div>
-      </div>
-    </Portal>
-  )
+	// const [isThisBeingRemoved, setRemoval] = React.useState('slide-in')
+	// const [isThisBeingRemovedTab, setRemovalTab] = React.useState('slide-in-folder-tab')
+	// const [style, setStyle] = React.useState(null)
+	const [exitStyle, setExitStyle] = React.useState(null)
+	const [activeIndex, setActiveIndex] = React.useState(0)
+	const [collapsed, toggleCollapsed] = React.useState(false)
+	const sidebarContainer = React.useRef(null)
+
+	React.useEffect(() => {
+		console.log(sidebarContainer)
+		if (sidebarContainer.current){
+			let tabStyleDuplicate = {...exitStyle}
+			tabStyleDuplicate.width = `${window.innerWidth / 11}px`
+			setExitStyle(tabStyleDuplicate)
+		}
+	}, [sidebarContainer])
+
+
+	if (!exitStyle){
+		// setStyle({width: '98%', height: '50%', bottom: '0px', zIndex: '1', overflowY: "scroll"})
+		// setExitStyle({zIndex: '2', bottom: `${window.innerHeight/2 + 1}px`, width: '20%', textAlign: 'center', borderBottom: 'none', left: '10%'})
+		setExitStyle({bottom: `${window.innerHeight/2 - 4}px`})
+	}
+
+	const exiting = (e, index) => {
+		e.preventDefault()
+		// setRemoval('slide-out')
+		// setRemovalTab('slide-out-folder-tab')
+		// setTimeout(() => setStyle({display: 'none'}), 775)
+		// setTimeout(() => setExitStyle({display: 'none'}), 775)
+		// setTimeout(() => exitModal(index), 800)
+		let newIndex
+		if (index === activeIndex){
+			if (index === 0 || (index > 0 && index < props.modal.length)){
+				newIndex = index
+			} else if (props.modal.length - 1 === index){
+				newIndex = index -1
+			}
+		} else if (index > activeIndex) {
+			newIndex = activeIndex
+		} else if (index < activeIndex){
+			newIndex = activeIndex - 1
+		}
+		setActiveIndex(newIndex)
+		exitModal(index)
+	}
+	const updateActiveIndex = i => {
+		if (i !== activeIndex){
+			setActiveIndex(i)
+		}
+		if (collapsed){
+			toggleCollapsed(false)
+		}
+	}
+
+	const updateToggleButton = i => {
+		if (!collapsed){
+			toggleCollapsed(true)
+		} else {
+			updateActiveIndex(i)
+		}
+	}
+
+
+	const displayAllTabs = () => {
+		return props.modal.map((m, i) => {
+			console.log(m)
+			let name = m.name || m.obj?.name || `Tab ${i+1}`
+			let tabStyle = {...exitStyle}
+			if (sidebarContainer.current){
+				// tabStyle.left = `${( i * Math.floor(sidebarContainer.current.clientWidth / 5) ) + (sidebarContainer.current.offsetLeft) + parseInt(window.getComputedStyle(sidebarContainer.current).getPropertyValue('padding-left'))}px`
+				let wiff = window.innerWidth
+				tabStyle.left = `${(i * wiff/11) + (wiff * 0.03)}px`
+			}
+			if (i !== activeIndex){
+				tabStyle.backgroundColor = "lightgrey"
+				tabStyle.borderBottom = "2px solid black"
+			}
+			if (collapsed){
+				tabStyle.bottom = "0px"
+			}
+			let cancelButton = <button onClick={(e) => exiting(e, i)}>X</button>
+			let toggleButton = <button onClick={() => updateToggleButton(i)}><FontAwesomeIcon icon={collapsed ? faChevronUp : faChevronDown}/></button>
+			return (
+				<>
+					<div id="sidebar-exit" style={tabStyle}><span className="underline-hover" onClick={() => updateActiveIndex(i)}>{name}</span><span>{toggleButton}{cancelButton}</span></div>
+					{i === activeIndex && renderComponent(m)}
+				</>
+			)
+		})
+	}
+
+	const collapsedStyle = () => {
+		if (collapsed){
+			return {height: "0px", padding: "0px", border: "0px", margin: "0px"}
+		} else {return {}}
+	}
+
+	return (
+		<aside id="sidebar" ref={sidebarContainer} style={collapsedStyle()}>
+			{displayAllTabs()}
+		</aside>
+	)
 
 }
 
@@ -105,7 +212,6 @@ const mapStatetoProps = (state) => {
 
 const mapDispatchtoProps = dispatch => {
   return {
-    exitModal,
     dispatch
   }
 }

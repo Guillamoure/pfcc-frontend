@@ -131,4 +131,4 @@ export function reloadAmmo(characterWeapon, magazine){
   }
 }
 
-export const exitModal = () => ({type: "MODAL", remove: true})
+export const exitModal = (index) => ({type: "MODAL", remove: true, indexToRemove: index})

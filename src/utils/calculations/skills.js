@@ -178,7 +178,7 @@ export const renderSkillName = skillObj => {
 	}
 
 
-	return <><span className="underline-hover" style={{color: "black"}} onClick={() => modalAction("skill", skillObj.id)}>{name}</span>{hasACP}{asterisk}</>
+	return <><span className="underline-hover" style={{color: "black"}} onClick={() => modalAction("skill", skillObj.id, {name})}>{name}</span>{hasACP}{asterisk}</>
 }
 
 export const addCustomSkills = (css, skills) => {

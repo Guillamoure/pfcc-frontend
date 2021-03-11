@@ -33,7 +33,7 @@ const initialState = {
   spells: [],
 	skills: [],
   tooltip: {},
-  modal: {},
+  modal: [],
 	websocket: {},
 	notifications: [],
 	storedNotifications: [],
@@ -486,10 +486,15 @@ const reducer = (state = initialState, action) => {
       }
       return {...state, tooltip}
     case 'MODAL':
-      let modal = {detail: action.detail, obj: action.obj}
-      if (action.remove){
-        modal = {}
-      }
+      let modal = [...state.modal]
+      if (action.options?.remove ?? false){
+        modal.splice(action.options.indexToRemove, 1)
+      } else {
+				if (modal.length === 5){
+					modal.pop()
+				}
+				modal.push({detail: action.detail, obj: action.obj, name: action.options?.name || action.obj?.name || null})
+			}
       return {...state, modal}
     case "CHANGE AMMO":
       var characterWeapons = [...state.character.character_weapons].map(cw => {

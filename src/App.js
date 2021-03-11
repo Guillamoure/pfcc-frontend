@@ -75,7 +75,7 @@ class App extends React.Component {
           <React.Fragment>
             <NavBar />
             {this.props.tooltip.message && <Tooltip />}
-            {this.props.modal.detail && <ModalSkeleton />}
+            {!!this.props.modal.length && <ModalSkeleton />}
             {!!this.props.notifications.length && <Notifications />}
             <Switch>
               <Route exact path="/" component={Home} />

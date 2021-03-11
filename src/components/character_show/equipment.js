@@ -36,7 +36,7 @@ class Equipment extends React.Component {
       changingState = detail === 'weapon' ? 'weapon' : changingState
       changingState = detail === 'armor' ? 'armor' : changingState
 			changingState = ["unknown", "weapon", "armor", "harrow", "magic item", "Wondrous Item"].includes(detail) ? changingState : "item"
-			modalAction(changingState, obj)
+			modalAction(changingState, obj, {name: obj.name || obj.weapon?.name || obj.armor?.name || null})
 			// debugger
       // this.props.editModal(changingState, null, itemID)
       // if (detail === 'armor'){
