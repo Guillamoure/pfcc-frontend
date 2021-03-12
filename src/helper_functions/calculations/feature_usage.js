@@ -9,20 +9,29 @@ import { locateFeatureFromSource } from '../fuf'
 export const calculateFeaturePercentage = feature => {
 	if (!feature.usage){return null}
 	// CALCULATED DATA
-	let maxUsage = calculateMaxUsage(feature.baseFeatureAndAbility?.feature.usage ?? feature.usage, feature.klassId)
+	let maxUsage = calculateMaxUsage(feature.baseFeatureAndAbility?.feature.usage ?? feature.usage, feature.klassId, {klassArchetypeId: feature.klass_archetype_id})
 	let timesUsed = calculateCurrentUsage(feature.usageSources)
 
 	return `${maxUsage - timesUsed}/${maxUsage}`
 }
 
-export const calculateMaxUsage = (usage, klassId) => {
+export const calculateMaxUsage = (usage, klassId, options) => {
 	// NEW DATA
 	let points = 0
 
 	// STORED DATA
 	let reduxState = store.getState()
 	let abilityScores = reduxState.character_info.ability_scores
-	let classLvl = reduxState.character_info.classes.find(cl => cl.id === klassId).level
+
+	let classLvl = reduxState.character_info.classes.find(cl => {
+		if (klassId){
+			return cl.id === klassId
+		} else if (options.klassArchetypeId){
+			let arch = reduxState.character.archetypes.find(ar => ar.id === options.klassArchetypeId)
+			return cl.id === arch.klass_id
+
+		}
+	}).level
 
 	// if it has a static limit, return that
 	if (usage.limit){return usage.limit}
@@ -31,6 +40,9 @@ export const calculateMaxUsage = (usage, klassId) => {
 	points += usage.base_limit
 	if (usage.base_limit_modifier){points += mod(abilityScores[usage.base_limit_modifier])}
 	if (classLvl > 1){points += (usage.limit_increase_per_level * (classLvl - 1))}
+
+	// if it has a minimum, but that value is not met, replace points with the minimum
+	if (usage.minimum_limit > points){points = usage.minimum_limit}
 
 	return points
 }

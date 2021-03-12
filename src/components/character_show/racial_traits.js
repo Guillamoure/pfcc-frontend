@@ -31,9 +31,8 @@ class Traits extends React.Component {
 				if (spells.length){desc = injectSpellIntoDescription(desc, spells, this.renderSpellClick, {})}
 			}
         return (
-          <li data-id={i * 3 + 1} onClick={this.changeActiveFeature} className='highlight mobile-selected-tab-content'  style={{maxHeight: window.outerHeight * 0.4}}>
+          <li data-id={i * 3 + 1} onClick={() => modalAction("generic", trait, {name: trait.name})} className='highlight mobile-selected-tab-content'  style={{maxHeight: window.outerHeight * 0.4}}>
             <strong data-id={i * 3 + 1}>{trait.name}</strong>
-            {this.state.activeTrait === i * 3 + 1 && <div style={{color: '#000'}}>{desc}</div>}
           </li>
         )
 

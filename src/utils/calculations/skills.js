@@ -111,6 +111,12 @@ export const isThisAClassSkill = (skillObj, character) => {
 			classSkill = true
 		}
 
+		// HARDCODE
+		if (character.name === "Fire-Roasted Tomatoes" && skillObj.name === "Handle Animal"){
+			classSkill = true
+		}
+		// HARDCODE
+
 	})
 	return classSkill
 }

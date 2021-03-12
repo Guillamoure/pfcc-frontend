@@ -42,6 +42,12 @@ const Details = props => {
       case 'Natesse':
         knownLanguages = ['Common', "Hexadecimal", "Elven", "Goblin", "Draconic"]
         break
+      case "Dz'eyn":
+        knownLanguages = ['Common', "Grippli", "Aquan", "Read Lips"]
+        break
+      case "Dink Weatherbyrst":
+        knownLanguages = ['Common', "Gnome"]
+        break
       default:
         break
     }

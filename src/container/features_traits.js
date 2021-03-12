@@ -1,12 +1,13 @@
 import React from 'react'
 
 import Features from '../components/character_show/features'
-import FeaturesTraitsContainer from '../components/character_show/feature_traits'
+import FeaturesTraitsFeatsContainer from '../components/character_show/feature_traits'
 import Traits from '../components/character_show/racial_traits'
 import Feats from '../components/character_show/feats'
 import Equipment from '../components/character_show/equipment'
 import FeatureTabs from './feature_tabs'
 import AlliesContainer from './allies_container'
+import Details from '../components/character_show/details'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSortDown } from '@fortawesome/free-solid-svg-icons'
@@ -14,7 +15,7 @@ import { faCircle } from '@fortawesome/free-solid-svg-icons'
 
 class FeaturesTraits extends React.Component {
   state= {
-    activeTab: "Features & Traits"
+    activeTab: "Features/Traits/Feats"
   }
 
   componentDidMount(){
@@ -63,9 +64,9 @@ class FeaturesTraits extends React.Component {
         <div id='features-traits' className="character-show shadow">
           <FeatureTabs renderTabClick={this.renderTabClick} activeTab={this.state.activeTab} alliedCreaturesTab={this.alliedCreaturesTab()}/>
           <div className="dynamic-size" style={{height: '100%'}}>
-            {this.state.activeTab === "Features & Traits" && <FeaturesTraitsContainer editModal={this.props.editModal}/>}
-            {this.state.activeTab === "Feats" && <Feats editModal={this.props.editModal}/>}
+            {this.state.activeTab === "Features/Traits/Feats" && <FeaturesTraitsFeatsContainer editModal={this.props.editModal}/>}
             {this.state.activeTab === "Equipment" && <Equipment editModal={this.props.editModal} exitModal={this.props.exitModal} cmiId={this.props.characterItemID}/>}
+            {this.state.activeTab === "Details" && <Details />}
             {this.state.activeTab === "Allied Creatures" && <AlliesContainer />}
           </div>
         </div>

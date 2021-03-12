@@ -66,9 +66,8 @@ class Features extends React.Component {
 				if (typeof description === "string"){description = descriptionParser(description)}
 
         return (
-          <li key={(feature.id * 3) -1} onClick={() => this.changeActiveFeature(feature.id)} className='highlight mobile-selected-tab-content' style={{maxHeight: window.outerHeight * 0.4}}>
+          <li key={(feature.id * 3) -1} onClick={() => modalAction("generic", feature, {name: feature.name})} className='highlight mobile-selected-tab-content' style={{maxHeight: window.outerHeight * 0.4}}>
             <strong>{name}</strong>
-            {this.state.activeFeature === feature.id && <div style={{color: '#000'}}>{description}</div>}
           </li>
         )
       // } else {
@@ -551,7 +550,7 @@ class Features extends React.Component {
         },
       ]
     } else if (name === 'Fire-Roasted Tomatoes'){
-      replacedFeatures = []
+      replacedFeatures = ["Trapfinding", "Sneak Attack"]
       addedFeatures = [
         {
           id: 7000,

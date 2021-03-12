@@ -21,7 +21,7 @@ const WeaponSummary = props => {
   const renderMI = () => {
     return (
       <React.Fragment>
-        {props.cw.name ? <h3 style={{display: 'inline-block'}}><em>{props.cw.name}</em> ({props.cw.masterwork && 'mwk '}{item.name})</h3> : <h3 style={{display: 'inline-block'}}>{item.name}</h3>}
+        {props.cw.name ? <h3 style={{display: 'inline-block'}}><em>{props.cw.name}</em> ({props.cw.masterwork && 'mwk '}{item.name})</h3> : <h3 style={{display: 'inline-block'}}>{props.cw.masterwork && 'mwk '}{item.name}</h3>}
 
         <UserItemAdjustment characterItem={props.cw} item={props.item} exitModal={props.exitModal} editModal={props.editModal} url='character_weapon'/>
 

@@ -173,6 +173,7 @@ const Attacks = props => {
 
   const renderTableElement = (cw, index) => {
     let name = cw.name !== "" ? cw.name : cw.weapon.name
+		if (cw.masterwork && !cw.name){name = "mwk " + name}
 		if (cw.count > 1){ name += ` (x${cw.count})`}
     let damageDice = cw.weapon.num_of_dice + "d" + cw.weapon.damage_dice
     let damageType = cw.weapon.damage_type
@@ -249,6 +250,9 @@ const Attacks = props => {
 		let options = {}
 
 		if ((props.character.name === "Natesse" || props.character.name === "Iyugi") && (cw.weapon.category === "Light" || cw.weapon.category === "Unarmed" || cw.weapon.name === "Rapier") ){
+			options.finesse = true
+		}
+		if (props.character.name === "Natesse" && cw.weapon.name === "Scimitar"){
 			options.finesse = true
 		}
 
@@ -1012,6 +1016,10 @@ const Attacks = props => {
 			//HARDCODE
 			if (characterWeapon.name === "Harrow Card"){tempBonuses += 1}
 			if (characterWeapon.name === "Fire Blast"){tempBonuses += Math.floor(abilityScoreMod("constitution")/2)}
+			if ((props.character.name === "Iyugi" && characterWeapon.weapon.name === "Dagger") || (props.character.name === "Natesse" && characterWeapon.weapon.name === "Scimitar")){
+				tempBonuses += dex
+				tempBonuses -= str
+			}
 			//HARDCODE
 
 			return `${pluser(str + handedStrengthModifier + tempBonuses)}`

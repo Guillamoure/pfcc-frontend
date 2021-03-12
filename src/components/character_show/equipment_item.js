@@ -50,6 +50,7 @@ const EquipmentItem = props => {
 		let known = group === 'unknown' ? false : true
 		// debugger
 		let name = known ? item.name || item[keyWord.toLowerCase()].name : item.false_desc
+		if (item.masterwork && !item.name){name = "mwk " + name}
 		let percentages = known && item[keyWord]?.features ? renderPercentage(item[keyWord]) : null
 		// find feature usage, find limit, and find relevant cmifu, and have a fraction of current usage
 		let equipped = item.equipped

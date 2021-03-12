@@ -80,6 +80,9 @@ const HP = props => {
 		// 		}
 		// 	}
 		})
+		if (props.character.name === "Fire-Roasted Tomatoes"){
+			totalHP += 6
+		}
 
 		let currentHP = totalHP - storedLethalDamage + storedTemporary + additionalTempHP
 

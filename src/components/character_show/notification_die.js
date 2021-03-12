@@ -1,8 +1,8 @@
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDiceD20 } from '@fortawesome/free-solid-svg-icons'
-import { doWeNeedAYellowNotification } from '../../helper_functions/notifications/yellow_notification'
-import { doWeNeedARedNotification } from '../../helper_functions/notifications/red_notification'
+import { doWeNeedAYellowNotification } from '../../utils/notifications/yellow_notification'
+import { doWeNeedARedNotification } from '../../utils/notifications/red_notification'
 
 const NotificationDie = props => {
 

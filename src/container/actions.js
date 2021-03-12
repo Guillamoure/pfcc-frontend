@@ -101,7 +101,7 @@ class Actions extends React.Component {
 			} else {
 				permanent += abilityMod
 			}
-			if (this.props.character.name === "Ildre"){
+			if (this.props.character.name === "Ildre" || this.props.character.name === "Dink Weatherbyrst"){
 				permanent += 4
 			}
 

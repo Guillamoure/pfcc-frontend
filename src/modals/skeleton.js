@@ -26,6 +26,8 @@ import ItemDescription from '../components/modals/item_description'
 import CurrencyManager from '../components/modals/currency_manager'
 import Settings from '../components/modals/settings'
 import FamiliarDescription from '../components/modals/familiar_description'
+import PoisonDescription from '../components/modals/poison_description'
+import GenericDescription from '../components/modals/generic_description'
 
 const ModalSkeleton = (props) => {
 
@@ -73,7 +75,10 @@ const ModalSkeleton = (props) => {
 				return <Weapon item={modal.obj.weapon} cw={modal.obj} exitModal={exitModal} clickOut={clickOut}/>
 			case "familiar":
 				return <FamiliarDescription familiar={modal.obj}/>
+			case "poison":
+				return <PoisonDescription item={modal.obj} />
       default:
+				return <GenericDescription name={modal.obj.name} description={modal.obj.description}/>
         break
     }
   }

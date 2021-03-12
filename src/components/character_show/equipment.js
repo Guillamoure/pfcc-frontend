@@ -35,7 +35,8 @@ class Equipment extends React.Component {
       let changingState = 'magic item'
       changingState = detail === 'weapon' ? 'weapon' : changingState
       changingState = detail === 'armor' ? 'armor' : changingState
-			changingState = ["unknown", "weapon", "armor", "harrow", "magic item", "Wondrous Item"].includes(detail) ? changingState : "item"
+      changingState = detail === 'poison' ? 'poison' : changingState
+			changingState = ["unknown", "weapon", "armor", "harrow", "magic item", "Wondrous Item", "poison"].includes(detail) ? changingState : "item"
 			modalAction(changingState, obj, {name: obj.name || obj.weapon?.name || obj.armor?.name || null})
 			// debugger
       // this.props.editModal(changingState, null, itemID)
@@ -150,6 +151,10 @@ class Equipment extends React.Component {
 		})
 
 		items = [...items, ...this.props.character.items]
+
+		this.props.character.poisons.forEach(cp => {
+			items.push({...cp, category: "Poison"})
+		})
 
 		let itemRows = items.map((item, idx) => {
 			return <EquipmentItem item={item} index={idx} group={item.category} changeSelectedItem={this.changeSelectedItem}/>

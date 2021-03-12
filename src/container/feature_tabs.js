@@ -8,9 +8,9 @@ class FeatureTabs extends React.Component {
 
     return(
       <span className='tab-list dynamic-size-small'>
-        <Tab label="Features & Traits" renderTabClick={this.props.renderTabClick} activeTab={this.props.activeTab}/>
-        <Tab label="Feats" renderTabClick={this.props.renderTabClick} activeTab={this.props.activeTab}/>
+        <Tab label="Features/Traits/Feats" renderTabClick={this.props.renderTabClick} activeTab={this.props.activeTab}/>
         <Tab label="Equipment" renderTabClick={this.props.renderTabClick} activeTab={this.props.activeTab}/>
+        <Tab label="Details" renderTabClick={this.props.renderTabClick} activeTab={this.props.activeTab}/>
         {!!this.props.alliedCreaturesTab && <Tab label="Allied Creatures" renderTabClick={this.props.renderTabClick} activeTab={this.props.activeTab}/>}
       </span>
     )

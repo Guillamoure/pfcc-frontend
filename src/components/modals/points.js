@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { remainingUsage, incrementFeatureUsage, decrementFeatureUsage } from '../../helper_functions/calculations/feature_usage'
+import { remainingUsage, incrementFeatureUsage, decrementFeatureUsage } from '../../utils/calculations/feature_usage'
 
 const Points = props => {
 

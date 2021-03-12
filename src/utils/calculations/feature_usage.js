@@ -9,20 +9,28 @@ import { locateFeatureFromSource } from '../fuf'
 export const calculateFeaturePercentage = feature => {
 	if (!feature.usage){return null}
 	// CALCULATED DATA
-	let maxUsage = calculateMaxUsage(feature.baseFeatureAndAbility?.feature.usage ?? feature.usage, feature.klassId)
+	let maxUsage = calculateMaxUsage(feature.baseFeatureAndAbility?.feature.usage ?? feature.usage, feature.klassId, {klassArchetypeId: feature.klassArchetypeId})
 	let timesUsed = calculateCurrentUsage(feature.usageSources)
 
 	return `${maxUsage - timesUsed}/${maxUsage}`
 }
 
-export const calculateMaxUsage = (usage, klassId) => {
+export const calculateMaxUsage = (usage, klassId, options) => {
 	// NEW DATA
 	let points = 0
 
 	// STORED DATA
 	let reduxState = store.getState()
 	let abilityScores = reduxState.character_info.ability_scores
-	let classLvl = reduxState.character_info.classes.find(cl => cl.id === klassId).level
+	let classLvl = reduxState.character_info.classes.find(cl => {
+		if (klassId){
+			return cl.id === klassId
+		} else if (options.klassArchetypeId){
+			let arch = reduxState.character.archetypes.find(ar => ar.id === options.klassArchetypeId)
+			return cl.id === arch.klass_id
+
+		}
+	}).level
 
 	// if it has a static limit, return that
 	if (usage.limit){return usage.limit}
@@ -31,9 +39,12 @@ export const calculateMaxUsage = (usage, klassId) => {
 	points += usage.base_limit
 	if (usage.base_limit_modifier){points += mod(abilityScores[usage.base_limit_modifier])}
 	if (classLvl > 1){points += (usage.limit_increase_per_level * (classLvl - 1))}
-	
+
 	// if a feature has a float for its limit_increase_per_level, and the base_limit is 0, its probably not nothing at the 1st level, but the same as the limit_increase_per_level
 	if (usage.base_limit === 0 && usage.limit_increase_per_level < 1){points += usage.limit_increase_per_level}
+
+	// if it has a minimum, but that value is not met, replace points with the minimum
+	if (usage.minimum_limit > points){points = usage.minimum_limit}
 
 	// round down points
 	points = Math.floor(points)
@@ -54,7 +65,7 @@ export const calculateCurrentUsage = used => {
 export const remainingUsage = feature => {
 	if (!feature.usage){return 1000}
 	// CALCULATED DATA
-	let maxUsage = calculateMaxUsage(feature.baseFeatureAndAbility?.feature.usage ?? feature.usage, feature.klassId)
+	let maxUsage = calculateMaxUsage(feature.baseFeatureAndAbility?.feature.usage ?? feature.usage, feature.klassId, {klassArchetypeId: feature.klassArchetypeId})
 	let timesUsed = calculateCurrentUsage(feature.usageSources)
 
 	return maxUsage - timesUsed
@@ -63,7 +74,7 @@ export const remainingUsage = feature => {
 export const incrementFeatureUsage = async feature => {
 	if (remainingUsage(feature) > 0){
 		let usage = feature.usageSources.length === 1 && feature.usageSources[0]
-		await alterCurrentUsage(usage, 1, usageArrayBasedOnSource(feature.source))
+		await alterCurrentUsage(usage, 1, usageArrayBasedOnSource(feature.source, {klassArchetypeId: feature.klassArchetypeId}))
 	} else {
 		let options = feature.usage?.all_feature_usage_options || []
 		if (options.length){
@@ -90,7 +101,7 @@ export const incrementFeatureUsage = async feature => {
 export const decrementFeatureUsage = async feature => {
 	let usage = feature.usageSources.length === 1 && feature.usageSources[0]
 	if (!!usage.current_usage){
-		await alterCurrentUsage(usage, -1, usageArrayBasedOnSource(feature.source))
+		await alterCurrentUsage(usage, -1, usageArrayBasedOnSource(feature.source, {klassArchetypeId: feature.klassArchetypeId}))
 	}
 }
 
@@ -120,9 +131,12 @@ export const isThisFeatureActive = feature => {
 	return active
 }
 
-const usageArrayBasedOnSource = (source) => {
+const usageArrayBasedOnSource = (source, options) => {
 	switch(source){
 		case "applicable_klass_features":
+			if (options.klassArchetypeId){
+				return "character_klass_archetype_feature_usages"
+			}
 			return "character_klass_feature_usages"
 		case "klass_specializations":
 			return "character_klass_specialization_feature_usages"

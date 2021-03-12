@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import _ from 'lodash'
+import { modalAction } from '../../utils/action_creator/popups'
 
 class Feats extends React.Component {
 
@@ -69,14 +70,15 @@ class Feats extends React.Component {
       default:
         break
     }
+
     return feats.map(f => {
       return (
-        <li onClick={() => this.changeActiveFeature(f.id)} className='highlight mobile-selected-tab-content' style={{maxHeight: window.outerHeight * 0.4}}>
+        <li onClick={() => modalAction("feat", f, {name: f.name})} className='highlight mobile-selected-tab-content' style={{maxHeight: window.outerHeight * 0.4}}>
           <strong data-id={f.id}>{f.name}</strong>
-          {this.state.activeFeat === f.id && <div style={{color: '#000'}}>{typeof f.description === 'string' ? this.renderDescription(f.description) : f.description}</div>}
         </li>
       )
     })
+		// {this.state.activeFeat === f.id && <div style={{color: '#000'}}>{typeof f.description === 'string' ? this.renderDescription(f.description) : f.description}</div>}
   }
 
   nettie = () => {
@@ -310,6 +312,11 @@ class Feats extends React.Component {
 				id: 11000,
 				description: 'You get a +3 bonus on all checks involving the chosen skill. If you have 10 or more ranks in that skill, this bonus increases to +6.',
 				name: 'Skill Focus (Profession (chef))'
+			},
+			{
+				id: 11001,
+				description: 'You gain +3 hit points. For every Hit Die you possess beyond 3, you gain an additional +1 hit point. If you have more than 3 Hit Dice, you gain +1 hit points whenever you gain a Hit Die (such as when you gain a level).',
+				name: 'Toughness'
 			},
 		]
 	}

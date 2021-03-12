@@ -1,13 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import _ from 'lodash'
-import { isThisActionAvailable } from '../../helper_functions/calculations/round_actions'
-import { abilityScoreMod } from '../../helper_functions/calculations/ability_scores'
+import { isThisActionAvailable } from '../../utils/calculations/round_actions'
+import { abilityScoreMod } from '../../utils/calculations/ability_scores'
 import { calculateFeaturePercentage, remainingUsage, calculateCurrentUsage, isThisFeatureActive } from '../../utils/calculations/feature_usage'
-import { featureDistribution, doesThisFeatureNeedToBeDistributed } from '../../helper_functions/distributers/features'
-import { patchFetch } from '../../helper_functions/fetches'
-import { locateFeatureAndAbilityFromSource, classLevel, renderDamage, abbreviateDamageType } from '../../helper_functions/fuf'
-import { modalAction } from '../../helper_functions/action_creator/popups'
+import { featureDistribution, doesThisFeatureNeedToBeDistributed } from '../../utils/distributers/features'
+import { patchFetch } from '../../utils/fetches'
+import { locateFeatureAndAbilityFromSource, classLevel, renderDamage, abbreviateDamageType } from '../../utils/fuf'
+import { modalAction } from '../../utils/action_creator/popups'
 
 class Abilities extends React.Component {
 
@@ -44,9 +44,12 @@ class Abilities extends React.Component {
 			akf.features.forEach(f => {
 				if (f.action){
 					let ckfus = this.props.character.character_klass_feature_usages.filter(fu => fu.klass_feature_id === akf.id)
+					if (akf.klass_archetype_id){
+						ckfus = this.props.character.character_klass_archetype_feature_usages.filter(fu => fu.klass_archetype_feature_id === akf.id)
+					}
 					// the id value in the below object refers to the id of the character[type]
 					// so that specific klass_feature, magic_item_feature, etc. can be found by id
-					activatableAbilities.push({...f, sourceId: akf.id, klassFeatureName: akf.name, klassId: akf.klass_id, usageSources: ckfus, source: "applicable_klass_features"})
+					activatableAbilities.push({...f, sourceId: akf.id, klassFeatureName: akf.name, klassId: akf.klass_id, klassArchetypeId: akf.klass_archetype_id, usageSources: ckfus, source: "applicable_klass_features"})
 				}
 
 				// if a feature is a choice of another action (i.e. Bardic Performances)
@@ -260,6 +263,9 @@ class Abilities extends React.Component {
 			} else if (ability.kspecFeatureName){
 				delete body.klass_feature_id
 				body.klass_specialization_feature_id = ability.subSourceId
+			} else if (ability.klassArchetypeId){
+				delete body.klass_feature_id
+				body.klass_archetype_feature_id = ability.sourceId
 			}
 
 			let url
@@ -272,6 +278,9 @@ class Abilities extends React.Component {
 					break
 				default:
 					url = "character_klass_feature_usages"
+			}
+			if (ability.klassArchetypeId){
+				url = "character_klass_archetype_feature_usages"
 			}
 
 			patchFetch(url, body)
