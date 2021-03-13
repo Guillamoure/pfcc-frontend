@@ -723,6 +723,13 @@ $tan: #cfb997;
   -webkit-animation: spinning 4s infinite linear;
 }
 
+#loading-dice-search {
+  // margin: 2%;
+	position: absolute;
+  animation: spinning 4s infinite linear;
+  -webkit-animation: spinning 4s infinite linear;
+}
+
 @keyframes spinning {
     from {transform:rotate(0deg);}
     to {transform:rotate(360deg);}

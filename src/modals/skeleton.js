@@ -28,6 +28,7 @@ import Settings from '../components/modals/settings'
 import FamiliarDescription from '../components/modals/familiar_description'
 import PoisonDescription from '../components/modals/poison_description'
 import GenericDescription from '../components/modals/generic_description'
+import AddCharacterEquipment from '../components/modals/add_character_equipment'
 
 const ModalSkeleton = (props) => {
 
@@ -77,6 +78,8 @@ const ModalSkeleton = (props) => {
 				return <FamiliarDescription familiar={modal.obj}/>
 			case "poison":
 				return <PoisonDescription item={modal.obj} />
+			case "addEquipment":
+				return <AddCharacterEquipment />
       default:
 				return <GenericDescription name={modal.obj.name} description={modal.obj.description}/>
         break

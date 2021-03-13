@@ -186,7 +186,7 @@ class Equipment extends React.Component {
 				<span>
 					<strong>Money</strong>: {totalGP.toFixed(2)} gp <small><em>({pp ?? 0} pp, {gp ?? 0} gp, {sp ?? 0} sp, {cp ?? 0} cp)</em></small>
         </span>
-        <button onClick={() => modalAction("currency")}>Manage</button>
+        <button onClick={() => modalAction("currency", null, {name: "Currency"})}>Manage</button>
 			</header>
 		)
 	}
@@ -229,6 +229,7 @@ class Equipment extends React.Component {
 		    <div style={{padding: '1em', display: 'grid', gridTemplateColumns: '40% 60%'}} className={localStorage.computer === "false" ? 'mobile-tab-selected-tab-container mobile-tab-bottom shadow' : 'none'}>
 		      {this.renderEquipmentList()}
 		    </div>
+				<button onClick={() => modalAction("addEquipment", null, {name: "Add Equipment"})}>Add Equipment</button>
 				{this.renderCarryWeight()}
 			</>
     )

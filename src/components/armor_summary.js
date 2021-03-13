@@ -46,7 +46,7 @@ const ArmorSummary = props => {
     return (
       <React.Fragment>
         {name}
-        <UserItemAdjustment characterItem={ca} item={ca.armor} url='character_armor'/>
+        {ca.name && <UserItemAdjustment characterItem={ca} item={ca.armor} url='character_armor'/>}
         <div>{ca.armor.proficiency} {ca.armor.bonus_type}; <strong>Price</strong> {ca.armor.price_in_gp} gp; <strong>Weight</strong> {ca.armor.weight} lb;</div>
 				<div style={{marginBottom: '1%', paddingBottom: '.8%', borderBottom: 'double'}}></div>
 				{ca.description && <div><em>{renderDescription(ca.description)}</em></div>}

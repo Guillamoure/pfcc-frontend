@@ -529,12 +529,12 @@ class Character extends React.Component {
 		        {this.state.modal === 'mutagen' && <MutagenModal exitModal={this.exitModal} editModal={this.editModal} clickOut={this.clickOut}/>}
 		        {/* unfinished, hardcoded features */}
 
-		        <div id='right' onClick={() => this.setState({display: this.rightArrow()})}><FontAwesomeIcon icon={faCaretRight} size='9x'/><div>{this.rightArrow()}</div></div>
-		        <div id='left' onClick={() => this.setState({display: this.leftArrow()})}><FontAwesomeIcon icon={faCaretLeft} size='9x'/><div>{this.leftArrow()}</div></div>
 
 	        </span>
 				</>
       )
+			// <div id='right' onClick={() => this.setState({display: this.rightArrow()})}><FontAwesomeIcon icon={faCaretRight} size='9x'/><div>{this.rightArrow()}</div></div>
+			// <div id='left' onClick={() => this.setState({display: this.leftArrow()})}><FontAwesomeIcon icon={faCaretLeft} size='9x'/><div>{this.leftArrow()}</div></div>
     } else {
       return (
         <>
