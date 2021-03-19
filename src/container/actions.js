@@ -101,8 +101,11 @@ class Actions extends React.Component {
 			} else {
 				permanent += abilityMod
 			}
-			if (this.props.character.name === "Ildre" || this.props.character.name === "Dink Weatherbyrst"){
+			if (this.props.character.name === "Dink Weatherbyrst"){
 				permanent += 4
+			}
+			if (this.props.character.name === "Iyugi"){
+				permanent += 2
 			}
 
 			array.push(permanent)
@@ -134,7 +137,7 @@ class Actions extends React.Component {
   render(){
     if (localStorage.computer === "true"){
       return(
-        <div className="actions shadow">
+        <div className="actions shadow" style={{boxShadow: `5px 4px 2px #${this.props.settings.shadeColor}`, opacity: "0.95", backgroundColor: `#${this.props.settings.bubbleColor}`, borderColor: `#${this.props.settings.borderColor}`}}>
           <ActionTabs renderTabClick={this.renderTabClick} activeTab={this.state.activeTab}/>
           <div className="dynamic-size" style={{height: '90%'}}>
 						{this.renderAttackDetails()}
@@ -185,7 +188,8 @@ const mapStateToProps = (state) => {
     currentUser: state.currentUser,
     admin: state.admin,
     characterInfo: state.character_info,
-		character: state.character
+		character: state.character,
+		settings: state.settings
   }
 }
 

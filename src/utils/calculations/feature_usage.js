@@ -22,6 +22,7 @@ export const calculateMaxUsage = (usage, klassId, options) => {
 	// STORED DATA
 	let reduxState = store.getState()
 	let abilityScores = reduxState.character_info.ability_scores
+
 	let classLvl = reduxState.character_info.classes.find(cl => {
 		if (klassId){
 			return cl.id === klassId

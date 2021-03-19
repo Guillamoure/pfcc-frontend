@@ -29,6 +29,8 @@ import FamiliarDescription from '../components/modals/familiar_description'
 import PoisonDescription from '../components/modals/poison_description'
 import GenericDescription from '../components/modals/generic_description'
 import AddCharacterEquipment from '../components/modals/add_character_equipment'
+import SummonedCreatureOptions from '../components/modals/summoned_creature_options'
+import MagicItemSummary from '../components/magic_item_summary'
 
 const ModalSkeleton = (props) => {
 
@@ -80,6 +82,10 @@ const ModalSkeleton = (props) => {
 				return <PoisonDescription item={modal.obj} />
 			case "addEquipment":
 				return <AddCharacterEquipment />
+			case "summonedAllies":
+				return <SummonedCreatureOptions featureAnimal={modal.obj} />
+			case "magicItem":
+				return <MagicItemSummary item={modal.obj.magic_item} cmi={modal.obj}/>
       default:
 				return <GenericDescription name={modal.obj.name} description={modal.obj.description}/>
         break
@@ -174,7 +180,7 @@ const ModalSkeleton = (props) => {
 		return props.modal.map((m, i) => {
 			console.log(m)
 			let name = m.name || m.obj?.name || `Tab ${i+1}`
-			let tabStyle = {...exitStyle}
+			let tabStyle = {...exitStyle, backgroundColor: `#${props.settings.bubbleColor}`, borderColor: `#${props.settings.borderColor}`}
 			if (sidebarContainer.current){
 				// tabStyle.left = `${( i * Math.floor(sidebarContainer.current.clientWidth / 5) ) + (sidebarContainer.current.offsetLeft) + parseInt(window.getComputedStyle(sidebarContainer.current).getPropertyValue('padding-left'))}px`
 				let wiff = window.innerWidth
@@ -198,10 +204,17 @@ const ModalSkeleton = (props) => {
 		})
 	}
 
+	// style={{boxShadow: `5px 4px 2px #${props.settings.shadeColor}`, opacity: "0.95", backgroundColor: `#${props.settings.bubbleColor}`, borderColor: `#${props.settings.borderColor}`}}
+
 	const collapsedStyle = () => {
+		let style = {backgroundColor: `#${props.settings.bubbleColor}`, borderColor: `#${props.settings.borderColor}`}
 		if (collapsed){
-			return {height: "0px", padding: "0px", border: "0px", margin: "0px"}
-		} else {return {}}
+			style.height = "0px"
+			style.padding = "0px"
+			style.border = "0px"
+			style.margin = "0px"
+		}
+		return style
 	}
 
 	return (
@@ -214,7 +227,8 @@ const ModalSkeleton = (props) => {
 
 const mapStatetoProps = (state) => {
   return {
-    modal: state.modal
+    modal: state.modal,
+		settings: state.settings
   }
 }
 

@@ -1,5 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { updateColorThemeAction } from '../../utils/action_creator/settings'
 
 const Settings = () => {
 
@@ -32,13 +33,26 @@ const Settings = () => {
 	}
 
 	const displayColorThemeOptions = () => {
+		let themes = [
+			{name: "Standard", colors: {background1: "cfb997", background2: "fff", textColor: "000", bubbleColor: "ebebeb", borderColor: "000", shadeColor: "800000"}},
+			{name: "Noir", colors: {background1: "000", background2: "666", textColor: "ddd3d3", bubbleColor: "3e3b3b", borderColor: "c3bcbc", shadeColor: "a39c9c"}},
+			{name: "Spring Pastels", colors: {background1: "dbd08f", background2: "fff", textColor: "965dae", bubbleColor: "ebebeb", borderColor: "d04ebd", shadeColor: "65bbd5"}},
+			{name: "Sorbet Summer", colors: {background1: "EF4136", background2: "FFDF63", textColor: "000", bubbleColor: "F7D15F", borderColor: "87ceff", shadeColor: "B43692"}},
+			{name: "Autumn Sunset", colors: {background1: "8f2323", background2: "cc9d3a", textColor: "000", bubbleColor: "bc7535", borderColor: "a7532d", shadeColor: "59200f"}},
+			{name: "Crisp Winter", colors: {background1: "e3e3ff", background2: "CCCCFF", textColor: "230745", bubbleColor: "ebebeb", borderColor: "b3e3f4", shadeColor: "020b36"}},
+			{name: "Ocean Floor", colors: {background1: "29ab87", background2: "93e9b3", textColor: "212121", bubbleColor: "c2b280", borderColor: "5a4d41", shadeColor: "4a3d32"}},
+			{name: "Cyberpunk", colors: {background1: "7a04eb", background2: "fe75fe", textColor: "000", bubbleColor: "00b8ff", borderColor: "00ff9f", shadeColor: "120458"}},
+			{name: "Gems and Treasure", colors: {background1: "ffba1f", background2: "74674e", textColor: "0f52ba", bubbleColor: "f5f7f7", borderColor: "046307", shadeColor: "dc143c"}},
+			{name: "Overcast", colors: {background1: "636d83", background2: "6d7178", textColor: "d1d5d9", bubbleColor: "7d8287", borderColor: "415c5d", shadeColor: "7d9fb0"}},
+		]
+
+		let themeElements = themes.map(th => <li style={{color: `#${th.colors.textColor}`, backgroundImage: `linear-gradient(#${th.colors.background1} 30%, #${th.colors.background2} 50%, #${th.colors.bubbleColor})`, padding: "0.8%", border: `1px solid #${th.colors.borderColor}`, margin: "0.5%", borderRadius: "0.5em", boxShadow: `2px 1px 1px #${th.colors.shadeColor}`}}><label onClick={() => updateColorThemeAction(th.colors)}>{th.name}</label></li>)
+
 		return (
 			<form>
 				<h4>Color Theme</h4>
-				<ul style={{display: "flex", listStyleType: "none", margin: "0", padding: "0"}}>
-					<li>
-						<label className="noir-color">Noir</label>
-					</li>
+				<ul style={{display: "flex", listStyleType: "none", margin: "0", padding: "0", flexWrap: "wrap"}}>
+					{themeElements}
 				</ul>
 			</form>
 		)
@@ -48,7 +62,6 @@ const Settings = () => {
 	return (
 		<section>
 			<h3>Character Settings</h3>
-			{displayLayoutOptions()}
 			{displayColorThemeOptions()}
 		</section>
 	)

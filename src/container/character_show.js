@@ -6,6 +6,7 @@ import { mod } from '../fuf'
 import { fetchCharacter } from '../dispatch'
 import { characterDistributer } from '../helper_functions/distributers/character'
 import { initializeCampaignWebsocket } from '../utils/websocket/campaign'
+import { modalAction } from '../utils/action_creator/popups'
 
 import AbilityScores from '../components/character_show/ability_scores'
 import CharacterName from '../components/character_show/character_name'
@@ -21,7 +22,7 @@ import Initiative from '../components/character_show/initiative'
 import TurnActions from '../components/character_show/turn_actions'
 import Details from './details'
 import Campaign from './campaign'
-import NotificationDie from '../components/character_show/notification_die'
+import NotificationDoor from '../components/character_show/notification_door'
 import CharacterShowTabs from './character_show_tabs'
 
 // unfinished hardcoded features
@@ -470,7 +471,10 @@ class Character extends React.Component {
 			return (
 				<div id='character' className='shrink'>
 					{this.state.character.race && <CharacterName character={this.state.character} editModal={this.editModal}/>}
-					{this.state.character.race && <NotificationDie character={this.state.character} editModal={this.editModal} />}
+					<div>
+						<FontAwesomeIcon id="spin" icon={faDiceD20} size='3x' onClick={() => modalAction('rollDice')} />
+						{this.state.character.race && <NotificationDoor character={this.state.character} editModal={this.editModal} />}
+					</div>
 				</div>
 			)
 		}
@@ -570,10 +574,10 @@ class Character extends React.Component {
 
   render() {
     return (
-      <>
+      <article style={{color: `#${this.props.settings.textColor}`}}>
 				{this.renderHeader()}
         {this.renderCharacter()}
-      </>
+      </article>
     )
   }
 }
@@ -584,7 +588,8 @@ const mapStatetoProps = (state) => {
   return {
     character: state.character,
     character_info: state.character_info,
-		websocket: state.websocket
+		websocket: state.websocket,
+		settings: state.settings
   }
 }
 

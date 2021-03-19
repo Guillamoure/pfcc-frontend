@@ -33,19 +33,24 @@ export const crXPCalc = cr => {
 	}
 }
 
-export const averageHP = (totalHitDice, creatureTypeHitDie, constitutionScore) => {
+export const averageHP = (totalHitDice, creatureTypeHitDie, constitutionScore, options) => {
 	let averageDiceRoll = (creatureTypeHitDie + 1.0) / 2
 	let baseHP = Math.floor(totalHitDice * averageDiceRoll)
-	let hp = baseHP + mod(constitutionScore)
+	let con = totalHitDice * mod(constitutionScore)
+	if (options.augmentSummoning){
+		con += 2 * totalHitDice
+	}
+	let hp = baseHP + con
 
-	let modString = mod(constitutionScore) !== 0 ? pluser(mod(constitutionScore)) : ""
+	let modString = mod(constitutionScore) !== 0 ? pluser(con) : ""
 	return `${hp} (${totalHitDice}d${creatureTypeHitDie}${modString})`
 }
 
-export const savingThrow = (save, abilityScore, totalHitDice) => {
+export const savingThrow = (save, abilityScore, totalHitDice, options) => {
 	let abilityMod = mod(abilityScore)
 	let bonus = Math.floor(abilityMod + (save * totalHitDice))
 	if (save === 0.5){bonus += 2}
+	if (options.augmentSummoning){bonus += 2}
 	return pluser(bonus)
 }
 
@@ -68,7 +73,9 @@ export const cmb = creature => {
 	let sizeModifier = specialSizeMod(creature.size)
 	let abilityMod = mod(creature.strength)
 	if (sizeModifier <= -2){abilityMod = mod(creature.dexterity)}
-	return baseAttackBonus + sizeModifier + abilityMod
+	let otherMods = 0
+	if (creature.augmentSummoning){otherMods += 2}
+	return baseAttackBonus + sizeModifier + abilityMod + otherMods
 }
 
 export const cmd = creature => {
@@ -143,6 +150,7 @@ export const renderAttacks = (creature, attackType) => {
 	let typedAttacks = creature.weapons.filter(cw => cw.weapon.weapon_type === attackType)
 	if (typedAttacks.length) {
 		let abilityModifier = attackType === "Melee" ? mod(creature.strength) : mod(creature.dexterity)
+		if (creature.augmentSummoning && attackType === "Melee"){abilityModifier += 2}
 		let totalAttackBonus = renderAttackBonus(creature, attackType)
 
 		let attackNodes = typedAttacks.map(cw => {
@@ -161,6 +169,7 @@ export const renderAttacks = (creature, attackType) => {
 export const renderAttackBonus = (creature, attackType) => {
 	let sizeModifier = sizeMod(creature.size)
 	let abilityModifier = attackType === "Melee" ? mod(creature.strength) : mod(creature.dexterity)
+	if (creature.augmentSummoning && attackType === "Melee"){abilityModifier += 2}
 
 	creature.creatureInfo.effects.forEach(ef => {
 		if (ef.could_apply_dex_for_attack_rolls === true && attackType === "Melee"){

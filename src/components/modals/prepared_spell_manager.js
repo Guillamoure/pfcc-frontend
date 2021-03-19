@@ -6,6 +6,7 @@ import { abilityScoreMod } from '../../utils/calculations/ability_scores'
 import { getFetch, postFetch, deleteFetch, patchFetch } from '../../utils/fetches'
 import { sortedSpellsByLevelAndName } from '../../utils/fuf'
 import { replaceCharacterAction } from '../../utils/action_creator/character'
+import { modalAction } from '../../utils/action_creator/popups'
 
 const PreparedSpellManager = props => {
 
@@ -178,7 +179,7 @@ const PreparedSpellManager = props => {
 			return (
 				<tr>
 					<td>{sp.spellLevel}</td>
-					<td><em className='underline-hover' onClick={() => updateSpellId(sp.spellId)}>{sp.spellName}</em></td>
+					<td><em className='underline-hover' onClick={() => modalAction("spellDescription", {id: sp.spellId}, {name: sp.spellName})}>{sp.spellName}</em></td>
 					<td>{!!sp.preparedSpellId && <button style={{color: "white", background: "red", fontSize: "0.9rem", border: "1px solid black", textAlign: "right", borderRadius: "6px"}} onClick={() => removeCharacterPreparedSpell(sp.preparedSpellId)}>Forget</button>}</td>
 					<td>{sp.cast && <button onClick={() => togglePreparedSpellCastStatus(sp.preparedSpellId, sp.cast)}>Restore</button>}</td>
 				</tr>
@@ -228,7 +229,7 @@ const PreparedSpellManager = props => {
 			return (
 				<tr className={className}>
 					<td>{sp.spell_level}</td>
-					<td draggable="true" onDragStart={() => updateDrag(spellListSpellId, sp.id, sp.spell_level)} onDragEnd={resetDrag}><em className='underline-hover' onClick={() => updateSpellId(sp.id)}>{sp.name}</em></td>
+					<td draggable="true" onDragStart={() => updateDrag(spellListSpellId, sp.id, sp.spell_level)} onDragEnd={resetDrag}><em className='underline-hover' onClick={() => modalAction("spellDescription", sp, {name: sp.name})}>{sp.name}</em></td>
 				</tr>
 			)
 		})
@@ -268,7 +269,6 @@ const PreparedSpellManager = props => {
 		<section id="known-spells-popup">
 			{renderPreparedSpells()}
 			{renderSpellOptions()}
-			{renderSpellDescription()}
 		</section>
 	)
 }

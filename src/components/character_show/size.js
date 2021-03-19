@@ -14,7 +14,7 @@ const Size = props => {
   let reach = data[1]
 
   return(
-    <div id='size' className='shadow shrink character-show'>
+    <div id='size' className='shadow shrink character-show' style={{boxShadow: `5px 4px 2px #${props.settings.shadeColor}`, opacity: "0.95", backgroundColor: `#${props.settings.bubbleColor}`, borderColor: `#${props.settings.borderColor}`}}>
       <span className='centered'>
         <div className='duller'><strong>Size: {size}</strong></div>
         <div className='container-2'>
@@ -31,6 +31,7 @@ const Size = props => {
 const mapStateToProps = (state) => {
   return {
     character: state.character,
+		settings: state.settings
   }
 }
 

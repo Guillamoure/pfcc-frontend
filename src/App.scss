@@ -949,12 +949,10 @@ $tan: #cfb997;
 
 #known-spells-popup {
 	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	grid-template-rows: repeat(3, 1fr);
+	grid-template-columns: repeat(2, 1fr);
+	grid-template-rows: 1fr;
 	grid-template-areas:
-		"known known all-spells"
-		"spell-description spell-description all-spells"
-		"spell-description spell-description all-spells";
+		"known all-spells";
 	text-align: left;
 	height: 100%;
 	table {

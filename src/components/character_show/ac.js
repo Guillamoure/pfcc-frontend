@@ -217,7 +217,7 @@ const ArmorClass = props => {
 
   if (localStorage.computer === "true"){
     return (
-      <div id='ac' className='shadow shrink' onMouseOver={dispatchTooltip} onMouseOut={dispatchTooltip}>
+      <div id='ac' className='shadow shrink' onMouseOver={dispatchTooltip} onMouseOut={dispatchTooltip} style={{boxShadow: `5px 4px 2px #${props.settings.shadeColor}`, opacity: "0.95", backgroundColor: `#${props.settings.bubbleColor}`, borderColor: `#${props.settings.borderColor}`}}>
         <span className='centered container-3'>
           <section>
             <div className='enhanced'>{acCalc('ac')}</div>
@@ -258,7 +258,8 @@ const ArmorClass = props => {
 const mapStatetoProps = (state) => {
   return {
     character: state.character,
-    character_info: state.character_info
+    character_info: state.character_info,
+		settings: state.settings
   }
 }
 

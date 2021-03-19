@@ -1,4 +1,5 @@
 import React from 'react'
+import { connect } from 'react-redux'
 
 import Features from '../components/character_show/features'
 import FeaturesTraitsFeatsContainer from '../components/character_show/feature_traits'
@@ -14,6 +15,7 @@ import { faSortDown } from '@fortawesome/free-solid-svg-icons'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
 
 class FeaturesTraits extends React.Component {
+
   state= {
     activeTab: "Features/Traits/Feats"
   }
@@ -54,6 +56,9 @@ class FeaturesTraits extends React.Component {
 		if (this.props.character.character_creatures.length){
 			makeTheTab = true
 		}
+		if (this.props.character_info.summonedAllies.length){
+			makeTheTab = true
+		}
 
 		return makeTheTab
 	}
@@ -61,7 +66,7 @@ class FeaturesTraits extends React.Component {
   renderFeaturesTraits = () => {
     if (localStorage.computer === "true"){
       return (
-        <div id='features-traits' className="character-show shadow">
+        <div id='features-traits' className="character-show shadow" style={{boxShadow: `5px 4px 2px #${this.props.settings.shadeColor}`, opacity: "0.95", backgroundColor: `#${this.props.settings.bubbleColor}`, borderColor: `#${this.props.settings.borderColor}`}}>
           <FeatureTabs renderTabClick={this.renderTabClick} activeTab={this.state.activeTab} alliedCreaturesTab={this.alliedCreaturesTab()}/>
           <div className="dynamic-size" style={{height: '100%'}}>
             {this.state.activeTab === "Features/Traits/Feats" && <FeaturesTraitsFeatsContainer editModal={this.props.editModal}/>}
@@ -96,4 +101,11 @@ class FeaturesTraits extends React.Component {
   }
 }
 
-export default FeaturesTraits
+const mapStateToProps = (state) => {
+  return {
+    character_info: state.character_info,
+		settings: state.settings
+	}
+}
+
+export default connect(mapStateToProps)(FeaturesTraits)

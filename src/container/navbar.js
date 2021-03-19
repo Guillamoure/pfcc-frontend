@@ -78,7 +78,7 @@ class NavBar extends React.Component {
 					<div>
           	{this.props.currentUser ? <a className="item" onClick={() => this.props.history.push('/')}>{this.props.currentUser.username}</a>: <a className="item" onClick={() => this.props.history.push('/login')}>Login</a>}
           	{this.props.currentUser ? <a className="item" onClick={this.renderLogOut}>Log Out</a> : <a className="item" onClick={() => this.props.history.push('/signup')}>Sign Up</a>}
-						<a className="item" onClick={() => modalAction("settings")}>Settings</a>
+						<a className="item" onClick={() => modalAction("settings", null, {name: "Settings"})}>Settings</a>
 					</div>
         </nav>
       )

@@ -272,7 +272,7 @@ const Attacks = props => {
     bonus = cw.improvised_ammunition ? bonus - 1 : bonus
 		bonus = cw.masterwork ? bonus + 1 : bonus
 
-		if ((props.character.name === "Dink Weatherbyrst" ) && (cw.weapon.name === "Heavy Pick") ){
+		if ((props.character.name === "Dink Weatherbyrst" ) && (cw.weapon.name === "Heavy Pick") || (props.character.name === "Natesse" ) && (cw.weapon.name === "Scimitar") ){
 			bonus += 1
 		}
     // add everything together
@@ -1019,6 +1019,9 @@ const Attacks = props => {
 			if ((props.character.name === "Iyugi" && characterWeapon.weapon.name === "Dagger") || (props.character.name === "Natesse" && characterWeapon.weapon.name === "Scimitar")){
 				tempBonuses += dex
 				tempBonuses -= str
+			}
+			if ((props.character.name === "Natesse" && characterWeapon.weapon.name === "Scimitar")){
+				tempBonuses += 1
 			}
 			//HARDCODE
 

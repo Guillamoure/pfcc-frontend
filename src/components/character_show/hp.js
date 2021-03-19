@@ -154,7 +154,7 @@ const HP = props => {
   }
 
   return (
-    <div className='hp shadow'>
+    <div className='hp shadow' style={{boxShadow: `5px 4px 2px #${props.settings.shadeColor}`, opacity: "0.95", backgroundColor: `#${props.settings.bubbleColor}`, borderColor: `#${props.settings.borderColor}`}}>
       {renderCharacterHP()}
       {mobileHPChange && <HPChanges renderEdit={props.renderEdit} closeHPChanges={closeHPChanges}/>}
     </div>
@@ -167,7 +167,8 @@ const mapStateToProps = (state) => {
     currentUser: state.currentUser,
     admin: state.admin,
     character: state.character,
-    character_info: state.character_info
+    character_info: state.character_info,
+		settings: state.settings
   }
 }
 

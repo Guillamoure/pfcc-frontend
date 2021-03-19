@@ -185,10 +185,11 @@ const Saves = props => {
       if (!isAComputer){
         capitalizedSave = capitalizedSave.substring(0, 3)
       }
-			let color = bonusPenaltySave(saveDetail.save, saveDetail.ability)
+			// removed dynamic color change because it clashed with theme color setting
+			// let color = bonusPenaltySave(saveDetail.save, saveDetail.ability)
 			return (
 	      <span key={i*3+1} className='centered' >
-	        <div className='enhanced' style={{color}}>{renderSave(saveDetail.save, saveDetail.ability)}</div>
+	        <div className='enhanced'>{renderSave(saveDetail.save, saveDetail.ability)}</div>
 	        <div className='muted'><strong>{capitalizedSave}</strong></div>
 	      </span>
 			)
@@ -211,7 +212,7 @@ const Saves = props => {
 		}
 
 		return (
-			<div id="saves" className={className}>
+			<div id="saves" className={className} style={{boxShadow: `5px 4px 2px #${props.settings.shadeColor}`, opacity: "0.95", backgroundColor: `#${props.settings.bubbleColor}`, borderColor: `#${props.settings.borderColor}`}}>
 			{isAComputer && savingThrowTitle}
 			{displayIndividualSave(isAComputer)}
 			</div>
@@ -272,7 +273,8 @@ const mapStateToProps = (state) => {
     admin: state.admin,
     character: state.character,
     character_info: state.character_info,
-    classes: state.classes
+    classes: state.classes,
+		settings: state.settings
   }
 }
 

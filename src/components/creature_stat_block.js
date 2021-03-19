@@ -1,7 +1,7 @@
 import React from 'react'
-import * as CreatureCalc from '../helper_functions/calculations/creatures'
-import * as SizeCalc from '../helper_functions/calculations/size'
-import * as CreatureFeaturesCalc from '../helper_functions/calculations/creature_features'
+import * as CreatureCalc from '../utils/calculations/creatures'
+import * as SizeCalc from '../utils/calculations/size'
+import * as CreatureFeaturesCalc from '../utils/calculations/creature_features'
 
 const CreatureStatBlock = props => {
 
@@ -18,9 +18,9 @@ const CreatureStatBlock = props => {
 		if (creature){
 			console.log(creature)
 			let hitDice = creature.hit_dice
-			let fortitude = CreatureCalc.savingThrow(creature.creature_type.fortitude, creature.constitution, hitDice)
-			let reflex = CreatureCalc.savingThrow(creature.creature_type.reflex, creature.dexterity, hitDice)
-			let will = CreatureCalc.savingThrow(creature.creature_type.will, creature.wisdom, hitDice)
+			let fortitude = CreatureCalc.savingThrow(creature.creature_type.fortitude, creature.constitution, hitDice, {augmentSummoning: creature.augmentSummoning})
+			let reflex = CreatureCalc.savingThrow(creature.creature_type.reflex, creature.dexterity, hitDice, {})
+			let will = CreatureCalc.savingThrow(creature.creature_type.will, creature.wisdom, hitDice, {})
 			let armorClass = CreatureCalc.armorClassTotal(creature)
 			let armorClassModsString = CreatureCalc.acModsString(creature)
 			return (
@@ -33,7 +33,7 @@ const CreatureStatBlock = props => {
 					<p className="creature-header"><strong>DEFENSE</strong></p>
 
 					<p><strong>AC</strong> {armorClass.armorClass}, touch {armorClass.touch}, flat-footed {armorClass.flatFooted} {armorClassModsString}</p>
-					<p><strong>hp</strong> {CreatureCalc.averageHP(hitDice, creature.creature_type.hit_die, creature.constitution)}</p>
+					<p><strong>hp</strong> {CreatureCalc.averageHP(hitDice, creature.creature_type.hit_die, creature.constitution, {augmentSummoning: creature.augmentSummoning})}</p>
 					<p><strong>Fort</strong> {fortitude}, <strong>Ref</strong> {reflex}, <strong>Will</strong> {will}</p>
 
 					<p className="creature-header"><strong>OFFENSE</strong></p>
@@ -45,7 +45,7 @@ const CreatureStatBlock = props => {
 
 					<p className="creature-header"><strong>STATISTICS</strong></p>
 
-					<p><strong>Str</strong> {creature.strength}, <strong>Dex</strong> {creature.dexterity}, <strong>Con</strong> {creature.constitution}, <strong>Int</strong> {creature.intelligence}, <strong>Wis</strong> {creature.wisdom}, <strong>Cha</strong> {creature.charisma}</p>
+					<p><strong>Str</strong> {creature.augmentSummoning ? creature.strength + 4 : creature.strength}, <strong>Dex</strong> {creature.dexterity}, <strong>Con</strong> {creature.augmentSummoning && creature.constitution ? creature.constitution + 4 : creature.constitution}, <strong>Int</strong> {creature.intelligence}, <strong>Wis</strong> {creature.wisdom}, <strong>Cha</strong> {creature.charisma}</p>
 					<p><strong>Base Atk</strong> {CreatureCalc.babString(hitDice, creature.creature_type.hit_die)}; <strong>CMB</strong> {CreatureCalc.cmbString(creature)}; <strong>CMD</strong> {CreatureCalc.cmd(creature)}</p>
 					<p><strong>Feats</strong> {CreatureCalc.renderFeats(creature.feats)}</p>
 					<p><strong>Skills</strong> INSERT SKILLS; <strong>Racial Modifiers</strong> INSERT RACIAL MODIFIERS</p>

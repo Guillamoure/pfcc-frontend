@@ -12,6 +12,7 @@ import { replaceCharacterInfoAction } from '../action_creator/character'
 import { statusConditionDistribution, removeStatusConditionDistribution } from  './status_conditions'
 import { sendCampaignWebsocket } from '../websocket/campaign'
 import { locateAbility } from '../fuf'
+import { modalAction } from '../action_creator/popups'
 
 export const defaultCharacterInfo = () => {
 	return {
@@ -22,7 +23,8 @@ export const defaultCharacterInfo = () => {
 		forbidden: [],
     proficiencies: { weapon: {groups: [], individualIds: []}, armor: {groups: [], individualIds: []} },
     movement: [],
-		statusConditions: []
+		statusConditions: [],
+		summonedAllies: []
   }
 }
 
@@ -32,6 +34,12 @@ export const doesThisFeatureNeedToBeDistributed = (ability) => {
 	array.forEach(feature => {
 		if (ability[feature].length){hasFeatures = true}
 	})
+	if (ability.action){
+		let actionArray = ["castable_spells"]
+		actionArray.forEach(feature => {
+			if (ability[feature].length){hasFeatures = true}
+		})
+	}
 	return hasFeatures
 }
 
@@ -94,6 +102,19 @@ export const featureDistribution = (feature, options) => {
 	let { activeFeatures, classes } = store.getState().character_info
 	let oldActiveFeaturesLength = activeFeatures.length
 	let characterLevel = classes.reduce((agg, el) => (agg + el.level), 0)
+
+	// if some feature that is activated has a spell that is cast on activation
+	if (feature.action && feature.castable_spells.length){
+		feature.castable_spells.forEach(fcs => {
+			// see if that spell has any features
+			if (fcs.spell.features.length){
+				fcs.spell.features.forEach(spF => {
+					// check for any features to be distributed
+					featureDistribution(spF, {featureName: fcs.spell.name})
+				})
+			}
+		})
+	}
 
 	// go through the feature, and add it to character_info
 	klassFeaturesFeatureDistribution(feature, character_info, source, {characterLevel})
@@ -243,6 +264,9 @@ export const klassFeaturesFeatureDistribution = (feature, obj, source, options) 
 			obj.displayDescriptions.push(displayDescriptionsFeature(el, source))
 		}
 	})
+	if (feature.animal && feature.animal.animal_type === "summoned"){
+		modalAction("summonedAllies", feature.animal, {name: "Creature List"})
+	}
 }
 
 const skillBonusFeature = (sk, source) => {

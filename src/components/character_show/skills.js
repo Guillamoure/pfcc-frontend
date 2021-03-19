@@ -614,7 +614,7 @@ class Skills extends React.Component {
 
     if (localStorage.computer === "true"){
       return(
-        <div id='skills' className='shadow'>
+        <div id='skills' className='shadow' style={{boxShadow: `5px 4px 2px #${this.props.settings.shadeColor}`, opacity: "0.95", backgroundColor: `#${this.props.settings.bubbleColor}`, borderColor: `#${this.props.settings.borderColor}`}}>
           <div className="dynamic-size" name="skill list">
             {!!this.state.skillset ? this.renderSkillsTable() : null}
           </div>
@@ -636,7 +636,8 @@ const mapStatetoProps = (state) => {
     currentUser: state.currentUser,
     admin: state.admin,
     character: state.character,
-    character_info: state.character_info
+    character_info: state.character_info,
+		settings: state.settings
   }
 }
 

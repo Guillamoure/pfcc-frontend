@@ -1,10 +1,10 @@
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faDiceD20 } from '@fortawesome/free-solid-svg-icons'
+import { faDungeon} from '@fortawesome/free-solid-svg-icons'
 import { doWeNeedAYellowNotification } from '../../utils/notifications/yellow_notification'
 import { doWeNeedARedNotification } from '../../utils/notifications/red_notification'
 
-const NotificationDie = props => {
+const NotificationDoor = props => {
 
 	const greenBadge = () => {
 		let badge = false
@@ -36,15 +36,15 @@ const NotificationDie = props => {
 	}
 
 	return (
-		<span className='notif'>
+		<span style={{marginLeft: "1vw"}}>
 			<div className='notification'>
 				{greenBadge() && <span className='badge green-badge'></span>}
 				{yellowBadge() && <span className='badge yellow-badge'></span>}
 				{redBadge() && <span className='badge red-badge'></span>}
-				<FontAwesomeIcon id='spin' icon={faDiceD20} size='3x' onClick={() => props.editModal('notifications')} />
+				<FontAwesomeIcon icon={faDungeon} size='3x' onClick={() => props.editModal('notifications')} />
 			</div>
 		</span >
 	)
 }
 
-export default NotificationDie
+export default NotificationDoor

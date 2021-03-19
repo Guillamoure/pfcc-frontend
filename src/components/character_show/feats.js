@@ -71,6 +71,8 @@ class Feats extends React.Component {
         break
     }
 
+		feats = [...this.props.character.character_klasses.filter(ck => ck.feat).map(ck => ck.feat), ...feats]
+
     return feats.map(f => {
       return (
         <li onClick={() => modalAction("feat", f, {name: f.name})} className='highlight mobile-selected-tab-content' style={{maxHeight: window.outerHeight * 0.4}}>
@@ -294,60 +296,32 @@ class Feats extends React.Component {
 	ildre = () => {
 		return [
 			{
-				id: 10000,
-				description: 'You get a +4 bonus on initiative checks.',
-				name: 'Improved Initiative'
-			},
-			{
 				id: 10001,
-				description: 'An extended spell lasts twice as long as normal. A spell with a duration of concentration, instantaneous, or permanent is not affected by this feat. Level Increase: +1 (an extended spell uses up a spell slot one level higher than the spell’s actual level.)',
-				name: 'Extend Spell'
+				benefit: 'Each time you cast a summoning spell that conjures more than one creature, add one to the total number of creatures summoned.',
+				prerequisites: "Augment Summoning, caster level 3rd.",
+				blurb: "You can summon more creatures.",
+				name: 'Superior Summoning'
 			},
 		]
 	}
 
 	fireRoastedTomatoes = () => {
 		return [
-			{
-				id: 11000,
-				description: 'You get a +3 bonus on all checks involving the chosen skill. If you have 10 or more ranks in that skill, this bonus increases to +6.',
-				name: 'Skill Focus (Profession (chef))'
-			},
-			{
-				id: 11001,
-				description: 'You gain +3 hit points. For every Hit Die you possess beyond 3, you gain an additional +1 hit point. If you have more than 3 Hit Dice, you gain +1 hit points whenever you gain a Hit Die (such as when you gain a level).',
-				name: 'Toughness'
-			},
 		]
 	}
 
 	iyugi = () => {
 		return [
-			{
-				id: 12000,
-				description: 'You can precisely mimic the physical features of any individual you have encountered. When you use your racial change shape ability, you can attempt to take the form of an individual, granting you a +10 circumstance bonus on Disguise checks made to fool others with your impersonation.',
-				name: 'Realistic Likeness'
-			},
 		]
 	}
 
 	natesse = () => {
 		return [
-			{
-				id: 13000,
-				description: 'With a light weapon, elven curve blade, rapier, whip, or spiked chain made for a creature of your size category, you may use your Dexterity modifier instead of your Strength modifier on attack rolls. If you carry a shield, its armor check penalty applies to your attack rolls.',
-				name: "Weapon Finesse"
-			},
 		]
 	}
 
 	dzeyn = () => {
 		return [
-			{
-				id: 14000,
-				description: 'You get a +1 bonus on attack and damage rolls with ranged weapons at ranges of up to 30 feet.',
-				name: "Point-Blank Shot"
-			},
 		]
 	}
 

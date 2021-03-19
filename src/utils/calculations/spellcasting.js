@@ -335,7 +335,11 @@ export const renderSpellDC = (spellData) => {
 	let save = spellData.spell.saving_throw
 	if (save === "Fortitude"){save = "Fort"}
 	if (save === "Reflex"){save = "Ref"}
-	return save + " " + (10 + abilityScoreMod(spellData.spellcasting.ability_score) + spellData.spell_level)
+	let score = (10 + abilityScoreMod(spellData.spellcasting.ability_score) + spellData.spell_level)
+	if (spellData.spell.magic_school.name === "Conjuration"){
+		console.log("something increase DC something")
+	}
+	return save + " " + score
 }
 
 export const castSpell = (ksData, spellsPerDay) => {

@@ -26,7 +26,8 @@ const initialState = {
 		activeFeatures: [],
 		temporaryHitPoints: [],
 		statusConditions: [],
-		displayDescriptions: []
+		displayDescriptions: [],
+		summonedAllies: []
   },
   classes: [],
   races: [],
@@ -40,7 +41,12 @@ const initialState = {
 	activeEncounter: {},
 	settings: {
 		layout: "detailed",
-		colorTheme: "noir"
+		background1: "CFB997",
+		background2: "fff",
+		textColor: "000",
+		bubbleColor: "ebebeb",
+		borderColor: "000",
+		shadeColor: "800000"
 	}
 }
 
@@ -647,6 +653,8 @@ const reducer = (state = initialState, action) => {
 			return {...state, classes: klasses}
 		case 'ADD SKILL':
 			return {...state, skills: [...state.skills, action.skill]}
+		case "UPDATE COLOR THEME":
+			return {...state, settings: {...state.settings, ...action.obj}}
     default:
       return state
   }

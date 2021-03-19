@@ -42,7 +42,7 @@ class Abilities extends React.Component {
     this.props.character.applicable_klass_features.forEach(akf => {
       // if an akf has a feature with an action, display it
 			akf.features.forEach(f => {
-				if (f.action){
+				if (f.action && !f.usage?.feature_usage_base){
 					let ckfus = this.props.character.character_klass_feature_usages.filter(fu => fu.klass_feature_id === akf.id)
 					if (akf.klass_archetype_id){
 						ckfus = this.props.character.character_klass_archetype_feature_usages.filter(fu => fu.klass_archetype_feature_id === akf.id)
@@ -50,17 +50,21 @@ class Abilities extends React.Component {
 					// the id value in the below object refers to the id of the character[type]
 					// so that specific klass_feature, magic_item_feature, etc. can be found by id
 					activatableAbilities.push({...f, sourceId: akf.id, klassFeatureName: akf.name, klassId: akf.klass_id, klassArchetypeId: akf.klass_archetype_id, usageSources: ckfus, source: "applicable_klass_features"})
-				}
-
+				} else if (f.usage?.feature_usage_base) {
 				// if a feature is a choice of another action (i.e. Bardic Performances)
-				if (f.usage?.feature_usage_base) {
 					let baseFeatureAndAbility = locateFeatureAndAbilityFromSource(f.usage.feature_usage_base.baseSource)
 					let ckfus = this.props.character.character_klass_feature_usages.filter(fu => fu.klass_feature_id === baseFeatureAndAbility.ability.id)
-					activatableAbilities.push({...f, sourceId: akf.id, klassFeatureName: akf.name, klassId: akf.klass_id, usageSources: ckfus, source: "applicable_klass_features", baseFeatureAndAbility, action: baseFeatureAndAbility.feature.action})
+
+					//cant use the same code from above to chane ght ckfus
+					// because the baseFeatureAndAbility that is the source of the usage points
+					// probably isn't an archetype thing
+					// so need to account for that
+
+					activatableAbilities.push({...f, sourceId: akf.id, klassFeatureName: akf.name, klassId: akf.klass_id, klassArchetypeId: akf.klass_archetype_id, usageSources: ckfus, source: "applicable_klass_features", baseFeatureAndAbility, action: f.action || baseFeatureAndAbility.feature.action})
 				}
 				// if a feature is spontaneous casting, like Cleric or Druid
 				if (akf.name === "Spontaneous Casting" && f.spontaneous_castings.length){
-					activatableAbilities.push({...f, sourceId: akf.id, klassFeatureName: akf.name, klassId: akf.klass_id, action: {name: "no-action"}, source: "applicable_klass_features", options: {spontaneous_casting: true}})
+					activatableAbilities.push({...f, sourceId: akf.id, klassFeatureName: akf.name, klassId: akf.klass_id, klassArchetypeId: akf.klass_archetype_id, action: {name: "no-action"}, source: "applicable_klass_features", options: {spontaneous_casting: true}})
 				}
 			})
       // only display the feature, but the text should be from the akf
@@ -98,6 +102,7 @@ class Abilities extends React.Component {
 			activatableAbilities.push({action: {name: "Move Action"}, sourceId: 1001, klassFeatureName: "Change Shape", klassId: 15, usageSources: [], source: "hardcoded", damages: [], saving_throws: []})
 		} else if (this.props.character.name === "Natesse"){
 			activatableAbilities.push({action: {name: "Immediate Action"}, sourceId: 1001, klassFeatureName: "Nanite Surge", klassId: 15, usageSources: [], source: "hardcoded", damages: [], saving_throws: []})
+			activatableAbilities.push({action: {name: "Immediate Action"}, sourceId: 1001, klassFeatureName: "Nanite Revival", klassId: 15, usageSources: [], source: "hardcoded", damages: [], saving_throws: []})
 		} else if (this.props.character.name === "Dz'eyn"){
 			activatableAbilities.push({action: {name: "Move Action"}, sourceId: 1001, klassFeatureName: "Climb 20 ft", klassId: 15, usageSources: [], source: "hardcoded", damages: [], saving_throws: []})
 			activatableAbilities.push({action: {name: "Swift Action"}, sourceId: 1001, klassFeatureName: "Toxic Skin - Poison Weapon", klassId: 15, usageSources: [], source: "hardcoded", damages: [], saving_throws: []})

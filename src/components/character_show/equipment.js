@@ -32,7 +32,7 @@ class Equipment extends React.Component {
       this.props.exitModal()
       // this.setState({itemObject: null})
     } else {
-      let changingState = 'magic item'
+      let changingState = 'magicItem'
       changingState = detail === 'weapon' ? 'weapon' : changingState
       changingState = detail === 'armor' ? 'armor' : changingState
       changingState = detail === 'poison' ? 'poison' : changingState
@@ -196,7 +196,7 @@ class Equipment extends React.Component {
 		let cc = carryingCapacity(abilityScore("strength"))
 		let load = calculateLoad(weight, abilityScore("strength"))
 		return (
-			<footer style={{display: "flex", justifyContent: "space-between", position: "sticky", bottom: "-5px", backgroundColor: "rgba(235, 235, 235, 0.95)", padding: "5px"}}>
+			<footer style={{display: "flex", justifyContent: "space-between", position: "sticky", bottom: "-5px", opacity: "0.95", backgroundColor: `#${this.props.settings.bubbleColor}`, padding: "5px"}}>
 				<div>
 					<strong>Carrying</strong>: {weight} lbs (<em>{load} Load</em>)
 				</div>
@@ -239,7 +239,8 @@ class Equipment extends React.Component {
 const mapStatetoProps = (state) => {
   return {
     character: state.character,
-    character_info: state.character_info
+    character_info: state.character_info,
+		settings: state.settings
   }
 }
 

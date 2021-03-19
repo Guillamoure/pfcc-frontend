@@ -41,7 +41,7 @@ const TurnActions = props => {
   }
 
   return (
-    <section id='actions' className='character-show shadow action-container'>
+    <section id='actions' className='character-show shadow action-container' style={{boxShadow: `5px 4px 2px #${props.settings.shadeColor}`, opacity: "0.95", backgroundColor: `#${props.settings.bubbleColor}`, borderColor: `#${props.settings.borderColor}`}}>
       <li id='full-action' className={used("full")} onClick={() => dispatch("full")}>Full-Round Action</li>
       <li id='immediate-action' className={used("immediate")} onClick={() => dispatch("immediate")}>Immediate Action</li>
       <li id='standard-action' className={used("standard")} onClick={() => dispatch("standard")}>Standard Action</li>
@@ -56,7 +56,8 @@ const TurnActions = props => {
 const mapStatetoProps = (state) => {
   return {
     character: state.character,
-    character_info: state.character_info
+    character_info: state.character_info,
+		settings: state.settings
   }
 }
 

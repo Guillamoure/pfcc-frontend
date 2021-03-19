@@ -45,6 +45,9 @@ export const skillBonusArray = (skillObj) => {
 	if (skillObj.name === "Sense Motive" && character.name === "Natesse"){permanent += -4}
 	if (skillObj.name === "Climb" && character.name === "Dz'eyn"){permanent += 8}
 	if (skillObj.name === "Perception" && character.name === "Dink Weatherbyrst"){permanent += 2}
+	// Alertness from Scimitar 
+	if (skillObj.name === "Perception" && character.name === "Natesse"){permanent += 2}
+	if (skillObj.name === "Sense Motive" && character.name === "Natesse"){permanent += 2}
 	// HARDCODE
 
 	return [permanent, temporary]

@@ -72,7 +72,7 @@ class App extends React.Component {
     localStorage.setItem("computer", computer)
     return (
         <Router>
-          <React.Fragment>
+          <main style={{backgroundImage: `linear-gradient(#${this.props.settings.background1} 60%, #${this.props.settings.background2})`, height: "100vh"}}>
             <NavBar />
             {this.props.tooltip.message && <Tooltip />}
             {!!this.props.modal.length && <ModalSkeleton />}
@@ -98,7 +98,7 @@ class App extends React.Component {
               <Route path="/campaigns/:slug" component={Campaign} />
               <Route path="/how-to-build-a-feature" component={HowToFeature} />
             </Switch>
-          </React.Fragment>
+          </main>
         </Router>
     );
   }
@@ -110,7 +110,8 @@ const mapStatetoProps = (state) => {
     admin: state.admin,
     tooltip: state.tooltip,
     modal: state.modal,
-		notifications: state.notifications
+		notifications: state.notifications,
+		settings: state.settings
   }
 }
 
