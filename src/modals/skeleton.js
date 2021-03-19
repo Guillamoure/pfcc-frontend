@@ -31,6 +31,7 @@ import GenericDescription from '../components/modals/generic_description'
 import AddCharacterEquipment from '../components/modals/add_character_equipment'
 import SummonedCreatureOptions from '../components/modals/summoned_creature_options'
 import MagicItemSummary from '../components/magic_item_summary'
+import DiceRoller from '../components/modals/dice_roller'
 
 const ModalSkeleton = (props) => {
 
@@ -86,6 +87,8 @@ const ModalSkeleton = (props) => {
 				return <SummonedCreatureOptions featureAnimal={modal.obj} />
 			case "magicItem":
 				return <MagicItemSummary item={modal.obj.magic_item} cmi={modal.obj}/>
+			case "rollDice":
+				return <DiceRoller diceObj={modal.obj}/>
       default:
 				return <GenericDescription name={modal.obj.name} description={modal.obj.description}/>
         break
