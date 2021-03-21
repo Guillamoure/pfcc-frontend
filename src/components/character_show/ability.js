@@ -90,7 +90,7 @@ function AbilityScore (props) {
   const renderAbilityScore = () => {
     if (localStorage.computer === "true"){
       return (
-        <span className='centered egg shadow shrink' style={{boxShadow: `5px 4px 2px #${props.settings.shadeColor}`, opacity: "0.95", backgroundColor: `#${props.settings.bubbleColor}`, borderColor: `#${props.settings.borderColor}`}} onClick={() => rollAbility(abilityScoreModString(props.name))}>
+        <span className='centered egg shadow shrink' style={{boxShadow: `5px 4px 2px #${props.settings.shadeColor}`, opacity: "0.95", backgroundColor: `#${props.settings.bubbleColor}`, borderColor: `#${props.settings.borderColor}`, cursor: "default"}} onClick={() => rollAbility(abilityScoreModString(props.name))}>
           <div className='enhanced'>{abilityScoreModString(props.name)}</div>
           <div className='muted'><strong>{truncate}</strong></div>
           <div className='dull'>{abilityScore(props.name, true)}</div>

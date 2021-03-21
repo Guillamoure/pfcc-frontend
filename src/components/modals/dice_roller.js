@@ -78,6 +78,7 @@ const DiceRoller = props => {
 		let nums = [20, 12, 10, 8, 6, 4, 3, 2, 100]
 		nums.forEach(n => {
 			if (diceToRoll[n]){
+				if (totalString !== ""){totalString += "+"}
 				totalString += `${diceToRoll[n]}d${n}`
 				for (let i = 0; i < diceToRoll[n]; i++){
 					let rollResult = Math.ceil(Math.random() * n)

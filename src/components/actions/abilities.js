@@ -7,7 +7,7 @@ import { calculateFeaturePercentage, remainingUsage, calculateCurrentUsage, isTh
 import { featureDistribution, doesThisFeatureNeedToBeDistributed } from '../../utils/distributers/features'
 import { patchFetch } from '../../utils/fetches'
 import { locateFeatureAndAbilityFromSource, classLevel, renderDamage, abbreviateDamageType } from '../../utils/fuf'
-import { modalAction } from '../../utils/action_creator/popups'
+import { modalAction, diceAction } from '../../utils/action_creator/popups'
 
 class Abilities extends React.Component {
 
@@ -113,12 +113,13 @@ class Abilities extends React.Component {
     return activatableAbilities.map((ability, idx) => {
 			let name = ability.klassFeatureName
 			if (!name){name = ability.kspecFeatureName}
+			let dice = this.renderDice(ability)
 			return (
 				<tr key={idx * 3 - 1}>
 					<td><button className={this.canThisAbilityBeUsed(ability)} onClick={() => this.newRenderClick(ability)}><strong>Click</strong></button></td>
 					<td>{name}</td>
 					<td>{this.renderUsage(ability)}</td>
-					<td>{this.renderDice(ability)}</td>
+					<td>{dice && <span style={{border: `1px solid #${this.props.settings.borderColor}`, borderRadius: "0.3em", cursor: "default", padding: "2px"}} onClick={() => this.rollAbility(name, dice)}>{dice}</span>}</td>
 					<td>{this.renderDC(ability)}</td>
 					<td>Nothin'</td>
 				</tr>
@@ -193,6 +194,15 @@ class Abilities extends React.Component {
 			}
 			return string
 		}
+	}
+
+	rollAbility = (name, dice) => {
+		let count = parseInt(dice)
+		let die = parseInt(dice.split("d")[1])
+		let modifier = parseInt(dice.split("+")[1]) || parseInt(dice.split("-")[1]) || 0
+
+		let obj = {rollName: name, modifier, die, count}
+		diceAction(obj)
 	}
 
 	renderDC = ability => {
@@ -1054,7 +1064,8 @@ class Abilities extends React.Component {
 const mapStatetoProps = (state) => {
   return {
     character: state.character,
-    character_info: state.character_info
+    character_info: state.character_info,
+		settings: state.settings
   }
 }
 

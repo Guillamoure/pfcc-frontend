@@ -7,7 +7,7 @@ import Abilities from '../components/actions/abilities'
 import Attacks from '../components/actions/attacks'
 import Basics from '../components/actions/basics'
 import Equipment from '../components/actions/equipment'
-import CombatManuevers from '../components/actions/basics/combat_maneuver'
+import CombatManeuvers from '../components/actions/basics/combat_maneuver'
 import Misc from '../components/actions/misc'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -15,8 +15,8 @@ import { faSortDown } from '@fortawesome/free-solid-svg-icons'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
 
 import { pluser } from '../utils/fuf'
-import { baseAttackBonus, pluserAB, combatManuevers } from '../utils/calculations/attack_bonus'
-import { tooltipAction } from '../utils/action_creator/popups'
+import { baseAttackBonus, pluserAB, combatManeuvers } from '../utils/calculations/attack_bonus'
+import { tooltipAction, diceAction } from '../utils/action_creator/popups'
 import { abilityScoreMod } from '../utils/calculations/ability_scores'
 
 
@@ -60,7 +60,7 @@ class Actions extends React.Component {
 		let bab = pluser(baseAttackBonus(this.props.characterInfo.classes, this.props.character.uniq_klasses))
 		let melee = pluserAB(this.props.character, this.props.characterInfo, "melee")
 		let ranged = pluserAB(this.props.character, this.props.characterInfo, "range")
-		let cm = combatManuevers(this.props.character, this.props.characterInfo)
+		let cm = combatManeuvers(this.props.character, this.props.characterInfo)
 		let cmb = pluser(cm.bonus)
 		let cmd = cm.defense
 
@@ -73,13 +73,14 @@ class Actions extends React.Component {
 
 
 
-		let pertinentTabs = ["Attacks", "Tactics", "Combat Manuevers"]
+		let pertinentTabs = ["Attacks", "Tactics", "Combat Maneuvers"]
 		if (pertinentTabs.includes(this.state.activeTab)) {
+			let init = this.calcInit()
 			return (
 				<div>
-					<strong onMouseOver={(e) => dispatchTooltip(e, "Base Attack Bonus")} onMouseOut={(e) => dispatchTooltip(e, "Base Attack Bonus")}>BAB:</strong> {bab} | <strong>Melee AB</strong> {melee} | <strong>Ranged AB</strong> {ranged} | <strong>Initiative:</strong> {this.calcInit()}
+					<strong onMouseOver={(e) => dispatchTooltip(e, "Base Attack Bonus")} onMouseOut={(e) => dispatchTooltip(e, "Base Attack Bonus")}>BAB:</strong> {bab} | <strong>Melee AB</strong> <span style={{border: `1px solid #${this.props.settings.borderColor}`, borderRadius: "0.3em", cursor: "default", padding: "1px 2px"}} onClick={() => this.rollDice("Melee Attack Roll", melee)}>{melee}</span> | <strong>Ranged AB</strong> <span style={{border: `1px solid #${this.props.settings.borderColor}`, borderRadius: "0.3em", cursor: "default", padding: "1px 2px"}} onClick={() => this.rollDice("Ranged Attack Roll", ranged)}>{ranged}</span> | <strong>Initiative:</strong> <span style={{border: `1px solid #${this.props.settings.borderColor}`, borderRadius: "0.3em", cursor: "default", padding: "1px 2px"}} onClick={() => this.rollDice("Initiative", init)}>{init}</span>
 					<br/>
-					<strong onMouseOver={(e) => dispatchTooltip(e, "Combat Manuever Bonus")} onMouseOut={(e) => dispatchTooltip(e, "Combat Manuever Bonus")}>CMB</strong> {cmb} | <strong onMouseOver={(e) => dispatchTooltip(e, "Combat Manuever Defense")} onMouseOut={(e) => dispatchTooltip(e, "Combat Manuever Defense")}>CMD</strong> {cmd}
+					<strong onMouseOver={(e) => dispatchTooltip(e, "Combat Maneuver Bonus")} onMouseOut={(e) => dispatchTooltip(e, "Combat Maneuver Bonus")}>CMB</strong> <span style={{border: `1px solid #${this.props.settings.borderColor}`, borderRadius: "0.3em", cursor: "default", padding: "1px 2px"}} onClick={() => this.rollDice("Combat Maneuver Check", cmb)}>{cmb}</span> | <strong onMouseOver={(e) => dispatchTooltip(e, "Combat Maneuver Defense")} onMouseOut={(e) => dispatchTooltip(e, "Combat Maneuver Defense")}>CMD</strong> {cmd}
 				</div>
 			)
 		} else {return null}
@@ -114,22 +115,27 @@ class Actions extends React.Component {
 		}
 
 
-		const bonusPenaltyInit = () => {
-			let temp = initiativeArray()[1]
-			let color = "black"
-			if (temp > 0){color = "green"}
-			if (temp < 0){color = "maroon"}
-			return color
-		}
+		// const bonusPenaltyInit = () => {
+		// 	let temp = initiativeArray()[1]
+		// 	let color = `#${this.props.settings.textColor}`
+		// 	if (temp > 0){color = "green"}
+		// 	if (temp < 0){color = "maroon"}
+		// 	return color
+		// }
 
 		const calculateInitiative = () => {
 			let initArray = initiativeArray()
 			return pluser(initArray[0] + initArray[1])
 		}
 
-		const color = bonusPenaltyInit()
+		// const initColor = bonusPenaltyInit()
 
-		return <span style={{color}}>{calculateInitiative()}</span>
+		return calculateInitiative()
+	}
+
+	rollDice = (name, modifier) => {
+		let obj = {rollName: name, modifier: parseInt(modifier), die: 20, count: 1}
+		diceAction(obj)
 	}
 
 
@@ -143,7 +149,7 @@ class Actions extends React.Component {
 						{this.renderAttackDetails()}
 	          {this.state.activeTab === "Attacks" && <Attacks editModal={this.props.editModal} renderTooltip={this.props.renderTooltip} mouseOut={this.props.mouseOut}/>}
 	          {this.state.activeTab === "Tactics" && <Basics renderTooltip={this.props.renderTooltip} mouseOut={this.props.mouseOut}/>}
-	          {this.state.activeTab === "Combat Manuevers" && <CombatManuevers />}
+	          {this.state.activeTab === "Combat Maneuvers" && <CombatManeuvers />}
 	          {this.state.activeTab === "Spells" && <Spellcasting />}
 	          {this.state.activeTab === "Abilities" && <Abilities editModal={this.props.editModal}/>}
           </div>

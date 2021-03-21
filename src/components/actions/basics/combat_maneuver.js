@@ -1,7 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { pluser } from '../../../utils/fuf'
-import { baseAttackBonus, pluserAB, combatManuevers } from '../../../utils/calculations/attack_bonus'
+import { baseAttackBonus, pluserAB, combatManeuvers } from '../../../utils/calculations/attack_bonus'
+import { modalAction, diceAction } from '../../../utils/action_creator/popups'
 
 const CombatManeuver = props => {
 
@@ -130,7 +131,7 @@ const CombatManeuver = props => {
     }
   }
 
-	const cms = combatManuevers(props.character, props.characterInfo)
+	const cms = combatManeuvers(props.character, props.characterInfo)
 	let cmb = pluser(cms.bonus)
 	let cmd = cms.defense
 
@@ -189,13 +190,18 @@ const CombatManeuver = props => {
         <tr>
           <td><button className={actions[m.action] ? 'cannot-cast' : m.action} onClick={() => renderDispatch(m.action)}>{m.button}</button></td>
           <td>{m.name}</td>
-          <td>{cmb}</td>
+          <td><span style={{border: `1px solid #${props.settings.borderColor}`, borderRadius: "0.3em", cursor: "default", padding: "2px"}} onClick={() => rollCM(m.name, cmb)}>{cmb}</span></td>
           <td>{cmd}</td>
           <td>{m.description}</td>
         </tr>
       )
     })
   }
+
+	const rollCM = (name, modifier) => {
+		let obj = {rollName: name, modifier: parseInt(modifier), die: 20, count: 1}
+		diceAction(obj)
+	}
 
   const renderDispatch = action => {
     if ((action === 'standard' || action  === 'move' || action === 'swift') && actions.full){
@@ -228,9 +234,9 @@ const CombatManeuver = props => {
 
 
   return (
-    <React.Fragment>
+    <>
       {cm()}
-    </React.Fragment>
+    </>
   )
 }
 
@@ -238,7 +244,8 @@ const mapStatetoProps = (state) => {
   return {
     character: state.character,
     characterInfo: state.character_info,
-    classes: state.classes
+    classes: state.classes,
+		settings: state.settings
   }
 }
 

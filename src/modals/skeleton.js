@@ -139,27 +139,31 @@ const ModalSkeleton = (props) => {
 		setExitStyle({bottom: `${window.innerHeight/2 - 4}px`})
 	}
 
-	const exiting = (e, index) => {
+	const exiting = (e, closingIndex) => {
 		e.preventDefault()
 		// setRemoval('slide-out')
 		// setRemovalTab('slide-out-folder-tab')
 		// setTimeout(() => setStyle({display: 'none'}), 775)
 		// setTimeout(() => setExitStyle({display: 'none'}), 775)
-		// setTimeout(() => exitModal(index), 800)
-		let newIndex
-		if (index === activeIndex){
-			if (index === 0 || (index > 0 && index < props.modal.length)){
-				newIndex = index
-			} else if (props.modal.length - 1 === index){
-				newIndex = index -1
+		// setTimeout(() => exitModal(closingIndex), 800)
+		let newActiveIndex
+		if (closingIndex === activeIndex){
+			if (closingIndex === 0 || (props.modal.length - 1 > closingIndex)){
+				newActiveIndex = closingIndex
+			} else if (props.modal.length - 1 === closingIndex){
+				newActiveIndex = closingIndex -1
 			}
-		} else if (index > activeIndex) {
-			newIndex = activeIndex
-		} else if (index < activeIndex){
-			newIndex = activeIndex - 1
+		} else if (closingIndex > activeIndex) {
+			newActiveIndex = activeIndex
+		} else if (closingIndex < activeIndex){
+			newActiveIndex = activeIndex - 1
 		}
-		setActiveIndex(newIndex)
-		exitModal(index)
+		console.log("The index of the tab that is closing is", closingIndex)
+		console.log("The index you have open is", activeIndex)
+		console.log("The index that is going to be active is", newActiveIndex)
+
+		setActiveIndex(newActiveIndex)
+		exitModal(closingIndex)
 	}
 	const updateActiveIndex = i => {
 		if (i !== activeIndex){

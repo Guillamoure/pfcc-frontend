@@ -102,7 +102,7 @@ export const bonusPenaltyAB = (characterObj, characterInfoObj, type) => {
 	return color
 }
 
-export const combatManuevers = (characterObj, characterInfoObj) => {
+export const combatManeuvers = (characterObj, characterInfoObj) => {
 	let obj = {}
 
 	let bab = baseAttackBonus(characterInfoObj.classes, characterObj.uniq_klasses)

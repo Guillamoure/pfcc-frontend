@@ -218,7 +218,7 @@ const Saves = props => {
 		}
 
 		return (
-			<div id="saves" className={className} style={{boxShadow: `5px 4px 2px #${props.settings.shadeColor}`, opacity: "0.95", backgroundColor: `#${props.settings.bubbleColor}`, borderColor: `#${props.settings.borderColor}`}}>
+			<div id="saves" className={className} style={{boxShadow: `5px 4px 2px #${props.settings.shadeColor}`, opacity: "0.95", backgroundColor: `#${props.settings.bubbleColor}`, borderColor: `#${props.settings.borderColor}`, cursor: "default"}}>
 			{isAComputer && savingThrowTitle}
 				<div style={{display: "flex", justifyContent: "center"}}>
 					{displayIndividualSave(isAComputer)}

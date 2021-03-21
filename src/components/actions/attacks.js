@@ -226,7 +226,7 @@ const Attacks = props => {
           <td>{name}</td>
           <td style={{display: "flex", flexWrap: "wrap"}}>{attackRoll}</td>
           <td>{cw.weapon.range ? cw.weapon.range + " ft" : "-"}</td>
-          <td><div style={{border: `1px solid #${props.settings.borderColor}`, borderRadius: "0.3em", padding: "2px"}} onClick={() => rollDamage(((cw.name || cw.weapon.name) + " Damage Roll"), damageRoll)}>{damageRoll}</div></td>
+          <td><div style={{border: `1px solid #${props.settings.borderColor}`, borderRadius: "0.3em", padding: "2px", cursor: "default"}} onClick={() => rollDamage(((cw.name || cw.weapon.name) + " Damage Roll"), damageRoll)}>{damageRoll}</div></td>
           <td>{renderCritical(cw)}</td>
           <td>{collectAdditionalInfo(cw).map(renderAdditionalInfo)}</td>
         </tr>
@@ -289,11 +289,11 @@ const Attacks = props => {
 
 		if (cw.weapon.thrown && attackBonuses.length === 2 && attackBonuses[0] !== attackBonuses[1]) {
 			// return attackBonuses[0] + " (T " + attackBonuses[1] + ")"
-			return attackBonuses.map((ab, i) => <span style={{border: `1px solid #${props.settings.borderColor}`, borderRadius: "0.3em", padding: "2px", margin: "2px"}} onClick={() => rollAttack(((cw.name || cw.weapon.name) + " Attack Roll"), ab)}>{i === 1 ? ` (T ${ab})` : ab}</span>)
+			return attackBonuses.map((ab, i) => <span style={{border: `1px solid #${props.settings.borderColor}`, borderRadius: "0.3em", padding: "2px", margin: "2px", cursor: "default"}} onClick={() => rollAttack(((cw.name || cw.weapon.name) + " Attack Roll"), ab)}>{i === 1 ? ` (T ${ab})` : ab}</span>)
 		} else if (attackBonuses[0] === attackBonuses[1]){
-			return attackBonuses.map(ab => <span style={{border: `1px solid #${props.settings.borderColor}`, borderRadius: "0.3em", padding: "2px", margin: "2px"}} onClick={() => rollAttack(((cw.name || cw.weapon.name) + " Attack Roll"), ab)}>{ab}</span>)[0]
+			return attackBonuses.map(ab => <span style={{border: `1px solid #${props.settings.borderColor}`, borderRadius: "0.3em", padding: "2px", margin: "2px", cursor: "default"}} onClick={() => rollAttack(((cw.name || cw.weapon.name) + " Attack Roll"), ab)}>{ab}</span>)[0]
 		}
-    return attackBonuses.map(ab => <span style={{border: `1px solid #${props.settings.borderColor}`, borderRadius: "0.3em", padding: "2px", margin: "2px"}} onClick={() => rollAttack(((cw.name || cw.weapon.name) + " Attack Roll"), ab)}>{ab}</span>)
+    return attackBonuses.map(ab => <span style={{border: `1px solid #${props.settings.borderColor}`, borderRadius: "0.3em", padding: "2px", margin: "2px", cursor: "default"}} onClick={() => rollAttack(((cw.name || cw.weapon.name) + " Attack Roll"), ab)}>{ab}</span>)
   }
 
 	const rollAttack = (name, modifier) => {
