@@ -45,7 +45,7 @@ export const skillBonusArray = (skillObj) => {
 	if (skillObj.name === "Sense Motive" && character.name === "Natesse"){permanent += -4}
 	if (skillObj.name === "Climb" && character.name === "Dz'eyn"){permanent += 8}
 	if (skillObj.name === "Perception" && character.name === "Dink Weatherbyrst"){permanent += 2}
-	// Alertness from Scimitar 
+	// Alertness from Scimitar
 	if (skillObj.name === "Perception" && character.name === "Natesse"){permanent += 2}
 	if (skillObj.name === "Sense Motive" && character.name === "Natesse"){permanent += 2}
 	// HARDCODE
@@ -187,7 +187,7 @@ export const renderSkillName = skillObj => {
 	}
 
 
-	return <><span className="underline-hover" style={{color: "black"}} onClick={() => modalAction("skill", skillObj.id, {name})}>{name}</span>{hasACP}{asterisk}</>
+	return <><span className="underline-hover" onClick={() => modalAction("skill", skillObj.id, {name})}>{name}</span>{hasACP}{asterisk}</>
 }
 
 export const addCustomSkills = (css, skills) => {

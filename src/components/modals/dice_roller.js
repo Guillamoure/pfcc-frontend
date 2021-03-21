@@ -22,7 +22,10 @@ const DiceRoller = props => {
 	const { borderColor, textColor, background1 } = useSelector(state => state.settings)
 
 	React.useEffect(() => {
+		const { rollName, modifier, die, count } = props.diceObj
 
+		setDice({rollName, [die]: count})
+		setBaseModifier(modifier)
 	}, [props.diceObj])
 
 	const chooseDice = () => {
@@ -69,11 +72,11 @@ const DiceRoller = props => {
 
 	const roll = () => {
 		let total = []
-		let totalString = []
+		let totalString = ""
 		let nums = [20, 12, 10, 8, 6, 4, 3, 2, 100]
 		nums.forEach(n => {
 			if (diceToRoll[n]){
-				totalString.push(`${diceToRoll[n]}d${n}`)
+				totalString += `${diceToRoll[n]}d${n}`
 				for (let i = 0; i < diceToRoll[n]; i++){
 					let rollResult = Math.ceil(Math.random() * n)
 					if (diceToRoll[n] == 1 && n === 20){
@@ -90,11 +93,11 @@ const DiceRoller = props => {
 		})
 		if (baseModifier){
 			total.push(parseInt(baseModifier))
-			totalString.push(baseModifier)
+			totalString += parseInt(baseModifier) >= 0 ? `+${baseModifier}` : baseModifier
 		}
 		if (tempModifier){
 			total.push(parseInt(tempModifier))
-			totalString.push(tempModifier)
+			totalString += parseInt(tempModifier) >= 0 ? `+${tempModifier}` : tempModifier
 		}
 		let resultsDupe = [...diceResults, {name: "custom roll", totalString, total}]
 		while (resultsDupe.length > 7){
@@ -149,8 +152,8 @@ const DiceRoller = props => {
 			}
 		})
 		diceString = diceString.join("+")
-		if (baseModifier){diceString += `+${baseModifier}`}
-		if (tempModifier){diceString += `+${tempModifier}`}
+		if (baseModifier){diceString += parseInt(baseModifier) >= 0 ? `+${baseModifier}` : baseModifier}
+		if (tempModifier){diceString += parseInt(tempModifier) >= 0 ? `+${tempModifier}` : tempModifier}
 		return (
 			<article>
 				<section style={{border: `2px dashed #${borderColor}`, margin: "1%", color: `#${textColor}`, display: "flex", minHeight: "20vh", flexWrap: "wrap"}}>
@@ -164,7 +167,7 @@ const DiceRoller = props => {
 					</div>
 					<button onClick={roll} style={{borderRadius: "1em", display: "flex", justifyContent: "space-around", width: "100%", alignItems: "center"}}>
 						<RollingDiceCup style={{height: "10vh", width: "10vh"}}/>
-						<p style={{fontSize: "20px", wordBreak: "break-word"}}>Roll {diceString}</p>
+						<p style={{fontSize: "20px", wordBreak: "break-word"}}>Roll {diceToRoll.rollName ? `${diceToRoll.rollName} (${diceString})` : diceString}</p>
 					</button>
 				</section>
 			</article>
@@ -178,21 +181,21 @@ const DiceRoller = props => {
 			let joinTotal = 0
 			if (typeof d.total[0] !== "number"){
 				let critical = d.total[0]
-				let remainder = d.total.slice(1).join("+")
-				if (remainder.length > 0){remainder = "+" + remainder}
+				let remainder = d.total.slice(1).map(d => parseInt(d) >= 0 ? "+" + d : d).join("")
+				// if (remainder.length > 0){remainder = "+" + remainder}
 				joinEquation = <span>{critical}{remainder}</span>
 
 				joinTotal += parseInt(critical.props.children)
 				joinTotal += d.total.slice(1).reduce((agg, el) => (agg + el), 0)
 
 			} else {
-				joinEquation = d.total.join("+")
+				joinEquation = d.total.map((d, i) => parseInt(d) >= 0 && i !== 0 ? "+" + d : d).join("")
 				joinTotal = d.total.reduce((agg, el) => agg + el)
 			}
 			return (
 				<li style={{borderTop: `1px solid #${borderColor}`, margin: "1%", wordBreak: "break-word"}}>
 					<div><strong>{joinEquation} = <span style={{fontSize: "1.25em", textShadow: `1px 1px #${background1}, 1px -1px #${background1}, -1px 1px #${background1}, -1px -1px #${background1}`}}>{joinTotal}</span></strong></div>
-					<div>{d.name} - {d.totalString.join("+")}</div>
+					<div>{d.name} - {d.totalString}</div>
 				</li>
 			)
 		})
@@ -204,7 +207,7 @@ const DiceRoller = props => {
 	}
 
 	return (
-		<aside style={{display: "grid", gridTemplateColumns: "10% 45% 45%"}}>
+		<aside style={{display: "grid", gridTemplateColumns: "15% 42% 43%"}}>
 			{chooseDice()}
 			{theCage()}
 			{results()}

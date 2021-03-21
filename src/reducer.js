@@ -655,6 +655,19 @@ const reducer = (state = initialState, action) => {
 			return {...state, skills: [...state.skills, action.skill]}
 		case "UPDATE COLOR THEME":
 			return {...state, settings: {...state.settings, ...action.obj}}
+		case "ADD DICE":
+			let modalDupe = [...state.modal]
+			let isTheDiceModalOpen = modalDupe.find(m => m.detail === "rollDice")
+			if (!isTheDiceModalOpen){
+				modalDupe.push({detail: "rollDice", obj: action.obj})
+			} else {
+				modalDupe = modalDupe.map(m => {
+					if (m.detail !== "rollDice"){return m}
+					return {...m, obj: action.obj}
+				})
+			}
+
+			return {...state, modal: modalDupe}
     default:
       return state
   }

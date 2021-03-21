@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import localhost from '../../localhost'
 import { abilityScoreMod } from '../../utils/calculations/ability_scores'
 import { skillBonusPluser, isThisAClassSkill, skillRanks, renderSkillTooltip, renderSkillName, addCustomSkills, sortSkills } from '../../utils/calculations/skills'
+import { diceAction } from '../../utils/action_creator/popups'
 
 class Skills extends React.Component {
 
@@ -316,18 +317,23 @@ class Skills extends React.Component {
 		skills = sortSkills(skills)
 		return skills.map(skill => {
 			// console.log(skill.name, skillBonusPluser(skill))
-
+			let modifier = skillBonusPluser(skill)
       return (
         <tr key={_.random(1, 2000000)}>
           <td>{isThisAClassSkill(skill, this.props.character) ? "X" : null}</td>
           <td onMouseOver={(e) => this.renderTooltip(e, null, skill.ability_score)} onMouseOut={this.props.mouseOut}><strong>{this.renderAbilityScoreAbbreviation(skill)}</strong></td>
-          <td className={this.raging(skill.name)} style={this.renderSkillBonus(skill, true)} onMouseOver={(e) => this.renderTooltip(e, skill)} onMouseOut={(e) => this.renderTooltip(e, skill)}>{renderSkillName(skill)}</td>
-          <td style={this.renderSkillBonus(skill, true)}>{skillBonusPluser(skill)}</td>
+          <td className={this.raging(skill.name)} style={{color: `#${this.props.settings.textColor}`}} onMouseOver={(e) => this.renderTooltip(e, skill)} onMouseOut={(e) => this.renderTooltip(e, skill)}>{renderSkillName(skill)}</td>
+          <td style={{color: `#${this.props.settings.textColor}`, border: `1px solid #${this.props.settings.borderColor}`, borderRadius: "0.3em", textAlign: "center"}} onClick={() => this.rollSkill(skill.name, modifier)}>{modifier}</td>
           <td>{skillRanks(skill, this.props.character)}</td>
         </tr>
       )}
     )
   }
+
+	rollSkill = (name, modifier) => {
+		let obj = {rollName: name, modifier: parseInt(modifier), die: 20, count: 1}
+		diceAction(obj)
+	}
 
   renderMobileSkillsRow = () => {
     const sortedSkills = this.modifiedSkills()
