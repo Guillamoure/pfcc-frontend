@@ -183,15 +183,15 @@ const ModalSkeleton = (props) => {
 		return props.modal.map((m, i) => {
 			console.log(m)
 			let name = m.name || m.obj?.name || `Tab ${i+1}`
-			let tabStyle = {...exitStyle, backgroundColor: `#${props.settings.bubbleColor}`, borderColor: `#${props.settings.borderColor}`}
+			let tabStyle = {...exitStyle, backgroundColor: `#${props.settings.bubbleColor}`, borderColor: `#${props.settings.borderColor}`, color: `#${props.settings.textColor}`}
 			if (sidebarContainer.current){
 				// tabStyle.left = `${( i * Math.floor(sidebarContainer.current.clientWidth / 5) ) + (sidebarContainer.current.offsetLeft) + parseInt(window.getComputedStyle(sidebarContainer.current).getPropertyValue('padding-left'))}px`
 				let wiff = window.innerWidth
 				tabStyle.left = `${(i * wiff/11) + (wiff * 0.03)}px`
 			}
 			if (i !== activeIndex){
-				tabStyle.backgroundColor = "lightgrey"
-				tabStyle.borderBottom = "2px solid black"
+				tabStyle.filter = "brightness(85%)"
+				tabStyle.borderBottom = `2px solid #${props.settings.borderColor}`
 			}
 			if (collapsed){
 				tabStyle.bottom = "0px"
@@ -210,7 +210,7 @@ const ModalSkeleton = (props) => {
 	// style={{boxShadow: `5px 4px 2px #${props.settings.shadeColor}`, opacity: "0.95", backgroundColor: `#${props.settings.bubbleColor}`, borderColor: `#${props.settings.borderColor}`}}
 
 	const collapsedStyle = () => {
-		let style = {backgroundColor: `#${props.settings.bubbleColor}`, borderColor: `#${props.settings.borderColor}`}
+		let style = {backgroundColor: `#${props.settings.bubbleColor}`, borderColor: `#${props.settings.borderColor}`, color: `#${props.settings.textColor}`}
 		if (collapsed){
 			style.height = "0px"
 			style.padding = "0px"

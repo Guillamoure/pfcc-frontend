@@ -2,12 +2,15 @@ import React from 'react'
 
 import { useSelector } from 'react-redux'
 
+import d2 from '../../dice/d2.png'
+import { ReactComponent as D3 } from '../../dice/d3.svg'
 import { ReactComponent as D4 } from '../../dice/d4.svg'
 import { ReactComponent as D6 } from '../../dice/d6.svg'
 import { ReactComponent as D8 } from '../../dice/d8.svg'
 import { ReactComponent as D10 } from '../../dice/d10.svg'
 import { ReactComponent as D12 } from '../../dice/d12.svg'
 import { ReactComponent as D20 } from '../../dice/d20.svg'
+import { ReactComponent as RollingDiceCup } from '../../dice/rolling-dice-cup.svg'
 
 const DiceRoller = props => {
 
@@ -16,7 +19,7 @@ const DiceRoller = props => {
 	const [baseModifier, setBaseModifier] = React.useState(0)
 	const [tempModifier, setTempModifier] = React.useState(0)
 
-	const { borderColor, textColor } = useSelector(state => state.settings)
+	const { borderColor, textColor, background1 } = useSelector(state => state.settings)
 
 	React.useEffect(() => {
 
@@ -25,10 +28,12 @@ const DiceRoller = props => {
 	const chooseDice = () => {
 		return (
 			<section style={{display: "flex", flexDirection: "column-reverse", marginBottom: "auto"}}>
+				<div onClick={() => renderAddDice(100)}><D10 style={{height: "4vh", width: "4vh"}}/><D10 style={{height: "4vh", width: "4vh"}}/></div>
+				<img src={d2} style={{height: "5vh", width: "5vh"}} onClick={() => renderAddDice(2)}/>
+				<D3 style={{height: "5vh", width: "5vh"}} onClick={() => renderAddDice(3)}/>
 				<D4 style={{height: "5vh", width: "5vh"}} onClick={() => renderAddDice(4)}/>
 				<D6 style={{height: "5vh", width: "5vh"}} onClick={() => renderAddDice(6)}/>
 				<D8 style={{height: "5vh", width: "5vh"}} onClick={() => renderAddDice(8)}/>
-				<div onClick={() => renderAddDice(100)}><D10 style={{height: "4vh", width: "4vh"}}/><D10 style={{height: "4vh", width: "4vh"}}/></div>
 				<D10 style={{height: "5vh", width: "5vh"}} onClick={() => renderAddDice(10)}/>
 				<D12 style={{height: "5vh", width: "5vh"}} onClick={() => renderAddDice(12)}/>
 				<D20 style={{height: "5vh", width: "5vh"}} onClick={() => renderAddDice(20)}/>
@@ -65,13 +70,13 @@ const DiceRoller = props => {
 	const roll = () => {
 		let total = []
 		let totalString = []
-		let nums = [4, 6, 8, 100, 10, 12, 20]
+		let nums = [20, 12, 10, 8, 6, 4, 3, 2, 100]
 		nums.forEach(n => {
 			if (diceToRoll[n]){
 				totalString.push(`${diceToRoll[n]}d${n}`)
 				for (let i = 0; i < diceToRoll[n]; i++){
 					let rollResult = Math.ceil(Math.random() * n)
-					if (Object.keys(diceToRoll).length === 1 && diceToRoll[n] == 1 && n === 20){
+					if (diceToRoll[n] == 1 && n === 20){
 						if (rollResult === 20){
 							rollResult = <span style={{color: "gold", textShadow: "1px 1px #000, 1px -1px #000, -1px 1px #000, -1px -1px #000"}}>20</span>
 						} else if (rollResult === 1){
@@ -102,8 +107,16 @@ const DiceRoller = props => {
 		if (!Object.keys(diceToRoll).length){return null}
 		let diceString = []
 		let diceElements = [];
-		[4, 6, 8, 100, 10, 12, 20].forEach(n => {
+		[20, 12, 10, 8, 6, 4, 3, 2, 100].forEach(n => {
 			if (diceToRoll[n]){
+				if (n === 2){
+					diceString.push(`${diceToRoll[n]}d2`)
+					for (let i = 0; i < diceToRoll[n]; i++){diceElements.push(<img src={d2} style={{height: "5vh", width: "5vh"}} onClick={() => renderSubtractDice(2)}/>)}
+				}
+				if (n === 3){
+					diceString.push(`${diceToRoll[n]}d3`)
+					for (let i = 0; i < diceToRoll[n]; i++){diceElements.push(<D3 style={{height: "5vh", width: "5vh"}} onClick={() => renderSubtractDice(3)}/>)}
+				}
 				if (n === 4){
 					diceString.push(`${diceToRoll[n]}d4`)
 					for (let i = 0; i < diceToRoll[n]; i++){diceElements.push(<D4 style={{height: "5vh", width: "5vh"}} onClick={() => renderSubtractDice(4)}/>)}
@@ -140,12 +153,20 @@ const DiceRoller = props => {
 		if (tempModifier){diceString += `+${tempModifier}`}
 		return (
 			<article>
-				<section style={{border: `2px dashed #${borderColor}`, margin: "1%", color: `#${textColor}`, display: "flex"}}>
+				<section style={{border: `2px dashed #${borderColor}`, margin: "1%", color: `#${textColor}`, display: "flex", minHeight: "20vh", flexWrap: "wrap"}}>
 					{diceElements}
 				</section>
-				<label>Base Mod<input type="number" value={baseModifier} onChange={e => setBaseModifier(e.target.value)}/></label>
-				<label>Temp Mod<input type="number" value={tempModifier} onChange={e => setTempModifier(e.target.value)}/></label>
-				<button onClick={roll}>Roll {diceString}</button> <button onClick={clearDice}>X</button>
+				<section style={{display: "grid", gridTemplateRows: "1fr 2fr"}}>
+					<div style={{padding: "4px", display: "flex", justifyContent: "space-between"}}>
+						<label>Base Mod <input type="number" value={baseModifier} onChange={e => setBaseModifier(e.target.value)} style={{width: "5vh"}}/></label>
+						<label>Temp Mod <input type="number" value={tempModifier} onChange={e => setTempModifier(e.target.value)} style={{width: "5vh"}}/></label>
+						<button onClick={clearDice}>Clear</button>
+					</div>
+					<button onClick={roll} style={{borderRadius: "1em", display: "flex", justifyContent: "space-around", width: "100%", alignItems: "center"}}>
+						<RollingDiceCup style={{height: "10vh", width: "10vh"}}/>
+						<p style={{fontSize: "20px", wordBreak: "break-word"}}>Roll {diceString}</p>
+					</button>
+				</section>
 			</article>
 		)
 	}
@@ -169,8 +190,8 @@ const DiceRoller = props => {
 				joinTotal = d.total.reduce((agg, el) => agg + el)
 			}
 			return (
-				<li style={{borderTop: `1px solid #${borderColor}`, margin: "1%"}}>
-					<div><strong>{joinEquation} = <span style={{fontSize: "1.2em"}}>{joinTotal}</span></strong></div>
+				<li style={{borderTop: `1px solid #${borderColor}`, margin: "1%", wordBreak: "break-word"}}>
+					<div><strong>{joinEquation} = <span style={{fontSize: "1.25em", textShadow: `1px 1px #${background1}, 1px -1px #${background1}, -1px 1px #${background1}, -1px -1px #${background1}`}}>{joinTotal}</span></strong></div>
 					<div>{d.name} - {d.totalString.join("+")}</div>
 				</li>
 			)
