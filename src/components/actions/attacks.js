@@ -6,6 +6,7 @@ import { abilityScoreMod } from '../../utils/calculations/ability_scores'
 // import { tooltip } from '../../dispatches/tooltip'
 import { expendAmmo, reloadAmmo } from '../../dispatch'
 import _ from 'lodash'
+import { diceAction } from '../../utils/action_creator/popups'
 
 
 const Attacks = props => {
@@ -217,13 +218,15 @@ const Attacks = props => {
       }
     }
     if (localStorage.computer === "true"){
+			let attackRoll = calculateAttackBonuses(cw)
+			let damageRoll = renderDamage(cw)
       return (
         <tr key={index * 3 - 1}>
           <td><button className={styling} onClick={clickAction}><strong>{buttonName}</strong></button></td>
           <td>{name}</td>
-          <td style={renderNum('abS', null, true)}>{calculateAttackBonuses(cw)}</td>
+          <td style={{display: "flex", flexWrap: "wrap"}}>{attackRoll}</td>
           <td>{cw.weapon.range ? cw.weapon.range + " ft" : "-"}</td>
-          <td>{renderDamage(cw)}</td>
+          <td><div style={{border: `1px solid #${props.settings.borderColor}`, borderRadius: "0.3em", padding: "2px"}} onClick={() => rollDamage(((cw.name || cw.weapon.name) + " Damage Roll"), damageRoll)}>{damageRoll}</div></td>
           <td>{renderCritical(cw)}</td>
           <td>{collectAdditionalInfo(cw).map(renderAdditionalInfo)}</td>
         </tr>
@@ -285,12 +288,30 @@ const Attacks = props => {
     // join that array together
 
 		if (cw.weapon.thrown && attackBonuses.length === 2 && attackBonuses[0] !== attackBonuses[1]) {
-			return attackBonuses[0] + " (T " + attackBonuses[1] + ")"
+			// return attackBonuses[0] + " (T " + attackBonuses[1] + ")"
+			return attackBonuses.map((ab, i) => <span style={{border: `1px solid #${props.settings.borderColor}`, borderRadius: "0.3em", padding: "2px", margin: "2px"}} onClick={() => rollAttack(((cw.name || cw.weapon.name) + " Attack Roll"), ab)}>{i === 1 ? ` (T ${ab})` : ab}</span>)
 		} else if (attackBonuses[0] === attackBonuses[1]){
-			return attackBonuses[0]
+			return attackBonuses.map(ab => <span style={{border: `1px solid #${props.settings.borderColor}`, borderRadius: "0.3em", padding: "2px", margin: "2px"}} onClick={() => rollAttack(((cw.name || cw.weapon.name) + " Attack Roll"), ab)}>{ab}</span>)[0]
 		}
-    return attackBonuses.join(", ")
+    return attackBonuses.map(ab => <span style={{border: `1px solid #${props.settings.borderColor}`, borderRadius: "0.3em", padding: "2px", margin: "2px"}} onClick={() => rollAttack(((cw.name || cw.weapon.name) + " Attack Roll"), ab)}>{ab}</span>)
   }
+
+	const rollAttack = (name, modifier) => {
+		let obj = {rollName: name, modifier: parseInt(modifier), die: 20, count: 1}
+		diceAction(obj)
+	}
+
+	const rollDamage = (name, dice) => {
+		let count = parseInt(dice)
+		let die = parseInt(dice.split("d")[1])
+		let modifier = parseInt(dice.split("+")[1]) || parseInt(dice.split("-")[1]) || 0
+
+		// if there is no dice, i.e."1+4 B", then you don't need to roll
+		if (!die){ return }
+
+		let obj = {rollName: name, modifier, die, count}
+		diceAction(obj)
+	}
 
 	const renderDamage = (cw, options) => {
 
@@ -1601,7 +1622,8 @@ const mapStatetoProps = (state) => {
     currentUser: state.currentUser,
     admin: state.admin,
     character: state.character,
-    character_info: state.character_info
+    character_info: state.character_info,
+		settings: state.settings
   }
 }
 

@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 import { abilityScore, abilityScoreModString } from '../../utils/calculations/ability_scores'
+import { diceAction } from '../../utils/action_creator/popups'
 
 function AbilityScore (props) {
 
@@ -81,13 +82,15 @@ function AbilityScore (props) {
     score += activeMutagen === 'constitution' ? -2 : 0
   }
 
-  const mod = (Math.floor( (score - 10) / 2))
-
+	const rollAbility = (modifier) => {
+		let obj = {rollName: _.capitalize(props.name), modifier: parseInt(modifier), die: 20, count: 1}
+		diceAction(obj)
+	}
 
   const renderAbilityScore = () => {
     if (localStorage.computer === "true"){
       return (
-        <span className='centered egg shadow shrink' style={{boxShadow: `5px 4px 2px #${props.settings.shadeColor}`, opacity: "0.95", backgroundColor: `#${props.settings.bubbleColor}`, borderColor: `#${props.settings.borderColor}`}}>
+        <span className='centered egg shadow shrink' style={{boxShadow: `5px 4px 2px #${props.settings.shadeColor}`, opacity: "0.95", backgroundColor: `#${props.settings.bubbleColor}`, borderColor: `#${props.settings.borderColor}`}} onClick={() => rollAbility(abilityScoreModString(props.name))}>
           <div className='enhanced'>{abilityScoreModString(props.name)}</div>
           <div className='muted'><strong>{truncate}</strong></div>
           <div className='dull'>{abilityScore(props.name, true)}</div>

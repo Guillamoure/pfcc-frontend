@@ -22,10 +22,12 @@ const DiceRoller = props => {
 	const { borderColor, textColor, background1 } = useSelector(state => state.settings)
 
 	React.useEffect(() => {
-		const { rollName, modifier, die, count } = props.diceObj
+		if (props.diceObj){
+			const { rollName, modifier, die, count } = props.diceObj
 
-		setDice({rollName, [die]: count})
-		setBaseModifier(modifier)
+			setDice({rollName, [die]: count})
+			setBaseModifier(modifier)
+		}
 	}, [props.diceObj])
 
 	const chooseDice = () => {
@@ -99,7 +101,7 @@ const DiceRoller = props => {
 			total.push(parseInt(tempModifier))
 			totalString += parseInt(tempModifier) >= 0 ? `+${tempModifier}` : tempModifier
 		}
-		let resultsDupe = [...diceResults, {name: "custom roll", totalString, total}]
+		let resultsDupe = [...diceResults, {name: diceToRoll.rollName || "Custom Roll", totalString, total}]
 		while (resultsDupe.length > 7){
 			resultsDupe.shift()
 		}

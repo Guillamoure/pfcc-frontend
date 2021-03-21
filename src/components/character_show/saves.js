@@ -2,6 +2,7 @@ import React from 'react'
 import _ from 'lodash'
 import { connect } from 'react-redux'
 import { renderSave, bonusPenaltySave } from '../../helper_functions/calculations/saving_throws'
+import { diceAction } from '../../utils/action_creator/popups'
 
 const Saves = props => {
 
@@ -170,6 +171,11 @@ const Saves = props => {
     return modifiers
   }
 
+	const rollSave = (name, modifier) => {
+		let obj = {rollName: name, modifier: parseInt(modifier), die: 20, count: 1}
+		diceAction(obj)
+	}
+
 	const displayIndividualSave = (isAComputer) => {
 		// NEW DATA
 		let saveDetails = [
@@ -185,11 +191,13 @@ const Saves = props => {
       if (!isAComputer){
         capitalizedSave = capitalizedSave.substring(0, 3)
       }
+
+			let modifier = renderSave(saveDetail.save, saveDetail.ability)
 			// removed dynamic color change because it clashed with theme color setting
 			// let color = bonusPenaltySave(saveDetail.save, saveDetail.ability)
 			return (
-	      <span key={i*3+1} className='centered' >
-	        <div className='enhanced'>{renderSave(saveDetail.save, saveDetail.ability)}</div>
+	      <span key={i*3+1} className='centered' style={{flexGrow: "1", margin: "0 0.7em"}} onClick={() => rollSave(capitalizedSave, modifier)}>
+	        <div className='enhanced' style={{border: `1px solid #${props.settings.borderColor}`, borderRadius: "0.3em"}}>{modifier}</div>
 	        <div className='muted'><strong>{capitalizedSave}</strong></div>
 	      </span>
 			)
@@ -205,16 +213,16 @@ const Saves = props => {
 		// CALCULATED DATA
 		let isAComputer = localStorage.computer === "true"
 
-		if (isAComputer) {
-			className += " container-3 shrink"
-		} else {
+		if (!isAComputer) {
 			className += " mobile-centering"
 		}
 
 		return (
 			<div id="saves" className={className} style={{boxShadow: `5px 4px 2px #${props.settings.shadeColor}`, opacity: "0.95", backgroundColor: `#${props.settings.bubbleColor}`, borderColor: `#${props.settings.borderColor}`}}>
 			{isAComputer && savingThrowTitle}
-			{displayIndividualSave(isAComputer)}
+				<div style={{display: "flex", justifyContent: "center"}}>
+					{displayIndividualSave(isAComputer)}
+				</div>
 			</div>
 		)
 	}
