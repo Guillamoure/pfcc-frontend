@@ -5,6 +5,8 @@ import { endTurn } from '../../helper_functions/distributers/new_turn'
 const TurnActions = props => {
 
   const used = (action) => {
+		const {full, standard, move} = props.character_info.actions
+		if (action === "full" && (full || standard || move)) {return "cast-full"}
     return props.character_info.actions[action] ? `cast-${action}` : action
   }
 

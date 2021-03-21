@@ -23,7 +23,7 @@ const WeaponSummary = props => {
       <React.Fragment>
         {props.cw?.name ? <h3 style={{display: 'inline-block'}}><em>{props.cw?.name}</em> ({props.cw?.masterwork && 'mwk '}{item.name})</h3> : <h3 style={{display: 'inline-block'}}>{props.cw?.masterwork && 'mwk '}{item.name}</h3>}
 
-        {props.cw?.name && <UserItemAdjustment characterItem={props.cw} item={props.item} exitModal={props.exitModal} editModal={props.editModal} url='character_weapon'/>}
+        {props.cw?.id && <UserItemAdjustment characterItem={props.cw} item={props.item} exitModal={props.exitModal} editModal={props.editModal} url='character_weapon'/>}
 
         <div>{item.category} {item.proficiency} {item.weapon_type} Weapon; <strong>Price</strong> {item.price_in_gp} gp; <strong>Weight</strong> {item.weight} lb;</div>
 

@@ -2,6 +2,10 @@ import React from 'react'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 import localhost from '../localhost'
+import { patchFetch } from '../utils/fetches'
+import { modalUpdateAction } from '../utils/action_creator/popups'
+import { replaceCharacterAction } from '../utils/action_creator/character'
+
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
@@ -332,6 +336,54 @@ const UserItemAdjustment = props => {
     )
   }
 
+	const renderAmmunition = () => {
+		if (!item.ammunition && item.ammunition_type){
+			let validAmmo = props.character.character_weapons.filter(cw => cw.weapon.ammunition && cw.weapon.ammunition_type === item.ammunition_type)
+
+			let activeAmmo = validAmmo.find(a => props.characterItem.character_weapon_ammunition_id === a.id) || {id: null, name: "No Ammo"}
+			if (props.characterItem.character_weapon_ammunition_id === 0) {activeAmmo = {id: 0, name: "Improvised Ammo"}}
+
+			let options = []
+			options.push(<option value={null}>No Ammo</option>)
+			validAmmo.forEach(characterAmmo => {
+				options.push(<option value={characterAmmo.id}>{characterAmmo.name || characterAmmo.weapon.name} x{characterAmmo.ammunition_amount ?? 0}</option>)
+			})
+			options.push(<option value={0}>Improvised Ammo</option>)
+
+			const changeAmmo = e => {
+				e.preventDefault()
+				let id = parseInt(e.target.value)
+
+				patchFetch(`character_weapons_ammo/${props.characterItem.id}`, {ammo_id: id})
+					.then(data => {
+						// change the characterWeapons
+						let characterWeaponsDupe = props.character.character_weapons.map(cw => {
+							if (cw.id === props.characterItem.id){
+								return {...cw, character_weapon_ammunition_id: id, improvised_ammunition: id === 0}
+							} else {
+								return cw
+							}
+						})
+						replaceCharacterAction("character_weapons", characterWeaponsDupe)
+						// change the modal
+						modalUpdateAction("weapon", {...props.characterItem, character_weapon_ammunition_id: id, improvised_ammunition: id === 0})
+
+					})
+			}
+
+
+			return (
+				<p>
+					<label htmlFor="ammunitionType" name="Ammunition">
+						<select name="ammunitionType" value={activeAmmo.id} onChange={changeAmmo}>
+							{options}
+						</select>
+					</label>
+				</p>
+			)
+		}
+	}
+
 
   return (
     <div>
@@ -347,6 +399,7 @@ const UserItemAdjustment = props => {
 
       <div className='trash' onClick={destroyItem} ><FontAwesomeIcon icon={faTrash} size='1x'/></div>
 
+			{renderAmmunition()}
     </div>
   )
 }

@@ -132,13 +132,13 @@ const reducer = (state = initialState, action) => {
       } else if(action.action === 'full' && actionDupe.full === true) {
         actionDupe = {full: false, standard: false, move: false}
       } else if (action.action === "standard" && actionDupe.standard === false && actionDupe.full === false) {
-				actionDupe = {full: true, standard: true}
+				actionDupe = {standard: true}
 			} else if (action.action === "standard" && actionDupe.standard === true && actionDupe.full === true) {
-				actionDupe = {full: false, standard: false}
+				actionDupe = {standard: false}
 			} else if (action.action === "move" && actionDupe.move === false && actionDupe.full === false) {
-				actionDupe = {full: true, move: true}
+				actionDupe = {move: true}
 			} else if (action.action === "move" && actionDupe.move === true && actionDupe.full === true) {
-				actionDupe = {full: false, move: false}
+				actionDupe = {move: false}
 			} else {
         actionDupe[action.action] = !actionDupe[action.action]
       }
@@ -656,7 +656,7 @@ const reducer = (state = initialState, action) => {
 		case "UPDATE COLOR THEME":
 			return {...state, settings: {...state.settings, ...action.obj}}
 		case "ADD DICE":
-			let modalDupe = [...state.modal]
+			var modalDupe = [...state.modal]
 			let isTheDiceModalOpen = modalDupe.find(m => m.detail === "rollDice")
 			if (!isTheDiceModalOpen){
 				modalDupe.push({detail: "rollDice", obj: action.obj})
@@ -667,6 +667,16 @@ const reducer = (state = initialState, action) => {
 				})
 			}
 
+			return {...state, modal: modalDupe}
+		case "UPDATE MODAL":
+			var modalDupe = [...state.modal]
+			modalDupe = modalDupe.map(m => {
+				if (m.detail === action.detail && m.obj.id === action.obj.id){
+					return {...m, obj: action.obj, options: action.obj || m.options}
+				} else {
+					return m
+				}
+			})
 			return {...state, modal: modalDupe}
     default:
       return state

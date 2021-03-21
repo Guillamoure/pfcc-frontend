@@ -3,6 +3,7 @@ import Store from '../../store'
 const { getState, dispatch } = Store
 
 export const modalAction = (detail, obj, options) => dispatch({type: "MODAL", detail, obj, options})
+export const modalUpdateAction = (detail, obj, options) => dispatch({type: "UPDATE MODAL", detail, obj, options})
 export const exitModalAction = () => ({type: "MODAL", remove: true})
 export const updateNotificationsAction = notifications => dispatch({type: "UPDATE NOTIFICATIONS", notifications})
 export const updateStoredNotificationsAction = notifications => dispatch({type: "UPDATE STORED NOTIFICATIONS", notifications})

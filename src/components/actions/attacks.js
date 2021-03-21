@@ -3,10 +3,11 @@ import { connect, useDispatch } from 'react-redux'
 import { pluser, mod } from '../../fuf'
 import { renderAB } from '../../utils/calculations/attack_bonus'
 import { abilityScoreMod } from '../../utils/calculations/ability_scores'
+import { isThisActionAvailable } from '../../utils/calculations/round_actions'
 // import { tooltip } from '../../dispatches/tooltip'
 import { expendAmmo, reloadAmmo } from '../../dispatch'
 import _ from 'lodash'
-import { diceAction } from '../../utils/action_creator/popups'
+import { diceAction, modalAction } from '../../utils/action_creator/popups'
 
 
 const Attacks = props => {
@@ -149,7 +150,7 @@ const Attacks = props => {
 		//HARDCODE
 
 		// add unarmed attack to end
-		weapons = weapons.filter(cw => cw.weapon.name !== "Unarmed")
+		weapons = weapons.filter(cw => !(cw.weapon.name === "Unarmed" || cw.weapon.ammunition))
     let unarmed = props.character.character_weapons.find(cw => cw.weapon.name === "Unarmed")
 		if (!!unarmed){
 			// there seems to be a bug on database reset
@@ -184,11 +185,11 @@ const Attacks = props => {
     let buttonName = "Attack"
 		let styling = canCast(action)
 
-		if (cw.equipped === "" && (cw.name !== "Unarmed" && cw.weapon.name !== "Unarmed")){
-			buttonName = "Equip"
-			action = "move"
-			styling = "move"
-		}
+		// if (cw.equipped === "" && (cw.name !== "Unarmed" && cw.weapon.name !== "Unarmed")){
+		// 	buttonName = "Equip"
+		// 	action = "move"
+		// 	styling = "move"
+		// }
 
 		let clickAction = () => newRenderDispatch(action, {characterWeapon: cw, buttonName})
 
@@ -199,6 +200,7 @@ const Attacks = props => {
         switch(loading.action.name){
           case "Move Action":
             action = "move"
+						styling = isThisActionAvailable(loading)
             break
           default:
             break
@@ -211,9 +213,10 @@ const Attacks = props => {
           clickAction = null
         }
       }
-      if (!cw.character_weapon_ammunition_id && !cw.improvised_ammunition){
+      if ((!cw.character_weapon_ammunition_id || !props.character.character_weapons.find(wc => wc.id === cw.character_weapon_ammunition_id).ammunition_amount) && !cw.improvised_ammunition){
         action = "none"
         buttonName = "No Ammo"
+				styling = "cannot-cast"
         clickAction = null
       }
     }
@@ -223,7 +226,7 @@ const Attacks = props => {
       return (
         <tr key={index * 3 - 1}>
           <td><button className={styling} onClick={clickAction}><strong>{buttonName}</strong></button></td>
-          <td>{name}</td>
+          <td><div className="underline-hover" onClick={() => modalAction("weapon", cw, {name: cw.name || cw.weapon.name})}>{name}</div></td>
           <td style={{display: "flex", flexWrap: "wrap"}}>{attackRoll}</td>
           <td>{cw.weapon.range ? cw.weapon.range + " ft" : "-"}</td>
           <td><div style={{border: `1px solid #${props.settings.borderColor}`, borderRadius: "0.3em", padding: "2px", cursor: "default"}} onClick={() => rollDamage(((cw.name || cw.weapon.name) + " Damage Roll"), damageRoll)}>{damageRoll}</div></td>
@@ -398,24 +401,24 @@ const Attacks = props => {
 		}
 
 		if (double) {
-			twfAttackBonuses = `${calculateAttackBonuses(double, penalties[0])}/${calculateAttackBonuses(double, penalties[1])}`
+			twfAttackBonuses = <div style={{display: "flex", flexWrap: "wrap"}}>{calculateAttackBonuses(double, penalties[0])}/{calculateAttackBonuses(double, penalties[1])}</div>
 			twfRange = range(double)
 			twfDamage = renderDamage(double, {double: true})
 
 			allAttacks = [double]
 
 		} else if (primary && off) {
-			twfAttackBonuses = `${calculateAttackBonuses(primary, penalties[0])}/${calculateAttackBonuses(off, penalties[1])}`
+			twfAttackBonuses = <div style={{display: "flex", flexWrap: "wrap"}}>{calculateAttackBonuses(primary, penalties[0])}/{calculateAttackBonuses(off, penalties[1])}</div>
 			twfRange = range(primary) === range(off) ? `${range(primary)}` : `${range(primary)}/${range(off)}`
 			twfDamage = renderDamage(primary) === renderDamage(off) ? `${renderDamage(primary)}` : `${renderDamage(primary)}/${renderDamage(off)}`
 			allAttacks = [primary, off]
 		}
 
     return (
-      <tr>
+      <tr style={{color: `#${props.settings.textColor}`}}>
         <td><button className={canCast('full')} onClick={() => renderMultipleDispatch(allAttacks)}><strong>Attack</strong></button></td>
         <td>{double ? name(double) : `${name(primary)} / ${name(off)}`}</td>
-        <td style={renderNum('abS', null, true)}>{twfAttackBonuses}</td>
+        <td>{twfAttackBonuses}</td>
         <td>{twfRange}</td>
         <td>{twfDamage}</td>
         <td>{}</td>
@@ -468,6 +471,9 @@ const Attacks = props => {
         additionalArray.push({name: "Thrown", tooltip: "If throwing, use second attack bonus (T)", sidebarRules: 0, italics: false})
       }
     }
+		if (characterWeapon.character_weapon_ammunition_id){
+			additionalArray.push({name: renderAmmo(characterWeapon), tooltip: null, italics: false, sidebarRules: 0})
+		}
 		//HARDCODE
 		if (characterWeapon.name === "Harrow Card"){
 			additionalArray.push({name: "Magic Weapon", tooltip: "You must use your Swift Action on Arcane Strike to enchant these cards to be used as weapons.", sidebarRules: 0, italics: false})
@@ -1535,17 +1541,18 @@ const Attacks = props => {
   }
 
   const renderAmmo = (weapon, justString) => {
-    let weaponAmmo = props.character_info.hardcode.weaponAmmo.find(wa => wa.weapon === weapon)
-    let ammo = props.character_info.hardcode.ammo.find(a => a.name === weaponAmmo.ammo)
+    // let weaponAmmo = props.character_info.hardcode.weaponAmmo.find(wa => wa.weapon === weapon)
+    let ammo = props.character.character_weapons.find(a => a.id === weapon.character_weapon_ammunition_id)
+
     if (justString){
       return ammo.name
     }
     let color = 'black'
-    color = ammo.amount <= 15 ? 'dark brown' : color
-    color = ammo.amount <= 10 ? 'maroon' : color
-    color = ammo.amount <= 5 ? 'red' : color
-    color = ammo.amount <= 0 ? 'grey' : color
-    return <span style={{color}}>({ammo.name})</span>
+    color = ammo.ammunition_amount <= 15 ? 'dark brown' : color
+    color = ammo.ammunition_amount <= 10 ? 'maroon' : color
+    color = ammo.ammunition_amount <= 5 ? 'red' : color
+    color = ammo.ammunition_amount <= 0 ? 'grey' : color
+    return <>{ammo.name || ammo.weapon.name} <span style={{color}}>(x{ammo.ammunition_amount ?? 0})</span></>
   }
 
   const renderMobileAttack = (attack) => {
