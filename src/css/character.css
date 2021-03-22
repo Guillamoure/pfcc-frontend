@@ -1,29 +1,39 @@
-.character {
-  margin: 10px 8em;
+.character-show-container {
+  margin: 0.5vw 4vw;
+	display: grid;
+	grid-template-columns: repeat(14, 1fr);
+	grid-template-rows: repeat(9, 1fr);
+	height: 80vh;
+	grid-template-areas:
+		"ability ability ability ability ability . . . . hp hp skills skills skills"
+		"saves saves saves size size round-actions round-actions round-actions round-actions ac ac skills skills skills"
+		"features-traits features-traits features-traits features-traits actions actions actions actions actions actions actions skills skills skills"
+		"features-traits features-traits features-traits features-traits actions actions actions actions actions actions actions skills skills skills"
+		"features-traits features-traits features-traits features-traits actions actions actions actions actions actions actions skills skills skills"
+		"features-traits features-traits features-traits features-traits actions actions actions actions actions actions actions skills skills skills"
+		"features-traits features-traits features-traits features-traits actions actions actions actions actions actions actions skills skills skills"
+		"features-traits features-traits features-traits features-traits actions actions actions actions actions actions actions skills skills skills"
+		"features-traits features-traits features-traits features-traits actions actions actions actions actions actions actions skills skills skills";
 	/* font-size: 1.1vw; */
 }
 
 .ability {
-  grid-column-start: 1;
-  grid-column-end: 5;
+	grid-area: ability;
+
   margin: .5em;
 }
 
 #features-traits {
-  grid-column-start: 1;
-  grid-column-end: 4;
-  grid-row-start: 3;
-  grid-row-end: 10;
+	grid-area: features-traits;
+
   overflow: auto;
   height: 100%;
   position: relative;
 }
 
 .hp {
-  grid-column-start: 8;
-  grid-column-end: 9;
-  grid-row-start: 1;
-  grid-row-end: 2;
+	grid-area: hp;
+
   margin-top: 2em;
   margin: .5em;
   padding: .2em;
@@ -35,10 +45,8 @@
 
 
 #saves {
-  grid-column-start: 1;
-  grid-column-end: 3;
-  grid-row-start: 2;
-  grid-row-end: 3;
+  grid-area: saves;
+
   margin: .5em;
   padding: .2em;
   background-color: rgba(235, 235, 235, 0.95);
@@ -48,10 +56,6 @@
 }
 
 #attack-bonus {
-  grid-column-start: 3;
-  grid-column-end: 4;
-  grid-row-start: 2;
-  grid-row-end: 3;
   margin: .5em;
   padding: .2em;
   background-color: rgba(235, 235, 235, 0.95);
@@ -61,10 +65,8 @@
 }
 
 #ac {
-  grid-column-start: 7;
-  grid-column-end: 8;
-  grid-row-start: 1;
-  grid-row-end: 2;
+	grid-area: ac;
+
   margin: .5em;
   padding: .2em;
   background-color: rgba(235, 235, 235, 0.95);
@@ -75,30 +77,28 @@
 }
 
 #details {
-  grid-column-start: 5;
+  /* grid-column-start: 5;
   grid-column-end: 9;
   grid-row-start: 1;
-  grid-row-end: 8;
+  grid-row-end: 8; */
   overflow: auto;
   max-height: 100%;
   position: relative;
 }
 
 #campaign{
-  grid-column-start: 1;
+  /* grid-column-start: 1;
   grid-column-end: 5;
   grid-row-start: 1;
-  grid-row-end: 8;
+  grid-row-end: 8; */
   overflow: auto;
   max-height: 29em;
   position: relative;
 }
 
 #skills {
-  grid-column-start: 7;
-  grid-column-end: 9;
-  grid-row-start: 2;
-  grid-row-end: 10;
+	grid-area: skills;
+
   margin: .5em;
   padding: .6em;
   background-color: rgba(235, 235, 235, 0.95);
@@ -108,6 +108,43 @@
   overflow: auto;
   max-height: 100%;
 	height: 100%;
+  position: relative;
+}
+
+.actions {
+	grid-area: actions;
+
+  margin: .5em;
+  padding: .2em;
+  background-color: rgba(235, 235, 235, 0.95);
+  border: solid;
+  border-color: #000;
+  border-radius: 1em;
+  overflow: auto;
+  height: 100%;
+  position: relative;
+}
+
+.action-container {
+  display: grid;
+  grid-template-columns: 3fr 3fr 3fr 2fr;
+  grid-template-rows: 1fr 1fr;
+	grid-gap: 4px;
+	grid-template-areas:
+		"full-round full-round immediate free"
+		"standard move swift start-turn";
+	list-style: none;
+}
+
+#actions {
+	grid-area: round-actions;
+}
+
+#size{
+	grid-area: size;
+
+  overflow: auto;
+  max-height: 29em;
   position: relative;
 }
 
@@ -126,41 +163,6 @@
 
 .strike {
   text-decoration: line-through;
-}
-
-#spin {
-  -webkit-animation: fa-spin 12s infinite ease-in;
-  animation: fa-spin 12s infinite ease-in;
-}
-
-#spin:hover {
-  /* -webkit-animation-name: fa-spin;
-  animation-name: fa-spin; */
-  -webkit-animation-duration: .1s;
-  -webkit-animation-timing-function: ease-out;
-  -webkit-animation-iteration-count: 5;
-  animation-duration: .1s;
-  animation-timing-function: ease-out;
-  animation-iteration-count: 5;
-  /* -webkit-animation-name: spin-back;
-  -webkit-animation-duration : 2s;
-  animation-name: spin-back;
-  animation-duration: 2s; */
-}
-
-
-@-webkit-keyframes spin-back {
-  0% {color: red;};
-  70% {color: green;}
-}
-
-@keyframes spin-back {
-  0% {
-    -webkit-animation: fa-spin 1s infinite linear;
-    animation: fa-spin 1s infinite linear;
-  }
-  70% {
-  }
 }
 
 .green-notif {

@@ -483,10 +483,15 @@ const Attacks = props => {
 			additionalArray.push({name: "Wild Talents", tooltip: "Can augment with your Substance Infusions (DC 14) or Form Infusions (DC 12)", sidebarRules: 0, italics: false})
 		}
 		if (props.character.name === "Iyugi"){
-			additionalArray.push({name: "Sneak Attack", tooltip: "If target is Denied Dex bonus to AC, or you are Flanking their, +1d6 Precision Damage", sidebarRules: 0, italics: false})
+			if (characterWeapon.weapon.name === "Dagger"){
+				additionalArray.push({name: "Sneak Attack +2d8", tooltip: "If target is Denied Dex bonus to AC, or you are Flanking their, +2d8 Precision Damage", sidebarRules: 0, italics: false})
+			} else {
+				additionalArray.push({name: "Sneak Attack +2d4", tooltip: "If target is Denied Dex bonus to AC, or you are Flanking their, +2d4 Precision Damage", sidebarRules: 0, italics: false})
+			}
 		}
 		if (props.character.name === "Dz'eyn"){
 			additionalArray.push({name: "Studied Target", tooltip: "+1 to Attacks and Damage if target is studied", sidebarRules: 0, italics: false})
+			additionalArray.push({name: "Sneak Attack +1d6", tooltip: "If target is Denied Dex bonus to AC, or you are Flanking their, +1d6 Precision Damage", sidebarRules: 0, italics: false})
 			if (characterWeapon.weapon.thrown || characterWeapon.weapon.category === "Ranged"){
 				additionalArray.push({name: "Point-Blank Shot", tooltip: "+1 to Attacks and Damage if within 30 ft", sidebarRules: 0, italics: false})
 				additionalArray.push({name: "Precise Shot", tooltip: "Attack engaged target without penalty", sidebarRules: 0, italics: false})

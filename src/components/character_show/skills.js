@@ -324,7 +324,7 @@ class Skills extends React.Component {
           <td onMouseOver={(e) => this.renderTooltip(e, null, skill.ability_score)} onMouseOut={this.props.mouseOut}><strong>{this.renderAbilityScoreAbbreviation(skill)}</strong></td>
           <td className={this.raging(skill.name)} style={{color: `#${this.props.settings.textColor}`}} onMouseOver={(e) => this.renderTooltip(e, skill)} onMouseOut={(e) => this.renderTooltip(e, skill)}>{renderSkillName(skill)}</td>
           <td style={{color: `#${this.props.settings.textColor}`, border: `1px solid #${this.props.settings.borderColor}`, borderRadius: "0.3em", textAlign: "center", cursor: "default"}} onClick={() => this.rollSkill(skill.name, modifier)}>{modifier}</td>
-          <td>{skillRanks(skill, this.props.character)}</td>
+          <td style={{textAlign: "center"}}>{skillRanks(skill, this.props.character)}</td>
         </tr>
       )}
     )

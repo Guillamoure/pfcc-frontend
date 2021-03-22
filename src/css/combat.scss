@@ -47,22 +47,6 @@
   text-align: center;
 }
 
-.actions {
-  grid-column-start: 4;
-  grid-column-end: 7;
-  grid-row-start: 3;
-  grid-row-end: 10;
-  margin: .5em;
-  padding: .2em;
-  background-color: rgba(235, 235, 235, 0.95);
-  border: solid;
-  border-color: #000;
-  border-radius: 1em;
-  overflow: auto;
-  height: 100%;
-  position: relative;
-}
-
 .standard {
   border-color: #666;
   border-radius: 1em;
@@ -244,24 +228,6 @@
   background: #aaa;
 }
 
-.action-container {
-  display: grid;
-  grid-template-columns: 3fr 3fr 3fr 2fr;
-  grid-template-rows: 1fr 1fr;
-	grid-gap: 4px;
-	grid-template-areas:
-		"full-round full-round immediate free"
-		"standard move swift start-turn";
-	list-style: none;
-}
-
-#actions {
-  grid-column-start: 4;
-  grid-column-end: 7;
-  grid-row-start: 2;
-  grid-row-end: 3;
-}
-
 #full-action {
   width: 100%;
   display: inline-block;
@@ -329,16 +295,6 @@
 
 .table-details {
   width: 69%;
-}
-
-#size{
-  grid-column-start: 3;
-  grid-column-end: 4;
-  grid-row-start: 2;
-  grid-row-end: 3;
-  overflow: auto;
-  max-height: 29em;
-  position: relative;
 }
 
 .health-box{

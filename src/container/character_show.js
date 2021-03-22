@@ -61,13 +61,15 @@ import CharacterFeatureModal from '../modals/character_feature_modal'
 import WeaponModal from '../modals/weapon'
 
 import MobileTabs from '../components/mobile/tabs'
-
 import ModalSkeleton from '../modals/skeleton'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCaretRight } from '@fortawesome/free-solid-svg-icons'
 import { faCaretLeft } from '@fortawesome/free-solid-svg-icons'
 import { faDiceD20 } from '@fortawesome/free-solid-svg-icons'
+
+import { updateColorThemeAction } from '../utils/action_creator/settings'
+import themes from '../themes'
 
 
 // from here
@@ -203,6 +205,14 @@ class Character extends React.Component {
       //   this.props.history.push('/')
       // }
     })
+		if (!localStorage.getItem("theme")){
+			localStorage.setItem("theme", "standard")
+		} else {
+			let theme = localStorage.getItem("theme")
+			let foundTheme = themes.find(t => t.name === theme)
+			updateColorThemeAction(foundTheme.colors)
+		}
+
   }
 
   //
@@ -484,7 +494,7 @@ class Character extends React.Component {
     if (localStorage.computer !== "false"){
       return (
 				<>
-	        <span className="container-8 character">
+	        <span className="character-show-container">
 		        {this.state.character.race && this.state.display === "Adventure" && <AbilityScores character={this.state.character} editModal={this.editModal}/>}
 		        {this.state.character.race && this.state.display === "Adventure" && <FeaturesTraits character={this.state.character} editModal={this.editModal} exitModal={this.exitModal} characterItemID={this.state.characterItemID}/>}
 		        {this.state.character.race && this.state.display === "Character" && <Details character={this.state.character} editModal={this.editModal}/>}
