@@ -1022,7 +1022,12 @@ const Attacks = props => {
 		bonuses.forEach(b => {
 			if (b.statistic === "Damage" && _.capitalize(b.specific_statistic) === weaponType){
 				bonusModifiers.push(b)
-			} else if (b.statistic === "Damage" && b.specific_statistic === "weapon"){bonusModifiers.push(b)}
+			} else if (b.statistic === "Damage" && b.specific_statistic === "weapon"){
+				bonusModifiers.push(b)
+			} else if (b.statistic === "Damage" && _.capitalize(b.specific_statistic) === "Range" && weaponType === "Thrown"){
+				bonusModifiers.push(b)
+			}
+
 		})
 
     if (weaponType === "Melee" || weaponType === "Thrown") {
@@ -1058,8 +1063,13 @@ const Attacks = props => {
 			//HARDCODE
 
 			return `${pluser(str + handedStrengthModifier + tempBonuses)}`
-    }
-    if (characterWeapon.weapon.weapon_type === "Range"){
+    } else if (weaponType === "Range"){
+			
+			let tempBonuses = bonusModifiers.reduce((agg, el) => (agg + el.bonus), 0)
+
+			if (tempBonuses > 0){
+				return `${pluser(tempBonuses)}`
+			}
       return ""
     }
   }

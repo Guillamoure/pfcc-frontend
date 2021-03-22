@@ -82,6 +82,17 @@ class Abilities extends React.Component {
 				}
 			})
 		})
+		this.props.character.character_klasses.forEach(cK => {
+			if (cK.feat){
+				cK.feat.features.forEach(f => {
+					if (f.usage){
+						let action = f.action || {name: "no-action"}
+						// at the time of creation, the only feats im using are used once per round, so no data needs to persist to the backend
+						activatableAbilities.push({...f, action, source: "character_klasses", sourceId: cK.id, featName: cK.feat.name})
+					}
+				})
+			}
+		})
 
 		// HARDCODE
 		if (this.props.character.name === "Majestik"){
@@ -112,7 +123,7 @@ class Abilities extends React.Component {
 
     return activatableAbilities.map((ability, idx) => {
 			let name = ability.klassFeatureName
-			if (!name){name = ability.kspecFeatureName}
+			if (!name){name = ability.kspecFeatureName || ability.featName}
 			let dice = this.renderDice(ability)
 			return (
 				<tr key={idx * 3 - 1}>
@@ -260,51 +271,58 @@ class Abilities extends React.Component {
 				return null
 			}
 
-			let body = {
-				character_id: this.props.character.id,
-				klass_feature_id: ability.sourceId,
-				feature_usage_id: ability.usage.id,
-				current_usage: calculateCurrentUsage(ability.usageSources) + 1
-			}
-			if (ability.baseFeatureAndAbility){
-				if (ability.usageSources.length === 1){
-					let ckfu = ability.usageSources[0]
-					body = {...ckfu, current_usage: ckfu.current_usage + 1}
-				} else if (ability.usageSources.length === 0){
-					body.feature_usage_id = ability.baseFeatureAndAbility.feature.usage.id
-					body.klass_feature_id = ability.baseFeatureAndAbility.ability.id
-					body.current_usage = 1
+			if (ability.usageSource) {
+				let body = {
+					character_id: this.props.character.id,
+					klass_feature_id: ability.sourceId,
+					feature_usage_id: ability.usage.id,
+					current_usage: calculateCurrentUsage(ability.usageSources) + 1
 				}
-			} else if (ability.kspecFeatureName){
-				delete body.klass_feature_id
-				body.klass_specialization_feature_id = ability.subSourceId
-			} else if (ability.klassArchetypeId){
-				delete body.klass_feature_id
-				body.klass_archetype_feature_id = ability.sourceId
+				if (ability.baseFeatureAndAbility){
+					if (ability.usageSources.length === 1){
+						let ckfu = ability.usageSources[0]
+						body = {...ckfu, current_usage: ckfu.current_usage + 1}
+					} else if (ability.usageSources.length === 0){
+						body.feature_usage_id = ability.baseFeatureAndAbility.feature.usage.id
+						body.klass_feature_id = ability.baseFeatureAndAbility.ability.id
+						body.current_usage = 1
+					}
+				} else if (ability.kspecFeatureName){
+					delete body.klass_feature_id
+					body.klass_specialization_feature_id = ability.subSourceId
+				} else if (ability.klassArchetypeId){
+					delete body.klass_feature_id
+					body.klass_archetype_feature_id = ability.sourceId
+				}
+
+				let url
+				switch(ability.source){
+					case "applicable_klass_features":
+						url = "character_klass_feature_usages"
+						break
+					case "klass_specializations":
+						url = "character_klass_specialization_feature_usages"
+						break
+					default:
+						url = "character_klass_feature_usages"
+				}
+				if (ability.klassArchetypeId){
+					url = "character_klass_archetype_feature_usages"
+				}
+
+				patchFetch(url, body)
+					.then(data => {
+						this.props.dispatch({type: "ADJUST CHARACTER REPLACE VALUE IN ARRAY", adjust: url, value: data})
+						 if (doesThisFeatureNeedToBeDistributed(ability)){
+							 featureDistribution(ability)
+						 }
+					})
+			} else {
+				if (doesThisFeatureNeedToBeDistributed(ability)){
+					featureDistribution(ability)
+				}
 			}
 
-			let url
-			switch(ability.source){
-				case "applicable_klass_features":
-					url = "character_klass_feature_usages"
-					break
-				case "klass_specializations":
-					url = "character_klass_specialization_feature_usages"
-					break
-				default:
-					url = "character_klass_feature_usages"
-			}
-			if (ability.klassArchetypeId){
-				url = "character_klass_archetype_feature_usages"
-			}
-
-			patchFetch(url, body)
-				.then(data => {
-					this.props.dispatch({type: "ADJUST CHARACTER REPLACE VALUE IN ARRAY", adjust: url, value: data})
-					 if (doesThisFeatureNeedToBeDistributed(ability)){
-						 featureDistribution(ability)
-					 }
-				})
 
 			this.props.dispatch({type: 'TRIGGER ACTION', action: isThisActionAvailable(ability)})
 

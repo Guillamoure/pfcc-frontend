@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { endTurn } from '../../helper_functions/distributers/new_turn'
+import { endTurn } from '../../utils/distributers/new_turn'
 
 const TurnActions = props => {
 

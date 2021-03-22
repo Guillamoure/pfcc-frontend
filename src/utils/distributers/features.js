@@ -188,7 +188,8 @@ export const featureDistribution = (feature, options) => {
 		})
 		// AFTER THE MAIN FEATURE HAS ENDED
 		// LOOK FOR ANY AFTER EFFECTS
-		if (!feature.after){
+		if (feature.after){
+			// featureSource wont find any Feats nests in character_klasses, be warned
 			let featureSource = store.getState().character[feature.source].find(ability => ability.id === feature.sourceId)
 			let featureSourceFeaturesAfter = featureSource.features.filter(fs => fs.after)
 

@@ -15,8 +15,8 @@ const themes = [
 	{name: "Golgari Swarm", colors: {background1: "00733e", background2: "282824", textColor: "dbe1e6", bubbleColor: "1d4a32", borderColor: "c9d2d1", shadeColor: "000"}},
 	{name: "Gruul Clans", colors: {background1: "326d3f", background2: "f54329", textColor: "c22d12", bubbleColor: "183d20", borderColor: "8e8d7b", shadeColor: "392115"}},
 	{name: "Izzet League", colors: {background1: "095ea1", background2: "f02908", textColor: "770902", bubbleColor: "67a7d7", borderColor: "e97335", shadeColor: "d74a43"}},
-	{name: "Orzhov Syndicate", colors: {background1: "24522b", background2: "4282c2", textColor: "222a4f", bubbleColor: "5c8462", borderColor: "b2cae6", shadeColor: "28303d"}},
-	{name: "Cult of Rakdos", colors: {background1: "326d3f", background2: "f54329", textColor: "c22d12", bubbleColor: "183d20", borderColor: "8e8d7b", shadeColor: "392115"}},
+	{name: "Orzhov Syndicate", colors: {background1: "2a2623", background2: "fbfbf3", textColor: "f9f1c2", bubbleColor: "3d3b3c", borderColor: "e8ce81", shadeColor: "7a6756"}},
+	{name: "Cult of Rakdos", colors: {background1: "a41316", background2: "363733", textColor: "ff5d2a", bubbleColor: "291d18", borderColor: "dd3935", shadeColor: "9c1f12"}},
 	{name: "Selesnya Conclave", colors: {background1: "00733e", background2: "f9faf4", textColor: "000", bubbleColor: "2bd8c0", borderColor: "f9faf4", shadeColor: "f7e8a7"}},
 	{name: "Simic Combine", colors: {background1: "24522b", background2: "4282c2", textColor: "222a4f", bubbleColor: "5c8462", borderColor: "b2cae6", shadeColor: "28303d"}},
 ]

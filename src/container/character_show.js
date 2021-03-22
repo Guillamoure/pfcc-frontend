@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import localhost from '../localhost'
 import { mod } from '../fuf'
 import { fetchCharacter } from '../dispatch'
-import { characterDistributer } from '../helper_functions/distributers/character'
+import { characterDistributer } from '../utils/distributers/character'
 import { initializeCampaignWebsocket } from '../utils/websocket/campaign'
 import { modalAction } from '../utils/action_creator/popups'
 
@@ -206,11 +206,15 @@ class Character extends React.Component {
       // }
     })
 		if (!localStorage.getItem("theme")){
-			localStorage.setItem("theme", "standard")
+			localStorage.setItem("theme", "Standard")
 		} else {
 			let theme = localStorage.getItem("theme")
 			let foundTheme = themes.find(t => t.name === theme)
-			updateColorThemeAction(foundTheme.colors)
+			if (!foundTheme){
+				localStorage.setItem("theme", "Standard")
+			} else {
+				updateColorThemeAction(foundTheme.colors)
+			}
 		}
 
   }

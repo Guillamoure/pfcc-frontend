@@ -1,6 +1,8 @@
 import store from '../../store'
 import { endTurnAction } from '../action_creator/character'
 import { incrementFeatureUsage } from '../calculations/feature_usage'
+import { featureDistribution as removeFeature } from './features'
+
 
 export const endTurn = async () => {
 	// NEW DATA
@@ -34,6 +36,23 @@ export const endTurn = async () => {
 
 			}
 		})
+	})
+
+	character.character_klasses.forEach(cK => {
+		if (cK.feat){
+			cK.feat.features.forEach(f => {
+				if (f.usage){
+					if (character_info.activeFeatures.find(af => af.sourceId === cK.id && af.featureId === f.id && af.source === "character_klasses")){
+
+						if (f.usage.limit_frequency === "Round"){
+							// if the feature is done at the end of a round
+							removeFeature({...f, source: "character_klasses", sourceId: cK.id, featName: cK.feat.name})
+						}
+					}
+
+				}
+			})
+		}
 	})
 
 	// {...f, sourceId: akf.id, klassFeatureName: akf.name, klassId: akf.klass_id, character_klass_feature_usages: ckfus, source: "applicable_klass_features"}
