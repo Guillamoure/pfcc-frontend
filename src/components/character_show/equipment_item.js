@@ -47,9 +47,9 @@ const EquipmentItem = props => {
 		let keyWord = group
 		keyWord = group === 'Wondrous Item' || group === "Potion" || group === "Magic Item"? 'magic_item' : keyWord
 
-		let known = group === 'unknown' ? false : true
+		let known = group === 'Magic Item' && !item.known ? false : true
 		// debugger
-		let name = known ? item.name || item[keyWord.toLowerCase()].name : item.false_desc
+		let name = known ? item.name || item[keyWord.toLowerCase()].name : item.false_desc ?? "Unknown"
 		if (item.masterwork && !item.name){name = "mwk " + name}
 		let percentages = known && item[keyWord]?.features ? renderPercentage(item[keyWord]) : null
 		// find feature usage, find limit, and find relevant cmifu, and have a fraction of current usage

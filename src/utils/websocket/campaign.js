@@ -2,6 +2,7 @@ import store from '../../store'
 import * as WebsocketAction from '../action_creator/websocket'
 import { websocketFeatureDistribution } from '../distributers/features'
 import { updateNotificationsAction, updateStoredNotificationsAction } from '../action_creator/popups'
+import { incorporateItemToCharacter } from './dm_item'
 // 	this.props.cableApp.room =
 // 		this.props.cableApp.cable.subscriptions.create({
 // 			channel: "RoomChannel",
@@ -19,7 +20,7 @@ export const initializeCampaignWebsocket = async (character, options) => {
 
 	// STORED DATA
 	let websocket = {...store.getState().websocket}
-	if (options?.encounter){
+	if (options?.dm){
 		websocketCode = options.websocketCode
 	} else {
 		websocketCode = character.campaign?.websocket_code
@@ -42,6 +43,9 @@ export const initializeCampaignWebsocket = async (character, options) => {
 				console.log(websocket)
 				if (character){
 					websocket.campaign.send({character_id: character.id, message: `My name is ${character.name}`})
+				}
+				if (options?.dm){
+					websocket.campaign.send({message: "Hey, the DM is here!"})
 				}
 				// else if (options.encounter){
 				// 	// websocket.campaign.send({message: "Initiating Encounter!"})
@@ -73,9 +77,9 @@ const parseSentCampaignData = data => {
 	console.log("CATCHING INCOMING CONNECTIONS", data)
 
 	let { sender_id, payload, source, options } = data
+	const { character, notifications, storedNotifications } = store.getState()
 
 	if (sender_id){
-		const { character, notifications, storedNotifications } = store.getState()
 		if (sender_id === character.id) {return null}
 
 		if (payload.participatingPlayer && !character.id){return incomingCharacter(data)}
@@ -116,7 +120,7 @@ const parseSentCampaignData = data => {
 			updatedNotifications.push(notification)
 			updateNotificationsAction(updatedNotifications)
 		}
-		// don't distribute inherently if there is a togglable attribute
+		// don't distribute inherently if there is a toggleable attribute
 	} else if (payload?.askForInitiative){
 		const { character, notifications, storedNotifications } = store.getState()
 
@@ -129,6 +133,26 @@ const parseSentCampaignData = data => {
 			updatedNotifications.push(notification)
 
 			updateNotificationsAction(updatedNotifications)
+		}
+	} else if (source?.dm){
+		console.log("MADE CONTACT FROM THE DM")
+		// if a message is meant just for you
+		if (payload.reciever_id === character.id){
+			// if the message includes a present
+			if (payload.itemType){
+				let updatedNotifications = [...notifications]
+
+				let message = "The DM gave you an item!"
+				let notification = { message }
+				if (options.toggleable){notification.toggleable = {payload, source:{...source}, options: {...options, acceptOnly: true}}}
+
+				updatedNotifications.push(notification)
+				updateNotificationsAction(updatedNotifications)
+				// add item to character's redux
+				incorporateItemToCharacter(payload, source, options)
+				// be able to accept the item from the notification (which'll make the item discovered)
+
+			}
 		}
 	}
 }

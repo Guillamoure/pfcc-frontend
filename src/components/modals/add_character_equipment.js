@@ -83,7 +83,7 @@ const AddCharacterEquipment = props => {
 				modalKeyWord = "armor"
 				obj = {armor: i}
 			}
-			else if (i.afflication_type){modalKeyWord = "poison"}
+			else if (i.affliction_type){modalKeyWord = "poison"}
 			else if (i.slot){modalKeyWord = "magicItem"}
 			return (
 				<li>

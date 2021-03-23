@@ -18,7 +18,7 @@ class HPChanges extends React.Component {
       return (
         <div>
           <label>
-            <input type="number" name="amount" value={this.state.amount} onChange={this.handleChange}/>
+            <input type="number" name="amount" min="0" value={this.state.amount} onChange={this.handleChange}/>
           </label>
         {/*this.state.lethality === 'lethal' && this.state.adjustment === 'harm' && <label>
         Damage Type:
@@ -143,9 +143,12 @@ class HPChanges extends React.Component {
 			array.push("Resist fire 5")
 		}
     return (
-      <ul>
-        {array.map(el => <li>{el}</li>)}
-      </ul>
+			<>
+				<h3>Damage Adjustments</h3>
+	      <ul style={{borderColor: `#${this.props.settings.borderColor}`}}>
+	        {array.map(el => <li>{el}</li>)}
+	      </ul>
+			</>
     )
   }
 
@@ -172,17 +175,17 @@ class HPChanges extends React.Component {
 		return damageDealt
 	}
 
-	renderHPDispatch = (amount) => {
-		switch(this.state.adjustment){
+	renderHPDispatch = (amount, adjustment, lethality) => {
+		switch(adjustment){
 			// if it was harm, calculate the damage done to temp, and reduce temp and increase lethal
 			// if it was heal, reduce lethal and/or non lethal
 			// if it was temp, increase temp
 			// if it was non-lethal, increase non-lethal
 			case "harm":
-				if (this.state.lethality === "nonLethal"){
+				if (lethality === "nonLethal"){
 					this.props.dispatch({type: "ADJUST CHARACTER", adjust: "non_lethal_damage", value: this.props.character.non_lethal_damage + amount})
 					break
-				} else if (this.state.lethality === "lethal"){
+				} else if (lethality === "lethal"){
 					let remainingDamage = amount
 					if (this.props.character.temp_hp){
 						let reducedTempHP = remainingDamage >= this.props.character.temp_hp ? 0 : this.props.character.temp_hp - remainingDamage
@@ -206,9 +209,9 @@ class HPChanges extends React.Component {
 		}
 	}
 
-  buttonEvent = () => {
+  buttonEvent = (adjustment, lethality) => {
 		let amount = parseInt(this.state.amount)
-		if (this.state.adjustment === "harm"){
+		if (adjustment === "harm"){
 			amount = this.removeTemporaryHPRedux()
 		}
 		if (amount > 0){
@@ -218,11 +221,11 @@ class HPChanges extends React.Component {
 					'Content-Type': 'application/json',
 					'Accept': 'application/json'
 				},
-				body: JSON.stringify({...this.state})
+				body: JSON.stringify({...this.state, adjustment, lethality})
 			})
 			.then(res => res.json())
 			.then(data => {
-				this.renderHPDispatch(amount)
+				this.renderHPDispatch(amount, adjustment, lethality)
 
 
 				// this.props.dispatch({type: 'CHARACTER', character: data.character })
@@ -251,24 +254,34 @@ class HPChanges extends React.Component {
     )
   }
 
+	renderButtons = () => {
+
+		return (
+			<div style={{display: "grid", gridTemplateColumns: "1fr 1fr"}}>
+				<button style={{background: `linear-gradient(90deg, #fff 35%, #f00)`}} onClick={() => this.buttonEvent("harm", "lethal")}>Lethal Damage</button>
+				<button style={{background: `linear-gradient(90deg, #fff 35%, #0f0)`}} onClick={() => this.buttonEvent("heal")}>Heal</button>
+				<button style={{background: `linear-gradient(90deg, #fff 35%, #f00)`}} onClick={() => this.buttonEvent("harm", "nonLethal")}>Non-Lethal Damage</button>
+				<button style={{background: `linear-gradient(90deg, #fff 35%, #0892D0)`}} onClick={() => this.buttonEvent("temp")}>Temporary Hit Points</button>
+			</div>
+		)
+	}
+
   render() {
-    let submitButtonColor = '#fff'
-    submitButtonColor = this.state.adjustment === 'heal' ? '#0f0' : submitButtonColor
-    submitButtonColor = this.state.adjustment === 'harm' ? '#f00' : submitButtonColor
-    submitButtonColor = this.state.adjustment === 'temp' ? '#0892D0' : submitButtonColor
     return (
       <section id="character-show-hp-container">
-        {this.renderAmount()}{this.renderAdjustment()}
+				<div>
+        	{this.renderAmount()}
+					{this.renderTypeAdjustments()}
+				</div>
         {localStorage.computer === "false" && <span><button className='mobile-close-button' onClick={this.props.closeHPChanges}>X</button></span>}
-				
-        {this.state.adjustment === 'harm' && this.renderLethality()}
+
         {localStorage.computer === "false" && this.renderMobileButtons()}
 
-        {this.renderTypeAdjustments()}
-        {(this.state.amount !== 0 && this.state.amount !== "") && <span style={{textAlign: 'center', display: 'block'}}><button className='mobile-submit-button' style={{background: `linear-gradient(90deg, #fff 35%, ${submitButtonColor})`}} onClick={this.buttonEvent}>{this.renderString()}</button></span>}
+				{this.renderButtons()}
       </section>
     )
   }
+	// {<button className='mobile-submit-button' >{this.renderString()}</button>}
 
 }
 
@@ -277,7 +290,8 @@ const mapStatetoProps = (state) => {
     currentUser: state.currentUser,
     admin: state.admin,
     character: state.character,
-    character_info: state.character_info
+    character_info: state.character_info,
+		settings: state.settings
   }
 }
 

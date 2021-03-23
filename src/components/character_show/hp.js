@@ -85,7 +85,7 @@ const HP = props => {
 		}
 
 		let currentHP = totalHP - storedLethalDamage + storedTemporary + additionalTempHP
-
+		console.log(currentHP)
 
     if (props.character.max_hp !== totalHP){
       fetch (`${localhost}/api/v1/character_max_hp/${props.character.id}`, {

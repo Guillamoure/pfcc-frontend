@@ -92,8 +92,8 @@ const MagicItemSummary = props => {
   const renderFalseDesc = () => {
     return (
       <React.Fragment>
-        <h3>{props.cmi.false_desc}</h3>
-        <UserItemAdjustment cmi={props.cmi} item={props.item} exitModal={props.exitModal} editModal={props.editModal}/>
+        <h3>{props.cmi.false_desc ?? "Some sort of Magic Item..."}</h3>
+        <UserItemAdjustment characterItem={props.cmi} item={props.item} exitModal={props.exitModal} editModal={props.editModal}/>
       </React.Fragment>
     )
   }

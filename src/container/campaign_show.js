@@ -17,10 +17,17 @@ import { startEncounterAction, endEncounterAction } from '../utils/action_creato
 const CampaignShow = props => {
 
 	const [activeTab, setActiveTab] = React.useState("Characters")
+	
+	const url = props.history.location.pathname
+	const campaignId = parseInt(url.substring(url.lastIndexOf('/') + 1))
+	const campaign = !!props.currentUser && props.currentUser.campaigns.find(c => c.id === campaignId)
 
-  const url = props.history.location.pathname
-  const campaignId = parseInt(url.substring(url.lastIndexOf('/') + 1))
-  const campaign = !!props.currentUser && props.currentUser.campaigns.find(c => c.id === campaignId)
+	React.useEffect(() => {
+		if (campaign){
+			initializeCampaignWebsocket(null, {dm: true, websocketCode: campaign.websocket_code})
+		}
+	}, [campaign])
+
 
 	const renderTab = () => {
 		let content = null
@@ -29,8 +36,12 @@ const CampaignShow = props => {
 				content = (
 					<>
 						<CharacterContainer campaign={campaign}/>
-						<ItemSearch />
 					</>
+				)
+				break
+			case "Item Search":
+				content = (
+					<ItemSearch campaign={campaign}/>
 				)
 				break
 			case "Details":
@@ -70,7 +81,7 @@ const CampaignShow = props => {
 	const startEncounter = (e, incomingEncounter) => {
 		e.preventDefault()
 		setActiveTab(incomingEncounter.name)
-		initializeCampaignWebsocket(null, {encounter: true, websocketCode: campaign.websocket_code, askForInitiative: true})
+		initializeCampaignWebsocket(null, {dm: true, websocketCode: campaign.websocket_code, askForInitiative: true})
 		startEncounterAction(incomingEncounter)
 	}
 

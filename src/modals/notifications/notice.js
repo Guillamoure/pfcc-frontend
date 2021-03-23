@@ -95,7 +95,7 @@ class Notice extends React.Component {
 
     return array.map((ni, idx) => {
       let name = ''
-      name = detail ==='character_magic_items' ? (ni.known ? ni.magic_item.name : ni.false_desc) : name
+      name = detail ==='character_magic_items' ? (ni.known ? ni.magic_item.name : ni.false_desc ?? "A New Magic Item") : name
       name = detail === 'character_weapons' ? (ni.name ? ni.name : ni.weapon.name) : name
       name = detail === 'character_armors' ? (ni.name ? ni.name : ni.armor.name) : name
       return <li key={(idx+10)*3-1}>{name} <button onClick={() => this.fetchDiscovered(ni.id, detail)}>Collect</button></li>
@@ -140,7 +140,7 @@ class Notice extends React.Component {
     )
   }
 }
-// 
+//
 // {this.props.character_info.hardcode.stealTime && <button onClick={() => this.props.dispatch({type: 'STEAL TIME'})}>Return Time</button>}
 // <br/>
 // <button style={{display: 'block', margin: 'auto'}} onClick={() => this.renderDispatch('HELMSMAN')}>Sasea Bitch Helmsman</button>

@@ -11,6 +11,7 @@ import {
 import { replaceCharacterInfoAction } from '../action_creator/character'
 import { statusConditionDistribution, removeStatusConditionDistribution } from  './status_conditions'
 import { sendCampaignWebsocket } from '../websocket/campaign'
+import { makeItemDiscovered } from '../websocket/dm_item'
 import { locateAbility } from '../fuf'
 import { modalAction } from '../action_creator/popups'
 
@@ -223,14 +224,18 @@ export const websocketFeatureDistribution = (payload, source, options) => {
 
 	activeFeatureAction(source, options)
 
-	if (options.remove){
-		character_info.bonuses.forEach(b => {
-			bonusAction(b, true)
-		})
+	if (payload.itemType){
+		makeItemDiscovered(payload, source, options)
 	} else {
-		character_info.bonuses.forEach(b => {
-			bonusAction(b)
-		})
+		if (options.remove){
+			character_info.bonuses.forEach(b => {
+				bonusAction(b, true)
+			})
+		} else {
+			character_info.bonuses.forEach(b => {
+				bonusAction(b)
+			})
+		}
 	}
 
 }

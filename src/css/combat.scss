@@ -338,11 +338,27 @@
 
 #character-show-hp-container {
 	text-align: center;
+	display: flex;
+	justify-content: space-around;
 	ul {
 		list-style: none;
 		padding-left: 0;
+		border: 2px solid black;
+		height: 25vh;
+		overflow-y: scroll;
 	}
-	div, form {
-		margin-top: 0.5em;
+	input {
+		font-size: 2em;
+		height: 2.5em;
+		width: 4em;
+		align-self: center;
+		text-align: center;
+	}
+	button {
+		width: 10vw;
+		height: 8vw;
+		margin: 1vw;
+		border-radius: 1em;
+		font-size: 1.5em;
 	}
 }

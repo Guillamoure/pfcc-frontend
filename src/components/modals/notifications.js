@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { updateNotificationsAction, updateStoredNotificationsAction } from '../../helper_functions/action_creator/popups'
-import { websocketFeatureDistribution } from '../../helper_functions/distributers/features'
+import { updateNotificationsAction, updateStoredNotificationsAction } from '../../utils/action_creator/popups'
+import { websocketFeatureDistribution } from '../../utils/distributers/features'
 
 
 const Notifications = props => {
@@ -12,7 +12,7 @@ const Notifications = props => {
 		return notifications.map((n, i) => {
 			let toggleable = null
 			if (n.toggleable){
-				toggleable = <><button onClick={() => renderDistribution(n.toggleable, i)}>Accept</button><button onClick={() => storeNotification(n.toggleable, i)}>Reject</button></>
+				toggleable = <><button onClick={() => renderDistribution(n.toggleable, i)}>Accept</button>{!n.toggleable?.options?.acceptOnly && <button onClick={() => storeNotification(n.toggleable, i)}>Reject</button>}</>
 			}
 			return (
 				<li className="popup-notification">

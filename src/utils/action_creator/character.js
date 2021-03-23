@@ -22,3 +22,5 @@ export const replaceCharacterInfoAction = (adjust, value, options) => dispatch({
 export const replaceCharacterAction = (adjust, value) => dispatch({type: 'ADJUST CHARACTER', adjust, value})
 
 export const triggerTurnActionAction = action => dispatch({type: 'TRIGGER ACTION', action})
+
+export const discoverEquipmentAction = (detail, id) => dispatch({type: 'DISCOVER EQUIPMENT', detail, id})
