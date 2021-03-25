@@ -7,7 +7,7 @@ const SpellDescription = props => {
 	const [spell, updateSpell] = React.useState({})
 
 	React.useEffect(() => {
-		if (!props.spell.magic_school) {
+		if (!props.spell.spell_list_spells) {
 			getFetch(`spells/${props.spell.id}`)
 				.then(data => updateSpell(data.spell))
 		} else {

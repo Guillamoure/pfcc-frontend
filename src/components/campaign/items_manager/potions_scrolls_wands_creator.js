@@ -21,6 +21,9 @@ const PotionsScrollsWandsCreator = props => {
 		potion_or_oil: "potion",
 		scroll_type: "arcane",
 		spell_level: 0,
+		charges: 50,
+		name: "",
+		description: "",
 		known: false,
 		discovered: false
 	})
@@ -50,7 +53,7 @@ const PotionsScrollsWandsCreator = props => {
 				if (data.status === 404 || data.status ===  500){
 	        console.log(data)
 	      } else {
-	        updateCustomData({caster_level: 1, potion_or_oil: "potion",	known: false, discovered: false, spell_level: 0, scroll_type: "arcane"})
+	        updateCustomData({caster_level: 1, potion_or_oil: "potion",	known: false, discovered: false, spell_level: 0, scroll_type: "arcane", charges: 50, name: "", description: ""})
 					setSelectedSpell({})
 					//send the item, itemType to the character if they are online
 					sendCampaignWebsocket({message: "Your DM gave you an item!", reciever_id: character_id, itemType, data}, {dm: true}, {toggleable: true})
@@ -179,6 +182,7 @@ const PotionsScrollsWandsCreator = props => {
 			if (Object.keys(selectedSpell).length){
 				if (itemType === "potion"){selected = <p>You are turning <strong>{selectedSpell.name}</strong> into a potion/oil</p>}
 				if (itemType === "scroll"){selected = <p>You are writing the <strong>{selectedSpell.name}</strong> spell onto a scroll</p>}
+				if (itemType === "wand"){selected = <p>You are imbuing the <strong>{selectedSpell.name}</strong> spell into a wand</p>}
 			}
 			return (
 				<section>
@@ -188,6 +192,9 @@ const PotionsScrollsWandsCreator = props => {
 					</label><br/></>}
 					{itemType === "potion" && <><label>
 						Is this a potion or an oil? (Potion is imbibed, oil is applied)<input type="text" name="potion_or_oil" value={customData.potion_or_oil} onChange={formHandler}/>
+					</label><br/></>}
+					{itemType === "wand" && <><label>
+						How many charges does this wand have?<input type="number" name="charges" value={customData.charges} max="50" min="1" onChange={formHandler}/>
 					</label><br/></>}
 					{itemType === "scroll" && <><label>
 						What spell level is this?<select name="spell_level" value={customData.spell_level} onChange={formHandler}>
@@ -210,6 +217,12 @@ const PotionsScrollsWandsCreator = props => {
 		          <option value="psychic">Psychic</option>
 		        </select>
 					</label><br/></>}
+					{itemType === "wand" && <><label>
+						Does this wand have a name?<input type="text" name="name" value={customData.name} onChange={formHandler} />
+					</label><br/></>}
+					{itemType === "wand" && <><label>
+						What does this wand look like?<input type="text" name="description" value={customData.description} onChange={formHandler} />
+					</label><br/></>}
 					<label>
 						Does the player known what this item is? <input type="checkbox" name="known" onChange={formHandler} value={customData.known}/>
 					</label><br/>
@@ -225,7 +238,7 @@ const PotionsScrollsWandsCreator = props => {
 		let duplicateObj = {...customData}
 		let key = e.target.name
 		let value = e.target.value
-		if (key === "caster_level" || key === "potion_or_oil" || key === "scroll_type" || key === "spell_level"){
+		if (key === "caster_level" || key === "potion_or_oil" || key === "scroll_type" || key === "spell_level" || key === "charges" || key === "name" || key === "description"){
 			duplicateObj[key] = value
 		} else if (key === "known" || key === "discovered"){
 			duplicateObj[key] = !duplicateObj[key]

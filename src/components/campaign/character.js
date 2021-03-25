@@ -7,10 +7,11 @@ import { sendCampaignWebsocket } from '../../utils/websocket/campaign'
 
 const Character = props => {
 
-  const { name, character_magic_items, id, character_potions, character_scrolls } = props.character
+  const { name, character_magic_items, id, character_potions, character_scrolls, character_wands } = props.character
   let unknownMagicItems = character_magic_items.filter(cmi => !cmi.known)
   let unknownPotions = character_potions.filter(cp => !cp.known)
   let unknownScrolls = character_scrolls.filter(cs => !cs.known)
+  let unknownWands = character_wands.filter(cw => !cw.known)
 
   const knownFetch = (id, itemType, name, obj) => {
     fetch(`${localhost}/api/v1/character_magic_items_known/${id}`, {
@@ -29,7 +30,7 @@ const Character = props => {
   }
 
   const renderUnknownMagicItems = () => {
-		if (unknownMagicItems.length || unknownPotions.length || unknownScrolls.length){
+		if (unknownMagicItems.length || unknownPotions.length || unknownScrolls.length || unknownWands.length){
 			return (
 				<>
 					<h4>Unknown Magic Items</h4>
@@ -46,6 +47,11 @@ const Character = props => {
 						let dc = 20 + u.spell_level
 						let name = `Scroll of ${u.spell.name}`
 						return <p key={u.spell.id*3-1}>{name} || DC {dc} Spellcraft <button onClick={() => knownFetch(u.id, "scroll", name, u)}>Known</button></p>
+					})}
+					{unknownWands.map((u, idx) => {
+						let dc = 15 + u.caster_level
+						let name = `Wand of ${u.spell.name}`
+						return <p key={u.spell.id*3-1}>{name} || DC {dc} Spellcraft <button onClick={() => knownFetch(u.id, "wand", name, u)}>Known</button></p>
 					})}
 				</>
 			)

@@ -76,9 +76,10 @@ class Notice extends React.Component {
     let undiscoveredCMIs = this.props.character.character_magic_items.filter(cmi => !cmi.discovered)
 		let undiscoveredCPs = this.props.character.character_potions.filter(cp => !cp.discovered)
 		let undiscoveredCSs = this.props.character.character_scrolls.filter(cs => !cs.discovered)
+		let undiscoveredCWas = this.props.character.character_wands.filter(cw => !cw.discovered)
     let undiscoveredCWs = this.props.character.character_weapons.filter(cw => !cw.discovered)
     let undiscoveredCAs = this.props.character.character_armors.filter(cw => !cw.discovered)
-    let newItems = [...undiscoveredCMIs, ...undiscoveredCPs, ...undiscoveredCSs, ...undiscoveredCWs, ...undiscoveredCAs]
+    let newItems = [...undiscoveredCMIs, ...undiscoveredCPs, ...undiscoveredCSs, ...undiscoveredCWas, ...undiscoveredCWs, ...undiscoveredCAs]
 
     if (!!newItems.length){
       return (
@@ -88,6 +89,7 @@ class Notice extends React.Component {
             {this.newItemLI(undiscoveredCMIs, 'character_magic_items')}
 						{this.newItemLI(undiscoveredCPs, 'character_potions')}
 						{this.newItemLI(undiscoveredCSs, 'character_scrolls')}
+						{this.newItemLI(undiscoveredCWas, 'character_wands')}
             {this.newItemLI(undiscoveredCWs, 'character_weapons')}
             {this.newItemLI(undiscoveredCAs, 'character_armors')}
           </ul>
@@ -103,6 +105,7 @@ class Notice extends React.Component {
       name = detail ==='character_magic_items' ? (ni.known ? ni.magic_item.name : ni.false_desc ?? "A New Magic Item") : name
       name = detail ==='character_potions' ? (ni.known ? `${_.capitalize(ni.potion_or_oil)} of ${ni.spell.name}` : "A Mysterious Liquid") : name
       name = detail ==='character_scrolls' ? (ni.known ? `Scroll of ${ni.spell.name}` : "A Strange Scroll") : name
+      name = detail ==='character_wands' ? (ni.known ? `Wand of ${ni.spell.name}` : "A Curious Wand") : name
       name = detail === 'character_weapons' ? (ni.name ? ni.name : ni.weapon.name) : name
       name = detail === 'character_armors' ? (ni.name ? ni.name : ni.armor.name) : name
       return <li key={(idx+10)*3-1}>{name} <button onClick={() => this.fetchDiscovered(ni.id, detail)}>Collect</button></li>

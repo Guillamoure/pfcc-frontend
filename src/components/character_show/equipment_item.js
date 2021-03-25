@@ -53,6 +53,7 @@ const EquipmentItem = props => {
 		if (item.masterwork && !item.name){name = "mwk " + name}
 		if (item.potion_or_oil && known){name = `${_.capitalize(item.potion_or_oil)} of ${item.spell.name}`}
 		if (item.scroll_type && known){name = `Scroll of ${item.spell.name}`}
+		if (item.charges && known){name = item.name || `Wand of ${item.spell.name}`}
 		let percentages = known && item[keyWord]?.features ? renderPercentage(item[keyWord]) : null
 		// find feature usage, find limit, and find relevant cmifu, and have a fraction of current usage
 		let equipped = item.equipped

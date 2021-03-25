@@ -26,6 +26,7 @@ class ItemSearch extends React.Component {
 			description: "",
 			masterwork: false,
 			false_desc: "",
+			ammunition_amount: 1,
 			known: false,
 			discovered: false
 		}
@@ -56,7 +57,7 @@ class ItemSearch extends React.Component {
       if (data.status === 404 || data.status ===  500){
         console.log(data)
       } else {
-        this.setState({successfulAddition: true, selectedItem: '', customData: {name: "", description: "", masterwork: false, false_desc: "", known: false, discovered: false}})
+        this.setState({successfulAddition: true, selectedItem: '', customData: {name: "", description: "", masterwork: false, false_desc: "", ammunition_amount: 1, known: false, discovered: false}})
 				//send the item, itemType to the character if they are online
 				sendCampaignWebsocket({message: "Your DM gave you an item!", reciever_id: character_id, itemType, data}, {dm: true}, {toggleable: true})
       }
@@ -114,7 +115,7 @@ class ItemSearch extends React.Component {
 	renderSelectedItem = () => {
 		if (!this.state.selectedItem){ return }
 
-		let { name, weapon_type, max_dex_bonus, affliction_type, slot } = this.state.selectedItem
+		let { name, weapon_type, max_dex_bonus, affliction_type, slot, ammunition } = this.state.selectedItem
 		let itemType = "item"
 		if (weapon_type){
 			itemType = "weapon"
@@ -154,6 +155,9 @@ class ItemSearch extends React.Component {
 				<form>
 					{itemType === "magic_item" && formDataMagicItem}
 					{(itemType === "weapon" || itemType === "armor") && formData}
+					{ammunition && <><label htmlFor="ammunition_amount">
+						How much ammo is this? <input type="number" id="ammunition_amount" name="ammunition_amount" onChange={this.formHandler} value={this.state.customData.ammunition_amount}/>
+					</label><br/></>}
 					<label htmlFor="known">
 						Does the player known what this item is? <input type="checkbox" id="known" name="known" onChange={this.formHandler} value={this.state.customData.known}/>
 					</label><br/>
@@ -175,7 +179,7 @@ class ItemSearch extends React.Component {
 		let duplicateObj = {...this.state.customData}
 		let key = e.target.name
 		let value = e.target.value
-		if (key === "name" || key === "description" || key === "false_desc"){
+		if (key === "name" || key === "description" || key === "false_desc" || key === "ammunition_amount"){
 			duplicateObj[key] = value
 		} else if (key === "masterwork" || key === "known" || key === "discovered"){
 			duplicateObj[key] = !duplicateObj[key]

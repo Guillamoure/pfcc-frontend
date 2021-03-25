@@ -38,7 +38,8 @@ class Equipment extends React.Component {
       changingState = detail === 'poison' ? 'poison' : changingState
       changingState = detail === 'potion' ? 'potion' : changingState
       changingState = detail === 'scroll' ? 'scroll' : changingState
-			changingState = ["unknown", "weapon", "armor", "harrow", "magic item", "Wondrous Item", "poison", "potion", "scroll"].includes(detail) ? changingState : "item"
+      changingState = detail === 'wand' ? 'wand' : changingState
+			changingState = ["unknown", "weapon", "armor", "harrow", "magic item", "Wondrous Item", "poison", "potion", "scroll", "wand"].includes(detail) ? changingState : "item"
 			modalAction(changingState, obj, {name: obj.name || obj.weapon?.name || obj.armor?.name || null})
 			// debugger
       // this.props.editModal(changingState, null, itemID)
@@ -137,6 +138,7 @@ class Equipment extends React.Component {
 		let cmis = this.props.character.character_magic_items.filter(cmi => cmi.discovered)
 		let cps = this.props.character.character_potions.filter(cp => cp.discovered)
 		let css = this.props.character.character_scrolls.filter(cs => cs.discovered)
+		let cwas = this.props.character.character_wands.filter(cw => cw.discovered)
 		let cws = this.props.character.character_weapons.filter(cw => cw.discovered)
 		let cas = this.props.character.character_armors.filter(cw => cw.discovered)
 
@@ -150,6 +152,10 @@ class Equipment extends React.Component {
 
 		css.forEach(cs => {
 			items.push({...cs, category: "Scroll"})
+		})
+
+		cwas.forEach(cw => {
+			items.push({...cw, category: "Wand"})
 		})
 
 		cws.forEach(cw => {
@@ -238,7 +244,7 @@ class Equipment extends React.Component {
     return(
 			<>
 				{this.renderCurrency()}
-		    <div style={{padding: '1em', display: 'grid', gridTemplateColumns: '40% 60%'}} className={localStorage.computer === "false" ? 'mobile-tab-selected-tab-container mobile-tab-bottom shadow' : 'none'}>
+		    <div style={{padding: '1em', display: 'grid', gridTemplateColumns: 'auto'}} className={localStorage.computer === "false" ? 'mobile-tab-selected-tab-container mobile-tab-bottom shadow' : 'none'}>
 		      {this.renderEquipmentList()}
 		    </div>
 				<button onClick={() => modalAction("addEquipment", null, {name: "Add Equipment"})}>Add Equipment</button>

@@ -34,6 +34,7 @@ import MagicItemSummary from '../components/magic_item_summary'
 import DiceRoller from '../components/modals/dice_roller'
 import PotionDescription from '../components/modals/potion_description'
 import ScrollDescription from '../components/modals/scroll_description'
+import WandDescription from '../components/modals/wand_description'
 
 const ModalSkeleton = (props) => {
 
@@ -95,6 +96,8 @@ const ModalSkeleton = (props) => {
 				return <PotionDescription cp={modal.obj}/>
 			case "scroll":
 				return <ScrollDescription cs={modal.obj}/>
+			case "wand":
+				return <WandDescription cw={modal.obj}/>
       default:
 				return <GenericDescription name={modal.obj.name} description={modal.obj.description}/>
         break
