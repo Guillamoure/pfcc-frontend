@@ -36,7 +36,9 @@ class Equipment extends React.Component {
       changingState = detail === 'weapon' ? 'weapon' : changingState
       changingState = detail === 'armor' ? 'armor' : changingState
       changingState = detail === 'poison' ? 'poison' : changingState
-			changingState = ["unknown", "weapon", "armor", "harrow", "magic item", "Wondrous Item", "poison"].includes(detail) ? changingState : "item"
+      changingState = detail === 'potion' ? 'potion' : changingState
+      changingState = detail === 'scroll' ? 'scroll' : changingState
+			changingState = ["unknown", "weapon", "armor", "harrow", "magic item", "Wondrous Item", "poison", "potion", "scroll"].includes(detail) ? changingState : "item"
 			modalAction(changingState, obj, {name: obj.name || obj.weapon?.name || obj.armor?.name || null})
 			// debugger
       // this.props.editModal(changingState, null, itemID)
@@ -133,11 +135,21 @@ class Equipment extends React.Component {
 		let items = []
 
 		let cmis = this.props.character.character_magic_items.filter(cmi => cmi.discovered)
+		let cps = this.props.character.character_potions.filter(cp => cp.discovered)
+		let css = this.props.character.character_scrolls.filter(cs => cs.discovered)
 		let cws = this.props.character.character_weapons.filter(cw => cw.discovered)
 		let cas = this.props.character.character_armors.filter(cw => cw.discovered)
 
 		cmis.forEach(cmi => {
 			items.push({...cmi, category: "Magic Item"})
+		})
+
+		cps.forEach(cp => {
+			items.push({...cp, category: "Potion"})
+		})
+
+		css.forEach(cs => {
+			items.push({...cs, category: "Scroll"})
 		})
 
 		cws.forEach(cw => {

@@ -32,6 +32,8 @@ import AddCharacterEquipment from '../components/modals/add_character_equipment'
 import SummonedCreatureOptions from '../components/modals/summoned_creature_options'
 import MagicItemSummary from '../components/magic_item_summary'
 import DiceRoller from '../components/modals/dice_roller'
+import PotionDescription from '../components/modals/potion_description'
+import ScrollDescription from '../components/modals/scroll_description'
 
 const ModalSkeleton = (props) => {
 
@@ -89,6 +91,10 @@ const ModalSkeleton = (props) => {
 				return <MagicItemSummary item={modal.obj.magic_item} cmi={modal.obj}/>
 			case "rollDice":
 				return <DiceRoller diceObj={modal.obj}/>
+			case "potion":
+				return <PotionDescription cp={modal.obj}/>
+			case "scroll":
+				return <ScrollDescription cs={modal.obj}/>
       default:
 				return <GenericDescription name={modal.obj.name} description={modal.obj.description}/>
         break

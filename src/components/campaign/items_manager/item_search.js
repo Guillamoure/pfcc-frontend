@@ -1,8 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import _ from 'lodash'
-import localhost from '../../localhost'
-import { sendCampaignWebsocket } from '../../utils/websocket/campaign'
+import localhost from '../../../localhost'
+import { sendCampaignWebsocket } from '../../../utils/websocket/campaign'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDiceOne } from '@fortawesome/free-solid-svg-icons'

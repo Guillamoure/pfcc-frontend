@@ -3,7 +3,8 @@ import { connect } from 'react-redux'
 
 import CampaignShowTabs from './campaign_show_tabs'
 
-import ItemSearch from '../components/campaign/item_search'
+// import ItemSearch from '../components/campaign/item_search'
+import ItemsContainer from '../components/campaign/items_manager/items_container'
 import CharacterContainer from '../components/campaign/characters'
 import SetDate from '../components/campaign/set_date'
 import Ideas from '../components/campaign/ideas'
@@ -17,7 +18,7 @@ import { startEncounterAction, endEncounterAction } from '../utils/action_creato
 const CampaignShow = props => {
 
 	const [activeTab, setActiveTab] = React.useState("Characters")
-	
+
 	const url = props.history.location.pathname
 	const campaignId = parseInt(url.substring(url.lastIndexOf('/') + 1))
 	const campaign = !!props.currentUser && props.currentUser.campaigns.find(c => c.id === campaignId)
@@ -41,7 +42,7 @@ const CampaignShow = props => {
 				break
 			case "Item Search":
 				content = (
-					<ItemSearch campaign={campaign}/>
+					<ItemsContainer campaign={campaign}/>
 				)
 				break
 			case "Details":

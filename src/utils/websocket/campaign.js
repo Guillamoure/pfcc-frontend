@@ -138,9 +138,16 @@ const parseSentCampaignData = data => {
 		console.log("MADE CONTACT FROM THE DM")
 		// if a message is meant just for you
 		if (payload.reciever_id === character.id){
-			// if the message includes a present
-			if (payload.itemType){
-				let updatedNotifications = [...notifications]
+			// if an item is know known
+			let updatedNotifications = [...notifications]
+			if (options?.knownItem){
+				let notification = { message: payload.message }
+				updatedNotifications.push(notification)
+				updateNotificationsAction(updatedNotifications)
+
+				incorporateItemToCharacter(payload, source, options)
+				// if the message includes a present
+			} else if (payload.itemType){
 
 				let message = "The DM gave you an item!"
 				let notification = { message }

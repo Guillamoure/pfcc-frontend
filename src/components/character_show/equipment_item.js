@@ -1,5 +1,5 @@
 import React from 'react'
-
+import _ from 'lodash'
 import { actionClass } from '../../fuf'
 
 const EquipmentItem = props => {
@@ -45,12 +45,14 @@ const EquipmentItem = props => {
 
 
 		let keyWord = group
-		keyWord = group === 'Wondrous Item' || group === "Potion" || group === "Magic Item"? 'magic_item' : keyWord
+		keyWord = group === 'Wondrous Item' || group === "Magic Item"? 'magic_item' : keyWord
 
-		let known = group === 'Magic Item' && !item.known ? false : true
+		let known = (group === 'Magic Item' || group === "Potion" || group === "Scroll" || group === "Wand") && !item.known ? false : true
 		// debugger
-		let name = known ? item.name || item[keyWord.toLowerCase()].name : item.false_desc ?? "Unknown"
+		let name = known ? item.name || item[keyWord.toLowerCase()]?.name || item?.spell?.name : item.false_desc ?? "Unknown"
 		if (item.masterwork && !item.name){name = "mwk " + name}
+		if (item.potion_or_oil && known){name = `${_.capitalize(item.potion_or_oil)} of ${item.spell.name}`}
+		if (item.scroll_type && known){name = `Scroll of ${item.spell.name}`}
 		let percentages = known && item[keyWord]?.features ? renderPercentage(item[keyWord]) : null
 		// find feature usage, find limit, and find relevant cmifu, and have a fraction of current usage
 		let equipped = item.equipped

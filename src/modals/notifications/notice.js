@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import _ from 'lodash'
 import localhost from '../../localhost'
 import { websocketFeatureDistribution } from '../../helper_functions/distributers/features'
 import { updateStoredNotificationsAction } from '../../helper_functions/action_creator/popups'
@@ -73,9 +74,11 @@ class Notice extends React.Component {
 
   newItems = () => {
     let undiscoveredCMIs = this.props.character.character_magic_items.filter(cmi => !cmi.discovered)
+		let undiscoveredCPs = this.props.character.character_potions.filter(cp => !cp.discovered)
+		let undiscoveredCSs = this.props.character.character_scrolls.filter(cs => !cs.discovered)
     let undiscoveredCWs = this.props.character.character_weapons.filter(cw => !cw.discovered)
     let undiscoveredCAs = this.props.character.character_armors.filter(cw => !cw.discovered)
-    let newItems = [...undiscoveredCMIs, ...undiscoveredCWs, ...undiscoveredCAs]
+    let newItems = [...undiscoveredCMIs, ...undiscoveredCPs, ...undiscoveredCSs, ...undiscoveredCWs, ...undiscoveredCAs]
 
     if (!!newItems.length){
       return (
@@ -83,6 +86,8 @@ class Notice extends React.Component {
           <h3>New Items</h3>
           <ul>
             {this.newItemLI(undiscoveredCMIs, 'character_magic_items')}
+						{this.newItemLI(undiscoveredCPs, 'character_potions')}
+						{this.newItemLI(undiscoveredCSs, 'character_scrolls')}
             {this.newItemLI(undiscoveredCWs, 'character_weapons')}
             {this.newItemLI(undiscoveredCAs, 'character_armors')}
           </ul>
@@ -96,6 +101,8 @@ class Notice extends React.Component {
     return array.map((ni, idx) => {
       let name = ''
       name = detail ==='character_magic_items' ? (ni.known ? ni.magic_item.name : ni.false_desc ?? "A New Magic Item") : name
+      name = detail ==='character_potions' ? (ni.known ? `${_.capitalize(ni.potion_or_oil)} of ${ni.spell.name}` : "A Mysterious Liquid") : name
+      name = detail ==='character_scrolls' ? (ni.known ? `Scroll of ${ni.spell.name}` : "A Strange Scroll") : name
       name = detail === 'character_weapons' ? (ni.name ? ni.name : ni.weapon.name) : name
       name = detail === 'character_armors' ? (ni.name ? ni.name : ni.armor.name) : name
       return <li key={(idx+10)*3-1}>{name} <button onClick={() => this.fetchDiscovered(ni.id, detail)}>Collect</button></li>
