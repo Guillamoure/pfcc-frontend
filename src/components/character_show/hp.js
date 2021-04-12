@@ -103,11 +103,11 @@ const HP = props => {
     if (localStorage.computer === "true"){
       return (
         <span className='centered'>
-          <div className='dull'><strong>Hit Points</strong></div>
+          <div><strong>Hit Points</strong></div>
           <div className='middle'>
             <span id={renderDamaged()} className='enhanced'>{currentHP}</span>
             <span className='enhanced'>/{totalHP}</span>
-            <span><button className='spacing' style={{boxShadow: "1px 1px 2px #000", borderRadius: ".5em"}} onClick={renderClick}>Adjust</button></span>
+            <span><button className='spacing' style={{boxShadow: `1px 1px 2px #${props.settings.shadeColor}`, borderRadius: ".5em", backgroundColor: `#${props.settings.background1}`, borderColor: `#${props.settings.borderColor}`, color: `#${props.settings.textColor}`}} onClick={renderClick}>Adjust</button></span>
           </div>
           {!!props.character.non_lethal_damage && <div><small>Non-Lethal: {props.character.non_lethal_damage}</small></div>}
         </span>

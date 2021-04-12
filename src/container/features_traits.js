@@ -68,7 +68,7 @@ class FeaturesTraits extends React.Component {
       return (
         <div id='features-traits' className="character-show shadow" style={{boxShadow: `5px 4px 2px #${this.props.settings.shadeColor}`, opacity: "0.95", backgroundColor: `#${this.props.settings.bubbleColor}`, borderColor: `#${this.props.settings.borderColor}`}}>
           <FeatureTabs renderTabClick={this.renderTabClick} activeTab={this.state.activeTab} alliedCreaturesTab={this.alliedCreaturesTab()}/>
-          <div className="dynamic-size" style={{height: '100%'}}>
+          <div className="dynamic-size" style={{height: 'auto'}}>
             {this.state.activeTab === "Features/Traits/Feats" && <FeaturesTraitsFeatsContainer editModal={this.props.editModal}/>}
             {this.state.activeTab === "Equipment" && <Equipment editModal={this.props.editModal} exitModal={this.props.exitModal} cmiId={this.props.characterItemID}/>}
             {this.state.activeTab === "Details" && <Details />}

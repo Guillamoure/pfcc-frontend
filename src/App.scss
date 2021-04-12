@@ -65,7 +65,7 @@ $tan: #cfb997;
 
 .muted {
   font-size: 13px;
-  color: #777;
+  // color: #777;
 }
 
 .enhanced {
@@ -1068,28 +1068,43 @@ $tan: #cfb997;
 .dynamic-size {
 	@media (max-width: 1500px){
 		font-size: 13px;
-		width: 110%;
+		// width: 110%;
 	}
 	@media (max-width: 1350px){
 		font-size: 12px;
-		width: 120%;
+		// width: 120%;
 	}
 	@media (max-width: 1200px){
-		width: 140%;
+		// width: 140%;
 	}
 }
 
 .dynamic-size-small {
 	@media (max-width: 1500px){
 		font-size: 12px;
-		width: 110%;
+		// width: 110%;
 	}
 	@media (max-width: 1350px){
 		font-size: 11px;
-		width: 120%;
+		// width: 120%;
 	}
 	@media (max-width: 1200px){
 		font-size: 10px;
-		width: 140%;
+		// width: 140%;
+	}
+}
+
+.dynamic-size-smaller {
+	@media (max-width: 1500px){
+		font-size: 11px;
+		// width: 110%;
+	}
+	@media (max-width: 1350px){
+		font-size: 10px;
+		// width: 120%;
+	}
+	@media (max-width: 1200px){
+		font-size: 9px;
+		// width: 140%;
 	}
 }

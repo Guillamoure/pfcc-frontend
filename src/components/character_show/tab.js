@@ -1,4 +1,5 @@
 import React from 'react'
+import { connect } from 'react-redux'
 
 class Tab extends React.Component {
 
@@ -17,7 +18,7 @@ class Tab extends React.Component {
     }
 
     return(
-      <span className={className} onClick={() => this.props.renderTabClick(this.props.label, this.props.index)}>
+      <span className={className} style={{borderColor: `#${this.props.settings.borderColor}`}} onClick={() => this.props.renderTabClick(this.props.label, this.props.index)}>
         {this.props.label}
         {this.renderCancel()}
       </span>
@@ -25,4 +26,10 @@ class Tab extends React.Component {
   }
 }
 
-export default Tab
+const mapStateToProps = (state) => {
+  return {
+		settings: state.settings
+  }
+}
+
+export default connect(mapStateToProps)(Tab)

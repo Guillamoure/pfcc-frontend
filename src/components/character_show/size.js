@@ -16,7 +16,7 @@ const Size = props => {
   return(
     <div id='size' className='shadow shrink character-show' style={{boxShadow: `5px 4px 2px #${props.settings.shadeColor}`, opacity: "0.95", backgroundColor: `#${props.settings.bubbleColor}`, borderColor: `#${props.settings.borderColor}`}}>
       <span className='centered'>
-        <div className='duller'><strong>Size: {size}</strong></div>
+        <div className="dynamic-size-small"><strong>Size: {size}</strong></div>
         <div className='container-2'>
           <span className='enhanced'>{space}</span>
           <span className='enhanced'>{reach}</span>

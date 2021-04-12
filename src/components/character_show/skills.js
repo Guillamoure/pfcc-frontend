@@ -591,7 +591,7 @@ class Skills extends React.Component {
   renderSkillsTable = () => {
     return (
       <table>
-        <thead >
+        <thead className="dynamic-size-smaller">
           <tr >
             <th>Class</th>
             <th>Ability</th>

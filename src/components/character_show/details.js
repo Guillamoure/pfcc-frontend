@@ -1,5 +1,4 @@
 import React from 'react'
-import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
@@ -74,7 +73,7 @@ const Details = props => {
   if (localStorage.computer === "true"){
     return(
       <>
-        <span className='header'>Background</span>
+        <span className='header' style={{borderColor: `#${props.settings.borderColor}`}}>Background</span>
         {props.character.user_id === props.currentUser.id && <span className='edit' onClick={() => props.editModal('background')}><FontAwesomeIcon icon={faPencilAlt} /></span>}
           <div className='nested'>
             <div><strong>Full Name:</strong> {props.character.full_name}</div>
@@ -85,7 +84,7 @@ const Details = props => {
             <div><strong>Deity:</strong> {props.character.deity}</div>
             <div><strong>Homeland:</strong> {props.character.homeland}</div>
           </div>
-        <div className='header'>Appearance</div>
+        <div className='header' style={{borderColor: `#${props.settings.borderColor}`}}>Appearance</div>
           <div className='nested'>
             <div><strong>Description:</strong> {props.character.description}</div>
             <div><strong>Gender:</strong> {props.character.gender}</div>
@@ -94,11 +93,11 @@ const Details = props => {
             <div><strong>Height:</strong> {props.character.height}</div>
             <div><strong>Weight:</strong> {props.character.weight}</div>
           </div>
-        <div className='header'>Languages</div>
+        <div className='header' style={{borderColor: `#${props.settings.borderColor}`}}>Languages</div>
           <div className='nested'>
           {languages(props.character.name).join(", ")}
           </div>
-				<div className='header'>Statistics</div>
+				<div className='header' style={{borderColor: `#${props.settings.borderColor}`}}>Statistics</div>
 					<div className='nested'>
 						{renderDisplayDescription()}
 					</div>
@@ -150,8 +149,9 @@ const mapStatetoProps = (state) => {
     currentUser: state.currentUser,
     admin: state.admin,
     character: state.character,
-    character_info: state.character_info
+    character_info: state.character_info,
+		settings: state.settings
   }
 }
 
-export default withRouter(connect(mapStatetoProps)(Details))
+export default connect(mapStatetoProps)(Details)

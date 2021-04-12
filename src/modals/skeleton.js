@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { modalAction } from '../utils/action_creator/popups'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons'
+import { faChevronDown, faChevronUp, faExpand, faCompress } from '@fortawesome/free-solid-svg-icons'
 
 import HPChanges from '../components/hp_changes'
 import Armor from '../components/armor_summary'
@@ -130,23 +130,27 @@ const ModalSkeleton = (props) => {
 	const [exitStyle, setExitStyle] = React.useState(null)
 	const [activeIndex, setActiveIndex] = React.useState(0)
 	const [collapsed, toggleCollapsed] = React.useState(false)
+	const [big, toggleBig] = React.useState(false)
 	const sidebarContainer = React.useRef(null)
 
 	React.useEffect(() => {
-		console.log(sidebarContainer)
 		if (sidebarContainer.current){
 			let tabStyleDuplicate = {...exitStyle}
 			tabStyleDuplicate.width = `${window.innerWidth / 11}px`
+			tabStyleDuplicate.bottom = `${window.innerHeight/2 - 4}px`
 			setExitStyle(tabStyleDuplicate)
 		}
 	}, [sidebarContainer])
 
+	React.useEffect(() => {
+			// setStyle({width: '98%', height: '50%', bottom: '0px', zIndex: '1', overflowY: "scroll"})
+			// setExitStyle({zIndex: '2', bottom: `${window.innerHeight/2 + 1}px`, width: '20%', textAlign: 'center', borderBottom: 'none', left: '10%'})
+			let bottomDenominator = big ? 1.25 : 2
+			console.log(exitStyle)
+			setExitStyle({...exitStyle, bottom: `${window.innerHeight/bottomDenominator - 4}px`, width: `${window.innerWidth / 11}px`})
+	}, [big])
 
-	if (!exitStyle){
-		// setStyle({width: '98%', height: '50%', bottom: '0px', zIndex: '1', overflowY: "scroll"})
-		// setExitStyle({zIndex: '2', bottom: `${window.innerHeight/2 + 1}px`, width: '20%', textAlign: 'center', borderBottom: 'none', left: '10%'})
-		setExitStyle({bottom: `${window.innerHeight/2 - 4}px`})
-	}
+
 
 	const exiting = (e, closingIndex) => {
 		e.preventDefault()
@@ -186,6 +190,7 @@ const ModalSkeleton = (props) => {
 	const updateToggleButton = i => {
 		if (!collapsed){
 			toggleCollapsed(true)
+			toggleBig(false)
 		} else {
 			updateActiveIndex(i)
 		}
@@ -197,6 +202,7 @@ const ModalSkeleton = (props) => {
 			console.log(m)
 			let name = m.name || m.obj?.name || `Tab ${i+1}`
 			let tabStyle = {...exitStyle, backgroundColor: `#${props.settings.bubbleColor}`, borderColor: `#${props.settings.borderColor}`, color: `#${props.settings.textColor}`}
+			console.log(tabStyle)
 			if (sidebarContainer.current){
 				// tabStyle.left = `${( i * Math.floor(sidebarContainer.current.clientWidth / 5) ) + (sidebarContainer.current.offsetLeft) + parseInt(window.getComputedStyle(sidebarContainer.current).getPropertyValue('padding-left'))}px`
 				let wiff = window.innerWidth
@@ -211,9 +217,10 @@ const ModalSkeleton = (props) => {
 			}
 			let cancelButton = <button onClick={(e) => exiting(e, i)}>X</button>
 			let toggleButton = <button onClick={() => updateToggleButton(i)}><FontAwesomeIcon icon={collapsed ? faChevronUp : faChevronDown}/></button>
+			let embiggenButton = <button onClick={() => toggleBig(!big)}><FontAwesomeIcon icon={big ? faCompress : faExpand}/></button>
 			return (
 				<>
-					<div id="sidebar-exit" style={tabStyle}><span className="underline-hover" onClick={() => updateActiveIndex(i)}>{name}</span><span>{toggleButton}{cancelButton}</span></div>
+					<div id="sidebar-exit" style={tabStyle}><span className="underline-hover" onClick={() => updateActiveIndex(i)}>{name}</span><span style={{textAlign: "center"}}>{toggleButton}{cancelButton}{(i === activeIndex && !collapsed) && embiggenButton}</span></div>
 					{i === activeIndex && renderComponent(m)}
 				</>
 			)
@@ -229,6 +236,10 @@ const ModalSkeleton = (props) => {
 			style.padding = "0px"
 			style.border = "0px"
 			style.margin = "0px"
+		}
+		if (big){
+			style.height = "80%"
+			style.width = "65vw"
 		}
 		return style
 	}

@@ -221,15 +221,15 @@ class Equipment extends React.Component {
 				<table>
 					<thead>
 						<tr>
-							<th style={{textAlign: "center", borderRight: "1px solid black"}}>Light</th>
-							<th style={{textAlign: "center", borderRight: "1px solid black"}}>Medium</th>
+							<th style={{textAlign: "center", borderRight: `1px solid #${this.props.settings.borderColor}`}}>Light</th>
+							<th style={{textAlign: "center", borderRight: `1px solid #${this.props.settings.borderColor}`}}>Medium</th>
 							<th style={{textAlign: "center"}}>Heavy</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
-							<td style={{borderRight: "1px solid black"}}>{cc[0]} lbs or less</td>
-							<td style={{borderRight: "1px solid black"}}>{cc[0]+1} - {cc[1]} lbs</td>
+							<td style={{borderRight: `1px solid #${this.props.settings.borderColor}`}}>{cc[0]} lbs or less</td>
+							<td style={{borderRight: `1px solid #${this.props.settings.borderColor}`}}>{cc[0]+1} - {cc[1]} lbs</td>
 							<td>{cc[1]+1} - {cc[2]} lbs</td>
 						</tr>
 					</tbody>

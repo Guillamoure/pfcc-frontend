@@ -225,11 +225,11 @@ const ArmorClass = props => {
           </section>
           <section>
             <div className='enhanced'>{acCalc('t')}</div>
-            <div className='dull'><strong>T</strong></div>
+            <div><strong>T</strong></div>
           </section>
           <section>
             <div className='enhanced'>{acCalc('ff')}</div>
-            <div className='dull'><strong>FF</strong></div>
+            <div><strong>FF</strong></div>
           </section>
         </span>
       </div>
@@ -243,11 +243,11 @@ const ArmorClass = props => {
         </span>
         <span style={{display: 'inline-block', margin: '0.3em', textAlign: 'center'}}>
           <div className='enhanced'>{acCalc('t')}</div>
-          <div className='dull'><strong>T</strong></div>
+          <div><strong>T</strong></div>
         </span>
         <span style={{display: 'inline-block', margin: '0.3em', textAlign: 'center'}}>
           <div className='enhanced'>{acCalc('ff')}</div>
-          <div className='dull'><strong>FF</strong></div>
+          <div><strong>FF</strong></div>
         </span>
       </div>
     )

@@ -103,7 +103,7 @@ const DiceRoller = props => {
 			totalString += parseInt(tempModifier) >= 0 ? `+${tempModifier}` : tempModifier
 		}
 		let resultsDupe = [...diceResults, {name: diceToRoll.rollName || "Custom Roll", totalString, total}]
-		while (resultsDupe.length > 7){
+		while (resultsDupe.length > 6){
 			resultsDupe.shift()
 		}
 		setResults(resultsDupe)
@@ -203,9 +203,11 @@ const DiceRoller = props => {
 			)
 		})
 		return (
-			<ul style={{color: `#${textColor}`, display: "flex", flexDirection: "column", fontSize: "1.2em", marginTop: "auto"}}>
-				{resultElements}
-			</ul>
+			<div style={{marginTop: "auto"}}>
+				<ul style={{color: `#${textColor}`, display: "flex", flexDirection: "column", fontSize: "1.1em", marginTop: "auto"}}>
+					{resultElements}
+				</ul>
+			</div>
 		)
 	}
 

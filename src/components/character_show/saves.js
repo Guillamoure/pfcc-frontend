@@ -198,7 +198,7 @@ const Saves = props => {
 			return (
 	      <span key={i*3+1} className='centered' style={{flexGrow: "1", margin: "0 0.7em"}} onClick={() => rollSave(capitalizedSave, modifier)}>
 	        <div className='enhanced' style={{border: `1px solid #${props.settings.borderColor}`, borderRadius: "0.3em"}}>{modifier}</div>
-	        <div className='muted'><strong>{capitalizedSave}</strong></div>
+	        <div className='muted dynamic-size-small'><strong>{capitalizedSave}</strong></div>
 	      </span>
 			)
 		})
