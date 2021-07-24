@@ -1,30 +1,30 @@
 {
   "files": {
-    "main.css": "/pfcc-frontend/static/css/main.a75d58ca.chunk.css",
-    "main.js": "/pfcc-frontend/static/js/main.ba234a0f.chunk.js",
-    "main.js.map": "/pfcc-frontend/static/js/main.ba234a0f.chunk.js.map",
-    "runtime-main.js": "/pfcc-frontend/static/js/runtime-main.35c945f9.js",
-    "runtime-main.js.map": "/pfcc-frontend/static/js/runtime-main.35c945f9.js.map",
-    "static/js/2.d71d1d51.chunk.js": "/pfcc-frontend/static/js/2.d71d1d51.chunk.js",
-    "static/js/2.d71d1d51.chunk.js.map": "/pfcc-frontend/static/js/2.d71d1d51.chunk.js.map",
-    "index.html": "/pfcc-frontend/index.html",
-    "precache-manifest.23a0c64bb2ea5b4323c86994daaa9982.js": "/pfcc-frontend/precache-manifest.23a0c64bb2ea5b4323c86994daaa9982.js",
-    "service-worker.js": "/pfcc-frontend/service-worker.js",
-    "static/css/main.a75d58ca.chunk.css.map": "/pfcc-frontend/static/css/main.a75d58ca.chunk.css.map",
-    "static/js/2.d71d1d51.chunk.js.LICENSE.txt": "/pfcc-frontend/static/js/2.d71d1d51.chunk.js.LICENSE.txt",
-    "static/media/d10.14f6d8eb.svg": "/pfcc-frontend/static/media/d10.14f6d8eb.svg",
-    "static/media/d12.8f63d196.svg": "/pfcc-frontend/static/media/d12.8f63d196.svg",
-    "static/media/d20.d4563f05.svg": "/pfcc-frontend/static/media/d20.d4563f05.svg",
-    "static/media/d3.58e63734.svg": "/pfcc-frontend/static/media/d3.58e63734.svg",
-    "static/media/d4.0f472d02.svg": "/pfcc-frontend/static/media/d4.0f472d02.svg",
-    "static/media/d6.a3dc0163.svg": "/pfcc-frontend/static/media/d6.a3dc0163.svg",
-    "static/media/d8.8b2ab880.svg": "/pfcc-frontend/static/media/d8.8b2ab880.svg",
-    "static/media/rolling-dice-cup.3cf54354.svg": "/pfcc-frontend/static/media/rolling-dice-cup.3cf54354.svg"
+    "main.css": "/static/css/main.a75d58ca.chunk.css",
+    "main.js": "/static/js/main.8599988e.chunk.js",
+    "main.js.map": "/static/js/main.8599988e.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.849ecac5.js",
+    "runtime-main.js.map": "/static/js/runtime-main.849ecac5.js.map",
+    "static/js/2.d71d1d51.chunk.js": "/static/js/2.d71d1d51.chunk.js",
+    "static/js/2.d71d1d51.chunk.js.map": "/static/js/2.d71d1d51.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.b8959fcf31d086cbf4cac7fd04c71f7c.js": "/precache-manifest.b8959fcf31d086cbf4cac7fd04c71f7c.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/main.a75d58ca.chunk.css.map": "/static/css/main.a75d58ca.chunk.css.map",
+    "static/js/2.d71d1d51.chunk.js.LICENSE.txt": "/static/js/2.d71d1d51.chunk.js.LICENSE.txt",
+    "static/media/d10.14f6d8eb.svg": "/static/media/d10.14f6d8eb.svg",
+    "static/media/d12.8f63d196.svg": "/static/media/d12.8f63d196.svg",
+    "static/media/d20.d4563f05.svg": "/static/media/d20.d4563f05.svg",
+    "static/media/d3.58e63734.svg": "/static/media/d3.58e63734.svg",
+    "static/media/d4.0f472d02.svg": "/static/media/d4.0f472d02.svg",
+    "static/media/d6.a3dc0163.svg": "/static/media/d6.a3dc0163.svg",
+    "static/media/d8.8b2ab880.svg": "/static/media/d8.8b2ab880.svg",
+    "static/media/rolling-dice-cup.3cf54354.svg": "/static/media/rolling-dice-cup.3cf54354.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.35c945f9.js",
+    "static/js/runtime-main.849ecac5.js",
     "static/js/2.d71d1d51.chunk.js",
     "static/css/main.a75d58ca.chunk.css",
-    "static/js/main.ba234a0f.chunk.js"
+    "static/js/main.8599988e.chunk.js"
   ]
 }
