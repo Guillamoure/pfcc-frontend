@@ -164,6 +164,9 @@ class Equipment extends React.Component {
 			}
 		})
 
+		if (this.props.character.name === "Majestik"){items.push({category: "harrow"})}
+
+
 		cas.forEach(ca => {
 			items.push({...ca, category: "Armor"})
 		})
@@ -175,6 +178,10 @@ class Equipment extends React.Component {
 		})
 
 		let itemRows = items.map((item, idx) => {
+			if (item.category === "harrow"){
+				return (<div onClick={() => modalAction("harrow", {})}>Harrow Deck</div>)
+			}
+
 			return <EquipmentItem item={item} index={idx} group={item.category} changeSelectedItem={this.changeSelectedItem}/>
 		})
 
