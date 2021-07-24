@@ -5,7 +5,7 @@ import { tableDescriptionsByLevel } from '../../utils/calculations/class'
 
 const Table = props => {
 
-	const tableDescriptions = tableDescriptionsByLevel(props.klass.klass_features, props.activeArchetype, props.chosenArchetypes)
+	const tableDescriptions = tableDescriptionsByLevel(props.klass.klass_features || [], props.activeArchetype || {}, props.chosenArchetypes || [])
 
   const renderBAB = () => {
     switch (props.klass.hit_die){
