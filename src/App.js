@@ -72,7 +72,7 @@ class App extends React.Component {
     localStorage.setItem("computer", computer)
     return (
         <Router>
-          <main style={{backgroundImage: `linear-gradient(#${this.props.settings.background1} 60%, #${this.props.settings.background2})`, height: "100vh"}}>
+          <main style={{backgroundImage: `linear-gradient(#${this.props.settings.background1} 60%, #${this.props.settings.background2})`, height: "100vh", backgroundAttachment: "fixed"}}>
             <NavBar />
             {this.props.tooltip.message && <Tooltip />}
             {!!this.props.modal.length && <ModalSkeleton />}
