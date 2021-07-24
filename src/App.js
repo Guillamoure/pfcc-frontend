@@ -12,7 +12,7 @@ import "./css/campaign-show.scss";
 import "./css/character-creation.scss";
 import "./css/character-details.scss";
 
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { HashRouter as Router, Route, Switch } from "react-router-dom";
 import { connect } from "react-redux";
 import localhost from "./localhost";
 import { removeLocalStorageCharactersIfCookieIsMissing } from "./utils/cookies";
