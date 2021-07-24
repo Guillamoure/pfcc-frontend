@@ -1,70 +1,87 @@
-import React from 'react'
-import { withRouter } from 'react-router-dom'
-import { connect } from 'react-redux'
-import localhost from '../localhost'
+import React from "react";
+import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
+import localhost from "../localhost";
 
-import Characters from '../components/characters'
-import Settings from './settings'
-import Campaigns from '../components/campaigns'
-
+import Characters from "../components/characters";
+import Settings from "./settings";
+import Campaigns from "../components/campaigns";
+import {
+  getLocalStorageFromCookieToken,
+  prepareCookie
+} from "../utils/cookies";
 
 const Home = props => {
+  const [characters, updateCharacters] = React.useState([]);
 
-	const [characters, updateCharacters] = React.useState([])
-
-	React.useEffect(() => {
-		if (props.currentUser){
-
-			fetch(`${localhost}/api/v1/characters`, {
-				headers: {
-					User: props.currentUser.id
-				}
-			})
-			.then(r => r.json())
-			.then(data => {
-				updateCharacters(data)
-			})
-		}
-
-	}, [props.currentUser])
+  React.useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (props.currentUser) {
+      fetch(`${localhost}/api/v1/characters`, {
+        headers: {
+          User: props.currentUser.id
+        }
+      })
+        .then(r => r.json())
+        .then(data => {
+          if (!getLocalStorageFromCookieToken(token)) {
+            prepareCookie(token, data);
+          }
+          updateCharacters(data);
+        });
+    }
+    let lsCharacters = getLocalStorageFromCookieToken(token);
+    if (lsCharacters) {
+      updateCharacters(lsCharacters);
+    }
+  }, [props.currentUser]);
 
   // COMMENTED OUT FOR TESTING PURPOSES
   const renderSignUp = () => {
-  //   if (!props.currentUser){
-  //     props.history.push("/signup")
-  //   }
-  }
+    //   if (!props.currentUser){
+    //     props.history.push("/signup")
+    //   }
+  };
   // COMMENTED OUT FOR TESTING PURPOSES
 
-
-  renderSignUp()
-  let className = localStorage.computer === 'true' ? 'container-4' : 'phone-container'
-
+  renderSignUp();
+  let className =
+    localStorage.computer === "true" ? "container-4" : "phone-container";
 
   return (
-    <main id="user-home" className='background'>
-			<section id="user-characters">
-				<button className='home-btn-create-links' onClick={() => props.history.push("/creation")} >Create Character</button>
-				<Characters characters={characters}/>
-			</section>
-			<section id="user-campaigns">
-				<button className='home-btn-create-links' onClick={() => props.history.push("/campaigns/new")}>Create Campaign</button>
-				<Campaigns />
-			</section>
-      <br/><br/>
-      <div className={className} style={{margin: '0 2em'}} >
+    <main id="user-home" className="background">
+      <section id="user-characters">
+        <button
+          className="home-btn-create-links"
+          onClick={() => props.history.push("/creation")}
+        >
+          Create Character
+        </button>
+        <Characters characters={characters} />
+      </section>
+      <section id="user-campaigns">
+        <button
+          className="home-btn-create-links"
+          onClick={() => props.history.push("/campaigns/new")}
+        >
+          Create Campaign
+        </button>
+        <Campaigns />
+      </section>
+      <br />
+      <br />
+      <div className={className} style={{ margin: "0 2em" }}>
         <Settings />
       </div>
     </main>
-  )
+  );
+};
 
-}
-
-const mapStatetoProps = (state) => {
+const mapStatetoProps = state => {
   return {
     currentUser: state.currentUser,
     admin: state.admin
-  }
-}
+  };
+};
 
-export default withRouter(connect(mapStatetoProps)(Home))
+export default withRouter(connect(mapStatetoProps)(Home));
