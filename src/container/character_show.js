@@ -132,6 +132,7 @@ class Character extends React.Component {
     fetch(`${localhost}/api/v1${this.props.location.pathname}`)
       .then(r => r.json())
       .then(data => {
+        console.log(data);
         // IF YOU WANT THE PAGE TO BE PRIVATE
         // if (this.props.currentUser.id === data.character.user.id){
         if (characterData) {
